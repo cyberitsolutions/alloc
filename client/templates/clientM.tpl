@@ -24,7 +24,7 @@ $(document).ready(function() {
                                ,"invoices"=>"Invoices"
                                ,"sales"=>"Sales"
                                ,"sbsAll"=>"All")
-                          ,$url_alloc_client."clientID=".$client_clientID)}
+                          ,$url_alloc_client."clientID=".$client_clientID,null,$clientSelfLink)}
 {/}
 
 <!-- need to merge this style back into the stylesheets -->
@@ -45,7 +45,7 @@ $(document).ready(function() {
 
 <table class="box view">
   <tr>
-    <th class="header">{$clientSelfLink}
+    <th class="header">View Details
       <span>{page::star("client",$client_clientID)}</span>
     </th>
   </tr>
@@ -92,7 +92,7 @@ $(document).ready(function() {
 
 <table class="box edit">
   <tr>
-    <th class="header">{$clientSelfLink}
+    <th class="header">Edit Details
       <span></span>
     </th>
   </tr>

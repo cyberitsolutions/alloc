@@ -69,7 +69,7 @@ $(document).ready(function() {
                                ,"attachments"=>"Attachments"
                                ,"history"=>"History"
                                ,"sbsAll"=>"All")
-                          ,$url_alloc_task."taskID=".$task_taskID)}
+                          ,$url_alloc_task."taskID=".$task_taskID, false, $taskSelfLink)}
 {/}
 
 
@@ -80,7 +80,7 @@ $(document).ready(function() {
 
 <table class="box view">
   <tr>
-    <th class="header">{$taskSelfLink}
+    <th class="header">View Details
       <span>
         {$navigation_links}
         {page::star("task",$task_taskID)}
@@ -210,7 +210,7 @@ $(document).ready(function() {
 
 <table class="box edit">
   <tr>
-    <th class="header">{$taskSelfLink}
+    <th class="header">Edit Details
       <span>{$navigation_links}</span>
     </th>
   </tr>
