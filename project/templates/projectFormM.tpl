@@ -92,7 +92,7 @@ function clickClientStatus(e) {
                                ,"importexport"=>"Import/Export"
                                ,"history"=>"History"
                                ,"sbsAll"=>"All")
-                          ,$url_alloc_project."projectID=".$project_projectID)}
+                          ,$url_alloc_project."projectID=".$project_projectID,null,$projectSelfLink)}
 {/}
 
 <div id="project" class="{$first_div}">
@@ -100,7 +100,7 @@ function clickClientStatus(e) {
 <input type="hidden" name="projectID" value="{$project_projectID}">
 <table class="box">
   <tr>
-    <th class="header" colspan="5">{$projectSelfLink}
+    <th class="header" colspan="5">Project Details
       <span>
         {if defined("PROJECT_EXISTS")}
         {$navigation_links}

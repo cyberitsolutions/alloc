@@ -95,6 +95,15 @@ a.sidebyside_active {
   font-size:100%; 
 }
 
+a.noselect {
+  -webkit-touch-callout: none;
+    -webkit-user-select: none;
+     -khtml-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+
 a.undecorated {
   text-decoration:none;
   color:#666666;

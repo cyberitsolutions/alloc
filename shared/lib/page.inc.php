@@ -324,7 +324,7 @@ EOD;
     $str = "<a class=\"growshrink nobr\" href=\"#x\" onClick=\"$('#".$id."').fadeToggle();".$extra."\">".$text."</a>";
     return $str;
   }
-  function side_by_side_links($items=array(),$url,$redraw="") {
+  function side_by_side_links($items=array(),$url,$redraw="",$title="") {
     $url = preg_replace("/[&?]+$/", "", $url);
     if (strpos($url, "?")) {
       $url.= "&";
@@ -332,10 +332,12 @@ EOD;
       $url.= "?";
     }
     foreach ($items as $id => $label) {
-      $str.= $sp."<a id=\"sbs_link_".$id."\" data-sbs-redraw='".$redraw."' href=\"".$url."sbs_link=".$id."\" class=\"sidebyside\">".$label."</a>";
+      $str.= $sp."<a id=\"sbs_link_".$id."\" data-sbs-redraw='".$redraw."' href=\"".$url."sbs_link=".$id."\" class=\"sidebyside noselect\" unselectable=\"on\">".$label."</a>";
       $sp = "&nbsp;";
     }
-    return "<div class=\"noprint\" style=\"margin:20px 0px 0px 0px; width:100%; text-align:center;\">".$str."</div>";
+    $s = "<div class='noprint' style='margin:20px 0px; text-align:center;'>".$str."</div>";
+    $title and $s.= "<span style='font-size:140%;'>".$title."</span>";
+    return $s;
   }
   function mandatory($field="") {
     $star = "&lowast;";
