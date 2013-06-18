@@ -1,4 +1,4 @@
-<a href="{$url}" class="tab{$active}" style="left:{$x}px;">{$name}</a>
+<a href="{$url}" class="tab{$active} noselect" style="left:{$x}px;" unselectable="on">{$name}</a>
 
 {if $active && $name == "Home" || $current_user->prefs["customizedTheme2"] != 4}
   <style>
