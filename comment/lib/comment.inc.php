@@ -1291,7 +1291,7 @@ class comment extends db_entity {
     move_attachment($entity, $entityID);
   }
 
-  function find_email($debug=false,$get_blobs=false) {
+  function find_email($debug=false,$get_blobs=false,$ignore_date=false) {
     $info = inbox::get_mail_info();
     $mailbox = $this->get_value("commentMaster").$this->get_value("commentMasterID");
     $mail = new email_receive($info);
@@ -1330,7 +1330,7 @@ class comment extends db_entity {
       $date3 = strtotime($mail->mail_headers["date"])+300;
 
       similar_text($text1,$text2,$percent);
-      if ($percent >= 99 && ($from1 == $from2 || !$from2 || same_email_address($from1, config::get_config_item("AllocFromEmailAddress"))) && $date > $date1 && $date < $date3) {
+      if ($percent >= 99 && ($from1 == $from2 || !$from2 || same_email_address($from1, config::get_config_item("AllocFromEmailAddress"))) && (($date > $date1 && $date < $date3)||$ignore_date)) {
         $debug and print "<br><b style='color:green'>Found you! Msg no: ".$num." in mailbox: ".$mailbox." for commentID: ".$this->get_id()."</b>";
 
         foreach ((array)$mail->mail_parts as $v) {
