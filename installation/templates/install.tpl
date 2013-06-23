@@ -55,8 +55,8 @@ want to install allocPSA on a Windows server, see
 {$tests = array("php_version"  =>"PHP &gt;= 5.2.6"           
                ,"php_memory"   =>"PHP memory_limit &gt;= 32M"
                ,"php_gd"       =>"PHP GD image library"      
-               ,"php_mbstring"     =>"PHP Multibyte string" 
-               ,"mysql_version"=>"MySQL &gt;= 5"          
+               ,"php_mbstring" =>"PHP Multibyte string" 
+               ,"php_pdo"      =>"PHP PDO DB library"          
                ,"mail_exists"  =>"Mail")}
 
 <table class="nice" cellspacing="0" border="0">

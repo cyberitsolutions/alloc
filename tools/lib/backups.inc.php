@@ -125,7 +125,7 @@ class backups {
     $db = new db_alloc();
     foreach($sql as $q) {
       if (!$db->query($q)) {
-        $errors[] = "Error! (".mysql_error().").";
+        $errors[] = "Error! (".$db->get_error().").";
       }
     }
 

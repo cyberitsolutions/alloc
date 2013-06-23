@@ -27,11 +27,10 @@ class db {
   var $password;
   var $hostname;
   var $database;
-  var $query_id;
-  var $link_id;
+  var $pdo;
+  var $pdo_statement;
   var $row = array();
   var $error;
-  var $verbose = 1;
   public static $started_transaction = false;
   public static $stop_doing_queries = false;
 
@@ -42,38 +41,43 @@ class db {
     $this->database = $database;
   }
 
-  function get_db($username="",$password="",$hostname="",$database="") {         // Singleton
-    static $db;
-    $db or $db = new db($username,$password,$hostname,$database);
-    return $db;
-  }
-
-  function connect() {
-    if (!$this->link_id) {
-      $this->link_id = mysql_connect($this->hostname,$this->username,$this->password);
-      if ($this->link_id && is_resource($this->link_id) && !$this->error) {
-        $this->database && $this->select_db($this->database);
-        // Force connection to use utf-8
-        function_exists("mysql_set_charset") && mysql_set_charset("utf8", $this->link_id);
-
-      } else {
-        $this->error("Unable to connect to database: ".mysql_error()."<br>",mysql_errno());
-        unset($this->link_id);
+  function connect($force=false) {
+    if ($force || !isset($this->pdo)) { 
+      $this->hostname and $h = "host=".$this->hostname.";";
+      $this->database and $d = "dbname=".$this->database.";";
+      try {
+        $this->pdo = new PDO(sprintf('mysql:%s%scharset=UTF-8',$h,$d), $this->username, $this->password);
+        $this->pdo->exec("SET CHARACTER SET utf8");
+        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        return true;
+      } catch (PDOException $e) {
+        $this->error("Unable to connect to database: ".$e->getMessage());
       }
     }
-    return $this->link_id;
   } 
 
   function start_transaction() {
-    $this->query("SET autocommit=0");
-    $this->query("START TRANSACTION");
+    $this->pdo->beginTransaction();
     self::$started_transaction = true;
   }
 
   function commit() {
     if (self::$started_transaction) {
-      $this->query("SET autocommit=1");
-      $this->query("COMMIT");
+      $rtn = $this->pdo->commit();
+      if (!$rtn) {
+        $this->error("Couldn't commit db transaction.");
+      }
+    }
+  }
+
+  function rollback() {
+    if (self::$started_transaction) {
+      self::$started_transaction = false;
+      try {
+        $this->pdo->rollBack();
+      } catch (Exception $e) {
+        return false;
+      }
     }
   }
 
@@ -107,45 +111,23 @@ class db {
   }
 
   function get_insert_id() {
-    if ($this->link_id) {
-      return @mysql_insert_id($this->link_id);
-    }
+    return $this->pdo->lastInsertId();
   }
   
   function esc($str) {
-    $esc_function = "mysql_escape_string";
-    if (version_compare(phpversion(), "4.3.0", ">")) {
-      $esc_function = "mysql_real_escape_string";
-    }
-    
     if (is_numeric($str)) {
       return $str;
     }
-    $rtn = @$esc_function($str);
-    if ($rtn === false) {
-      $err = error_get_last();
-      $e = new Exception();
-      alloc_error("Error in db->esc(".$str."): \n".$e->getTraceAsString()."\n".print_r($err,1));
-    } else {
-      return $rtn;
+    if (!isset($this->pdo)) {
+      $this->connect();
     }
+    return trim($this->pdo->quote($str),"'");
   }
 
   function select_db($db="") { 
-    static $selected;
-
-    if (!$selected || $selected != $db) {
-      // Select a database
-      if (mysql_select_db($db)) {
-        $this->database = $db;
-        $selected = $db;
-        return true;
-      } else {
-        $this->error("<b>Could not select database: ".$db."</b>",mysql_errno()); 
-        return false;
-      }
-    }
-    return true;
+    // Select a database
+    $this->database = $db;
+    return $this->connect(true);
   } 
 
   function qr() {
@@ -159,9 +141,12 @@ class db {
   }
 
   private function _query($query) {
-    // wrapper for mysql_query
     if (!self::$stop_doing_queries || $query == "ROLLBACK") {
-      return @mysql_query($query);
+      try {
+        return $this->pdo->query($query);
+      } catch (PDOException $e) {
+        $this->error("Error executing query: ".$e->getMessage());
+      }
     }
   }
 
@@ -172,34 +157,27 @@ class db {
     $this->connect();
     $args = func_get_args();
     $query = $this->get_escaped_query_str($args);
-    #echo "<br><br>Query: ".$query;
-    #echo "<br><pre>".print_r(debug_backtrace(),1)."</pre>";
 
     if ($query && !self::$stop_doing_queries) {
 
       if (is_object($current_user) && method_exists($current_user,"get_id") && $current_user->get_id()) {
-        $this->_query(prepare("SET @personID = %d",$current_user->get_id()),$this->link_id);
+        $this->_query(prepare("SET @personID = %d",$current_user->get_id()));
       } else {
-        $this->_query("SET @personID = NULL",$this->link_id);
+        $this->_query("SET @personID = NULL");
       }
 
-      $id = $this->_query($query,$this->link_id);
+      $rtn = $this->_query($query);
 
-      if ($str = mysql_error()) {
-        $rtn = false;
-        $this->error("Query failed: ".$str."\n".$query,mysql_errno());
-        if (self::$started_transaction) {
-          $this->_query("ROLLBACK");
-          self::$started_transaction = false;
-        }
+      if (!$rtn) {
+        $info = $this->pdo->errorInfo();
+        $this->error("Query failed: ".$info[0]." ".$info[1]."\n".$query, $info[2]);
+        $this->rollback();
+        unset($this->pdo_statement);
 
-      } else if ($id) {
-        $this->query_id = $id;
-        $rtn = $this->query_id;
+      } else {
+        $this->pdo_statement = $rtn;
         $this->error();
       }
-    } else if (self::$stop_doing_queries) {
-      //alloc_error("DB queries halted. Will not execute: ".$query);
     }
 
     $result = timetook($start,false);
@@ -211,27 +189,32 @@ class db {
     return $rtn;
   } 
 
-  function num($query_id="") {
-    $id = $query_id or $id = $this->query_id;
-    if (is_resource($id)) return mysql_num_rows($id);
+  function num($pdo_statement="") {
+    $pdo_statement or $pdo_statement = $this->pdo_statement;
+    return $pdo_statement->rowCount();
   } 
 
-  function num_rows($query_id="") {
-    return $this->num($query_id);
+  function num_rows($pdo_statement="") {
+    return $this->num($pdo_statement);
   } 
 
-  function row($query_id="",$method=MYSQL_ASSOC) { 
+  function row($pdo_statement="",$method=PDO::FETCH_ASSOC) { 
     if (!self::$stop_doing_queries) {
-      $id = $query_id or $id = $this->query_id;
-      if (is_resource($id)) {
+      $pdo_statement or $pdo_statement = $this->pdo_statement;
+      if ($pdo_statement) {
         unset($this->row);
-        $this->row = mysql_fetch_array($id,$method);
+        if (isset($this->pos)) {
+          $this->row = $pdo_statement->fetch($method,PDO::FETCH_ORI_ABS,$this->pos);
+          unset($this->pos);
+        } else {
+          $this->row = $pdo_statement->fetch($method,PDO::FETCH_ORI_NEXT);
+        }
         return $this->row;
       }
     }
   } 
 
-  // DEPRACATED
+  // DEPRECATED
   function next_record() {
     return $this->row();
   }
@@ -247,7 +230,7 @@ class db {
     $this->select_db($db);
     $query = prepare('SHOW TABLES LIKE "%s"',$table);
     $this->query($query);
-    while ($row = $this->row($this->query_id,MYSQL_NUM)) {
+    while ($row = $this->row($this->pdo_statement,PDO::FETCH_NUM)) {
       if ($row[0] == $table) $yep = true;
     }
     $this->select_db($prev_db);
@@ -264,13 +247,9 @@ class db {
     if (strstr($table,".")) {
       list($database,$table) = explode(".",$table);
     }
-
-    $list = mysql_list_fields($database, $table);
-    $cols = mysql_num_fields($list);
-    $i = 0;
-    while ($i < $cols) {
-      $fields[$table][] = mysql_field_name($list, $i);
-      $i++;
+    $this->query("SHOW COLUMNS FROM ".$table);
+    while ($row = $this->row()) {
+      $fields[$table][] = $row["Field"];
     }
     $fields[$table] or $fields[$table] = array();
     return $fields[$table];
@@ -308,16 +287,14 @@ class db {
       reset($keys);
       return current($keys);
 
-   } else {
+    } else {
       $q = sprintf("INSERT INTO %s (%s) VALUES (%s)"
                   , $table, $this->get_insert_str_fields($row), $this->get_insert_str_values($row));
       $debug &&  sizeof($row) and print ("<br>SAVE -> INSERT -> Would have executed this query: <br>".$q);
       $debug && !sizeof($row) and print ("<br>SAVE -> INSERT -> Would NOT have executed this query: <br>".$q);
       !$debug && sizeof($row) and $this->query($q);
-      if (mysql_affected_rows() != 0) { 
-        return mysql_insert_id(); // The primary key needs to be of type AUTO_INCREMENT for this to work.
-      }
-   }
+      return $this->get_insert_id();
+    }
   }
 
   function delete($table, $row=array(), $debug=0) {
@@ -326,8 +303,10 @@ class db {
                  , $table, $this->get_update_str($row, " AND "));
     $debug &&  sizeof($row) and print ("<br>DELETE -> WILL execute this query: <br>".$q);
     $debug && !sizeof($row) and print ("<br>DELETE -> WONT execute this query: <br>".$q);
-    sizeof($row) and $this->query($q);
-    return mysql_affected_rows();
+    if (sizeof($row)) {
+      $pdo_statement = $this->query($q);
+      return $pdo_statement->rowCount();
+    }
   }
 
   function get_insert_str_fields($row) {
@@ -372,30 +351,13 @@ class db {
   }
 
   function seek($pos = 0) {
-    $status = @mysql_data_seek($this->query_id, $pos);
-    if ($status) {
-      $this->pos = $pos;
-    } else {
-      /* half assed attempt to save the day, but do not consider this documented or even desireable behaviour. */
-      @mysql_data_seek($this->query_id, $this->num_rows());
-      $this->pos = $this->num_rows;
-      return 0;
-    }
-    return 1;
+    $this->pos = $pos;
   }
 
   function get_encoding() {
-    return mysql_client_encoding($this->link_id);
-  }
-
-  function get_db_version() {
-    $link_id = $this->link_id;
-    if (!$link_id) {
-      $link_id = @mysql_connect($this->hostname);
-    }
-    $a = @mysql_get_server_info($link_id);
-    $b = substr($a, 0, strpos($a, "-"));
-    return $b;
+    $this->query("SHOW VARIABLES LIKE 'character_set_client'");
+    $row = $this->row();
+    return $row["Value"];
   }
 
   function dump_db($filename) {

@@ -405,7 +405,8 @@ function move_attachment($entity, $id=false) {
   }
 }
 function db_esc($str = "") {
-  return db::esc($str);
+  $db =& singleton("db");
+  return $db->esc($str);
 }
 function parse_sql_file($file) {
   
@@ -915,8 +916,8 @@ function sprintf_implode() {
   $x = 0;
   while ($x < $length) {
     $rtn.= $comma.sprintf($str
-                         ,db::esc($f["arg1"][$x]),db::esc($f["arg2"][$x]),db::esc($f["arg3"][$x])
-                         ,db::esc($f["arg4"][$x]),db::esc($f["arg5"][$x]),db::esc($f["arg6"][$x]));
+                         ,db_esc($f["arg1"][$x]),db_esc($f["arg2"][$x]),db_esc($f["arg3"][$x])
+                         ,db_esc($f["arg4"][$x]),db_esc($f["arg5"][$x]),db_esc($f["arg6"][$x]));
     $comma = $glue;
     $x++;
   }
@@ -939,13 +940,13 @@ function prepare() {
 
     if (is_array($arg)) {
       foreach ((array)$arg as $v) {
-        $str.= $comma."'".db::esc($v)."'";
+        $str.= $comma."'".db_esc($v)."'";
         $comma = ",";
       }
       $clean_args[] = $str;
 
     } else {
-      $clean_args[] = db::esc($arg);
+      $clean_args[] = db_esc($arg);
     }
   }
 
