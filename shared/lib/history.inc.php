@@ -168,11 +168,8 @@ class history extends db_entity {
     $db->query($query);
     $row = $db->row();
     if ($row["total"] >= (3*$this->max_to_display)) {
-      // Can only use DELETE FROM .. ORDER BY syntax from mysql >= 4.0
-      if (version_compare($db->get_db_version(),"4.0",">=")) {
-        $query  = prepare("DELETE FROM history WHERE personID = %d ORDER BY the_time LIMIT %d",$current_user->get_id(),$this->max_to_display, (2*$this->max_to_display));
-        $db->query($query);
-      }
+      $query  = prepare("DELETE FROM history WHERE personID = %d ORDER BY the_time LIMIT %d",$current_user->get_id(),$this->max_to_display, (2*$this->max_to_display));
+      $db->query($query);
     }
 
     $ignored_files = $this->get_ignored_files();

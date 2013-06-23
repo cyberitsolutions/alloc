@@ -103,10 +103,11 @@ function perform_test($test) {
         $arr["remedy"] = "Your installation of PHP does not have the GD extension. It is recommended to install GD.";
       }
     break;
-    case "mysql_version":
-      $arr["value"] =  "Client: ".mysql_get_client_info();
-      if (!in_array("mysql",$extensions)) {
-        $arr["remedy"] = "Your installation of PHP does not have the MySQL extension. allocPSA requires the use of a MySQL database.";
+    case "php_pdo":
+      $arr["value"] = "Enabled";
+      if (!extension_loaded('pdo')) {
+        $arr["value"] = "";
+        $arr["remedy"] = "Your installation of PHP does not have the PDO database extension.";
       }
     break;
     case "mail_exists":
@@ -123,20 +124,6 @@ function perform_test($test) {
         $arr["remedy"].= "<br>mkdir ".$_FORM["ATTACHMENTS_DIR"];
         $arr["remedy"].= "<br>chmod a+w ".$_FORM["ATTACHMENTS_DIR"];
       }
-    break;
-
-    case "valid_currency":
-      $arr["value"] = $_FORM["currency"];
-      $link = @mysql_connect($_FORM["ALLOC_DB_HOST"],$_FORM["ALLOC_DB_USER"],$_FORM["ALLOC_DB_PASS"]);
-      $qid = @mysql_query("SELECT * FROM currencyType WHERE currencyTypeID = '".$_FORM["currency"]."'",$link);
-      if (is_resource($qid)) {
-        if ($row = mysql_fetch_array($qid)) {
-          $arr["value"].= " ".$row["currencyTypeName"];
-        } else {
-          $failed = 1;
-        }
-      }
-      $failed and $arr["remedy"] = "The currency code you entered is not valid.";
     break;
   }
 

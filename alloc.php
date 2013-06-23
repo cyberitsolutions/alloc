@@ -150,6 +150,9 @@ if (file_exists(ALLOC_MOD_DIR."alloc_config.php")) {
   require_once(ALLOC_MOD_DIR."alloc_config.php");
 }
 
+$db = new db_alloc();
+singleton("db",$db);
+
 // ATTACHMENTS_DIR is defined above in alloc_config.php
 define("ALLOC_LOGO", ATTACHMENTS_DIR."logos/logo.jpg");
 define("ALLOC_LOGO_SMALL", ATTACHMENTS_DIR."logos/logo_small.jpg");
@@ -170,12 +173,6 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
 
 // Else include the alloc_config.php file and begin with proceedings..
 } else {
-
-  // Need to just touch a db connection, so that calls to
-  // mysql_real_escape_string() et al, don't break because 
-  // no prior connection was initialized.
-  $db = new db_alloc();
-  $db->connect();
 
   // The timezone must be dealt with before anything else uses it or php will emit a warning
   $timezone = config::get_config_item("allocTimezone");

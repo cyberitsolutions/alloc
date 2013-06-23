@@ -58,9 +58,6 @@ function show_tab_2() {
   $tab = $_GET["tab"] or $tab = $_POST["tab"];
   return $tab == 2 || $_POST["submit_stage_1"];
 }
-function show_tab_2a() {
-  return $_POST["submit_stage_2"];
-}
 function show_tab_3() {
   $tab = $_GET["tab"] or $tab = $_POST["tab"];
   return $tab == 3;
@@ -70,10 +67,7 @@ function show_tab_3b() {
 }
 function show_tab_4() {
   $tab = $_GET["tab"] or $tab = $_POST["tab"];
-  return $tab == 4;
-}
-function show_tab_4b() {
-  return $_POST["submit_stage_4"];
+  return $tab == 4 && !$_POST["test_db"];
 }
 
 $server_user = getenv("APACHE_RUN_USER") or $server_user = "apache";
@@ -106,16 +100,6 @@ $TPL["config_vars"] = $config_vars;
 $TPL["_FORM"] = $_FORM;
 $TPL["get"] = "&".implode("&",$get);
 $TPL["hidden"] = implode("\n",$hidden);
-
-if ($_FORM["ALLOC_DB_USER"] && $_FORM["ALLOC_DB_NAME"]) {
-  $db = new db($_FORM["ALLOC_DB_USER"],$_FORM["ALLOC_DB_PASS"],$_FORM["ALLOC_DB_HOST"],$_FORM["ALLOC_DB_NAME"]);
-  $db->verbose = false;
-}
-
-if ($_POST["refresh_tab_1"]) {
-  alloc_redirect($TPL["url_alloc_installation"]."?1=1".$TPL["get"]);
-  exit;
-}
 
 
 if ($_POST["submit_stage_2"]) {
@@ -187,51 +171,67 @@ if ($_POST["submit_stage_2"]) {
 }
 
 
-if ($_POST["test_db"] && is_object($db)) {
-  // Test supplied credentials
-  $link = @$db->connect();
-  #@mysql_connect($_FORM["ALLOC_DB_HOST"],$_FORM["ALLOC_DB_USER"],$_FORM["ALLOC_DB_PASS"]);
-  if ($link) {
-    $text_tab_3b[] = "Connected to MySQL database server as user '".$_FORM["ALLOC_DB_USER"]."'.";
+if ($_POST["test_db"]) {
+  errors_off();
+  $db = new db($_FORM["ALLOC_DB_USER"],$_FORM["ALLOC_DB_PASS"],$_FORM["ALLOC_DB_HOST"],$_FORM["ALLOC_DB_NAME"]);
+  singleton("db",$db); // this makes db_esc() work as expected
 
+  // Test supplied credentials
+  if ($db->connect()) {
+    $text_tab_3b[] = "Connected to MySQL database server as user '".$_FORM["ALLOC_DB_USER"]."'.";
+  } else {
+    $text_tab_3b[] = "<b>Unable to connect to MySQL database server! (".$db->get_error().").</b>";
+    $failed = 1;
+  }
+
+  if (!$failed) {
     if ($db->select_db($_FORM["ALLOC_DB_NAME"])) {
-      #@mysql_select_db($_FORM["ALLOC_DB_NAME"], $link)
       $text_tab_3b[] = "Connected to database '".$_FORM["ALLOC_DB_NAME"]."'.";
     } else {
-      $text_tab_3b[] = "<b>Unable to select database '".$_FORM["ALLOC_DB_NAME"]."'. Ensure it was created. (".mysql_error().").</b>";
+      $text_tab_3b[] = "<b>Unable to select database '".$_FORM["ALLOC_DB_NAME"]."'. (".$db->get_error().").</b>";
       $failed = 1;
     }
+  }
 
+  if (!$failed) {
     $query = "CREATE TABLE IF NOT EXISTS test ( hey int );";
     if ($db->query($query)) {
       $text_tab_3b[] = "Created table 'test'.";
     } else {
-      $text_tab_3b[] = "<b>Unable to create table 'test'! (".mysql_error().").</b>";
+      $text_tab_3b[] = "<b>Unable to create table 'test'! (".$db->get_error().").</b>";
       $failed = 1;
     }
+  }
 
+  if (!$failed) {
     $query = "DROP TABLE test;";
     if ($db->query($query)) {
       $text_tab_3b[] = "Deleted table 'test'.";
     } else {
-      $text_tab_3b[] = "<b>Unable to delete table 'test'! (".mysql_error().").</b>";
+      $text_tab_3b[] = "<b>Unable to delete table 'test'! (".$db->get_error().").</b>";
       $failed = 1;
     }
+  }
 
-    $query = "SELECT * FROM config;";
-    if ($db->query($query)) {
-      $text_tab_3b[] = "Queried the config table.";
+  if (!$failed) {
+    $db->query("SHOW TABLES LIKE 'config'");
+    if ($db->row()) {
+      $text_tab_3b[] = "Config table exists.";
     } else {
-      $text_tab_3b[] = "<b>Unable to query config table! Have you imported db_structure.sql as directed above? (".mysql_error().").</b>";
+      $text_tab_3b[] = "<b>Unable to find config table! Have you imported db_structure.sql as directed above?.</b>";
       $failed = 1;
     }
+  }
 
-    $query = "SHOW TABLES;";
+  if (!$failed) {
+    $query = "SHOW TABLES";
     if ($db->query($query)) {
       $num_tables = $db->num_rows();
     }
-
-    $query = "SELECT * FROM config WHERE name='install_data';";
+  }
+  
+  if (!$failed) {
+    $query = "SELECT * FROM config WHERE name='install_data'";
     $db->query($query);
     if ($row = $db->row()) {
       $install_data = unserialize($row["value"]);
@@ -239,14 +239,18 @@ if ($_POST["test_db"] && is_object($db)) {
       $text_tab_3b[] = "<b>Can't get install_data from config table. Have you imported db_patches.sql as directed above?</b>";
       $failed = 1;
     }
-      
+  }
+    
+  if (!$failed) {
     if ($install_data["num_tables"] == $num_tables) {
       $text_tab_3b[] = "Checked db_structure.sql (".$num_tables." out of ".$install_data["num_tables"]." tables).";
     } else {
       $text_tab_3b[] = "<b>Not all tables imported (".$num_tables." out of ".$install_data["num_tables"]."). Try re-importing db_structure.sql.</b>";
       $failed = 1;
     }
+  }
 
+  if (!$failed) {
     $query = "SELECT * FROM announcement;";
     $db->query($query);
     if ($row = $db->row()) {
@@ -255,7 +259,9 @@ if ($_POST["test_db"] && is_object($db)) {
       $text_tab_3b[] = "<b>Missing the final INSERT from db_data.sql. Have you imported db_data.sql as directed above?</b>";
       $failed = 1;
     }
+  }
 
+  if (!$failed) {
     $query = "SELECT * FROM patchLog;";
     $db->query($query);
     if ($row = $db->row()) {
@@ -264,34 +270,35 @@ if ($_POST["test_db"] && is_object($db)) {
       $text_tab_3b[] = "<b>Missing the patchLog patches. Have you imported db_patches.sql as directed above?</b>";
       $failed = 1;
     }
+  }
 
-    // one way to test the constraints is by trying to break them, so we temporarily kill error reporting.
-    errors_off();
-    
+  if (!$failed) {
+    // one way to test the constraints is by trying to break them
     $query = "DELETE FROM tfPerson WHERE tfID = 321321 AND personID = 374921;";
-    @$db->query($query);
+    $db->query($query);
     $query = "INSERT INTO tfPerson (tfID,personID) VALUES (321321,374921);";
-    if (@$db->query($query)) {
+    if ($db->query($query)) {
       $text_tab_3b[] = "<b>Missing constraints. Have you imported db_constraints.sql as directed above?</b>";
       $failed = 1;
     } else {
       $text_tab_3b[] = "Checked db_constraints.sql.";
     }
     $query = "DELETE FROM tfPerson WHERE tfID = 321321 AND personID = 374921;";
-    @$db->query($query);
-    errors_on();
+    $db->query($query);
+  }
 
 
-    errors_off();
-    $query = "SELECT neq(0,1) as result";
-    if (@$db->query($query)) {
+  if (!$failed) {
+    $db->query("SHOW FUNCTION STATUS where Db = '%s' AND Name = 'neq'",$_FORM["ALLOC_DB_NAME"]);
+    if ($db->row()) {
       $text_tab_3b[] = "Checked db_triggers.sql.";
     } else {
-      $text_tab_3b[] = "<b>Can't use a UDF. Have you imported db_triggers.sql as the db admin user, as directed above?</b>";
+      $text_tab_3b[] = "<b>Can't use a UDF. Have you imported db_triggers.sql as the db admin/root user, as directed above?</b>";
       $failed = 1;
     }
-    errors_on();
+  }
 
+  if (!$failed) {
     $query = "SELECT password FROM person WHERE personID = 1;";
     $row = $db->qr($query);
     if ($row["password"]) {
@@ -300,11 +307,8 @@ if ($_POST["test_db"] && is_object($db)) {
       $text_tab_3b[] = "<b>No user password in person table. Have you imported db_config.sql as directed above?</b>";
       $failed = 1;
     }
-
-  } else {
-    $text_tab_3b[] = "Unable to connect to MySQL database server with supplied credentials! (".mysql_error().").";
-    $failed = 1;
   }
+
 
   if ($failed) {
     $TPL["img_test_db_result"] = IMG_CROSS;
@@ -334,8 +338,8 @@ if ($_FORM["ALLOC_DB_NAME"] && $_FORM["ALLOC_DB_USER"]) {
   $text_tab_3[] = "USE ".$_FORM["ALLOC_DB_NAME"].";";
   $text_tab_3[] = "";
   $text_tab_3[] = "SOURCE ".dirname(__FILE__).DIRECTORY_SEPARATOR."db_structure.sql;";
-  $text_tab_3[] = "SOURCE ".dirname(__FILE__).DIRECTORY_SEPARATOR."db_data.sql;";
   $text_tab_3[] = "SOURCE ".dirname(__FILE__).DIRECTORY_SEPARATOR."db_patches.sql;";
+  $text_tab_3[] = "SOURCE ".dirname(__FILE__).DIRECTORY_SEPARATOR."db_data.sql;";
   $text_tab_3[] = "SOURCE ".dirname(__FILE__).DIRECTORY_SEPARATOR."db_constraints.sql;";
   $text_tab_3[] = "SOURCE ".dirname(__FILE__).DIRECTORY_SEPARATOR."db_triggers.sql;";
   $text_tab_3[] = "";

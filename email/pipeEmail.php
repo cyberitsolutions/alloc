@@ -47,6 +47,7 @@ singleton("errors_logged",true);
 singleton("errors_thrown",true);
 unset($current_user);
 
+$db = new db_alloc();
 
 $info = inbox::get_mail_info();
 

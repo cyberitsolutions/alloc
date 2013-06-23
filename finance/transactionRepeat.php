@@ -93,7 +93,7 @@ if ($_POST["save"] || $_POST["delete"] || $_POST["pending"] || $_POST["approved"
 $TPL["reimbursementRequired_checked"] = $transactionRepeat->get_value("reimbursementRequired") ? " checked" : "";
 
 if ($transactionRepeat->get_value("transactionRepeatModifiedUser")) {
-  $db->query("select username from person where personID=".$transactionRepeat->get_value("transactionRepeatModifiedUser"));
+  $db->query("select username from person where personID=%d",$transactionRepeat->get_value("transactionRepeatModifiedUser"));
   $db->next_record();
   $TPL["user"] = $db->f("username");
 }
