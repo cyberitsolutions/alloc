@@ -242,6 +242,16 @@ if ($search && $needle && $category == "search_projects") {
     }
   }
  
+// Expense Form ID search
+} else if ($search && $needle && $category == "search_expenseForm") {
+
+  if (!$noRedirect && is_numeric($needle)) {
+    $query = prepare("SELECT expenseFormID FROM expenseForm WHERE expenseFormID = %d",$needle);
+    $db->query($query);
+    if ($db->next_record()) {
+      alloc_redirect($TPL["url_alloc_expenseForm"]."expenseFormID=".$db->f("expenseFormID"));
+    }
+  }
 
 // Time Sheet Search
 } else if ($search && $needle && $category == "search_time") {
