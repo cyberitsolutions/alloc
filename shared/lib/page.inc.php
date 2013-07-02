@@ -192,6 +192,7 @@ class page {
     has("comment") and $category_options["search_comment"] = "Search Comments";
     has("wiki")    and $category_options["search_wiki"] = "Search Wiki";
     has("item")    and $category_options["search_items"] = "Search Items";
+    has("finance") and $category_options["search_expenseForm"] = "Search Expense Forms";
     return page::select_options($category_options, $category);
   } 
   function help($topic, $hovertext=false) {
