@@ -367,7 +367,7 @@ class alloc(object):
       del(k)
 
       h = ''
-      if prependEmailHeader or 1:
+      if prependEmailHeader:
         d = datetime.datetime.strptime(r['dateCreated'], '%Y-%m-%d %H:%M:%S')
         h = "From allocPSA "+d.strftime("%a %b  %d %H:%M:%S %Y")
         h += "\nX-Alloc-Task: "+r['taskName']
