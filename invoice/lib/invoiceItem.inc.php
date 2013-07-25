@@ -215,15 +215,16 @@ class invoiceItem extends db_entity {
     $db = new db_alloc();
     $db->query("SELECT * FROM transaction WHERE expenseFormID = %d",$expenseFormID);
     while ($row = $db->row()) {
-      $amount = abs($row["amount"]);
+      $amount = page::money($row["currencyTypeID"],$row["amount"],"%mo");
       $ii = new invoiceItem();
+      $ii->currency = $row["currencyTypeID"];
       $ii->set_value("invoiceID",$invoiceID);
       $ii->set_value("expenseFormID",$expenseForm->get_id());
       $ii->set_value("transactionID",$row["transactionID"]);
       $ii->set_value("iiMemo","Expenses for ".person::get_fullname($expenseForm->get_value("expenseFormCreatedUser")).", ".$row["product"]);
       $ii->set_value("iiQuantity",$row["quantity"]);
-      $ii->set_value("iiUnitPrice",$amount);
-      $ii->set_value("iiAmount",$amount*$row["quantity"]);
+      $ii->set_value("iiUnitPrice",$amount/$row["quantity"]);
+      $ii->set_value("iiAmount",$amount);
       $ii->set_value("iiDate",$row["transactionDate"]);
       $ii->set_value("iiTax",config::get_config_item("taxPercent"));
       $ii->save();
