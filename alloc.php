@@ -158,7 +158,7 @@ define("ALLOC_LOGO_SMALL", ATTACHMENTS_DIR."logos/logo_small.jpg");
 if (defined("IN_INSTALL_RIGHT_NOW")) {
 
   // Re-direct home if an alloc_config.php already exists
-  if (file_exists(ALLOC_MOD_DIR."alloc_config.php") && is_readable(ALLOC_MOD_DIR."alloc_config.php") && filesize(ALLOC_MOD_DIR."alloc_config.php") >= 2 && defined("ALLOC_DB_NAME")) {
+  if (!defined("ALLOCPSA_PLATFORM") && file_exists(ALLOC_MOD_DIR."alloc_config.php") && is_readable(ALLOC_MOD_DIR."alloc_config.php") && filesize(ALLOC_MOD_DIR."alloc_config.php") >= 2 && defined("ALLOC_DB_NAME")) {
     alloc_redirect($TPL["url_alloc_login"]);
     exit();
   }
