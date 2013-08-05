@@ -371,6 +371,8 @@ VALUES
 ,('projectCommissionPerson'  ,-1 ,'manage'   ,NULL ,1+2+4+8    ,NULL)
 ,('projectCommissionPerson'  ,0  ,'admin'    ,NULL ,1+2+4+8    ,NULL)
 
+,('projectType'              ,0  ,'god'      ,NULL ,1+2+4+8    ,NULL)
+
 ,('reminder'                 ,0  ,''         ,NULL ,1+2+4+8    ,'Will have to change this later?')
 ,('reminderRecipient'        ,0  ,''         ,NULL ,1+2+4+8    ,NULL)
 
