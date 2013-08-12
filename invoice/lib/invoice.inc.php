@@ -415,6 +415,30 @@ class invoice extends db_entity {
       return $sql;
     }
 
+    if ($filter["personID"]) {
+      $q = "SELECT DISTINCT project.clientID
+              FROM projectPerson LEFT JOIN project ON projectPerson.projectID = project.projectID
+             WHERE ".sprintf_implode("projectPerson.personID = %d",$filter["personID"])."
+               AND project.clientID IS NOT NULL";
+      $db = new db_alloc();
+      $db->query($q);
+      while ($row = $db->row()) {
+        $valid_clientIDs[] = $row["clientID"];
+      }
+      $filter["clientID"] && !is_array($filter["clientID"]) and $filter["clientID"] = array($filter["clientID"]);
+      foreach ((array)$filter["clientID"] as $clientID) {
+        if (in_array($clientID,(array)$valid_clientIDs)) {
+          $approved_clientIDs[] = $clientID;
+        }
+      }
+      $approved_clientIDs or $approved_clientIDs = (array)$valid_clientIDs;
+      if ($approved_clientIDs) {
+        $filter["clientID"] = $approved_clientIDs;
+      } else {
+        $filter["clientID"] = array(0);
+      }
+    }
+
     $filter["invoiceNum"]    and $sql[] = sprintf_implode("invoice.invoiceNum = %d",$filter["invoiceNum"]);
     $filter["dateOne"]       and $sql[] = sprintf_implode("invoice.invoiceDateFrom>='%s'",$filter["dateOne"]);
     $filter["dateTwo"]       and $sql[] = sprintf_implode("invoice.invoiceDateTo<='%s'",$filter["dateTwo"]);
@@ -426,35 +450,21 @@ class invoice extends db_entity {
   }
 
   function get_list_filter2($filter=array()) {
-    $current_user = &singleton("current_user");
-    // restrict non-admin users records
-    if ($filter["personID"]) {
-      $tfIDs = $current_user->get_tfIDs();
-      if (is_array($tfIDs) && $tfIDs) {
-        $filter["tfIDs"] = $tfIDs;
-      } else {
-        $filter["tfIDs"] = array(0);
-      }
-      $sql[] = prepare("(tfPerson.tfID in (%s))",$filter["tfIDs"]);
-      $sql[] = prepare("(tfPerson.personID = %d)",$filter["personID"]);
-    }
-
-  
     // Filter for the HAVING clause
-    $sql2 = array();
+    $sql = array();
     if ($filter["invoiceStatusPayment"] == "pending") {
-      $sql2[] = "(COALESCE(amountPaidApproved,0) < iiAmountSum)";
+      $sql[] = "(COALESCE(amountPaidApproved,0) < iiAmountSum)";
     #if ($filter["invoiceStatusPayment"] == "partly_paid") {
-     # $sql2[] = "(amountPaidApproved < iiAmountSum)";
+     # $sql[] = "(amountPaidApproved < iiAmountSum)";
     } else if ($filter["invoiceStatusPayment"] == "rejected") {
-      $sql2[] = "(COALESCE(amountPaidRejected,0) > 0)";
+      $sql[] = "(COALESCE(amountPaidRejected,0) > 0)";
     } else if ($filter["invoiceStatusPayment"] == "fully_paid") {
-      $sql2[] = "(COALESCE(amountPaidApproved,0) = iiAmountSum)";
+      $sql[] = "(COALESCE(amountPaidApproved,0) = iiAmountSum)";
     } else if ($filter["invoiceStatusPayment"] == "over_paid") {
-      $sql2[] = "(COALESCE(amountPaidApproved,0) > iiAmountSum)";
+      $sql[] = "(COALESCE(amountPaidApproved,0) > iiAmountSum)";
     }
 
-    return array($sql,$sql2);
+    return $sql;
   }
 
   function get_list($_FORM) {
@@ -465,18 +475,16 @@ class invoice extends db_entity {
 
     global $TPL;
     $filter1_where = invoice::get_list_filter($_FORM);
-    list($filter2_where,$filter2_having) = invoice::get_list_filter2($_FORM);
+    $filter2_having = invoice::get_list_filter2($_FORM);
 
     $debug = $_FORM["debug"];
     $debug and print "<pre>_FORM: ".print_r($_FORM,1)."</pre>";
     $debug and print "<pre>filter1_where: ".print_r($filter1_where,1)."</pre>";
-    $debug and print "<pre>filter2_where: ".print_r($filter2_where,1)."</pre>";
     $debug and print "<pre>filter2_having: ".print_r($filter2_having,1)."</pre>";
 
     $_FORM["return"] or $_FORM["return"] = "html";
 
     is_array($filter1_where) && count($filter1_where) and $f1_where = " WHERE ".implode(" AND ",$filter1_where);
-    is_array($filter2_where) && count($filter2_where) and $f2_where = " WHERE ".implode(" AND ",$filter2_where);
     is_array($filter2_having) && count($filter2_having) and $f2_having = " HAVING ".implode(" AND ",$filter2_having);
  
     $q1= "CREATE TEMPORARY TABLE invoice_details
@@ -504,11 +512,10 @@ class invoice extends db_entity {
        LEFT JOIN transaction transaction_approved on invoiceItem.invoiceItemID = transaction_approved.invoiceItemID AND transaction_approved.status='approved'
        LEFT JOIN transaction transaction_pending on invoiceItem.invoiceItemID = transaction_pending.invoiceItemID AND transaction_pending.status='pending'
        LEFT JOIN transaction transaction_rejected on invoiceItem.invoiceItemID = transaction_rejected.invoiceItemID AND transaction_rejected.status='rejected'
-       LEFT JOIN tfPerson ON tfPerson.tfID = transaction_approved.tfID OR tfPerson.tfID = transaction_pending.tfID OR tfPerson.tfID = transaction_rejected.tfID
-              $f2_where
         GROUP BY invoice_details.invoiceID
               $f2_having
         ORDER BY invoiceDateFrom";
+       // Don't do this! It doubles the totals!
        //LEFT JOIN tfPerson ON tfPerson.tfID = transaction_approved.tfID OR tfPerson.tfID = transaction_pending.tfID OR tfPerson.tfID = transaction_rejected.tfID
 
     $debug and print "<pre>Query1: ".$q1."</pre>";

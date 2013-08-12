@@ -24,7 +24,7 @@
           <td><select name="invoiceStatusPayment"><option value="">All</option>{$statusPaymentOptions}</select></td>
         </tr>
         <tr>
-          <td colspan="4">Note: Only user accounts with Financial Administrator privileges can see the full totals of invoices.
+          <td colspan="4">
           <br>{$status_legend}
           <button type="submit" name="applyFilter" value="1" class="filter_button" style="margin-left:5px; margin-top:5px;">Filter<i class="icon-cogs"></i></button>
           </td>
