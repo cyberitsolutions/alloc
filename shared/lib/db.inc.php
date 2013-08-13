@@ -57,6 +57,7 @@ class db {
   } 
 
   function start_transaction() {
+    $this->connect();
     $this->pdo->beginTransaction();
     self::$started_transaction = true;
   }
