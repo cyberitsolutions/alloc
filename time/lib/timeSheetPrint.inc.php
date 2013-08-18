@@ -384,7 +384,7 @@ class timeSheetPrint {
         $pdf->ezSetY(782);
         $image_jpg = ALLOC_LOGO;
         if (file_exists($image_jpg)) {
-          $pdf->ezImage($image_jpg,0,0,'none');
+          $pdf->ezImage($image_jpg,0,sprintf("%d",config::get_config_item("logoScaleX")),'none');
           $y = 700;
         } else {
           $y = $pdf->ezText($TPL["companyName"],27, array("justification"=>"right"));
