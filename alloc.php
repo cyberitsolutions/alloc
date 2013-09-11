@@ -222,4 +222,12 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
     $TPL["current_user"] = &$current_user;
   }
 }
+
+// This is a hook for the SaaS side of alloc, to allow per-site code customizations
+if (!function_exists("ace_augment")) {
+  function ace_augment($name,$default=null) {
+    return $default;
+  }
+}
+
 ?>
