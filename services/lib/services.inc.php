@@ -162,12 +162,25 @@ class services {
       // usernames, partial and full names
       } else {
 
-        // Note the third check against partial: firstname." ".surname. Because $data["name"] will default back to username
         foreach ($person_table as $pid => $data) {
-          if ((strtolower($person) == strtolower($data["username"])
-            || strtolower($person) == strtolower($data["name"])
-            || strtolower($person) == strtolower(substr(strtolower($data["firstName"]." ".$data["surname"]),0,strlen($person)))
-          ) && $data["personActive"]) {
+          // If matches username
+          if (strtolower($person) == strtolower($data["username"]) && $data["personActive"]) {
+            $rtn[$data["emailAddress"]] = $data;
+            $bad_person = false;
+            continue 2;
+          }
+        }
+        foreach ($person_table as $pid => $data) {
+          // If matches name
+          if (strtolower($person) == strtolower($data["firstName"]." ".$data["surname"]) && $data["personActive"]) {
+            $rtn[$data["emailAddress"]] = $data;
+            $bad_person = false;
+            continue 2;
+          }
+        }
+        foreach ($person_table as $pid => $data) {
+          // If matches a section of name, eg: a search for "Ale" will match the full name "Alex Lance"
+          if (strtolower($person) == strtolower(substr(strtolower($data["firstName"]." ".$data["surname"]),0,strlen($person))) && $data["personActive"]) {
             $rtn[$data["emailAddress"]] = $data;
             $bad_person = false;
             continue 2;
