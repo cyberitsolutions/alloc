@@ -293,6 +293,7 @@ require_once("../alloc.php");
     #$options["showTimes"] = true; // performance hit
     $options["return"] = "html";
     // $TPL["taskListRows"] is used for the budget estimatation outside of this function
+    $options = ace_augment("project_page_task_list_options",$options);
     $TPL["taskListRows"] = task::get_list($options); 
     $TPL["_FORM"] = $options;
     include_template("templates/projectTaskS.tpl"); 
