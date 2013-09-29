@@ -16,9 +16,7 @@ $(document).ready(function() {
   $('input[name=client_status]').bind("click", clickClientStatus);
 
   // This listens to the client dropdown and refreshes the client contact
-  // dropdown, we have to use livequery() like this instead of bind() because the
-  // client dropdown needs to maintain its onChange event once it is refreshed
-  $('select[name=clientID]').livequery("change", function(e) {
+  $(document).on("change", 'select[name=clientID]', function(e) {
     url = '{$url_alloc_updateProjectClientContactList}clientID='+this.value;
     makeAjaxRequest(url,'clientContactDropdown');
   });
