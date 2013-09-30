@@ -704,9 +704,9 @@ class alloc(object):
         for i in rtn:
           r.append(i)
 
-      # else if they don't want all the records, then return an impossible personID
+      # else if they don't want all the records, then error out
       elif n and n != '%' and n != '*' and n.lower() != 'all':
-        r.append('1000000000000000000') # returning just zero doesn't work
+        self.die("Unrecognized username: "+str(n))
 
     return r
 
