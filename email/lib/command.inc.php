@@ -236,11 +236,13 @@ class command {
         if ($k == "assign") {
           $changes[$k] = "personID";
           $v = $people_by_username[$v]["personID"];
+          $v or alloc_error("Unrecognized username.");
         }
         
         if ($k == "manage") {
           $changes[$k] = "managerID";
           $v = $people_by_username[$v]["personID"];
+          $v or alloc_error("Unrecognized username.");
         }
 
         // transform from priority label to priority ID
