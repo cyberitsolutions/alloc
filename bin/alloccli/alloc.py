@@ -10,6 +10,7 @@ import ConfigParser
 import subprocess
 from netrc import netrc
 from urlparse import urlparse
+from collections import defaultdict
 from alloc_output_handler import alloc_output_handler
 from alloc_cli_arg_handler import alloc_cli_arg_handler
 
@@ -355,6 +356,13 @@ class alloc(object):
       elif len(clients) == 1:
         return clients.keys()[0]
 
+  def sloppydict(self, row):
+    """Coerce a dict with perhaps missing keys or a value of None to an empty string."""
+    r = defaultdict(str)
+    for a, b in row.items():
+      r[a] = str(b or '')
+    return r
+
   def print_task(self, taskID, prependEmailHeader=False):
     """Return a plaintext view of a task and its details."""
     rtn = self.get_list('task', {'taskID':taskID, 'taskView':'prioritised', 'showTimes':True})
@@ -365,6 +373,7 @@ class alloc(object):
     final_str = ''
     for k, r in rtn.items():
       del(k)
+      r = self.sloppydict(r)
 
       h = ''
       if prependEmailHeader:
