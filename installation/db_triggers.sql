@@ -17,6 +17,7 @@ INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Time sheet's rate is not e
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task is not editable.\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task is not editable: user not a project member.\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Invalid date.\n\n")$$
+INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Invalid time duration.\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task is not deletable.\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task has pending tasks.\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Must use: call change_task_status(taskID,status)\n\n")$$
@@ -315,6 +316,10 @@ BEGIN
     call alloc_error("Invalid date.");
   END IF;
 
+  IF (NEW.timeSheetItemDuration IS NULL OR NEW.timeSheetItemDuration < 0) THEN
+    call alloc_error("Invalid time duration.");
+  END IF;
+
   SET NEW.personID = personID();
   SELECT projectID INTO pID FROM timeSheet WHERE timeSheet.timeSheetID = NEW.timeSheetID;
   SELECT rate,rateUnitID INTO r,rUnitID FROM projectPerson WHERE projectID = pID AND personID = personID() LIMIT 1;
@@ -370,6 +375,10 @@ BEGIN
   SELECT DATE(NEW.dateTimeSheetItem) INTO validDate;
   IF (validDate = '0000-00-00') THEN
     call alloc_error("Invalid date.");
+  END IF;
+
+  IF (NEW.timeSheetItemDuration IS NULL OR NEW.timeSheetItemDuration < 0) THEN
+    call alloc_error("Invalid time duration.");
   END IF;
 
   SET NEW.timeSheetItemID = OLD.timeSheetItemID;
