@@ -395,7 +395,7 @@ class comment extends db_entity {
       $cc->select();
       #$author = " <a href=\"".$TPL["url_alloc_client"]."clientID=".$cc->get_value("clientID")."\">".$cc->get_value("clientContactName")."</a>";
       $author = $cc->get_value("clientContactName");
-    } else {
+    } else if ($comment["personID"]) {
       $author = person::get_fullname($comment["personID"]);
     }
     return $author;
