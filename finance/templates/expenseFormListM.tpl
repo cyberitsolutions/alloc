@@ -9,7 +9,7 @@
     <td>
       <table class="list sortable">
         <tr>
-          <th width="5%" class="sorttable_numeric">ID</th>
+          <th width="5%" data-sort="num">ID</th>
           <th>Created Date</th>
           <th>Created By</th>
           <th>Payment Method</th>
@@ -37,7 +37,7 @@
     <td>
       <table class="list sortable">
         <tr>
-          <th width="5%" class="sorttable_numeric">ID</th>
+          <th width="5%" data-sort="num">ID</th>
           <th>Created Date</th>
           <th>Created By</th>
           <th>Transaction Type</th>

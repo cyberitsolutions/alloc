@@ -500,20 +500,24 @@ EOD;
     $current_user = &singleton("current_user");
     global $TPL;
     if ($current_user->prefs["stars"][$entity][$entityID]) {
-      $star_sort = 1;
       $star_hot = " hot";
       $star_icon = "icon-star";
       $star_text = "<b style='display:none'>*</b>";
     } else {
-      $star_sort = 2;
       $star_hot = "";
       $star_icon = "icon-star-empty";
       $star_text = "<b style='display:none'>.</b>";
     }
-    return '<input type="hidden" value="'.$star_sort.'">'
-          .'<a sorttable_customkey="'.$star_sort.'" class="star'.$star_hot.'" href="'.$TPL["url_alloc_star"]
+    return '<a class="star'.$star_hot.'" href="'.$TPL["url_alloc_star"]
           .'entity='.$entity.'&entityID='.$entityID.'"><b class="'.$star_icon.'">'.$star_text.'</b></a>';
   }
+  function star_sorter($entity,$entityID) {
+    $current_user = &singleton("current_user");
+    if ($current_user->prefs["stars"][$entity][$entityID]) {
+      return 1;
+    } else {
+      return 2;
+    }
+  }
 }
-
 ?>

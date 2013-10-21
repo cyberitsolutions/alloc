@@ -1,6 +1,6 @@
 <table class="list sortable">
   <tr>
-    <th width="5%" class="sorttable_numeric">ID</th>
+    <th width="5%" data-sort="num">ID</th>
     <th>Created By</th>
     <th class="right">Form Total</th>
   </tr>

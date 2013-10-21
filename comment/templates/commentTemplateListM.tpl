@@ -12,7 +12,7 @@
     <td>
       <table class="list sortable">
         <tr>
-          <th width="1%" class="sorttable_numeric">ID</th>
+          <th width="1%" data-sort="num">ID</th>
           <th>Template</th>
           <th>Type</th>
         </tr>
