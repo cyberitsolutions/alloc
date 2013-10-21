@@ -19,7 +19,7 @@
         <th width="1%">Dest TF</th>
         <th width="1%">Amount{$amount_msg}</th>
         <th width="1%">Type</th> 
-        <th width="1%" class="sorttable_nosort nobr" style="font-size:80%">{$p_a_r_buttons}</th>
+        <th width="1%" data-sort="none" class="nobr" style="font-size:80%">{$p_a_r_buttons}</th>
         <th width="1%">&nbsp;</th>
       </tr>
       {show_transaction_listR("templates/timeSheetTransactionListR.tpl")}

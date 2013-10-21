@@ -897,6 +897,7 @@ class task extends db_entity {
 
     $_FORM["people_cache"] =& get_cached_table("person");
     $_FORM["timeUnit_cache"] =& get_cached_table("timeUnit");
+    $_FORM["taskType_cache"] =& get_cached_table("taskType");
 
     if ($_FORM["taskView"] == "prioritised") {
       unset($filter["parentTaskID"]);
@@ -947,6 +948,7 @@ class task extends db_entity {
       has("project") and $row["projectPriorityLabel"] = project::get_priority_label($db->f("projectPriority"));
       has("project") and list($row["priorityFactor"],$row["daysUntilDue"]) = $task->get_overall_priority($row["projectPriority"],$row["priority"],$row["dateTargetCompletion"]);
       $row["taskTypeImage"] = $task->get_task_image();
+      $row["taskTypeSeq"] = $_FORM["taskType_cache"][$row["taskTypeID"]]["taskTypeSeq"];
       $row["taskStatusLabel"] = $task->get_task_status("label");
       $row["taskStatusColour"] = $task->get_task_status("colour");
       $row["creator_name"] = $_FORM["people_cache"][$row["creatorID"]]["name"];

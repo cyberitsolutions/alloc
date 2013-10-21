@@ -5,17 +5,17 @@
 <table class="list sortable">
   <tr>
   {if $_FORM["showEdit"]}
-    <th width="1%" class="sorttable_nosort noprint"> <!-- checkbox toggler -->
+    <th width="1%" data-sort="none" class="noprint"> <!-- checkbox toggler -->
       <input type="checkbox" class="toggler">
     </th>
   {/}
-    <th width="1%"></th> <!-- taskTypeImage -->
-  {if $_FORM["showTaskID"]}<th class="sorttable_numeric" width="1%">ID</th>{/}
+    <th width="1%" data-sort="num">&nbsp;</th> <!-- taskTypeImage -->
+  {if $_FORM["showTaskID"]}<th data-sort="num" width="1%">ID</th>{/}
     <th>Task</th>
   {if $_FORM["showProject"]}<th>Project</th>{/}
-  {if $_FORM["showPriority"]}<th class="sorttable_numeric">Priority</th>{/}
-  {if $_FORM["showPriority"]}<th>Task Pri</th>{/}
-  {if $_FORM["showPriority"]}<th>Proj Pri</th>{/}
+  {if $_FORM["showPriority"]}<th data-sort="num">Priority</th>{/}
+  {if $_FORM["showPriority"]}<th data-sort="num">Task Pri</th>{/}
+  {if $_FORM["showPriority"]}<th data-sort="num">Proj Pri</th>{/}
   {if $_FORM["showCreator"]}<th>Task Creator</th>{/}
   {if $_FORM["showManager"]}<th>Task Manager</th>{/}
   {if $_FORM["showAssigned"]}<th>Assigned To</th>{/}
@@ -31,7 +31,7 @@
   {if $_FORM["showTimes"]}<th>Limit</th>{/}
   {if $_FORM["showPercent"]}<th>%</th>{/}
   {if $_FORM["showStatus"]}<th>Status</th>{/}
-  {if $_FORM["showEdit"] || $_FORM["showStarred"]}<th width="1%" style="font-size:120%"><i class="icon-star"></i></th>{/}
+  {if $_FORM["showEdit"] || $_FORM["showStarred"]}<th data-sort="num" width="1%" style="font-size:120%"><i class="icon-star"></i></th>{/}
   </tr>
   
   <!-- Rows -->
@@ -39,7 +39,7 @@
   {foreach $taskListRows as $r}
   <tr class="clickrow" id="clickrow_{$r.taskID}">
   {if $_FORM["showEdit"]}      <td class="nobr noprint"><input type="checkbox" id="checkbox_{$r.taskID}" name="select[{$r.taskID}]" class="task_checkboxes"></td>{/}
-                               <td sorttable_customkey="{$r.taskTypeID}">{$r.taskTypeImage}</td>
+                               <td data-sort-value="{$r.taskTypeSeq}">{$r.taskTypeImage}</td>
   {if $_FORM["showTaskID"]}    <td>{$r.taskID}</td>{/}
                                <td style="padding-left:{echo $r["padding"]*25+6}px">{$r.taskLink}&nbsp;&nbsp;{$r.newSubTask}
   {if $_FORM["showDescription"]}<br>{=$r.taskDescription}{/}
@@ -47,8 +47,8 @@
                                </td>
   {if $_FORM["showProject"]}   <td><a href="{$url_alloc_project}projectID={$r.projectID}">{=$r.project_name}</a></td>{/}
   {if $_FORM["showPriority"]}  <td>{$r.priorityFactor}</td>{/}
-  {if $_FORM["showPriority"]}  <td style="color:{echo $taskPriorities[$r["priority"]]["colour"]}">{echo $taskPriorities[$r["priority"]]["label"]}</td>{/}
-  {if $_FORM["showPriority"]}  <td style="color:{echo $projectPriorities[$r["projectPriority"]]["colour"]}">{echo $projectPriorities[$r["projectPriority"]]["label"]}</td>{/}
+  {if $_FORM["showPriority"]}  <td data-sort-value='{$r.priority}' style="color:{echo $taskPriorities[$r["priority"]]["colour"]}">{echo $taskPriorities[$r["priority"]]["label"]}</td>{/}
+  {if $_FORM["showPriority"]}  <td data-sort-value='{$r.projectPriority}' style="color:{echo $projectPriorities[$r["projectPriority"]]["colour"]}">{echo $projectPriorities[$r["projectPriority"]]["label"]}</td>{/}
   {if $_FORM["showCreator"]}   <td>{=$r.creator_name}</td>{/}
   {if $_FORM["showManager"]}   <td>{=$r.manager_name}</td>{/}
   {if $_FORM["showAssigned"]}  <td>{=$r.assignee_name}</td>{/}
@@ -76,7 +76,7 @@
                                  </span>
                                </td>{/}
   {if $_FORM["showEdit"] || $_FORM["showStarred"]}
-    <td width="1%">
+    <td width="1%" data-sort-value="{page::star_sorter("task",$r["taskID"])}">
       {page::star("task",$r["taskID"])}
     </td>
   {/}

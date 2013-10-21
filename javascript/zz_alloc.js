@@ -188,14 +188,6 @@ function refresh_calendars() {
 
 // Preload mouseover images
 if (document.images) {
-  pic1= new Image(9,11);
-  pic1.src="../images/arrow_blank.gif";
-  pic2= new Image(9,11);
-  pic2.src="../images/arrow_faded.gif";
-  pic3= new Image(9,11);
-  pic3.src="../images/arrow_down.gif";
-  pic4= new Image(9,11);
-  pic4.src="../images/arrow_up.gif";
   pic5= new Image(119,13);
   pic5.src="../images/ticker2.gif";
   pic6= new Image(16,16);
@@ -214,6 +206,21 @@ $(document).ready(function() {
       $("#password").focus();
     }
   }
+
+  // Enable the dynamic table sorting
+  $("table.sortable").each(function() {
+    var t = $(this).stupidtable();
+    var arr = $("<i class='arrow icon-circle-arrow-up' style='font-size:95%'></i>").css("visibility","hidden");
+    $('thead > tr > th',this).not(function(){ return $(this).data("sort") == "none"; }).append(arr);
+
+    t.bind('aftertablesort', function (event, data) {
+      var th = $(this).find("th");
+      th.find(".arrow").css("visibility","hidden");
+      th.eq(data.column).find(".arrow").removeClass("icon-circle-arrow-down icon-circle-arrow-up").addClass(data.direction === "asc" ? "icon-circle-arrow-up" : "icon-circle-arrow-down").css("visibility","visible");
+      $("tr:nth-child(even)",this).removeClass("even odd").addClass("even");
+      $("tr:nth-child(odd)",this).removeClass("even odd").addClass("odd");
+    });
+  });
 
   // Give the tables alternating stripes
   $(".list tr:nth-child(even)").addClass("even");
@@ -326,9 +333,11 @@ $(document).ready(function() {
     if ($("b",$(this)).hasClass('icon-star-empty')) {
       $("b",$(this)).removeClass('icon-star-empty').addClass('icon-star');
       $(this).addClass("hot");
+      $(this).parent().attr({"data-sort-value":"1"});
     } else {
       $("b",$(this)).removeClass('icon-star hot').addClass('icon-star-empty');
       $(this).removeClass("hot");
+      $(this).parent().attr({"data-sort-value":"2"});
     }
     $.get($(this).attr("href"));   
     return false;

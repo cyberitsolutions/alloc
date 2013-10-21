@@ -2,7 +2,7 @@
 <table class="list sortable">
   <tr>
     <th></th>
-    <th class="sorttable_numeric">ID</th>
+    <th data-sort="num">ID</th>
     <th>Project</th>
     <th>Owner</th>
     <th>Start Date</th>

@@ -1,7 +1,7 @@
 {if $productSaleListRows}
 <table class="list sortable">
 <tr>
-  <th class="sorttable_numeric">ID</th>
+  <th data-sort="num">ID</th>
   <th>Creator</th>
   <th>Salesperson</th>
   <th>Date</th>
