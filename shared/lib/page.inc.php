@@ -139,45 +139,40 @@ class page {
   function messages() {
     global $TPL;
 
-    $msgtypes["message"]      = "bad";
-    $msgtypes["message_good"] = "good";
-    $msgtypes["message_help"] = "help";
-    $msgtypes["message_help_no_esc"] = "help";
-
-    foreach ($msgtypes as $type => $label) {
-      if ($TPL[$type] && is_string($TPL[$type])) {
-        $t = $TPL[$type];
-        unset($TPL[$type]);
-        $TPL[$type][] = $t;
-      }
-      $_GET[$type] && $type != "message_help_no_esc" and $TPL[$type][] = $_GET[$type];
-
-      if (is_array($TPL[$type]) && count($TPL[$type])) {
-        $arr[$label] = array("type"=>$type, "msg"=>implode("<br>",$TPL[$type]));
-      }
-    }
-
-    $search  = array("&lt;br&gt;","&lt;br /&gt;","&lt;b&gt;","&lt;/b&gt;","&lt;u&gt;","&lt;/u&gt;",'\\');
-    $replace = array("<br>"      ,"<br />"      ,"<b>"      ,"</b>"      ,"<u>"      ,"</u>"      ,'');
-
     $class_to_icon["good"] = "icon-ok-sign";
     $class_to_icon["bad"] = "icon-exclamation-sign";
     $class_to_icon["help"] = "icon-info-sign";
 
-    if (is_array($arr) && count($arr)) {
+    $search  = array("&lt;br&gt;","&lt;br /&gt;","&lt;b&gt;","&lt;/b&gt;","&lt;u&gt;","&lt;/u&gt;",'\\');
+    $replace = array("<br>"      ,"<br />"      ,"<b>"      ,"</b>"      ,"<u>"      ,"</u>"      ,'');
+
+    $types = array("message"             => "bad"
+                  ,"message_good"        => "good"
+                  ,"message_help"        => "help"
+                  ,"message_good_no_esc" => "good"
+                  ,"message_help_no_esc" => "help"
+                  );
+
+    foreach ($types as $type => $class) {
+      $str = "";
+      $TPL[$type]  and $str = is_array($TPL[$type])  ? implode("<br>",$TPL[$type])  : $TPL[$type];
+      $_GET[$type] and $str = is_array($_GET[$type]) ? implode("<br>",$_GET[$type]) : $_GET[$type];
+      if (in_str("no_esc",$type)) {
+        $str and $msg[$type] = $str;
+      } else {
+        $str and $msg[$type] = str_replace($search,$replace,page::htmlentities($str));
+      }
+    }
+
+    if (is_array($msg) && count($msg)) {
       $str = "<div style=\"text-align:center;\"><div class=\"message corner\" style=\"width:60%;\">";
       $str.= "<table cellspacing=\"0\">";
-      foreach ($arr as $class => $arr) {
-        $info = $arr["msg"];
-        $type = $arr["type"];
-
-        $type != "message_help_no_esc" and $info = page::htmlentities($info);
-        $type != "message_help_no_esc" and $info = str_replace($search,$replace,$info);
-
+      foreach ($msg as $type => $info) {
+        $class = $types[$type];
         $str.= "<tr>";
         $str.= "<td class='".$class."' width='1%' style='vertical-align:top;padding:6px;font-size:150%;'>";
         $str.= "<i class='".$class_to_icon[$class]."'></i><td/>";
-        $str.= "<td class='".$class."' width='99%' style='vertical-align:top;padding-top:10px;text-align:left;font-weight:bold;'>".$info."</td></tr>";
+        $str.= "<td class='".$class."' width='99%' style='vertical-align:top;padding-top:11px;text-align:left;font-weight:bold;'>".$info."</td></tr>";
       }
       $str.= "</table>";
       $str.= "</div></div>";

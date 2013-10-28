@@ -544,7 +544,7 @@ function alloc_redirect($url) {
   $sep = "&";
   strpos($url,"?") === false and $sep = "?";
 
-  foreach (array("message","message_good","message_help") as $type) {
+  foreach (array("message","message_good","message_help","message_help_no_esc","message_good_no_esc") as $type) {
     if ($TPL[$type]) {
       is_array($TPL[$type]) and $TPL[$type] = implode("<br>",$TPL[$type]);
       is_string($TPL[$type]) && strlen($TPL[$type]) and $str[] = $type."=".urlencode($TPL[$type]);
