@@ -176,10 +176,11 @@ class inbox extends db_entity {
       }
       rmdir_if_empty(ATTACHMENTS_DIR.DIRECTORY_SEPARATOR."task".DIRECTORY_SEPARATOR.$task->get_id());
 
-      $TPL["message_good"][] = "Created task ".$task->get_id()." and moved the email to the task's mail folder.";
+      $msg = "Created task ".$task->get_task_link(array("prefixTaskID"=>true))." and moved the email to the task's mail folder.";
       $mailbox = "INBOX/task".$task->get_id();
-      $email_receive->create_mailbox($mailbox) and $TPL["message_good"][] = "Created mailbox: ".$mailbox;
-      $email_receive->archive($mailbox) and $TPL["message_good"][] = "Moved email to ".$mailbox;
+      $email_receive->create_mailbox($mailbox) and $msg.= "\nCreated mailbox: ".$mailbox;
+      $email_receive->archive($mailbox) and $msg.= "\nMoved email to ".$mailbox;
+      $msg and $TPL["message_good_no_esc"][] = $msg;
 
       list($from_address,$from_name) = parse_email_address($email_receive->mail_headers["from"]);
       $ip["emailAddress"] = $from_address;
@@ -213,7 +214,7 @@ class inbox extends db_entity {
 
       $c = comment::add_comment_from_email($email_receive,$task);
       $commentID = $c->get_id();
-      $commentID and $TPL["message_good"][] = "Created comment ".$commentID." on task ".$task->get_id()." ".$task->get_name();
+      $commentID and $TPL["message_good_no_esc"][] = "Created comment ".$commentID." on task ".$task->get_task_link(array("prefixTaskID"=>true));
 
       // Possibly change the identity of current_user
       list($from_address,$from_name) = parse_email_address($email_receive->mail_headers["from"]);
