@@ -384,9 +384,10 @@ class invoiceItem extends db_entity {
                        AND fromTfID = %d
                        AND tfID = %d
                        AND amount = %d
+                       AND (invoiceItemID = %d or invoiceItemID IS NULL)
                   ORDER BY transactionCreatedTime DESC LIMIT 1
                          ",$this->get_value("timeSheetID"),config::get_config_item("inTfID")
-                          ,$tfID,page::money($this->currency,$amount,"%mi"));
+                          ,$tfID,page::money($this->currency,$amount,"%mi"),$this->get_id());
       $db->query($q);
       if ($db->row()) {
         $transaction->set_id($db->f("transactionID"));
