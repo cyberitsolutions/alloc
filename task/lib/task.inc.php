@@ -205,7 +205,7 @@ class task extends db_entity {
         //$maxUsed = 1; nope, so people can have recurring reminders
         $name = "Task reopened: ".$this->get_name(array("prefixTaskID"=>true));
         $desc = "This reminder will have automatically reopened this task, if it was pending:\n\n".$this->get_name(array("prefixTaskID"=>true));
-        $recipients = array();
+        $recipients = array(array("field"=>"metaPersonID","who"=>-2),array("field"=>"metaPersonID","who"=>-3));
         if (strlen($date) <= "10") {
           $date.= " 08:30:00";
         }
