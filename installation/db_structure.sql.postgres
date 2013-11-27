@@ -160,6 +160,15 @@ CREATE TABLE invoiceItem (
   iiDate date DEFAULT NULL
 ) ;
 
+CREATE TABLE invoiceEntity (
+  invoiceEntityID serial PRIMARY KEY,
+  invoiceID integer NOT NULL,
+  timeSheetID integer DEFAULT NULL,
+  expenseFormID integer DEFAULT NULL,
+  productSaleID integer DEFAULT NULL,
+  useItems BOOLEAN DEFAULT false
+) ;
+
 CREATE TABLE invoiceRepeat (
   invoiceRepeatID serial PRIMARY KEY,
   invoiceID integer NOT NULL,
