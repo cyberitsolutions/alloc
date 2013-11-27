@@ -54,6 +54,9 @@ class invoice extends db_entity {
         $currencyTypeID = config::get_config_item("currency");
       }
 
+      if (!imp($this->get_value("maxAmount"))) {
+        $this->set_value("maxAmount",'');
+      }
       if ($currencyTypeID) {
         $this->set_value("currencyTypeID", $currencyTypeID);
       } else {
@@ -61,6 +64,13 @@ class invoice extends db_entity {
       } 
     }
     return parent::save();
+  }
+
+  function delete() {
+    $db = new db_alloc();
+    $q = prepare("DELETE FROM invoiceEntity WHERE invoiceID = %d",$this->get_id());
+    $db->query($q);
+    return parent::delete();
   }
 
   function get_invoice_statii() {
@@ -761,8 +771,7 @@ class invoice extends db_entity {
       // Add this time sheet to the invoice if the timeSheet hasn't already
       // been added to this invoice
       if (!$db->row()) {
-        $invoiceItem = new invoiceItem();
-        $invoiceItem->add_timeSheet($this->get_id(),$timeSheetID);
+        invoiceEntity::save_invoice_timeSheet($this->get_id(),$timeSheetID);
       }
     }  
   }

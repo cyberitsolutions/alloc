@@ -322,6 +322,8 @@ VALUES
 ,('invoiceItem'              ,-1 ,'employee' ,NULL ,1+2+4+8    ,NULL)
 ,('invoiceItem'              ,0  ,'admin'    ,NULL ,1+2+4+8+256,NULL)
 
+,('invoiceEntity'            ,0  ,''         ,NULL ,1+2+4+8    ,'Anyone can create a relationship for invoiceEntity.')
+
 ,('invoiceRepeat'            ,0  ,'admin'    ,NULL ,1+2+4+8    ,"Admin controls repeating invoices.")
 ,('invoiceRepeatDate'        ,0  ,'admin'    ,NULL ,1+2+4+8    ,"Admin controls repeating invoices.")
 

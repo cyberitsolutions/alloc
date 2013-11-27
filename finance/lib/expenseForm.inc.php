@@ -157,11 +157,10 @@ class expenseForm extends db_entity {
       }
 
       // Add invoiceItem and add expense form transactions to invoiceItem
-      $invoiceItem = new invoiceItem();
       if ($_POST["split_invoice"]) {
-        $invoiceItem->add_expenseFormItems($invoiceID,$this->get_id());
+        invoiceEntity::save_invoice_expenseFormItems($invoiceID,$this->get_id());
       } else {
-        $invoiceItem->add_expenseForm($invoiceID,$this->get_id());
+        invoiceEntity::save_invoice_expenseForm($invoiceID,$this->get_id());
       }
     }
   }

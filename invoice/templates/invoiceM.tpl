@@ -129,12 +129,14 @@ $(document).ready(function() {
   <tr>
     <td align="right">Invoice Number: </td>
     <td>{$field_invoiceNum}</td>
-    <td align="right">Period: </td>
-    <td>{$field_invoiceDateFrom}&nbsp;&nbsp;{$field_invoiceDateTo}</td>
+    <td align="right">Related Entities: </td>
+    <td>{echo invoiceEntity::get_links($invoiceID)}</td>
   </tr>
   <tr>
     <td align="right">Invoice Name: </td>
     <td>{$field_invoiceName}</td>
+    <td align="right">Period: </td>
+    <td>{$field_invoiceDateFrom}&nbsp;&nbsp;{$field_invoiceDateTo}</td>
   </tr>
   <tr>
     <td colspan="4" align="center">

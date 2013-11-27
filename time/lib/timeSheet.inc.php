@@ -82,6 +82,24 @@ class timeSheet extends db_entity {
     }
   }
 
+  function save() {
+    $rtn = parent::save();
+    $this->update_related_invoices();
+    return $rtn;
+  }
+
+  function update_related_invoices() {
+    if ($rows = invoiceEntity::get("timeSheet",$this->get_id())) {
+      foreach ($rows as $row) {
+        if ($row["useItems"]) {
+          invoiceEntity::save_invoice_timeSheetItems($row["invoiceID"],$this->get_id());
+        } else {
+          invoiceEntity::save_invoice_timeSheet($row["invoiceID"],$this->get_id());
+        }
+      }
+    }
+  }
+
   function get_timeSheet_statii() {
     return array("edit"      => "Add Time"
                 ,"manager"   => "Manager"
@@ -721,26 +739,12 @@ class timeSheet extends db_entity {
 
   function get_invoice_link() {
     global $TPL;
-    $rows = $this->get_invoice_rows();
+    $rows = invoiceEntity::get("timeSheet",$this->get_id());
     foreach ($rows as $row) {
       $str.= $sp."<a href=\"".$TPL["url_alloc_invoice"]."invoiceID=".$row["invoiceID"]."\">".$row["invoiceNum"]."</a>";
       $sp = "&nbsp;&nbsp;";
     }
     return $str;
-  }
-
-  function get_invoice_rows() {
-    if (is_object($this) && $this->get_id()) {
-      $db = new db_alloc();
-      $db->query("SELECT invoice.*, invoiceItemID
-                    FROM invoiceItem 
-               LEFT JOIN invoice on invoice.invoiceID = invoiceItem.invoiceID 
-                   WHERE timeSheetID = %d ORDER BY iiDate DESC",$this->get_id());
-      while ($row = $db->row()) { 
-        $rows[] = $row;
-      }
-    }
-    return (array)$rows;
   }
 
   function change_status($direction) {

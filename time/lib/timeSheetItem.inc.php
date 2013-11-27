@@ -83,19 +83,7 @@ class timeSheetItem extends db_entity {
     }
 
     $rtn = parent::save();
-
-    $db = new db_alloc();
-
-    // Update the related invoiceItem
-    $q = prepare("SELECT * FROM invoiceItem WHERE timeSheetID = %d",$this->get_value("timeSheetID"));
-    $db->query($q);
-    $row = $db->row();
-    if ($row) {
-      $ii = new invoiceItem();
-      $ii->set_id($row["invoiceItemID"]);
-      $ii->select();
-      $ii->add_timeSheet($row["invoiceID"],$this->get_value("timeSheetID"));  // will update the existing invoice item
-    }
+    $timeSheet->update_related_invoices();
     return $rtn;
   } 
 
@@ -139,18 +127,25 @@ class timeSheetItem extends db_entity {
 
   function delete() {
     $timeSheetID = $this->get_value("timeSheetID");
-    parent::delete();
 
     $db = new db_alloc();
-    $q = prepare("SELECT * FROM invoiceItem WHERE timeSheetID = %d",$timeSheetID);
+    $q = prepare("SELECT invoiceItem.*
+                    FROM invoiceItem
+               LEFT JOIN invoice ON invoiceItem.invoiceID = invoice.invoiceID
+                   WHERE timeSheetID = %d
+                     AND invoiceStatus != 'finished'",$timeSheetID);
     $db->query($q);
-    $row = $db->row();
-    if ($row) {
+    while ($row = $db->row()) {
       $ii = new invoiceItem();
       $ii->set_id($row["invoiceItemID"]);
       $ii->select();
-      $ii->add_timeSheet($row["invoiceID"],$timeSheetID);  // will update the existing invoice item
+      if ($ii->get_value("timeSheetItemID") == $this->get_id()) {
+        $ii->delete();
+      } else if (!$ii->get_value("timeSheetItemID")) {
+        invoiceEntity::save_invoice_timeSheet($row["invoiceID"],$timeSheetID);  // will update the existing invoice item
+      }
     }
+    return parent::delete();
   }
 
   function get_fortnightly_average($personID=false) {

@@ -551,22 +551,28 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
     $invoiceItem->read_globals("invoiceItem_");
 
     if ($_POST["timeSheetID"] && $_POST["split_timeSheet"]) {
-      $invoiceItem->add_timeSheetItems($invoiceItem->get_value("invoiceID"),$_POST["timeSheetID"]);
+      invoiceEntity::create($invoiceItem->get_value("invoiceID"),"timeSheet",$_POST["timeSheetID"],1);
+      invoiceEntity::save_invoice_timeSheetItems($invoiceItem->get_value("invoiceID"),$_POST["timeSheetID"]);
 
     } else if ($_POST["timeSheetID"]) {
-      $invoiceItem->add_timeSheet($invoiceItem->get_value("invoiceID"),$_POST["timeSheetID"]);
+      invoiceEntity::create($invoiceItem->get_value("invoiceID"),"timeSheet",$_POST["timeSheetID"]);
+      invoiceEntity::save_invoice_timeSheet($invoiceItem->get_value("invoiceID"),$_POST["timeSheetID"]);
 
     } else if ($_POST["expenseFormID"] && $_POST["split_expenseForm"]) {
-      $invoiceItem->add_expenseFormItems($invoiceItem->get_value("invoiceID"),$_POST["expenseFormID"]);
+      invoiceEntity::create($invoiceItem->get_value("invoiceID"),"expenseForm",$_POST["expenseFormID"],1);
+      invoiceEntity::save_invoice_expenseFormItems($invoiceItem->get_value("invoiceID"),$_POST["expenseFormID"]);
 
     } else if ($_POST["expenseFormID"]) {
-      $invoiceItem->add_expenseForm($invoiceItem->get_value("invoiceID"),$_POST["expenseFormID"]);
+      invoiceEntity::create($invoiceItem->get_value("invoiceID"),"expenseForm",$_POST["expenseFormID"]);
+      invoiceEntity::save_invoice_expenseForm($invoiceItem->get_value("invoiceID"),$_POST["expenseFormID"]);
 
     } else if ($_POST["productSaleID"] && $_POST["split_productSale"]) {
-      $invoiceItem->add_productSaleItems($invoiceItem->get_value("invoiceID"),$_POST["productSaleID"]);
+      invoiceEntity::create($invoiceItem->get_value("invoiceID"),"productSale",$_POST["productSaleID"],1);
+      invoiceEntity::save_invoice_productSaleItems($invoiceItem->get_value("invoiceID"),$_POST["productSaleID"]);
 
     } else if ($_POST["productSaleID"]) {
-      $invoiceItem->add_productSale($invoiceItem->get_value("invoiceID"),$_POST["productSaleID"]);
+      invoiceEntity::create($invoiceItem->get_value("invoiceID"),"productSale",$_POST["productSaleID"]);
+      invoiceEntity::save_invoice_productSale($invoiceItem->get_value("invoiceID"),$_POST["productSaleID"]);
 
     } else {
       $invoiceItem->save();

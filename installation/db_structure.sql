@@ -177,6 +177,16 @@ CREATE TABLE invoiceItem (
   iiDate date DEFAULT NULL
 ) ENGINE=InnoDB PACK_KEYS=0;
 
+DROP TABLE IF EXISTS invoiceEntity;
+CREATE TABLE invoiceEntity (
+  invoiceEntityID integer NOT NULL auto_increment PRIMARY KEY,
+  invoiceID integer NOT NULL,
+  timeSheetID integer DEFAULT NULL,
+  expenseFormID integer DEFAULT NULL,
+  productSaleID integer DEFAULT NULL,
+  useItems BOOLEAN DEFAULT false
+) ENGINE=InnoDB PACK_KEYS=0;
+
 DROP TABLE IF EXISTS invoiceRepeat;
 CREATE TABLE invoiceRepeat (
   invoiceRepeatID integer NOT NULL auto_increment PRIMARY KEY,
