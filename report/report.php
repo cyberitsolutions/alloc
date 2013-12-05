@@ -224,7 +224,7 @@ if ($_POST["do_step_3"]) {
       }
 
       if ($_POST["table_num_op_1"][$v] != "") {
-        if (preg_match("/([^\d])(\d\d\d\d-\d\d?-\d\d?)/",$_POST["table_num_op_1"][$v],$m)) {
+        if (preg_match("/([^\d]{1,2})(\d\d\d\d-\d\d?-\d\d?)/",$_POST["table_num_op_1"][$v],$m)) {
           $query["where"].= " AND ".db_esc($_POST["table_name"][$v])." ".db_esc($m[1])."'".db_esc($m[2])."'";
         } else {
           $query["where"].= " AND ".db_esc($_POST["table_name"][$v])." ".db_esc($_POST["table_num_op_1"][$v]);
@@ -232,7 +232,7 @@ if ($_POST["do_step_3"]) {
       }
 
       if ($_POST["table_num_op_2"][$v] != "") {
-        if (preg_match("/([^\d])(\d\d\d\d-\d\d?-\d\d?)/",$_POST["table_num_op_2"][$v],$m)) {
+        if (preg_match("/([^\d]{1,2})(\d\d\d\d-\d\d?-\d\d?)/",$_POST["table_num_op_2"][$v],$m)) {
           $query["where"].= " AND ".db_esc($_POST["table_name"][$v])." ".db_esc($m[1])."'".db_esc($m[2])."'";
         } else {
           $query["where"].= " AND ".db_esc($_POST["table_name"][$v])." ".db_esc($_POST["table_num_op_2"][$v]);
