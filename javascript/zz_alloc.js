@@ -245,7 +245,6 @@ $(document).ready(function() {
 
   // This loads up certain textboxes with faint help text that vanishes upon focus
   preload_field("#menu_form_needle", "Enter search text or ID...");
-  preload_field("input.datefield", "YYYY-MM-DD");
 
   $("#search_action").change(function(){
     var bits = $(this).val().split("_");
