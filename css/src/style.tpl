@@ -362,23 +362,22 @@ hr {
   vertical-align:middle; 
   padding:0px; 
   margin:0px; 
-  display:inline; 
+  display:inline-block;
 }
 .calendar_container img {
-  vertical-align:text-bottom;
+  vertical-align:middle;
   cursor:pointer; 
   border:1px solid (CALENDAR_IMAGE_BORDER_COLOR);
-  margin:0px; 
-  padding:0px; 
   position:relative;
-  top:0px !important; top:-2px;
+  margin:2px 0px;
 }
 .calendar_container img:hover {
   border: 1px solid (CALENDAR_ACTIVE_BORDER_COLOR);
   background-color:(CALENDAR_ACTIVE_BACKGROUND);
 }
 .calendar_container input {
-  vertical-align:text-bottom;
+  vertical-align:middle;
+  width:6em;
 }
 
 .message { 
