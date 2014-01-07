@@ -233,7 +233,7 @@ $(document).ready(function() {
   });
   $("input.datefield").bind("dblclick", function(e){
     var now = new Date();
-    this.value=now.getFullYear()+'-'+(now.getMonth()+1)+'-'+now.getDate();
+    this.value=now.getFullYear()+'-'+((1e2 + now.getMonth()+1 + '').substr(1))+'-'+(1e2 + now.getDate() + '').substr(1);
   });
 
   $('tr.clickrow').bind('click',function(e){                                                                                                     
