@@ -790,9 +790,9 @@ class task extends db_entity {
     $filter["taskName"] and $sql[] = sprintf_implode("task.taskName LIKE '%%%s%%'", $filter["taskName"]);
 
     // If personID filter
-    $filter["personID"]  and $sql["personID"]  = sprintf_implode("task.personID = %d", $filter["personID"]);
-    $filter["creatorID"] and $sql["creatorID"] = sprintf_implode("task.creatorID = %d",$filter["creatorID"]);
-    $filter["managerID"] and $sql["managerID"] = sprintf_implode("task.managerID = %d",$filter["managerID"]);
+    $filter["personID"]  and $sql["personID"]  = sprintf_implode("IFNULL(task.personID,0) = %d", $filter["personID"]);
+    $filter["creatorID"] and $sql["creatorID"] = sprintf_implode("IFNULL(task.creatorID,0) = %d",$filter["creatorID"]);
+    $filter["managerID"] and $sql["managerID"] = sprintf_implode("IFNULL(task.managerID,0) = %d",$filter["managerID"]);
 
     // These filters are for the time sheet dropdown list
     if ($filter["taskTimeSheetStatus"] == "open") {
@@ -1238,7 +1238,7 @@ class task extends db_entity {
     has("project") and $rtn["projectOptions"] = project::get_list_dropdown($_FORM["projectType"],$_FORM["projectID"]);
 
     $_FORM["projectType"] and $rtn["projectType_checked"][$_FORM["projectType"]] = " checked"; 
-    $ops = array(""=>"Nobody");
+    $ops = array("0"=>"Nobody");
     $rtn["personOptions"] = page::select_options($ops+person::get_username_list($_FORM["personID"]), $_FORM["personID"]);
     $rtn["managerPersonOptions"] = page::select_options($ops+person::get_username_list($_FORM["managerID"]), $_FORM["managerID"]);
     $rtn["creatorPersonOptions"] = page::select_options(person::get_username_list($_FORM["creatorID"]), $_FORM["creatorID"]);

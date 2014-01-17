@@ -42,12 +42,10 @@ class tasks(alloc):
 
     # Get personID, either assignee or logged in user
     personID = []
-    if not isinstance(o['assignee'], list) and o['assignee'].lower() == 'null':
-      personID.append('')
-    elif not o['assignee']:
+    if not o['assignee']:
       personID.append(self.get_my_personID())
-    elif o['assignee'] != 'all':
-      personID = self.person_to_personID(o['assignee'])
+    elif o['assignee']:
+      personID = self.person_to_personID([0 if x.lower()=='null' else x for x in o['assignee']])
 
     managerID = []
     if o['manager']:
