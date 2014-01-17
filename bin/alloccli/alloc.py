@@ -695,18 +695,21 @@ class alloc(object):
     r = []
     for n in name:
       ops = {}
-      if ' ' in n:
-        ops['firstName'], ops['surname'] = n.split(" ")
+      if self.is_num(n):
+        r.append(n)
       else:
-        ops["username"] = n
-      rtn = self.get_list("person", ops)
-      if rtn:
-        for i in rtn:
-          r.append(i)
+        if ' ' in n:
+          ops['firstName'], ops['surname'] = n.split(" ")
+        else:
+          ops["username"] = n
+        rtn = self.get_list("person", ops)
+        if rtn:
+          for i in rtn:
+            r.append(i)
 
-      # else if they don't want all the records, then error out
-      elif n and n != '%' and n != '*' and n.lower() != 'all':
-        self.die("Unrecognized username: "+str(n))
+        # else if they don't want all the records, then error out
+        elif n and n != '%' and n != '*' and n.lower() != 'all':
+          self.die("Unrecognized username: "+str(n))
 
     return r
 
