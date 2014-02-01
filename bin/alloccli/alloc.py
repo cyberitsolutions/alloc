@@ -29,6 +29,10 @@ class alloc(object):
   config = {}
   user_transforms = {}
   url_opener = None
+  username = ''
+  password = ''
+  http_username = ''
+  http_password = ''
   field_names = {
     "task" : {
       "taskID"                   :"ID"
