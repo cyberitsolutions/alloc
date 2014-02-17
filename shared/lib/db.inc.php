@@ -63,7 +63,7 @@ class db {
   }
 
   function commit() {
-    if (self::$started_transaction) {
+    if (self::$started_transaction && is_object($this->pdo)) {
       $rtn = $this->pdo->commit();
       if (!$rtn) {
         $this->error("Couldn't commit db transaction.");
