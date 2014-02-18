@@ -1,5 +1,6 @@
       </div> <!-- end #main2 -->
     </div> <!-- end #main -->
+    {if config::get_config_item("sqlDebug")}
     {if $slowest_query_time >1}
     <div id="slowest_query_1" style="text-align:right; font-size:70%;" class="faint noprint">
       {page::expand_link("slowest_query_2", $slowest_query_time, "slowest_query_1")}
@@ -23,6 +24,6 @@
         {/}
       </pre>
     </div> 
-
+    {/}
   </body>
 </html>
