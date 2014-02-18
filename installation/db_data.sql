@@ -510,6 +510,7 @@ INSERT INTO config (name,value,type) VALUES ('allocTimezone','','text');
 INSERT INTO config (name,value,type) VALUES ("taskPrioritySpread","20","text");
 INSERT INTO config (name,value,type) VALUES ("taskPriorityScale","8","text");
 INSERT INTO config (name,value,type) VALUES ("logoScaleX",0,"text");
+INSERT INTO config (name,value,type) VALUES ("sqlDebug",1,"text");
 
 --
 -- Dumping data for table taskType
