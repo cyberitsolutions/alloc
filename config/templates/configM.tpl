@@ -486,6 +486,11 @@
     <td><input type="text" size="70" value="{$taskPriorityScale}" name="taskPriorityScale"></td>
     <td width="1%">{page::help("config_taskPriorityScale")}</td>
   </tr>
+  <tr>
+    <td>SQL Debug in Page Footer</td>
+    <td><input type="text" size="70" value="{$sqlDebug}" name="sqlDebug"></td>
+    <td width="1%">{page::help("config_sqlDebug")}</td>
+  </tr>
   <tr>  
     <td colspan="3" align="center"><input type="submit" name="save" value="Save"></td>
   </tr>
