@@ -463,10 +463,8 @@ $$
 DROP FUNCTION IF EXISTS can_delete_task $$
 CREATE FUNCTION can_delete_task(id INTEGER) RETURNS BOOLEAN READS SQL DATA
 BEGIN
-  DECLARE num_audits INTEGER;
-  SELECT COUNT(*) INTO num_audits FROM audit WHERE taskID = id;
   -- perm delete = 4
-  IF (NOT num_audits AND has_perm(personID(),4,"task")) THEN
+  IF (has_perm(personID(),4,"task")) THEN
     RETURN TRUE;
   END IF;
   RETURN FALSE;
@@ -586,6 +584,7 @@ BEGIN
   call check_edit_task(OLD.projectID);
   call check_delete_task(OLD.taskID);
   DELETE FROM pendingTask WHERE taskID = OLD.taskID OR pendingTaskID = OLD.taskID;
+  DELETE FROM audit WHERE taskID = OLD.taskID;
 END
 $$
 
