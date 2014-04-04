@@ -288,6 +288,7 @@ VALUES
 
 ,('client'                   ,0  ,''         ,NULL ,1+2+4+8    ,NULL)
 ,('clientContact'            ,0  ,''         ,NULL ,1+2+4+8    ,NULL)
+,('clientStatus'             ,0  ,'god'      ,NULL ,1+2+4+8    ,NULL)
 
 ,('comment'                  ,0  ,''         ,NULL ,1+2+4+8    ,NULL)
 
@@ -295,6 +296,8 @@ VALUES
 ,('commentTemplate'          ,0  ,'manage'   ,NULL ,1+2+4+8    ,NULL)
 
 ,('config'                   ,0  ,'god'      ,NULL ,1+2+4+8    ,NULL)
+
+,('currencyType'             ,0  ,'god'      ,NULL ,1+2+4+8    ,NULL)
 
 ,('exchangeRate'             ,0  ,'admin'    ,NULL ,1+2+4+8    ,NULL)
 
@@ -330,6 +333,8 @@ VALUES
 ,('item'                     ,-1 ,''         ,NULL ,1+2+4+8    ,NULL)
 ,('item'                     ,0  ,'employee' ,NULL ,11         ,'Read, update, create.')
 ,('item'                     ,0  ,'admin'    ,NULL ,1+2+4+8    ,NULL)
+
+,('itemType'                 ,0  ,'god'      ,NULL ,1+2+4+8    ,NULL)
 
 ,('loan'                     ,0  ,'employee' ,NULL ,1+2+4+8    ,NULL)
 ,('loan'                     ,-1 ,'employee' ,NULL ,1+2+4+8    ,NULL)
@@ -374,6 +379,7 @@ VALUES
 ,('projectCommissionPerson'  ,-1 ,'manage'   ,NULL ,1+2+4+8    ,NULL)
 ,('projectCommissionPerson'  ,0  ,'admin'    ,NULL ,1+2+4+8    ,NULL)
 
+,('projectStatus'            ,0  ,'god'      ,NULL ,1+2+4+8    ,NULL)
 ,('projectType'              ,0  ,'god'      ,NULL ,1+2+4+8    ,NULL)
 
 ,('reminder'                 ,0  ,''         ,NULL ,1+2+4+8    ,'Will have to change this later?')
@@ -393,6 +399,9 @@ VALUES
 ,('task'                     ,0  ,'manage'   ,NULL ,1+2+4+8+256,NULL)
 ,('task'                     ,0  ,'admin'    ,NULL ,1+256      ,NULL)
 
+,('taskStatus'               ,0  ,'god'      ,NULL ,1+2+4+8    ,NULL)
+,('taskType'                 ,0  ,'god'      ,NULL ,1+2+4+8    ,NULL)
+
 ,('tf'                       ,0  ,'employee' ,NULL ,1          ,NULL)
 ,('tf'                       ,0  ,'manage'   ,NULL ,1          ,NULL)
 ,('tf'                       ,0  ,'admin'    ,NULL ,1+2+4+8    ,NULL)
@@ -410,6 +419,8 @@ VALUES
 ,('timeSheetItem'            ,0  ,'manage'   ,NULL ,1+2+4+8    ,NULL)
 ,('timeSheetItem'            ,0  ,'admin'    ,NULL ,1+2+4+8    ,NULL)
 
+,('timeSheetItemMultiplier'  ,0  ,'god'      ,NULL ,1+2+4+8    ,NULL)
+
 ,('tsiHint'                  ,0  ,'manage'   ,NULL ,1+2+4+8    ,NULL)
 
 ,('token'                    ,0  ,''         ,NULL ,1+2+4+8    ,NULL)
@@ -420,6 +431,9 @@ VALUES
 
 ,('transactionRepeat'        ,-1 ,'employee' ,NULL ,1          ,NULL)
 ,('transactionRepeat'        ,0  ,'admin'    ,NULL ,1+2+4+8    ,NULL)
+,('transactionType'          ,0  ,'god'      ,NULL ,1+2+4+8    ,NULL)
+
+,('skillProficiency'         ,0  ,'god'      ,NULL ,1+2+4+8    ,NULL)
 
 ;
 
