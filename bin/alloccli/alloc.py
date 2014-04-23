@@ -367,7 +367,7 @@ class alloc(object):
       r[a] = str(b or '')
     return r
 
-  def print_task(self, taskID, prependEmailHeader=False):
+  def print_task(self, taskID, prependEmailHeader=False, children=False):
     """Return a plaintext view of a task and its details."""
     rtn = self.get_list('task', {'taskID':taskID, 'taskView':'prioritised', 'showTimes':True})
 
@@ -424,6 +424,17 @@ class alloc(object):
         s += '\n'
         #s += '\n'.join(wrap(r['taskDescription'], 75))+'\n' # this seems to not work very well.
         s += '\n'+r['taskDescription']
+
+
+      if children and r['taskTypeID'] == 'Parent':
+        tasks = self.get_list('task', {'parentTaskID': r['taskID'], 'taskView': 'byProject'})
+        # print_table doesn't work here because the output of this is printed out of the return value.
+        # self.print_table("task", tasks, ["taskID", "taskName"])
+        s += '\nChild Tasks:\n\n'
+        # TODO: for CSV output this might need to do something saner
+        # on the other hand, view doesn't work right with CSV anyway
+        for c in tasks.values():
+          s += '%s %s\n' % (c['taskID'], c['taskName'])
 
       s += '\n\n'
       final_str += h+s
