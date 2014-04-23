@@ -11,6 +11,7 @@ class view(alloc):
   #ops.append(('i:', 'item=ID        ', 'An existing time sheet item\'s ID.'))
   #ops.append(('p:', 'project=ID     ', 'An existing project\'s ID.'))
   #ops.append(('s:', 'timesheet=ID   ', 'An existing time sheet\'s ID.'))
+  ops.append(('c',   'children'       , 'Show children for tasks.'))
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS]\n"
@@ -34,7 +35,7 @@ alloc view --task 1234"""
     self.authenticate()
 
     if o['task']:
-      print self.print_task(o['task']) 
+      print self.print_task(o['task'], children = o['children'])
 
     # elif o['timesheet']:
     #   pass
