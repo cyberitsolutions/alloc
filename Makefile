@@ -28,6 +28,7 @@ help:
 	@echo "  dist      - makes doc_html, doc_clean, and makes an alloc tarball"
 	@echo "  cache     - copies/concatenates all the javascript and css files to a cache directory"
 	@echo "  test      - final tests that must pass before a tarball can be built"
+	@echo "  patches   - combines all DB schema patches into installation file"
 
 doc_html:
 	if [ -d ./help/images ]; then rm -rf ./help/images; fi;
