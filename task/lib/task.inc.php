@@ -151,7 +151,7 @@ class task extends db_entity {
     $str2 = implode(",",(array)$bits);
 
     if ($str1 != $str2) {
-      $db->qr("DELETE FROM pendingTask WHERE taskID = %d",$this->get_id());
+      $db->query("DELETE FROM pendingTask WHERE taskID = %d",$this->get_id());
       foreach ((array)$bits as $id) {
         if (is_numeric($id)) {
           $db->query("INSERT INTO pendingTask (taskID,pendingTaskID) VALUES (%d,%d)",$this->get_id(),$id);
