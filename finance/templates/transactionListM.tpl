@@ -39,9 +39,9 @@
         <th width="1%">Modified</th>
         <th>Product</th>
         <th width="1%">Status</th>
-        <th class="right" width="1%">Credit</th>
-        <th class="right" width="1%">Debit</th>
-        <th class="right" width="1%">Balance</th>
+        <th class="right" width="1%" data-sort="float">Credit</th>
+        <th class="right" width="1%" data-sort="float">Debit</th>
+        <th class="right" width="1%" data-sort="float">Balance</th>
       </tr>
       {foreach $transactionListRows as $r}
       <tr class="{$r.class}">
@@ -58,7 +58,7 @@
         <td class="transaction-{$r.status} nobr right">{$r.running_balance}&nbsp;</td>
       </tr>
       {/}
-      <tr>
+      <tr class="tfoot">
         <td colspan="8">&nbsp;</td>
         <td class="grand_total nobr right">{$totals.total_amount_positive}&nbsp;</td>
         <td class="grand_total nobr right">{$totals.total_amount_negative}&nbsp;</td>
