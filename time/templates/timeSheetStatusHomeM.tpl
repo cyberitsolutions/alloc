@@ -5,6 +5,9 @@ $(document).ready(function() {
     var plot1 = $.jqplot('chart1', [points], {  
         series:[{ showMarker:false }],
         seriesColors: [ "#539cf6" ],
+        seriesDefaults: {
+          renderer:$.jqplot.BarRenderer,
+        },
         axesDefaults: {
           tickRenderer: $.jqplot.CanvasAxisTickRenderer,
           tickOptions: {
