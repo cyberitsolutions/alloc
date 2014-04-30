@@ -448,7 +448,7 @@ class timeSheetItem extends db_entity {
     $x = 0;
     while (mktime(0,0,0,$sm,$sd+$x,$sy)<=mktime(0,0,0,$em,$ed,$ey)) {
       $d = date("Y-m-d",mktime(0,0,0,$sm,$sd+$x,$sy));
-      $points[] = array($d." 12:00PM", sprintf("%d",$info[$d]["hours"]));
+      $points[] = array($d." 12:00PM", sprintf("%.2F",$info[$d]["hours"]));
       $x++;
     }
 
