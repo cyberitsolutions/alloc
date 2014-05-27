@@ -46,7 +46,7 @@ class db {
       $this->hostname and $h = "host=".$this->hostname.";";
       $this->database and $d = "dbname=".$this->database.";";
       try {
-        $this->pdo = new PDO(sprintf('mysql:%s%scharset=UTF-8',$h,$d), $this->username, $this->password);
+        $this->pdo = new PDO(sprintf('mysql:%s%scharset=UTF8',$h,$d), $this->username, $this->password);
         $this->pdo->exec("SET CHARACTER SET utf8");
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         return true;
