@@ -234,16 +234,39 @@ class reminder extends db_entity {
     }
 
     if ($ok) {
+
       $recipients = $this->get_all_recipients();
-      foreach ((array)$recipients as $person) {
-        if ($person['emailAddress']) {
-          $email = sprintf("%s %s <%s>", $person['firstName'], $person['surname'], $person['emailAddress']);
-          $subject = $this->get_value('reminderSubject');
-          $content = $this->get_value('reminderContent');
-          $e = new email_send($email, $subject, $content, "reminder");
-          $e->send();
+      # Reminders can be clients, tasks, projects or "general" - comment threads don't exist for general
+      if ($this->get_value('reminderType') != 'general') {
+        # Nowhere to put the subject?
+        $commentID = comment::add_comment($this->get_value('reminderType'), $this->get_value('reminderLinkID'),
+          $this->get_value('reminderContent'), $this->get_value('reminderType'), $this->get_value('reminderLinkID'));
+        # Repackage the recipients to become IPs of the new comment
+        $ips = array();
+        foreach ((array)$recipients as $id => $person) {
+          $ip = array();
+          $ip['name'] = $person['name'];
+          $ip['addIP'] = true;
+          $ip['addContact'] = false;
+          $ip['internal'] = true;
+
+          $ips[$person['emailAddress']] = $ip;
         }
-      } 
+
+        comment::add_interested_parties($commentID, false, $ips);
+        # email_receive false or true? false for now... maybe true is better?
+        comment::send_comment($commentID, array("interested"));
+      } else {
+        foreach ((array)$recipients as $person) {
+          if ($person['emailAddress']) {
+            $email = sprintf("%s %s <%s>", $person['firstName'], $person['surname'], $person['emailAddress']);
+            $subject = $this->get_value('reminderSubject');
+            $content = $this->get_value('reminderContent');
+            $e = new email_send($email, $subject, $content, "reminder");
+            $e->send();
+          }
+        }
+      }
 
       // Update reminder (reminderTime can be blank for task->moved_from_pending_to_open)
       if ($this->get_value('reminderRecuringInterval') == "No") {
