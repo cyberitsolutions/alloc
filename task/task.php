@@ -372,7 +372,9 @@ if (in_str("pending_",$task->get_value("taskStatus"))) {
   foreach ($rows as $r) {
     $TPL["message_help_no_esc"][] = 'This task is set to
                                     <a href="'.$TPL["url_alloc_reminder"].'step=3&reminderID='.$r["rID"].'&returnToParent=task">
-                                    automatically reopen at '.$r["reminderTime"].'</a>';
+				    automatically reopen at '.$r["reminderTime"].'</a>';
+    // Which date gets plugged in is arbitrary, but it would be unusual for there to be more than one
+    $TPL['reopen_task'] = strftime("%Y-%m-%d", strtotime($r['reminderTime']));
   }
 }
 
