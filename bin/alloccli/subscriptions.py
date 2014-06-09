@@ -53,9 +53,8 @@ alloc subscriptions --add < foo.txt"""
     self.dryrun = o['dryrun']
 
     # This is the data format that is exported and imported
-    fields = ["entity", "Entity", "entityID", "ID", "personID",
-              "Person ID", "emailAddress", "Email", "name", "Name", "interestedPartyActive", "Active"]
-    keys = fields[::2]
+    fields = ["entity", "entityID", "personID",
+              "emailAddress", "name", "interestedPartyActive"]
     searchops = {}
 
     # If we're looking for interested parties and we have a {key:something}
