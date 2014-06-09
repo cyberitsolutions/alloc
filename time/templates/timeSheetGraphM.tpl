@@ -11,7 +11,13 @@ $(document).ready(function() {
     series:[{ showMarker:false }],
     seriesColors: [ "#539cf6" ],
     seriesDefaults:{
-        pointLabels: { show: true }
+        pointLabels: { show: true },
+        renderer: $.jqplot.BarRenderer,
+        rendererOptions: {
+            barPadding: 10,
+            barMargin: 10,
+            barWidth: 40
+        }
     },
     axesDefaults: {
       tickRenderer: $.jqplot.CanvasAxisTickRenderer,
@@ -27,14 +33,14 @@ $(document).ready(function() {
         renderer:$.jqplot.DateAxisRenderer,
         tickOptions:{ formatString:'%b %#d' },
         tickInterval:'1 {$groupBy}',
-        label: "Date"
+        label: "Date",
       },
       yaxis:{
         min:0,
         {$max = 24; $groupBy == "month" and $max = 10*28}
         max:{$max},
         tickOptions: { angle: 0 },
-        label: "Hours"
+        label: "Hours",
       }
     }
   });
