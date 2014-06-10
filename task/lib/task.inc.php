@@ -193,6 +193,16 @@ class task extends db_entity {
   function add_reopen_reminder($date) {
     if ($date) {
       $rows = $this->get_reopen_reminders();
+      // If this reopen event already exists, do nothing
+      // Allows the form to be saved without changing anything
+      // the 8:30 is the same as creation, below.
+      $check_date = strtotime($date . " 08:30:00");
+      foreach ($rows as $r) {
+        if (strtotime($r['reminderTime']) == $check_date) {
+          return;
+        }
+      }
+
       foreach ($rows as $r) {
         $reminder = new reminder();
         $reminder->set_id($r['rID']);

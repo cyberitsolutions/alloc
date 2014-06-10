@@ -36,7 +36,7 @@ alloc token --key 1234abcd"""
     self.quiet = o['quiet']
 
     # This is the data format that is exported and imported
-    fields = ["tokenEntity", "Entity", "tokenEntityID", "ID", "tokenHash", "Key"]
+    fields = ["tokenEntity", "tokenEntityID", "tokenHash"]
     searchops = {}
     searchops['tokenHash'] = o['key'] or ''
     searchops['tokenEntity'] = 'comment'
