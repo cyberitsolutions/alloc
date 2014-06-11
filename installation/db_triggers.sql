@@ -432,10 +432,35 @@ $$
 
 -- task perm
 
+DROP PROCEDURE IF EXISTS check_task_cycle;
+CREATE PROCEDURE check_task_cycle (in self_id int, in parent_id int)
+BEGIN
+
+  DECLARE last_parent INT DEFAULT parent_id;
+
+-- unique constraint failed
+   DECLARE EXIT HANDLER FOR SQLSTATE '23000' CALL alloc_error("Parent task loops not permitted.");
+
+-- If a previous invocation failed the table might still be around
+  DROP TEMPORARY TABLE IF EXISTS parent_search;
+
+-- unique so this will explode if a cycle exists
+  CREATE TEMPORARY TABLE parent_search (parentid int, UNIQUE (parentid));
+  INSERT INTO parent_search(parentid) VALUES (parent_id), (self_id);
+
+  REPEAT
+    SELECT parentTaskID FROM task WHERE taskID = last_parent INTO last_parent;
+    INSERT INTO parent_search (parentid) VALUES (last_parent);
+  UNTIL last_parent is null END REPEAT;
+  DROP TEMPORARY TABLE parent_search;
+END
+$$
+
 DROP PROCEDURE IF EXISTS check_edit_task $$
 CREATE PROCEDURE check_edit_task(IN id INTEGER)
 BEGIN
   DECLARE count_project INTEGER;
+
   SELECT count(project.projectID) INTO count_project
     FROM project LEFT JOIN projectPerson ON projectPerson.projectID = project.projectID 
    WHERE project.projectID = id AND projectPerson.personID = personID();
@@ -480,6 +505,8 @@ BEGIN
   DECLARE defTaskLimit DECIMAL(7,2);
   call check_edit_task(NEW.projectID);
 
+  IF (NEW.parentTaskID) THEN CALL check_task_cycle(NEW.parentTaskID); END IF;
+
   SET NEW.creatorID = personID();
   SET NEW.dateCreated = current_timestamp();
 
@@ -523,6 +550,8 @@ BEGIN
   IF (neq(@in_change_task_status,1) AND neq(OLD.taskStatus,NEW.taskStatus)) THEN
     call alloc_error('Must use: call change_task_status(taskID,status)');
   END IF;
+
+  IF (NEW.parentTaskID) THEN CALL check_task_cycle(OLD.taskID, NEW.parentTaskID); END IF;
 
   SET NEW.taskID = OLD.taskID;
   SET NEW.creatorID = OLD.creatorID;
