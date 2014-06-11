@@ -67,6 +67,9 @@ class command {
      ,"best"      => array("timeBest",        "shortest estimate of how many hours of effort this task will take")
      ,"likely"    => array("timeExpected",    "most likely amount of hours of effort this task will take")
      ,"worst"     => array("timeWorst",       "longest estimate of how many hours of effort this task will take")
+     ,"estimator" => array("estimatorID",     "the person who created the estimates on this task")
+     ,"targetstart" => array("dateTargetStart","estimated date for work to start on this task")
+     ,"targetcompletion" => array("dateTargetCompletion","estimated date for when this task should be finished")
      ,"project"   => array("projectID",       "task's project ID")
      ,"type"      => array("taskTypeID",      "Task, Fault, Message, Milestone or Parent")
      ,"dupe"      => array("duplicateTaskID", "If the task status is duplicate, then this should be set to the task ID of the related dupe")
@@ -241,6 +244,12 @@ class command {
         
         if ($k == "manage") {
           $changes[$k] = "managerID";
+          $v = $people_by_username[$v]["personID"];
+          $v or alloc_error("Unrecognized username.");
+        }
+
+        if ($k == "estimator") {
+          $changes[$k] = "estimatorID";
           $v = $people_by_username[$v]["personID"];
           $v or alloc_error("Unrecognized username.");
         }
