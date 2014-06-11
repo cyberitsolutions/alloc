@@ -190,37 +190,40 @@ class task extends db_entity {
     return (array)$rows;
   }
 
+
   function add_reopen_reminder($date) {
+    $rows = $this->get_reopen_reminders();
+    // If this reopen event already exists, do nothing
+    // Allows the form to be saved without changing anything
+    // the 8:30 is the same as creation, below.
     if ($date) {
-      $rows = $this->get_reopen_reminders();
-      // If this reopen event already exists, do nothing
-      // Allows the form to be saved without changing anything
-      // the 8:30 is the same as creation, below.
       $check_date = strtotime($date . " 08:30:00");
       foreach ($rows as $r) {
         if (strtotime($r['reminderTime']) == $check_date) {
           return;
         }
       }
+    }
 
-      foreach ($rows as $r) {
-        $reminder = new reminder();
-        $reminder->set_id($r['rID']);
-        $reminder->select();
-        $reminder->deactivate();
-      }
+    foreach ($rows as $r) {
+      $reminder = new reminder();
+      $reminder->set_id($r['rID']);
+      $reminder->select();
+      $reminder->deactivate();
+    }
 
-      if ($date != 'null') { // alloc-cli can pass 'null' to kill future reopening
-        $tokenActionID = 4;
-        //$maxUsed = 1; nope, so people can have recurring reminders
-        $name = "Task reopened: ".$this->get_name(array("prefixTaskID"=>true));
-        $desc = "This reminder will have automatically reopened this task, if it was pending:\n\n".$this->get_name(array("prefixTaskID"=>true));
-        $recipients = array(array("field"=>"metaPersonID","who"=>-2),array("field"=>"metaPersonID","who"=>-3));
-        if (strlen($date) <= "10") {
-          $date.= " 08:30:00";
-        }
-        $this->add_notification($tokenActionID,$maxUsed,$name,$desc,$recipients,$date);
+    // alloc-cli can pass 'null' to kill future reopening
+    // Removing the field in the web UI does the same
+    if ($check_date && $date != 'null') {
+      $tokenActionID = 4;
+      //$maxUsed = 1; nope, so people can have recurring reminders
+      $name = "Task reopened: ".$this->get_name(array("prefixTaskID"=>true));
+      $desc = "This reminder will have automatically reopened this task, if it was pending:\n\n".$this->get_name(array("prefixTaskID"=>true));
+      $recipients = array(array("field"=>"metaPersonID","who"=>-2),array("field"=>"metaPersonID","who"=>-3));
+      if (strlen($date) <= "10") {
+        $date.= " 08:30:00";
       }
+      $this->add_notification($tokenActionID,$maxUsed,$name,$desc,$recipients,$date);
     }
   }
 
