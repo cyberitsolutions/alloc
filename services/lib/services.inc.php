@@ -509,6 +509,84 @@ class services {
     die("Usage: get_list(entity, options). The following entities are available: ".$rtn);
   }
 
+
+  public function show_reminders() {
+    return reminder::get_list(array());
+  }
+
+  public function get_reminder($id) {
+    $reminder = new reminder();
+    $reminder->set_id($id);
+    $reminder->select();
+    return $reminder->get_value("reminderContent");
+  }
+
+  public function edit_reminder($id, $options) {
+    $reminder = new reminder();
+    if ($id and $id != "new") {
+      $reminder->set_id($id);
+      $reminder->select();
+      //return $reminder->get_value("reminderSubject");
+    } else if ($id == "new") {
+      // extra sanity checks, partially filled in reminder isn't much good
+      if (!$options['date'] || !$options['name'] || !$options['comment'] || !$options['recipients']) {
+        print_r($options);
+        return("Missing arguments");
+      }
+
+      if ($options['task']) {
+        $reminder->set_value('reminderLinkID', $options['task']);
+        $reminder->set_value('reminderType', 'task');
+      } else if ($options['project']) {
+        $reminder->set_value('reminderLinkID', $options['project']);
+        $reminder->set_value('reminderType', 'project');
+      } else {
+        $reminder->set_value('reminderLinkID', $options['client']);
+        $reminder->set_value('reminderType', 'client');
+      }
+    } else {
+      return("No ID!");
+    }
+
+
+    // Tear apart the frequency bits
+    // hour day week month year
+    if ($options['frequency']) {
+      list($freq, $units) = sscanf($options['frequency'], "%d%c");
+      $freq_units = ['h' => 'Hour', 'd' => 'Day', 'w' => 'Week', 'm' => 'Month', 'y' => 'Year'];
+      $options['frequency'] = $freq;
+      $options['frequency_units'] = $freq_units[strtolower($units)];
+    }
+
+    $fields = ['date' => 'reminderTime', 'name' => 'reminderSubject', 'comment' => 'reminderContent',
+      'frequency' => 'reminderRecuringValue', 'frequency_units' => 'reminderRecuringInterval'];
+    foreach ($fields as $s => $d) {
+      if ($options[$s]) {
+        print("updating " . $s);
+        print($reminder->get_value($d));
+        $reminder->set_value($d, $options[$s]);
+      }
+    }
+
+    $reminder->save();
+
+    // Deal with recipients
+    print("About to handle recipients");
+    print_r($options);
+    if ($options['recipients']) {
+      list($_x, $recipients) = $reminder->get_recipient_options();
+      if ($options['recipients']) {
+        $recipients = array_unique(array_merge($recipients, $options['recipients']));
+      }
+      if ($options['recipients_remove']) {
+        $recipients = array_diff($recipients, $options['recipients_remove']);
+      }
+      $reminder->update_recipients($recipients);
+    }
+
+    return($out . "Updated");
+  }
+
   /**
   * A generic method to edit entities
   * @param string $entity which type of entity to edit
