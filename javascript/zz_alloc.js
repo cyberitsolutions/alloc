@@ -211,7 +211,7 @@ $(document).ready(function() {
   $("table.sortable").each(function() {
     var t = $(this).stupidtable();
     var arr = $("<i class='arrow icon-circle-arrow-up' style='font-size:95%'></i>").css("visibility","hidden");
-    $('thead > tr > th',this).not(function(){ return $(this).data("sort") == "none"; }).append(arr);
+    $('thead > tr > th',this).not(function(){ return $(this).data("sort") == "none"; }).append(arr).css({"cursor":"pointer"});
 
     t.bind('aftertablesort', function (event, data) {
       var th = $(this).find("th");
@@ -332,11 +332,11 @@ $(document).ready(function() {
     if ($("b",$(this)).hasClass('icon-star-empty')) {
       $("b",$(this)).removeClass('icon-star-empty').addClass('icon-star');
       $(this).addClass("hot");
-      $(this).parent().attr({"data-sort-value":"1"});
+      $(this).closest("td").attr({"data-sort-value":"1"});
     } else {
       $("b",$(this)).removeClass('icon-star hot').addClass('icon-star-empty');
       $(this).removeClass("hot");
-      $(this).parent().attr({"data-sort-value":"2"});
+      $(this).closest("td").attr({"data-sort-value":"2"});
     }
     $.get($(this).attr("href"));   
     return false;
