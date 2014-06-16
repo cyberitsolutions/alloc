@@ -36,6 +36,8 @@ define("PAGE_IS_PRINTABLE",1);
       $options["showPercent"] = true;
       $options["showHeader"] = true;
       $options["showTimes"] = true;
+      $options["showStatus"] = true;
+      $options["showPriorityFactor"] = true;
 
       $_GET["media"] == "print" and $options["showDescription"] = true;
       $_GET["media"] == "print" and $options["showComments"] = true;

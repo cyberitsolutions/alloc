@@ -1169,6 +1169,7 @@ class task extends db_entity {
                 ,"showDate5"            => "Date Created"
                 ,"showProject"          => "The tasks Project (has different layout when prioritised vs byProject)"
                 ,"showPriority"         => "The calculated overall priority, then the tasks, then the projects priority"
+                ,"showPriorityFactor"   => "The calculated overall priority"
                 ,"showStatus"           => "A colour coded textual description of the status of the task"
                 ,"showCreator"          => "The tasks creator"
                 ,"showAssigned"         => "The person assigned to the task"

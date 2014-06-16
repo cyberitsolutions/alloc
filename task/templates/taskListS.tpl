@@ -13,7 +13,7 @@
   {if $_FORM["showTaskID"]}<th data-sort="num" width="1%">ID</th>{/}
     <th>Task</th>
   {if $_FORM["showProject"]}<th>Project</th>{/}
-  {if $_FORM["showPriority"]}<th data-sort="num">Priority</th>{/}
+  {if $_FORM["showPriority"] || $_FORM["showPriorityFactor"]}<th data-sort="num">Priority</th>{/}
   {if $_FORM["showPriority"]}<th data-sort="num">Task Pri</th>{/}
   {if $_FORM["showPriority"]}<th data-sort="num">Proj Pri</th>{/}
   {if $_FORM["showCreator"]}<th>Task Creator</th>{/}
@@ -46,7 +46,7 @@
   {if $_FORM["showComments"] && $r["comments"]}<br>{$r.comments}{/}
                                </td>
   {if $_FORM["showProject"]}   <td><a href="{$url_alloc_project}projectID={$r.projectID}">{=$r.project_name}</a></td>{/}
-  {if $_FORM["showPriority"]}  <td>{$r.priorityFactor}</td>{/}
+  {if $_FORM["showPriority"] || $_FORM["showPriorityFactor"]}  <td>{$r.priorityFactor}</td>{/}
   {if $_FORM["showPriority"]}  <td data-sort-value='{$r.priority}' style="color:{echo $taskPriorities[$r["priority"]]["colour"]}">{echo $taskPriorities[$r["priority"]]["label"]}</td>{/}
   {if $_FORM["showPriority"]}  <td data-sort-value='{$r.projectPriority}' style="color:{echo $projectPriorities[$r["projectPriority"]]["colour"]}">{echo $projectPriorities[$r["projectPriority"]]["label"]}</td>{/}
   {if $_FORM["showCreator"]}   <td>{=$r.creator_name}</td>{/}
