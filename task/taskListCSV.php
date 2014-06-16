@@ -29,7 +29,8 @@ $_FORM["showEdit"] = false;
                               $fields["taskID"]               = "ID";
                               $fields["taskName"]             = "Task";
 $_FORM["showProject"]     and $fields["projectName"]          = "Project";
-$_FORM["showPriority"]    and $fields["priorityFactor"]       = "Pri";
+$_FORM["showPriority"] || $_FORM["showPriorityFactor"]
+                          and $fields["priorityFactor"]       = "Pri";
 $_FORM["showPriority"]    and $fields["taskPriority"]         = "Task Pri";
 $_FORM["showPriority"]    and $fields["projectPriority"]      = "Proj Pri";
 $_FORM["showCreator"]     and $fields["creator_name"]         = "Creator";
