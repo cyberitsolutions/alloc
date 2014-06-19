@@ -20,6 +20,7 @@ class reminders(alloc):
             ('n.', 'name=NAME', 'The title of the reminder'),
             ('f.', 'frequency=FREQ', 'How often this reminder is to recur.\n'
                                     'Specify as [number][unit], where unit is one of [h]our, [d]ay, [w]eek, [m]onth, [y]ear'),
+            ('N.', 'notice=WARNING', 'Advance warning for this reminder. Same specification as frequency.'),
             ('d.', 'date=DATE', 'When this reminder is to trigger.'),
             ('a.', 'active=true|false', 'Whether this reminder is active or not'),
             ('e', 'edit', 'Spawn EDITOR to write comment.'),
@@ -40,6 +41,9 @@ class reminders(alloc):
         if op['frequency'] and not re.match(r'\d+[hdwmy]', op['frequency'], re.IGNORECASE):
             # EXPLODE
             print("Invalid frequency specification")
+            exit(1)
+        if op['notice'] and not re.match(r'\d+[hdwmy]', op['notice'], re.IGNORECASE):
+            print("Invalid advance notice specification")
             exit(1)
 
         if op['reminder']:

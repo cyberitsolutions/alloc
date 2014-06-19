@@ -555,8 +555,17 @@ class services {
       $options['frequency_units'] = $freq_units[strtolower($units)];
     }
 
+    if ($options['notice']) {
+      list($freq, $units) = sscanf($options['notice'], "%d%c");
+      $freq_units = ['h' => 'Hour', 'd' => 'Day', 'w' => 'Week', 'm' => 'Month', 'y' => 'Year'];
+      $options['notice'] = $freq;
+      $options['notice_units'] = $freq_units[strtolower($units)];
+
+    }
+
     $fields = ['date' => 'reminderTime', 'name' => 'reminderSubject', 'comment' => 'reminderContent',
-      'frequency' => 'reminderRecuringValue', 'frequency_units' => 'reminderRecuringInterval', 'active' => 'reminderActive'];
+      'frequency' => 'reminderRecuringValue', 'frequency_units' => 'reminderRecuringInterval', 'active' => 'reminderActive',
+      'notice' => "reminderAdvNoticeValue", 'notice_units' => 'reminderAdvNoticeInterval'];
     foreach ($fields as $s => $d) {
       if ($options[$s]) {
         $reminder->set_value($d, $options[$s]);
