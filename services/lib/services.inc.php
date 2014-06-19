@@ -530,16 +530,15 @@ class services {
     } else if ($id == "new") {
       // extra sanity checks, partially filled in reminder isn't much good
       if (!$options['date'] || !$options['name'] || !$options['comment'] || !$options['recipients']) {
-        print_r($options);
         return("Missing arguments");
       }
 
       if ($options['task']) {
-        $reminder->set_value('reminderLinkID', $options['task']);
         $reminder->set_value('reminderType', 'task');
+        $reminder->set_value('reminderLinkID', $options['task']);
       } else if ($options['project']) {
-        $reminder->set_value('reminderLinkID', $options['project']);
         $reminder->set_value('reminderType', 'project');
+        $reminder->set_value('reminderLinkID', $options['project']);
       } else {
         $reminder->set_value('reminderLinkID', $options['client']);
         $reminder->set_value('reminderType', 'client');
@@ -548,9 +547,7 @@ class services {
       return("No ID!");
     }
 
-
     // Tear apart the frequency bits
-    // hour day week month year
     if ($options['frequency']) {
       list($freq, $units) = sscanf($options['frequency'], "%d%c");
       $freq_units = ['h' => 'Hour', 'd' => 'Day', 'w' => 'Week', 'm' => 'Month', 'y' => 'Year'];
@@ -559,20 +556,24 @@ class services {
     }
 
     $fields = ['date' => 'reminderTime', 'name' => 'reminderSubject', 'comment' => 'reminderContent',
-      'frequency' => 'reminderRecuringValue', 'frequency_units' => 'reminderRecuringInterval'];
+      'frequency' => 'reminderRecuringValue', 'frequency_units' => 'reminderRecuringInterval', 'active' => 'reminderActive'];
     foreach ($fields as $s => $d) {
       if ($options[$s]) {
-        print("updating " . $s);
-        print($reminder->get_value($d));
         $reminder->set_value($d, $options[$s]);
       }
+    }
+
+    if (!$reminder->get_value("reminderRecuringInterval")) {
+      $reminder->set_value("reminderRecuringInterval", "No");
+    }
+
+    if (!$reminder->get_value("reminderAdvNoticeInterval")) {
+      $reminder->set_value("reminderAdvNoticeInterval", "No");
     }
 
     $reminder->save();
 
     // Deal with recipients
-    print("About to handle recipients");
-    print_r($options);
     if ($options['recipients']) {
       list($_x, $recipients) = $reminder->get_recipient_options();
       if ($options['recipients']) {
@@ -582,6 +583,25 @@ class services {
         $recipients = array_diff($recipients, $options['recipients_remove']);
       }
       $reminder->update_recipients($recipients);
+    }
+
+    if ($options['reopen'] && $options['task']) {
+      $current_user = &singleton("current_user");
+      // This needs to be done after the reminder is saved so that it has an ID
+      $token = new token();
+      $token->set_value("tokenEntity", "task");
+      $token->set_value("tokenEntityID",$reminder->get_id());
+      $token->set_value("tokenActionID",4); //task reopen - defined in ??? (borrowed from task.inc.php)
+      $token->set_value("tokenActive",1);
+      $token->set_value("tokenCreatedBy",$current_user->get_id());
+      $token->set_value("tokenCreatedDate",date("Y-m-d H:i:s"));
+      $hash = $token->generate_hash();
+      $token->set_value("tokenHash",$hash);
+      $token->save();
+
+      // Save this again, now that the FC constraint will be satisfied
+      $reminder->set_value("reminderHash", $hash);
+      $reminder->save();
     }
 
     return($out . "Updated");

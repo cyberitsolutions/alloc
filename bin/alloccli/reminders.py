@@ -8,28 +8,27 @@ import tempfile
 import os
 import subprocess
 
-class reminder(alloc):
+class reminders(alloc):
     """Create and manipulate reminders."""
 
     ops = [('', 'help', ''), # Wtf, if this is missing stuff breaks
             ('R.', 'reminder=ID', 'Reminder ID or "new"'),
             ('t.', 'task=ID|NAME', 'A task ID, or a fuzzy match for a task name.'),
             ('p.', 'project=ID|NAME', 'A project ID, or a fuzzy match for a project name.'),
-            ('C.', 'client=ID|NAME', 'A client ID, or a fuzzy match for a project name.'),
-            # TODO: is C acceptable?
+            ('C.', 'client=ID|NAME', 'A client ID, or a fuzzy match for a client name.'),
             ('c.', 'comment=COMMENT', 'The text of the reminder'),
             ('n.', 'name=NAME', 'The title of the reminder'),
-            ('f.', 'frequency=AAA', 'How often this reminder is to recur.\n'
+            ('f.', 'frequency=FREQ', 'How often this reminder is to recur.\n'
                                     'Specify as [number][unit], where unit is one of [h]our, [d]ay, [w]eek, [m]onth, [y]ear'),
             ('d.', 'date=DATE', 'When this reminder is to trigger.'),
             ('a.', 'active=true|false', 'Whether this reminder is active or not'),
             ('e', 'edit', 'Spawn EDITOR to write comment.'),
-            # INTERESTED PARTY CRAP GOES HERE
             ('r:', 'to=', 'Recipients'),
+            ('D:', 'remove=', 'Recipients to remove'),
             ('', 'reopen', 'Reopen the task when this reminder triggers')
             ]
 
-    help_text = "Usage: %s [OPTIONS] %s" # TODO: What's the second %s meant to be?
+    help_text = "Usage: %s [OPTIONS] %s"
 
     def run(self, commands):
         op, _ = self.get_args(commands, self.ops, self.help_text)
@@ -37,7 +36,6 @@ class reminder(alloc):
 
         args = {}
 
-        print(op)
         # hour day week month year
         if op['frequency'] and not re.match(r'\d+[hdwmy]', op['frequency'], re.IGNORECASE):
             # EXPLODE
@@ -49,20 +47,19 @@ class reminder(alloc):
             args['id'] = op['reminder']
             options = {}
 
+            if op['task'] and not op['task'].isdigit():
+                op['task'] = self.search_for_task({'taskName': op['task']})
+            elif op['project'] and not op['project'].isdigit():
+                op['project'] = self.search_for_project(op['project'])
+            elif op['client'] and not op['client'].isdigit():
+                op['client'] = self.search_for_client({'clientName': op['client']})
+
             options.update(op)
 
             if options['to']:
-                recipients_remove = []
-                recipients = []
-                for name in options['to']:
-                    if name[0] == '-':
-                        recipients_remove.append(name[1:])
-                    else:
-                        recipients.append(name)
-                if recipients:
-                    options['recipients'] = [x['personID'] for x in self.get_people(recipients).values()]
-                if recipients_remove:
-                    options['recipients_remove'] = [x['personID'] for x in self.get_people(recipients_remove).values()]
+                options['recipients'] = [x['personID'] for x in self.get_people(options['to']).values()]
+            if options['remove']:
+                options['recipients_remove'] = [x['personID'] for x in self.get_people(options['remove']).values()]
 
             if op['reminder'] == 'new' and not op['comment']:
                 if not op['edit']:
@@ -100,7 +97,7 @@ class reminder(alloc):
                     options['comment'] = new_comment
 
             args['options'] = options
-            self.make_request(args)
+            print self.make_request(args)
             return
         else:
             # Viewing reminders
@@ -112,14 +109,12 @@ class reminder(alloc):
                 options['id'] = op['task']
             elif op['client']:
                 options['type'] = 'client'
-                options['id'] = op['clietn']
+                options['id'] = op['client']
             elif op['project']:
                 options['type'] = 'project'
                 options['project'] = op['project']
 
             rows = self.get_list("reminder", options)
-
-            print type(rows)
 
             # Compact the recurrency display
             # And the link display
