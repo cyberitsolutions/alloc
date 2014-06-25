@@ -168,7 +168,17 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
 
   if ($success) {
     interestedParty::make_interested_parties("task",$task->get_id(),$_POST["interestedParty"]);
+
+    // A task can only have a pending task or pending reopen date - pending task is fixed up in JS, but check here too
+    if ($task->get_value("taskStatus") != "pending_tasks") {
+      $_POST['pendingTaskIDs'] = '';
+    }
     $task->add_pending_tasks($_POST["pendingTasksIDs"]);
+
+    // This is only valid on pending_, but not on pending_task (because it has a different field)
+    if (strpos($task->get_value("taskStatus"), "pending_") !== 0 || $task->get_value("taskStatus") == "pending_tasks") {
+      $_POST['reopen_task'] = '';
+    }
     $task->add_reopen_reminder($_POST["reopen_task"]);
 
     // Create reminders if necessary
