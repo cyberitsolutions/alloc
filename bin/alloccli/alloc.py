@@ -179,7 +179,16 @@ class alloc(object):
      ,"iiQuantity"               :"Qty"
      ,"iiUnitPrice"              :"Per unit"
      ,"iiMemo"                   :"Comment"
-    }
+    },
+
+    "reminder" : {
+      "reminderID"                :"ID"
+     ,"reminderSubject"           :"Subject"
+     ,"reminderActive"            :"Active"
+     ,"link"                      :"Entity"
+     ,"frequency"                 :"Frequency"
+# Plug in the target object
+    },
   }
 
 

@@ -432,6 +432,7 @@ class reminder extends db_entity {
     $filter["id"]   and $sql[] = prepare("reminderLinkID=%d",$filter["id"]);
     $filter["filter_recipient"] and $sql[] = prepare("personID = %d", $filter["filter_recipient"]);
     imp($filter["filter_reminderActive"]) and $sql[] = prepare("reminderActive = %d",$filter["filter_reminderActive"]);
+
     return $sql;
   }
 
@@ -453,7 +454,8 @@ class reminder extends db_entity {
     while ($row = $db->row()) {
       $reminder = new reminder();
       $reminder->read_db_record($db);
-      $rows[] = $row;
+      $rows[$row['reminderID']] = $row;
+      //$rows[] = $row;
     }
     return $rows;
   }
