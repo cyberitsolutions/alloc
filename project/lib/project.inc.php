@@ -65,47 +65,32 @@ class project extends db_entity {
     global $TPL;
     // The data prior to the save
     $old = $this->all_row_fields;
+    $ids = '';$commar = '';
+    $db = new db_alloc();
 
     // If we're archiving the project, then archive the tasks.
     if ($old["projectStatus"] != "Archived" && $this->get_value("projectStatus") == "Archived") {
-      $db = new db_alloc();
-      $q = prepare("SELECT * FROM task WHERE projectID = %d AND SUBSTRING(taskStatus,1,6) != 'closed'",$this->get_id());
-      $db->query($q);
-      while ($row = $db->row()) {
-        $task = new task();
-        $task->read_row_record($row);
-        $task->set_value("taskStatus","closed_archived");
-        $task->updateSearchIndexLater = true;
-        $task->save();
-        $ids.= $commar.$task->get_id();
+      $q = prepare("SELECT taskID FROM task WHERE projectID = %d AND SUBSTRING(taskStatus,1,6) != 'closed'",$this->get_id());
+      $q1 = $db->query($q);
+      while ($row = $db->row($q1)) {
+        $q = prepare("call change_task_status(%d,'closed_archived')",$row["taskID"]);
+        $db->query($q);
+        $ids.= $commar.$row["taskID"];
         $commar = ", ";
       }
-      $ids and $TPL["message_good"][] = "All open and pending Tasks (".$ids.") have had their status changed to Closed: Archived.";
-    }
+      $ids and $TPL["message_good"][] = "All open and pending tasks (".$ids.") have had their status changed to Closed: Archived.";
 
-    // If we're un-archiving the project, then un-archive the tasks.
-    if ($old["projectStatus"] == "Archived" && $this->get_value("projectStatus") != "Archived") {
-      $db = new db_alloc();
-      $q = prepare("SELECT * FROM task WHERE projectID = %d AND taskStatus = 'closed_archived'",$this->get_id());
-      $id = $db->query($q);
-      while ($row = $db->row($id)) {
-        $q = prepare("SELECT * FROM audit
-                       WHERE taskID = %d
-                         AND field = 'taskStatus'
-                    ORDER BY auditID DESC
-                       LIMIT 2,1
-                    ",$row["taskID"]);
-        $id2 = $db->query($q);
-        $r = $db->row($id2);
-        $task = new task();
-        $task->read_row_record($row);
-        $task->set_value("taskStatus",$r["value"]);
-        $task->updateSearchIndexLater = true;
-        $task->save();
-        $ids.= $commar.$task->get_id();
+    // Else if we're un-archiving the project, then un-archive the tasks.
+    } else if ($old["projectStatus"] == "Archived" && $this->get_value("projectStatus") != "Archived") {
+      $q = prepare("SELECT taskID FROM task WHERE projectID = %d AND taskStatus = 'closed_archived'",$this->get_id());
+      $q1 = $db->query($q);
+      while ($row = $db->row($q1)) {
+        $q = prepare("call change_task_status(%d,get_most_recent_non_archived_taskStatus(%d))",$row["taskID"],$row["taskID"]);
+        $db->query($q);
+        $ids.= $commar.$row["taskID"];
         $commar = ", ";
       }
-      $ids and $TPL["message_good"][] = "All archived Tasks (".$ids.") have been set back to their former task status.";
+      $ids and $TPL["message_good"][] = "All archived tasks (".$ids.") have been set back to their former task status.";
     }
 
     $TPL["message"] or $TPL["message_good"][] = "Project saved.";

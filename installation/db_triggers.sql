@@ -122,6 +122,23 @@ BEGIN
 END
 $$
 
+DROP FUNCTION IF EXISTS get_most_recent_non_archived_taskStatus $$
+CREATE FUNCTION get_most_recent_non_archived_taskStatus(tID INTEGER) RETURNS varchar(255) READS SQL DATA
+BEGIN
+  DECLARE rtn varchar(255);
+  SELECT value INTO rtn FROM audit
+   WHERE taskID = tID
+     AND value != 'closed_archived'
+     AND field = 'taskStatus'
+ORDER BY auditID DESC
+   LIMIT 1;
+
+  IF (empty(rtn)) THEN
+    SELECT 'open_notstarted' INTO rtn;
+  END IF;
+  RETURN rtn;
+END
+$$
 
 -- this fucker exists because mysql doesn't yet provide a way to kill the
 -- operation when a trigger's initiating event should fail, eg BEFORE DELETE might
@@ -819,7 +836,10 @@ BEGIN
       IF (num_records = 0) THEN
         -- first close off the dependence
         UPDATE task SET taskStatus = new_status WHERE taskID = tID AND taskStatus != new_status;
-        call change_task_status(task_that_is_pending,"open_notstarted");
+        IF neq(new_status,'closed_archived') THEN
+          -- Don't run auto-opening if just archiving the dependants
+          call change_task_status(task_that_is_pending,"open_notstarted");
+        END IF;
         -- this needs to be set again
         SET @in_change_task_status = 1; 
       END IF;
@@ -842,9 +862,9 @@ BEGIN
       FETCH parent_tasks_cursor INTO task_that_is_child, child_type;
 
       IF child_type = 'Parent' THEN
-        call change_task_status(task_that_is_child,"closed_incomplete");
+        call change_task_status(task_that_is_child,new_status);
       END IF;
-      UPDATE task SET taskStatus = "closed_incomplete"
+      UPDATE task SET taskStatus = new_status
        WHERE SUBSTRING(task.taskStatus,1,6) != 'closed'
          AND (parentTaskID = task_that_is_child OR taskID = task_that_is_child);
 
@@ -865,6 +885,35 @@ BEGIN
     UPDATE task SET taskStatus = 'pending_tasks'
      WHERE taskStatus = 'open_notstarted'
        AND taskID IN (SELECT taskID FROM pendingTask WHERE pendingTaskID = tID);
+
+    -- Take care of closing the child tasks if the parent task is closed
+    SET no_more_rows = 0;
+
+    -- Walk through a set of rows using a mysql cursor
+    OPEN parent_tasks_cursor;
+    the_loop: LOOP
+
+      -- This loads the taskID results of the select query, defined above, into the loop variables
+      FETCH parent_tasks_cursor INTO task_that_is_child, child_type;
+
+      IF child_type = 'Parent' THEN
+        call change_task_status(task_that_is_child,new_status);
+      END IF;
+      UPDATE task SET taskStatus = new_status
+       WHERE SUBSTRING(task.taskStatus,1,6) = 'closed_archived'
+         AND (parentTaskID = task_that_is_child OR taskID = task_that_is_child);
+
+      -- this needs to be set again
+      SET @in_change_task_status = 1;
+
+      IF no_more_rows THEN
+        CLOSE parent_tasks_cursor;
+        LEAVE the_loop;
+      END IF;
+    END LOOP the_loop;
+
+    SET @in_change_task_status = 1;
+
   END IF;
 
   -- If just moved from pending_tasks to anything else ...

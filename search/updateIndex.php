@@ -46,11 +46,11 @@ foreach (array("client","comment","item","project","task","timeSheet","wiki") as
 $q = "SELECT * FROM indexQueue ORDER BY entity";
 
 $db = new db_alloc();
-$db->query($q);
+$q1 = $db->query($q);
 
 echoo("Beginning ...");
 
-while ($row = $db->row()) {
+while ($row = $db->row($q1)) {
 
   $z++;
   if ($z % 1000 == 0 && is_object($index)) {
@@ -82,10 +82,9 @@ while ($row = $db->row()) {
   $e->delete_search_index_doc($index);
   $e->update_search_index_doc($index);
 
+
   // Nuke item from queue
-  $i = new indexQueue();
-  $i->set_id($row["indexQueueID"]);
-  $i->delete();
+  $db->query("DELETE FROM indexQueue WHERE indexQueueID = %d",$row["indexQueueID"]);
 }
 
 // commit index
