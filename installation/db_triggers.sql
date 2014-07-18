@@ -807,7 +807,7 @@ BEGIN
   DECLARE old_status VARCHAR(255);
   DECLARE num_pending_tasks INTEGER;
   DECLARE pending_tasks_cursor CURSOR FOR SELECT taskID FROM pendingTask WHERE pendingTaskID = tID;
-  DECLARE parent_tasks_cursor CURSOR FOR SELECT taskID,taskTypeID FROM task WHERE parentTaskID = tID;
+  DECLARE child_tasks_cursor CURSOR FOR SELECT taskID,taskTypeID FROM task WHERE parentTaskID = tID;
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET no_more_rows = TRUE;
   SET max_sp_recursion_depth = 10; 
   SET @in_change_task_status = 1;
@@ -854,12 +854,12 @@ BEGIN
     -- Take care of closing the child tasks if the parent task is closed
     SET no_more_rows = 0;
 
-    -- Walk through a set of rows using a mysql cursor
-    OPEN parent_tasks_cursor;
+    -- Walk through a set of child task rows using a mysql cursor
+    OPEN child_tasks_cursor;
     the_loop: LOOP
       
       -- This loads the taskID results of the select query, defined above, into the loop variables
-      FETCH parent_tasks_cursor INTO task_that_is_child, child_type;
+      FETCH child_tasks_cursor INTO task_that_is_child, child_type;
 
       IF child_type = 'Parent' THEN
         call change_task_status(task_that_is_child,new_status);
@@ -872,7 +872,7 @@ BEGIN
       SET @in_change_task_status = 1; 
 
       IF no_more_rows THEN
-        CLOSE parent_tasks_cursor;
+        CLOSE child_tasks_cursor;
         LEAVE the_loop;
       END IF;
     END LOOP the_loop;
@@ -890,29 +890,29 @@ BEGIN
     SET no_more_rows = 0;
 
     -- Walk through a set of rows using a mysql cursor
-    OPEN parent_tasks_cursor;
+    OPEN child_tasks_cursor;
     the_loop: LOOP
-
+      
       -- This loads the taskID results of the select query, defined above, into the loop variables
-      FETCH parent_tasks_cursor INTO task_that_is_child, child_type;
+      FETCH child_tasks_cursor INTO task_that_is_child, child_type;
 
       IF child_type = 'Parent' THEN
         call change_task_status(task_that_is_child,new_status);
       END IF;
-      UPDATE task SET taskStatus = new_status
-       WHERE SUBSTRING(task.taskStatus,1,6) = 'closed_archived'
+      UPDATE task SET taskStatus = get_most_recent_non_archived_taskStatus(task_that_is_child)
+       WHERE task.taskStatus = 'closed_archived'
          AND (parentTaskID = task_that_is_child OR taskID = task_that_is_child);
 
       -- this needs to be set again
-      SET @in_change_task_status = 1;
+      SET @in_change_task_status = 1; 
 
       IF no_more_rows THEN
-        CLOSE parent_tasks_cursor;
+        CLOSE child_tasks_cursor;
         LEAVE the_loop;
       END IF;
     END LOOP the_loop;
 
-    SET @in_change_task_status = 1;
+    SET @in_change_task_status = 1; 
 
   END IF;
 
