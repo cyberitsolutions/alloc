@@ -327,10 +327,8 @@ class db_entity {
 
       // Update the index asynchronously (later from a job running search/updateIndex.php)
       if ($this->updateSearchIndexLater) {
-        $i = new indexQueue();
-        $i->set_value("entity",$this->classname);
-        $i->set_value("entityID",$this->get_id());
-        $i->save();
+        $db = $this->get_db();
+        $db->query("call update_search_index('%s',%d)",$this->classname,$this->get_id());
 
       // Update the index right now
       } else {
