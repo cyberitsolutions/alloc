@@ -82,7 +82,7 @@ function perform_test($test) {
     break;
     case "php_version":
       $arr["value"] = phpversion();
-      if (!version_compare(phpversion(), "5.2.6", ">=")) {
+      if (!version_compare(phpversion(), "5.4", ">=")) {
         $arr["remedy"] = "Some functionality may not work correctly with your version of PHP. It is recommended that you upgrade.";
       }
     break;
