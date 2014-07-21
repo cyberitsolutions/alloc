@@ -1,7 +1,7 @@
 {if $taskListRows}
 
 <!-- Header -->
-{if $_FORM["showEdit"]}<form action="{$_FORM["url_form_action"]}" method="post">{/}
+{if $_FORM["showEdit"]}<form action="{$url_alloc_taskList}" method="post">{/}
 <table class="list sortable">
   <tr>
   {if $_FORM["showEdit"]}
@@ -91,10 +91,10 @@
   {$taskType = new meta("taskType")}
   {$taskType_array = $taskType->get_assoc_array("taskTypeID","taskTypeID")}
   <tfoot>
-    <tr>
-      <th colspan="26" class="nobr noprint" style="padding:2px;">
+    <tr id="task_editor">
+      <th colspan="26" class="nobr noprint" style="padding:2px;" data-sort="none">
         <span style="margin-right:5px;">
-          <select name="update_action" onChange="$('.hidden').hide();$('#'+$(this).val()+'_span').show();$('#mass_update').show();"> 
+          <select name="update_action" onChange="$('#task_editor .hidden').hide();$('#'+$(this).val()+'_span').show();$('#mass_update').show();"> 
             <option value="">Modify Checked...
             <option value="personID">Assign to --&gt;
             <option value="managerID">Manager to --&gt;
@@ -138,6 +138,7 @@
     </tr>
   </tfoot>
   <input type="hidden" name="sessID" value="{$sessID}">
+  <input type="hidden" name="returnURL" value="{echo $taskListOptions["returnURL"]}">
   </form>
   {/}
 

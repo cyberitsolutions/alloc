@@ -80,7 +80,8 @@ if ($_POST["mass_update"]) {
       }
     }
     $TPL["message_good"][] = "Tasks updated.";
-    alloc_redirect($TPL["url_alloc_taskList"]);
+    $url = $_POST["returnURL"] or $url = $TPL["url_alloc_taskList"];
+    alloc_redirect($url);
   }
 }
 

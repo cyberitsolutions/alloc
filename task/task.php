@@ -37,7 +37,9 @@ define("PAGE_IS_PRINTABLE",1);
       $options["showHeader"] = true;
       $options["showTimes"] = true;
       $options["showStatus"] = true;
+      $options["showEdit"] = true;
       $options["showPriorityFactor"] = true;
+      $options["returnURL"] = $TPL["url_alloc_task"]."taskID=".$task->get_id();
 
       $_GET["media"] == "print" and $options["showDescription"] = true;
       $_GET["media"] == "print" and $options["showComments"] = true;
