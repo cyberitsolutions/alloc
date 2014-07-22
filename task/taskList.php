@@ -29,6 +29,7 @@ $defaults = array("showHeader"=>true
                  ,"showEdit"=>true
                  ,"taskView" => "byProject"
                  ,"showStatus" => "true"
+                 ,"showTotals" => "true"
                  ,"padding"=>1
                  ,"url_form_action"=>$TPL["url_alloc_taskList"]
                  ,"form_name"=>"taskList_filter"

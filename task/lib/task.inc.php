@@ -1184,6 +1184,7 @@ class task extends db_entity {
                 ,"showManager"          => "Show the tasks manager"
                 ,"showPercent"          => "The percent complete"
                 ,"showEdit"             => "Display the html edit controls to allow en masse task editing"
+                ,"showTotals"           => "Display the totals of certain columns in the html view"
                 );
   }
 
