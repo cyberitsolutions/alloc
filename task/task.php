@@ -36,6 +36,8 @@ define("PAGE_IS_PRINTABLE",1);
       $options["showPercent"] = true;
       $options["showHeader"] = true;
       $options["showTimes"] = true;
+      $options["showTaskID"] = true;
+      $options["showTotals"] = true;
       $options["showStatus"] = true;
       $options["showEdit"] = true;
       $options["showPriorityFactor"] = true;

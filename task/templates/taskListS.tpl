@@ -81,16 +81,30 @@
     </td>
   {/}
 
+  {$gt_best     += $r["timeBest"]*60*60}
+  {$gt_expected += $r["timeExpected"]*60*60}
+  {$gt_worst    += $r["timeWorst"]*60*60}
+  {$gt_actual   += $r["timeActual"]*60*60}
+  {$gt_limit    += $r["timeLimit"]*60*60}
+
   </tr>
   {/}
+  {$gt_actual > $gt_limit and $gt_status=' bad'}
+  {$gt_best     and $gt_best     = seconds_to_display_format($gt_best)}
+  {$gt_expected and $gt_expected = seconds_to_display_format($gt_expected)}
+  {$gt_worst    and $gt_worst    = seconds_to_display_format($gt_worst)}
+  {$gt_actual   and $gt_actual   = seconds_to_display_format($gt_actual)}
+  {$gt_limit    and $gt_limit    = seconds_to_display_format($gt_limit)}
 
   <!-- Footer -->
+  {if $_FORM["showTotals"] || $_FORM["showEdit"]}
+  <tfoot>
+  {/}
 
   {if $_FORM["showEdit"]}
   {$person_options = page::select_options(person::get_username_list())}
   {$taskType = new meta("taskType")}
   {$taskType_array = $taskType->get_assoc_array("taskTypeID","taskTypeID")}
-  <tfoot>
     <tr id="task_editor">
       <th colspan="26" class="nobr noprint" style="padding:2px;" data-sort="none">
         <span style="margin-right:5px;">
@@ -136,12 +150,43 @@
         <button type="submit" id="mass_update" name="mass_update" value="1" class="hidden save_button" style="margin-left:5px;text-transform:none !important;">Update Tasks<i class="icon-ok-sign"></i></button>
       </th>
     </tr>
-  </tfoot>
   <input type="hidden" name="sessID" value="{$sessID}">
   <input type="hidden" name="returnURL" value="{echo $taskListOptions["returnURL"]}">
   </form>
   {/}
 
+  {if $_FORM["showTotals"] && $_FORM["showTimes"]}
+    <tr>
+  {if $_FORM["showEdit"]}<td></td>{/}
+    <td></td> <!-- taskTypeImage -->
+  {if $_FORM["showTaskID"]}<td></td>{/}
+    <td></td> <!-- task name -->
+  {if $_FORM["showProject"]}<td></td>{/}
+  {if $_FORM["showPriority"] || $_FORM["showPriorityFactor"]}<td></td>{/}
+  {if $_FORM["showPriority"]}<td></td>{/}
+  {if $_FORM["showPriority"]}<td></td>{/}
+  {if $_FORM["showCreator"]}<td></td>{/}
+  {if $_FORM["showManager"]}<td></td>{/}
+  {if $_FORM["showAssigned"]}<td></td>{/}
+  {if $_FORM["showDate1"]}<td></td>{/}
+  {if $_FORM["showDate2"]}<td></td>{/}
+  {if $_FORM["showDate3"]}<td></td>{/}
+  {if $_FORM["showDate4"]}<td></td>{/}
+  {if $_FORM["showDate5"]}<td></td>{/}
+  {if $_FORM["showTimes"]}<td class="grand_total">{$gt_best}</td>{/}
+  {if $_FORM["showTimes"]}<td class="grand_total">{$gt_expected}</td>{/}
+  {if $_FORM["showTimes"]}<td class="grand_total">{$gt_worst}</td>{/}
+  {if $_FORM["showTimes"]}<td class="grand_total">{$gt_actual}</td>{/}
+  {if $_FORM["showTimes"]}<td class="grand_total{$gt_status}">{$gt_limit}</td>{/}
+  {if $_FORM["showPercent"]}<td></td>{/}
+  {if $_FORM["showStatus"]}<td></td>{/}
+  {if $_FORM["showEdit"] || $_FORM["showStarred"]}<td></td>{/}
+    </tr>
+  {/}
+
+  {if $_FORM["showTotals"] || $_FORM["showEdit"]}
+  </tfoot>
+  {/}
 </table>
 
 
