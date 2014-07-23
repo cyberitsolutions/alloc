@@ -440,7 +440,7 @@ class interestedParty extends db_entity {
       $party = trim($party);
 
       // remove an ip
-      if ($party[0] == "-") {
+      if ($party[0] == "%") {
         list($personID,$name,$email) = interestedParty::expand_ip(implode("",array_slice(str_split($party),1)),$projectID);
         interestedParty::delete_interested_party($entity, $entityID, $email);
 

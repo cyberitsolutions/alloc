@@ -76,7 +76,7 @@ class command {
      ,"pend"      => array("",                "The task ID(s), commar separated, that block this task")
      ,"reopen"    => array("",                "Reopen the task on this date. To be used with --status=pending.")
      ,"task"      => array("",                "A task ID, or the word 'new' to create a new task.")
-     ,"taskip"    => array("",                "Add some interested parties and send the desc to them.")
+     ,"dip"    => array("",                   "Add some default interested parties.")
     );
 
     $types = array("all"=>array_merge($comment,$item,$task)
@@ -292,13 +292,6 @@ class command {
         $after_label = "Fields: ";
       }
 
-      if (strtolower($commands["task"]) == "new") {
-        $interestedPartyOptions = $task->get_all_parties();
-        foreach ((array)$interestedPartyOptions as $email => $info) {
-          $info["selected"] and $selected_ips[] = $info["identifier"];
-        }
-      }
-
       // Save task
       $err = $task->validate();
       if (!$err && $task->save()) {
@@ -320,12 +313,8 @@ class command {
         $str and $status[] = "msg";
         $str and $message[] = $after_label.$str;
 
-        if (strtolower($commands["task"]) == "new" && $selected_ips) {
-          interestedParty::make_interested_parties("task",$task->get_id(),$selected_ips);
-        }
-
-        if ($commands["taskip"]) {
-          #interestedParty::add_remove_ips($commands["taskip"],"task",$task->get_id(),$task->get_value("projectID"));
+        if ($commands["dip"]) {
+          interestedParty::add_remove_ips($commands["dip"],"task",$task->get_id(),$task->get_value("projectID"));
         }
   
         if (strtolower($commands["task"]) == "new") {
