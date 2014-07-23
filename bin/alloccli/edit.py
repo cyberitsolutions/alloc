@@ -13,6 +13,7 @@ class edit(alloc):
   ops.append((''  , 'name=TEXT      ', 'task\'s title'))
   ops.append((''  , 'assign=USERNAME', 'username of the person that the task is assigned to'))
   ops.append((''  , 'manage=USERNAME', 'username of the person that the task is managed by'))
+  ops.append((''  , 'dip=TEXT       ', 'default interested parties, comma separated usernames/emails/full names'))
   ops.append((''  , 'desc=TEXT      ', 'task\'s long description'))
   ops.append((''  , 'priority=PRI   ', '1, 2, 3, 4 or 5; or one of Wishlist, Minor, Normal, Important or Critical'))
   ops.append((''  , 'limit=HOURS    ', 'limit in hours for effort spend on this task'))

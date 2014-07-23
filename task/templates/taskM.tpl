@@ -136,7 +136,7 @@ $(document).ready(function() {
           {foreach $interestedParties as $ip}
             <tr class="hover">
               <td style="width:50%;">
-                <a class='undecorated' href='mailto:{=$ip.name} <{=$ip.email}>'>{=$ip.name}</a>
+                <a class='undecorated' href='mailto:{=$ip.name} <{=$ip.email}>'>{=$ip.name}{if !$ip["name"]}{=$ip.email}{/}</a>
               </td>
               <td style="width:50%;">
                 {if $ip["phone"]["p"]}Ph: {=$ip.phone.p}{/}
