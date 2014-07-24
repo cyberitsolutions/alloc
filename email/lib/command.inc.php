@@ -259,6 +259,12 @@ class command {
           $v = $priorities[strtolower($v)];
         }
 
+        // so that --type parent becomes --type Parent
+        // mysql's referential integrity is case-insensitive :(
+        if ($k == "type") {
+          $v = ucwords($v);
+        }
+
         // Plug the value in
         if ($task_fields[$k][0]) {
           $changes[$k] = $task_fields[$k][0];
