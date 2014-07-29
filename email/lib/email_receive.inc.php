@@ -158,7 +158,13 @@ class email_receive {
 
   function set_msg($x) {
     $this->msg_uid = $x;
-    $this->mail_headers = $this->mail_structure = $this->mail_text = $this->mail_parts = $this->mail_info = $this->dir = "";
+    $this->mail_headers = '';
+    $this->mail_structure = '';
+    $this->mail_text = '';
+    $this->mail_parts = '';
+    $this->mail_info = '';
+    $this->dir = '';
+    $this->mimebits = '';
   }
 
   function set_msg_text($text) {
