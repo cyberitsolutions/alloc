@@ -34,6 +34,8 @@
         <tr>
           <td align="right"><label for="showPriority" class="nobr">Priority Info</label></td>
           <td><input type="checkbox" id="showPriority" name="showPriority"{$showPriority_checked}></td>
+          <td align="right"><label for="showParentID" class="nobr">Parent ID</label></td>
+          <td><input type="checkbox" id="showParentID" name="showParentID"{$showParentID_checked}></td>
         </tr>
       </table>
       {/}

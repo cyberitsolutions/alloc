@@ -618,11 +618,11 @@ class task extends db_entity {
     return $rtn;
   }
 
-  function get_url($absolute=false) {
+  function get_url($absolute=false,$id=false) {
     global $sess;
     $sess or $sess = new session();
-
-    $url = "task/task.php?taskID=".$this->get_id();
+    $id or $id = $this->get_id();
+    $url = "task/task.php?taskID=".$id;
 
     if ($sess->Started() && !$absolute) {
       $url = $sess->url(SCRIPT_PATH.$url);
@@ -986,6 +986,7 @@ class task extends db_entity {
       $row["padding"] = $_FORM["padding"];
       $row["taskID"] = $task->get_id();
       $row["parentTaskID"] = $task->get_value("parentTaskID");
+      $row["parentTaskID_link"] = "<a href='".$task->get_url(false,$task->get_value("parentTaskID"))."'>".$task->get_value("parentTaskID")."</a>";
       $row["timeLimitLabel"] = $row["timeBestLabel"] = $row["timeWorstLabel"] = $row["timeExpectedLabel"] = $row["timeActualLabel"] = "";
       $row["timeLimit"] !== NULL    and $row["timeLimitLabel"]    = seconds_to_display_format($row["timeLimit"]*60*60);
       $row["timeBest"] !== NULL     and $row["timeBestLabel"]     = seconds_to_display_format($row["timeBest"]*60*60);
@@ -1181,6 +1182,7 @@ class task extends db_entity {
                 ,"showDescription"      => "The tasks description"
                 ,"showComments"         => "The tasks comments"
                 ,"showTaskID"           => "The task ID"
+                ,"showParentID"         => "The task's parent ID"
                 ,"showManager"          => "Show the tasks manager"
                 ,"showPercent"          => "The percent complete"
                 ,"showEdit"             => "Display the html edit controls to allow en masse task editing"
@@ -1277,6 +1279,7 @@ class task extends db_entity {
     $_FORM["showTaskID"]      and $rtn["showTaskID_checked"]      = " checked";
     $_FORM["showManager"]     and $rtn["showManager_checked"]     = " checked";
     $_FORM["showProject"]     and $rtn["showProject_checked"]     = " checked";
+    $_FORM["showParentID"]    and $rtn["showParentID_checked"]    = " checked";
     
     $arrow = " --&gt;";
     $taskDateOps = array(""                   => ""
