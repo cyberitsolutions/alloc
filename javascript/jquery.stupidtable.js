@@ -14,7 +14,7 @@
       $("tbody",this).replaceWith($("tbody",this).contents());
 
       // change <tfoot><tr> into <tr class="tfoot">
-      $("tfoot",this).find("tr").first().addClass("tfoot");
+      $("tfoot",this).find("tr").addClass("tfoot");
       $("tfoot",this).replaceWith($("tfoot",this).contents());
   
       // Add <thead>, <tbody> and <tfoot> again
