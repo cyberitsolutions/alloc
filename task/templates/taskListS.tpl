@@ -103,6 +103,36 @@
   <tfoot>
   {/}
 
+  {if $_FORM["showTotals"] && $_FORM["showTimes"]}
+    <tr>
+  {if $_FORM["showEdit"]}<td></td>{/}
+    <td></td> <!-- taskTypeImage -->
+  {if $_FORM["showTaskID"]}<td></td>{/}
+  {if $_FORM["showParentID"]}<td></td>{/}
+    <td></td> <!-- task name -->
+  {if $_FORM["showProject"]}<td></td>{/}
+  {if $_FORM["showPriority"] || $_FORM["showPriorityFactor"]}<td></td>{/}
+  {if $_FORM["showPriority"]}<td></td>{/}
+  {if $_FORM["showPriority"]}<td></td>{/}
+  {if $_FORM["showCreator"]}<td></td>{/}
+  {if $_FORM["showManager"]}<td></td>{/}
+  {if $_FORM["showAssigned"]}<td></td>{/}
+  {if $_FORM["showDate1"]}<td></td>{/}
+  {if $_FORM["showDate2"]}<td></td>{/}
+  {if $_FORM["showDate3"]}<td></td>{/}
+  {if $_FORM["showDate4"]}<td></td>{/}
+  {if $_FORM["showDate5"]}<td></td>{/}
+  {if $_FORM["showTimes"]}<td class="grand_total">{$gt_best}</td>{/}
+  {if $_FORM["showTimes"]}<td class="grand_total">{$gt_expected}</td>{/}
+  {if $_FORM["showTimes"]}<td class="grand_total">{$gt_worst}</td>{/}
+  {if $_FORM["showTimes"]}<td class="grand_total">{$gt_actual}</td>{/}
+  {if $_FORM["showTimes"]}<td class="grand_total{$gt_status}">{$gt_limit}</td>{/}
+  {if $_FORM["showPercent"]}<td></td>{/}
+  {if $_FORM["showStatus"]}<td></td>{/}
+  {if $_FORM["showEdit"] || $_FORM["showStarred"]}<td></td>{/}
+    </tr>
+  {/}
+
   {if $_FORM["showEdit"]}
   {$person_options = page::select_options(person::get_username_list())}
   {$taskType = new meta("taskType")}
@@ -155,36 +185,6 @@
   <input type="hidden" name="sessID" value="{$sessID}">
   <input type="hidden" name="returnURL" value="{echo $taskListOptions["returnURL"]}">
   </form>
-  {/}
-
-  {if $_FORM["showTotals"] && $_FORM["showTimes"]}
-    <tr>
-  {if $_FORM["showEdit"]}<td></td>{/}
-    <td></td> <!-- taskTypeImage -->
-  {if $_FORM["showTaskID"]}<td></td>{/}
-  {if $_FORM["showParentID"]}<td></td>{/}
-    <td></td> <!-- task name -->
-  {if $_FORM["showProject"]}<td></td>{/}
-  {if $_FORM["showPriority"] || $_FORM["showPriorityFactor"]}<td></td>{/}
-  {if $_FORM["showPriority"]}<td></td>{/}
-  {if $_FORM["showPriority"]}<td></td>{/}
-  {if $_FORM["showCreator"]}<td></td>{/}
-  {if $_FORM["showManager"]}<td></td>{/}
-  {if $_FORM["showAssigned"]}<td></td>{/}
-  {if $_FORM["showDate1"]}<td></td>{/}
-  {if $_FORM["showDate2"]}<td></td>{/}
-  {if $_FORM["showDate3"]}<td></td>{/}
-  {if $_FORM["showDate4"]}<td></td>{/}
-  {if $_FORM["showDate5"]}<td></td>{/}
-  {if $_FORM["showTimes"]}<td class="grand_total">{$gt_best}</td>{/}
-  {if $_FORM["showTimes"]}<td class="grand_total">{$gt_expected}</td>{/}
-  {if $_FORM["showTimes"]}<td class="grand_total">{$gt_worst}</td>{/}
-  {if $_FORM["showTimes"]}<td class="grand_total">{$gt_actual}</td>{/}
-  {if $_FORM["showTimes"]}<td class="grand_total{$gt_status}">{$gt_limit}</td>{/}
-  {if $_FORM["showPercent"]}<td></td>{/}
-  {if $_FORM["showStatus"]}<td></td>{/}
-  {if $_FORM["showEdit"] || $_FORM["showStarred"]}<td></td>{/}
-    </tr>
   {/}
 
   {if $_FORM["showTotals"] || $_FORM["showEdit"]}
