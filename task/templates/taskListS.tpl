@@ -11,6 +11,7 @@
   {/}
     <th width="1%" data-sort="num">&nbsp;</th> <!-- taskTypeImage -->
   {if $_FORM["showTaskID"]}<th data-sort="num" width="1%">ID</th>{/}
+  {if $_FORM["showParentID"]}<th data-sort="num" width="1%">PID</th>{/}
     <th>Task</th>
   {if $_FORM["showProject"]}<th>Project</th>{/}
   {if $_FORM["showPriority"] || $_FORM["showPriorityFactor"]}<th data-sort="num">Priority</th>{/}
@@ -41,6 +42,7 @@
   {if $_FORM["showEdit"]}      <td class="nobr noprint"><input type="checkbox" id="checkbox_{$r.taskID}" name="select[{$r.taskID}]" class="task_checkboxes"></td>{/}
                                <td data-sort-value="{$r.taskTypeSeq}">{$r.taskTypeImage}</td>
   {if $_FORM["showTaskID"]}    <td>{$r.taskID}</td>{/}
+  {if $_FORM["showParentID"]}  <td>{$r.parentTaskID_link}</td>{/}
                                <td style="padding-left:{echo $r["padding"]*25+6}px">{$r.taskLink}&nbsp;&nbsp;{$r.newSubTask}
   {if $_FORM["showDescription"]}<br>{=$r.taskDescription}{/}
   {if $_FORM["showComments"] && $r["comments"]}<br>{$r.comments}{/}
@@ -160,6 +162,7 @@
   {if $_FORM["showEdit"]}<td></td>{/}
     <td></td> <!-- taskTypeImage -->
   {if $_FORM["showTaskID"]}<td></td>{/}
+  {if $_FORM["showParentID"]}<td></td>{/}
     <td></td> <!-- task name -->
   {if $_FORM["showProject"]}<td></td>{/}
   {if $_FORM["showPriority"] || $_FORM["showPriorityFactor"]}<td></td>{/}
