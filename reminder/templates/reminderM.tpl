@@ -121,7 +121,7 @@ $(document).ready(function() {
           <h6>Recipients<div>When</div></h6>
           <div style="float:left; width:47%;">
             <select name="reminder_recipient[]" multiple="true">{page::select_options($reminder_recipients,$selected_recipients)}</select>
-            {page::help("reminder_recipient")}
+            <span style='float:right'>{page::help("reminder_recipient")}</span>
           </div>
           <div style="float:right; width:50%; text-align:left;">
             {page::calendar("reminder_date",$reminder_date)}&nbsp;&nbsp;
