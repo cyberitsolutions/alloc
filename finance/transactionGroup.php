@@ -96,7 +96,7 @@ if ($_POST["save_transactions"]) {
 
     foreach ($_POST["transactionID"] as $k => $transactionID) {
       // Delete
-      if (in_array($transactionID, $_POST["deleteTransaction"])) {
+      if ($transactionID && in_array($transactionID, $_POST["deleteTransaction"])) {
         $transaction = new transaction();
         $transaction->set_id($transactionID);
         $transaction->select();
