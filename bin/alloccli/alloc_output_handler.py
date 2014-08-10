@@ -210,6 +210,8 @@ class alloc_output_handler:
       for row in rows:
         table.add_row(row)
       print unicode(table.get_string(header=True)).encode('utf-8')
+      # http://stackoverflow.com/questions/15793886/how-to-avoid-a-broken-pipe-error-when-printing-a-large-amount-of-formatted-data
+      sys.stdout.flush()
 
   def __get_row(self, alloc, entity, row, only_these_fields, transforms=None):
     """Load up the items for one row for a pretty table or csv output."""
