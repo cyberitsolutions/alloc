@@ -20,7 +20,7 @@
     
     <div class="container">
       <div style="float:right">
-        ID: <b>{$timeSheetID}</b>
+        Time Sheet ID: <b>{$timeSheetID}</b>
       </div>
     </div>
 
@@ -53,6 +53,7 @@
 
 
     <div class="container">
+      Date Issued {echo date("d/m/Y")}<br>
       Client: {$clientName}<br>
       Project: {$timeSheet_projectName}<br>
       Contractor: {$timeSheet_personName}
@@ -128,7 +129,7 @@
 
     <div class="container">
       <div style="float:right">
-        ID: <b>{$timeSheetID}</b>
+        Time Sheet ID: <b>{$timeSheetID}</b>
       </div>
     </div>
 
