@@ -1243,13 +1243,7 @@ class comment extends db_entity {
     return $rtn;
   }
 
-  function attach_tasks($commentID, $entityID, $options) {
-
-    $c = new comment();
-    $c->set_id($commentID);
-    $c->select();
-    $projectID = $c->get_project_id();
-
+  function attach_tasks($commentID, $projectID, $options) {
     if ($projectID) {
       // Begin buffering output to halt anything being sent to the web browser.
       ob_start();
@@ -1280,7 +1274,7 @@ class comment extends db_entity {
       $suffix = ".html";
       $options != "html" && $options != "html_plus" and $suffix = ".pdf";
 
-      $rtn["name"] = "taskList_".$entityID.$suffix;
+      $rtn["name"] = "taskList_".$projectID.$suffix;
       $rtn["blob"] = $str;
       $rtn["size"] = strlen($str);
       return $rtn;
