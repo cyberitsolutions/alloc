@@ -55,19 +55,19 @@ if ($_FILES) {
 
 // Attach any alloc generated timesheet pdf
 if ($_REQUEST["attach_timeSheet"]) {
-  $files[] = comment::attach_timeSheet($commentID, $_REQUEST["entityID"], $_REQUEST["attach_timeSheet"]);
+  $files[] = comment::attach_timeSheet($commentID, $_REQUEST["commentMasterID"], $_REQUEST["attach_timeSheet"]);
 }
 
 // Attach any alloc generated invoice pdf
 if ($_REQUEST["attach_invoice"]) {
   $_REQUEST["attach_invoice"] == $_REQUEST["generate_pdf_verbose"] and $verbose = true; // select
   $_REQUEST["generate_pdf_verbose"] and $verbose = true; // link
-  $files[] = comment::attach_invoice($commentID,$_REQUEST["entityID"],$verbose);
+  $files[] = comment::attach_invoice($commentID,$_REQUEST["commentMasterID"],$verbose);
 }
 
 // Attach any alloc generated tasks pdf
 if ($_REQUEST["attach_tasks"]) {
-  $files[] = comment::attach_tasks($commentID,$_REQUEST["entityID"],$_REQUEST["attach_tasks"]);
+  $files[] = comment::attach_tasks($commentID,$_REQUEST["commentMasterID"],$_REQUEST["attach_tasks"]);
 }
 
 // Store the files on the file-system temporarily in this dir

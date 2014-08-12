@@ -300,7 +300,7 @@ class timeSheetPrint {
 
       $db->next_record();
       $timeSheet->set_id($timeSheetID);
-      $timeSheet->select() || alloc_error("unable to determine timeSheetID for purposes of latest date.");
+      $timeSheet->select() || alloc_error("Unable to select time sheet, trying to use id: ".$timeSheetID);
       $TPL["period"] = format_date(DATE_FORMAT, $db->f("minDate"))." to ".format_date(DATE_FORMAT, $db->f("maxDate"));
 
       $TPL["img"] = config::get_config_item("companyImage");
