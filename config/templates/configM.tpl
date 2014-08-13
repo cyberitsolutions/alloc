@@ -62,6 +62,11 @@
     <td><input type="text" size="70" value="{$allocSessionMinutes}" name="allocSessionMinutes"></td> 
     <td width="1%">{page::help("config_allocSessionMinutes")}</td>
   </tr>
+  <tr>
+    <td width="20%"><nobr>Task Window Num Days</nobr></td>
+    <td><input type="text" size="70" value="{$taskWindow}" name="taskWindow"></td>
+    <td width="1%">{page::help("config_taskWindow")}</td>
+  </tr>
   <tr>  
     <td colspan="3" align="center"><input type="submit" name="save" value="Save"></td>
   </tr>

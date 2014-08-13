@@ -24,6 +24,7 @@ INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Must use: call change_task
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task cannot be pending itself.\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task belongs to wrong project.\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Absence must have a start and end date.\n\n")$$
+INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Time not recorded. Task has been closed for too long.\n\n")$$
 
 
 -- if (NOT something) doesn't work for NULLs
@@ -323,10 +324,21 @@ BEGIN
   DECLARE r BIGINT(20);
   DECLARE rUnitID INTEGER;
   DECLARE description VARCHAR(255);
+  DECLARE dClosed DATETIME;
+  DECLARE taskWindow INTEGER;
   call check_edit_timeSheet(NEW.timeSheetID);
 
   SET NEW.timeSheetItemCreatedUser = personID();
   SET NEW.timeSheetItemCreatedTime = current_timestamp();
+
+  SELECT IFNULL(value,0) INTO taskWindow FROM config WHERE name = 'taskWindow';
+  SELECT dateClosed INTO dClosed FROM task WHERE taskID = NEW.taskID;
+
+  IF NEW.taskID AND taskWindow AND dClosed THEN
+    IF now() > DATE_ADD(dClosed, INTERVAL taskWindow DAY) THEN
+      call alloc_error("Time not recorded. Task has been closed for too long.");
+    END IF;
+  END IF;
 
   SELECT DATE(NEW.dateTimeSheetItem) INTO validDate;
   IF (validDate = '0000-00-00') THEN
