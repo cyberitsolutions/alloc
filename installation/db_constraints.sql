@@ -125,6 +125,7 @@ ALTER TABLE sentEmailLog ADD CONSTRAINT sentEmailLog_sentEmailLogCreatedUser FOR
 ALTER TABLE sess ADD CONSTRAINT sess_personID FOREIGN KEY (personID) REFERENCES person (personID);
 ALTER TABLE proficiency ADD CONSTRAINT proficiency_personID FOREIGN KEY (personID) REFERENCES person (personID);
 ALTER TABLE proficiency ADD CONSTRAINT proficiency_skillID FOREIGN KEY (skillID) REFERENCES skill (skillID);
+ALTER TABLE tag ADD CONSTRAINT tag_taskID FOREIGN KEY (taskID) REFERENCES task (taskID);
 ALTER TABLE task ADD CONSTRAINT task_creatorID FOREIGN KEY (creatorID) REFERENCES person (personID);
 ALTER TABLE task ADD CONSTRAINT task_closerID FOREIGN KEY (closerID) REFERENCES person (personID);
 ALTER TABLE task ADD CONSTRAINT task_personID FOREIGN KEY (personID) REFERENCES person (personID);

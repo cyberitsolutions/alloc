@@ -160,6 +160,17 @@ class task extends db_entity {
     }
   }
 
+  function add_tags($tags=array()) {
+    count($tags) == 1 and $tags = explode(",",current($tags));
+    $db = new db_alloc();
+    $db->query("DELETE FROM tag WHERE taskID = %d",$this->get_id());
+    foreach ((array)$tags as $tag) {
+      if (trim($tag)) {
+        $db->query("INSERT INTO tag (taskID,name) VALUES (%d,'%s')",$this->get_id(),trim($tag));
+      }
+    }
+  }
+
   function get_pending_tasks($invert=false) {
     $db = new db_alloc();
     $q = prepare("SELECT * FROM pendingTask WHERE %s = %d",($invert ? "pendingTaskID" : "taskID"),$this->get_id());
@@ -807,6 +818,12 @@ class task extends db_entity {
     $filter["creatorID"] and $sql["creatorID"] = sprintf_implode("IFNULL(task.creatorID,0) = %d",$filter["creatorID"]);
     $filter["managerID"] and $sql["managerID"] = sprintf_implode("IFNULL(task.managerID,0) = %d",$filter["managerID"]);
 
+    // If tags filter
+    if ($filter["tags"] && is_array($filter["tags"])) {
+      foreach ((array)$filter["tags"] as $k => $tag) { $tag and $tags[] = $tag; }
+      $tags and $sql[] = sprintf_implode("seltag.name = '%s'",$tags);
+    }
+
     // These filters are for the time sheet dropdown list
     if ($filter["taskTimeSheetStatus"] == "open") {
       unset($sql["personID"]);
@@ -938,10 +955,13 @@ class task extends db_entity {
                 ,rate
                 ,rateUnitID
                 ,GROUP_CONCAT(pendingTask.pendingTaskID) as pendingTaskIDs
+                ,GROUP_CONCAT(distinct alltag.name SEPARATOR ', ') as tags
             FROM task
        LEFT JOIN project ON project.projectID = task.projectID
        LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID AND projectPerson.personID = '".$uid."'
        LEFT JOIN pendingTask ON pendingTask.taskID = task.taskID
+       LEFT JOIN tag alltag ON alltag.taskID = task.taskID
+       LEFT JOIN tag seltag ON seltag.taskID = task.taskID
                  ".$f."
         GROUP BY task.taskID
                  ".$order_limit;
@@ -1153,6 +1173,7 @@ class task extends db_entity {
                 ,"taskID"               => "Task ID"
                 ,"starred"              => "Tasks that you have starred"
                 ,"taskName"             => "Task Name (eg: *install*)"
+                ,"tags"                 => "Task tags"
                 ,"creatorID"            => "Task creator"
                 ,"managerID"            => "The person managing task"
                 ,"personID"             => "The person assigned to the task"
@@ -1185,6 +1206,7 @@ class task extends db_entity {
                 ,"showParentID"         => "The task's parent ID"
                 ,"showManager"          => "Show the tasks manager"
                 ,"showPercent"          => "The percent complete"
+                ,"showTags"             => "The task's tags"
                 ,"showEdit"             => "Display the html edit controls to allow en masse task editing"
                 ,"showTotals"           => "Display the totals of certain columns in the html view"
                 );
@@ -1260,6 +1282,8 @@ class task extends db_entity {
     $rtn["managerPersonOptions"] = page::select_options($ops+person::get_username_list($_FORM["managerID"]), $_FORM["managerID"]);
     $rtn["creatorPersonOptions"] = page::select_options(person::get_username_list($_FORM["creatorID"]), $_FORM["creatorID"]);
 
+    $rtn["tags"] = $_FORM["tags"];
+
     $taskType = new meta("taskType");
     $taskType_array = $taskType->get_assoc_array("taskTypeID","taskTypeID");
     $rtn["taskTypeOptions"] = page::select_options($taskType_array,$_FORM["taskTypeID"]);
@@ -1279,6 +1303,7 @@ class task extends db_entity {
     $_FORM["showTaskID"]      and $rtn["showTaskID_checked"]      = " checked";
     $_FORM["showManager"]     and $rtn["showManager_checked"]     = " checked";
     $_FORM["showProject"]     and $rtn["showProject_checked"]     = " checked";
+    $_FORM["showTags"]        and $rtn["showTags_checked"]        = " checked";
     $_FORM["showParentID"]    and $rtn["showParentID_checked"]    = " checked";
     
     $arrow = " --&gt;";

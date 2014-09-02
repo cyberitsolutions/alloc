@@ -30,6 +30,7 @@
   {if $_FORM["showTimes"]}<th>Worst</th>{/}
   {if $_FORM["showTimes"]}<th>Actual</th>{/}
   {if $_FORM["showTimes"]}<th>Limit</th>{/}
+  {if $_FORM["showTags"]}<th>Tags</th>{/}
   {if $_FORM["showPercent"]}<th>%</th>{/}
   {if $_FORM["showStatus"]}<th>Status</th>{/}
   {if $_FORM["showEdit"] || $_FORM["showStarred"]}<th data-sort="num" width="1%" style="font-size:120%"><i class="icon-star"></i></th>{/}
@@ -71,7 +72,8 @@
   {if $_FORM["showTimes"]}     <td class="nobr">{$r.timeWorstLabel}</td>{/}
   {if $_FORM["showTimes"]}     <td class="nobr">{$r.timeActualLabel}</td>{/}
   {if $_FORM["showTimes"]}     <td class="nobr{$r["timeActual"] > $r["timeLimit"] and print ' bad'}">{$r.timeLimitLabel}</td>{/}
-  {if $_FORM["showPercent"]}     <td class="nobr">{$r.percentComplete}</td>{/}
+  {if $_FORM["showTags"]}      <td class="nobr">{$r.tags}</td>{/}
+  {if $_FORM["showPercent"]}   <td class="nobr">{$r.percentComplete}</td>{/}
   {if $_FORM["showStatus"]}    <td class="nobr" style="width:1%;">
                                  <span class="corner" style="display:block;width:10em;padding:5px;text-align:center;background-color:{$r.taskStatusColour};">
                                    {$r.taskStatusLabel}
@@ -127,6 +129,7 @@
   {if $_FORM["showTimes"]}<td class="grand_total">{$gt_worst}</td>{/}
   {if $_FORM["showTimes"]}<td class="grand_total">{$gt_actual}</td>{/}
   {if $_FORM["showTimes"]}<td class="grand_total{$gt_status}">{$gt_limit}</td>{/}
+  {if $_FORM["showTags"]}<td></td>{/}
   {if $_FORM["showPercent"]}<td></td>{/}
   {if $_FORM["showStatus"]}<td></td>{/}
   {if $_FORM["showEdit"] || $_FORM["showStarred"]}<td></td>{/}
