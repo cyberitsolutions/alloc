@@ -252,11 +252,10 @@ $(document).ready(function() {
         <h6>Description</h6>
         {page::textarea("taskDescription",$task_taskDescription,array("height"=>"medium","width"=>"100%"))}
 
+        <div class="nobr">
         <h6>Tags</h6>
-        <input type="text" name="tags[]" class="taginput" value="">
-        {foreach (array)$tags as $tag}
-        <input type="text" name="tags[]" class="taginput" value="{$tag}">
-        {/}
+        <select width="100%" name="tags[]" multiple="true" data-selectn-new="true">{$tagOptions}</select>
+        </div>
 
         {if !$task_taskID}
           <h6>Possible Duplicates</h6>

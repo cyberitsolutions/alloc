@@ -1282,6 +1282,12 @@ class task extends db_entity {
     $rtn["managerPersonOptions"] = page::select_options($ops+person::get_username_list($_FORM["managerID"]), $_FORM["managerID"]);
     $rtn["creatorPersonOptions"] = page::select_options(person::get_username_list($_FORM["creatorID"]), $_FORM["creatorID"]);
 
+    $q = prepare("SELECT DISTINCT name FROM tag ORDER BY name");
+    $db->query($q);
+    while ($row = $db->row()) {
+      $all_tags[$row["name"]] = $row["name"];
+    }
+    $rtn["all_tags"] = (array)$all_tags;
     $rtn["tags"] = $_FORM["tags"];
 
     $taskType = new meta("taskType");

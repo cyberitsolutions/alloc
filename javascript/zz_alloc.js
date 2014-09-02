@@ -372,12 +372,6 @@ $(document).ready(function() {
       $.get(get_alloc_var("url")+"home/"+i+".php", function(data) {
         $("."+i).html(data);
         redraw_multiple_selects();
-
-        $('.taginput').tagedit({
-          autocompleteURL: get_alloc_var('url')+"task/tags.php",
-          breakKeyCodes: [ 13, 44, 32, 46, 59 ],
-          allowEdit: false
-        });
       });
     }
 
@@ -392,12 +386,6 @@ $(document).ready(function() {
     if (data.select.attr("data-callback")) {
       window[data.select.attr("data-callback")](data);
     }
-  });
-
-  $('.taginput').tagedit({
-    autocompleteURL: get_alloc_var('url')+"task/tags.php",
-    breakKeyCodes: [ 13, 44, 32, 46, 59 ],
-    allowEdit: false
   });
 
 });

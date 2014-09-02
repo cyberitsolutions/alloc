@@ -149,7 +149,7 @@ h6 div {
   right:0px !important; right:12px;
 }
 
-textarea, input, select, button, .tagedit-list {
+textarea, input, select, button {
   font-size:100%; 
   font-family:arial,helvetica,sans-serif; 
   font-weight:normal;
@@ -166,6 +166,10 @@ td {
   color:(TD_COLOR); 
   font-size:100%; 
 }
+ul {
+  display:inline;
+  list-style:disc outside none
+}
 form { 
   display:inline; 
   padding:0px; 
@@ -180,8 +184,7 @@ input[type="text"],
 input[type="password"], 
 input[type="checkbox"], 
 textarea,
-select,
-.tagedit-list {
+select {
   border: 1px solid (DECORATIVE_LINE_COLOR);
   background-color: (FORM_ELEMENT_BACKGROUND);
   text-transform:none; /* list.th turns options into uppercase */

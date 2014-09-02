@@ -120,7 +120,7 @@ test:
 cache:
 	rm -rf cache_`cat util/alloc_version`
 	mkdir cache_`cat util/alloc_version`
-	cp css/*.css css/*.png cache_`cat util/alloc_version`/
+	cp css/*.css cache_`cat util/alloc_version`/
 	for i in javascript/*; do\
 	  cat $$i >> cache_`cat util/alloc_version`/javascript.js;\
 	done
