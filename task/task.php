@@ -180,6 +180,7 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
       $_POST['pendingTaskIDs'] = '';
     }
     $task->add_pending_tasks($_POST["pendingTasksIDs"]);
+    $task->add_tags($_POST["tags"]);
 
     // This is only valid on pending_, but not on pending_task (because it has a different field)
     if (strpos($task->get_value("taskStatus"), "pending_") !== 0 || $task->get_value("taskStatus") == "pending_tasks") {
@@ -415,10 +416,28 @@ if ($taskID) {
   $row = $db->row();
   $TPL["task_pendingTaskIDs"] = $row["pendingTaskIDs"];
 
+  $q = prepare("SELECT GROUP_CONCAT(name SEPARATOR ', ') as task_tags FROM tag WHERE taskID = %d",$task->get_id());
+  $db->query($q);
+  $row = $db->row();
+  $TPL["task_tags"] = $row["task_tags"];
+
 } else {
   $TPL["taskSelfLink"] = "New Task";
   $TPL["main_alloc_title"] = "New Task - ".APPLICATION_NAME;
 }
+
+$q = prepare("SELECT name FROM tag WHERE taskID = %d",$task->get_id());
+$db->query($q);
+while ($row = $db->row()) {
+  $sel[] = $row["name"];
+}
+$q = prepare("SELECT distinct name FROM tag");
+$db->query($q);
+while ($row = $db->row()) {
+  $all[$row["name"]] = $row["name"];
+}
+$TPL["tagOptions"] = page::select_options($all,$sel);
+$TPL["tags"] = $sel;
 
 if (!$task->get_id()) {
   $TPL["message_help"][] = "Enter a Task Name and click the Save button to create a new Task.";

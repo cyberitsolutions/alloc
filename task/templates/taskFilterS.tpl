@@ -4,7 +4,7 @@
     <td>&nbsp;</td>
     <td>{page::expand_link("project_superset","Projects")}</td>
     <td>Created By</td> 
-    <td rowspan="6" valign="top" colspan="3" class="right">
+    <td rowspan="9" valign="top" colspan="3" class="right">
       {if !$hide_field_options}
       <table align="right">
         <tr>
@@ -37,12 +37,17 @@
           <td align="right"><label for="showParentID" class="nobr">Parent ID</label></td>
           <td><input type="checkbox" id="showParentID" name="showParentID"{$showParentID_checked}></td>
         </tr>
+        <tr>
+          <td align="right"><label for="showTags" class="nobr">Tags</label></td>
+          <td><input type="checkbox" id="showTags" name="showTags"{$showTags_checked}></td>
+        </tr>
+
       </table>
       {/}
     </td>
   </tr>
   <tr>
-    <td valign="top" align="right" rowspan="8">
+    <td valign="top" align="right" rowspan="9">
       <div id="project_superset" style="display:none">
         <label for="pt_mine">My Projects</label><input type="radio" id="pt_mine" name="projectType" value="mine" onClick="refreshProjectList(this)"{$projectType_checked.mine}><br>
         <nobr><label for="pt_pm">My Project Managed</label><input type="radio" id="pt_pm" name="projectType" value="pm" onClick="refreshProjectList(this)"{$projectType_checked.pm}></nobr><br>
@@ -79,7 +84,34 @@
   </tr>
   <tr>
     <td colspan="2">Task Date</td>
-    <td class="right" valign="bottom" rowspan="2" style="vertical-align:bottom;">
+  </tr>
+  <tr>
+    <td class="nobr" colspan="2">
+      <span style="float:left">
+        <select name="taskDate" onChange="$('.hidden').hide(); if ($(this).val()) $('.'+$(this).val()).slideDown('fast');">
+          {$taskDateOptions}
+        </select>
+      </span>
+      {if !$dateOne && !$dateTwo}
+        {$visibility = "hidden"}
+      {/}
+      <span style="float:right;" class="{$visibility} d_created d_assigned d_targetStart d_targetCompletion d_actualStart d_actualCompletion d_dates">
+        {page::calendar("dateOne",$dateOne);}&nbsp;&nbsp;to&nbsp;&nbsp;
+        {page::calendar("dateTwo",$dateTwo);}
+      </span>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2">Tags</td>
+  </tr>
+  <tr>
+    <td colspan="2">
+      <input type="text" name="tags[]" class="taginput" value="">
+      {foreach (array)$tags as $tag}
+      <input type="text" name="tags[]" class="taginput" value="{$tag}">
+      {/}
+    </td>
+    <td class="right" valign="bottom">
       <span>
         <select name="limit">
         {$limitOptions}
@@ -92,22 +124,6 @@
       &nbsp;&nbsp;
       <button type="submit" name="applyFilter" value="1" class="filter_button">Filter<i class="icon-cogs"></i></button>
       {page::help("taskList_filter")}
-    </td>
-  </tr>
-  <tr>
-    <td class="nobr" colspan="2" valign="bottom">
-      <span style="float:left">
-        <select name="taskDate" onChange="$('.hidden').hide(); if ($(this).val()) $('.'+$(this).val()).slideDown('fast');">
-          {$taskDateOptions}
-        </select>
-      </span>
-      {if !$dateOne && !$dateTwo}
-        {$visibility = "hidden"}
-      {/}
-      <span style="float:right;" class="{$visibility} d_created d_assigned d_targetStart d_targetCompletion d_actualStart d_actualCompletion d_dates">
-        {page::calendar("dateOne",$dateOne);}<div style="display:inline; float:left;">&nbsp;&nbsp;to&nbsp;&nbsp;</div>
-        {page::calendar("dateTwo",$dateTwo);}
-      </span>
     </td>
   </tr>
 </table>

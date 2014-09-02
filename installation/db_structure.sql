@@ -399,6 +399,12 @@ CREATE TABLE proficiency (
   skillProficiency varchar(255) NOT NULL default 'Novice'
 ) ENGINE=InnoDB PACK_KEYS=0;
 
+DROP TABLE IF EXISTS tag;
+CREATE TABLE tag (
+  taskID integer NOT NULL,
+  name varchar(255) NOT NULL
+) ENGINE=InnoDB PACK_KEYS=0;
+
 DROP TABLE IF EXISTS task;
 CREATE TABLE task (
   taskID integer NOT NULL auto_increment PRIMARY KEY,

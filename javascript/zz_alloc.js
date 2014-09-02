@@ -372,6 +372,12 @@ $(document).ready(function() {
       $.get(get_alloc_var("url")+"home/"+i+".php", function(data) {
         $("."+i).html(data);
         redraw_multiple_selects();
+
+        $('.taginput').tagedit({
+          autocompleteURL: get_alloc_var('url')+"task/tags.php",
+          breakKeyCodes: [ 13, 44, 32, 46, 59 ],
+          allowEdit: false
+        });
       });
     }
 
@@ -388,6 +394,11 @@ $(document).ready(function() {
     }
   });
 
+  $('.taginput').tagedit({
+    autocompleteURL: get_alloc_var('url')+"task/tags.php",
+    breakKeyCodes: [ 13, 44, 32, 46, 59 ],
+    allowEdit: false
+  });
 
 });
 
