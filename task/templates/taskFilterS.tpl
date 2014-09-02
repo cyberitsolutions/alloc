@@ -106,10 +106,7 @@
   </tr>
   <tr>
     <td colspan="2">
-      <input type="text" name="tags[]" class="taginput" value="">
-      {foreach (array)$tags as $tag}
-      <input type="text" name="tags[]" class="taginput" value="{$tag}">
-      {/}
+      <select width="100%" name="tags[]" multiple="true">{page::select_options($all_tags,$tags)}</select>
     </td>
     <td class="right" valign="bottom">
       <span>

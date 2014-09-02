@@ -416,7 +416,7 @@ if ($taskID) {
   $row = $db->row();
   $TPL["task_pendingTaskIDs"] = $row["pendingTaskIDs"];
 
-  $q = prepare("SELECT GROUP_CONCAT(name SEPARATOR ', ') as task_tags FROM tag WHERE taskID = %d",$task->get_id());
+  $q = prepare("SELECT GROUP_CONCAT(name SEPARATOR ', ') as task_tags FROM tag WHERE taskID = %d ORDER BY name",$task->get_id());
   $db->query($q);
   $row = $db->row();
   $TPL["task_tags"] = $row["task_tags"];
@@ -426,18 +426,17 @@ if ($taskID) {
   $TPL["main_alloc_title"] = "New Task - ".APPLICATION_NAME;
 }
 
-$q = prepare("SELECT name FROM tag WHERE taskID = %d",$task->get_id());
+$q = prepare("SELECT name FROM tag WHERE taskID = %d ORDER BY name",$task->get_id());
 $db->query($q);
 while ($row = $db->row()) {
   $sel[] = $row["name"];
 }
-$q = prepare("SELECT distinct name FROM tag");
+$q = prepare("SELECT DISTINCT name FROM tag ORDER BY name");
 $db->query($q);
 while ($row = $db->row()) {
   $all[$row["name"]] = $row["name"];
 }
-$TPL["tagOptions"] = page::select_options($all,$sel);
-$TPL["tags"] = $sel;
+$TPL["tagOptions"] = page::select_options($all,$sel,300);
 
 if (!$task->get_id()) {
   $TPL["message_help"][] = "Enter a Task Name and click the Save button to create a new Task.";

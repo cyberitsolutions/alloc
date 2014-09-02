@@ -17,25 +17,33 @@ var selectn_unique_select_id_counter = 1;
 
         // First make a label for the closed dropdown list
         var label = $("<span/>",{"class":"selectn-label", "data-select-id":select.attr("id"), "tabindex":"0"});
-        label.width(select.width());
+
+        // Default to the natural width of the select - unless the select has a width attribute
+        if (!select.attr("width")) {
+          label.width(select.width());
+        } else {
+          label.width(select.attr("width"));
+        }
 
         // Put the selected options into the label span and add the label's icon
         methods.set_label(label, select);
         select.parent().append(label);
 
-        // Three extra buttons for: all, none, and invert, and a search field
+        // Extra buttons for: all, none, and invert, and a search field which doubles as a new entry input
         var op_all = $("<button/>",{"name":"all",   "type":"button","class":"selectn-button"}).text("all").outerHTML();
         var op_non = $("<button/>",{"name":"none",  "type":"button","class":"selectn-button"}).text("none").outerHTML();
         var op_inv = $("<button/>",{"name":"invert","type":"button","class":"selectn-button"}).text("toggle").outerHTML();
         var op_sea = $("<input/>", {"name":"search","type":"text",  "class":"selectn-search"}).outerHTML();
+        var op_new = '';
+        if (select.attr("data-selectn-new")) {
+          var op_new = $("<button/>",{"name":"new",   "type":"button","class":"selectn-button"}).text("new").outerHTML();
+        }
 
         // Gather up all the options from the <select> dropdown
         var dropdown_ops = [];
-        dropdown_ops[dropdown_ops.length] = "<div class='selectn-buttons'>"+op_all+" "+op_non+" "+op_inv+" "+op_sea+"</div>";
+        dropdown_ops[dropdown_ops.length] = "<div class='selectn-buttons'>"+op_all+" "+op_non+" "+op_inv+" "+op_sea+" "+op_new+"</div>";
         select.find("option").each(function(i, option){ 
-          var cb_ops = {"type":"checkbox", "value":$(option).val(), "class":"selectn-cb", "checked":$(option).prop("selected")};
-          dropdown_ops[dropdown_ops.length] = "<label class='"+($(option).prop("selected")?"selectn-cb-selected":"")+"'>"+
-                                              $("<input/>",cb_ops).outerHTML()+" <span>"+$(option).html().trim()+"</span></label>";
+          dropdown_ops[dropdown_ops.length] = methods.make_item($(option).val(), $(option).html().trim(), $(option).prop("selected"));
         });
       
         // Create a dropdown box, that has selectable checkboxes in it
@@ -93,7 +101,7 @@ var selectn_unique_select_id_counter = 1;
           }
         });
 
-        // Listen for the all, none, or invert, buttons to be pressed
+        // Listen for the all, none, invert or new, buttons to be pressed
         $(".selectn-button",dropdown).click(function(){
           if ($(this).attr("name") == "all") {
             $(".selectn-cb:visible",dropdown).each(function(){
@@ -110,6 +118,13 @@ var selectn_unique_select_id_counter = 1;
               $(this).prop("checked",!$(this).is(':checked'));
               $(this).trigger('change');
             });
+          } else if ($(this).attr("name") == "new") {
+            var new_item = $(".selectn-search",dropdown).val();
+            select.append($('<option>', {value:new_item, text:new_item}));
+            dropdown.append(methods.make_item(new_item, new_item, 0));
+            $(".selectn-search",dropdown).val("").focus();
+            $("label",dropdown).show();
+            $(".selectn-cb[value='"+new_item+"']",dropdown).trigger("change");
           }
         });
 
@@ -120,7 +135,11 @@ var selectn_unique_select_id_counter = 1;
           if (e.which == 13) {
             e.preventDefault();
             e.stopPropagation();
-            methods.toggle_open(label, dropdown);
+            if ($(this).val().length > 0) {
+              $(".selectn-button[name='new']",dropdown).click();
+            } else {
+              methods.toggle_open(label, dropdown);
+            }
             return false;
 
           // Down arrow, move to first checkbox
@@ -135,6 +154,11 @@ var selectn_unique_select_id_counter = 1;
         // Listen AFTER text typed into the search input
         $(".selectn-search",dropdown).keyup(function(e){
           var needle = $(this).val();
+
+          // Give a little hint that the new button can be used
+          var new_button_css = needle.length > 0 ? {"background-color":"#e7eff9"} : {"background-color":"white"};
+          $(".selectn-button[name='new']",dropdown).css(new_button_css);
+
           if (needle.substring(0,1) == "!") { // negate the pattern if leading !
             needle = needle.substring(1, needle.length);
             var negate = 1;
@@ -152,10 +176,9 @@ var selectn_unique_select_id_counter = 1;
           }
         });
 
-        // When the checkboxes are clicked, update the original <select> (which is hidden, but still submitted).
+        // Add event listener for checkboxes, this updates the <select> (which is hidden, but still submitted).
         var timeout;
-        $(".selectn-cb",dropdown).change(function(e){
-          var cb = $(this);
+        $(dropdown).on("change",$(".select-cb"),function(e){
           if (timeout) {
             clearTimeout(timeout);
           }
@@ -174,11 +197,19 @@ var selectn_unique_select_id_counter = 1;
           },20);
         });
 
+
         // Hide the original <select> dropdown.
         select.hide(); 
       });        
 
       return this;
+    },
+
+    // Return a checkbox selection entry for the dropdown
+    make_item : function(value, text, selected) {
+      var cb_ops = {"type":"checkbox", "value":value, "class":"selectn-cb", "checked":selected};
+      return "<label class='"+(selected?"selectn-cb-selected":"")+"'>"+
+             $("<input/>",cb_ops).outerHTML()+" <span>"+text+"</span></label>";
     },
 
     // Update the text inside the label when the selected options are changed
