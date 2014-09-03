@@ -171,6 +171,21 @@ class task extends db_entity {
     }
   }
 
+  function get_tags($all=false) {
+    $db = new db_alloc();
+    if ($all) {
+      $q = prepare("SELECT DISTINCT name FROM tag ORDER BY name");
+    } else {
+      $q = prepare("SELECT name FROM tag WHERE taskID = %d ORDER BY name",$this->get_id());
+    }
+    $db->query($q);
+    $arr = array();
+    while ($row = $db->row()) {
+      $row["name"] and $arr[] = $row["name"];
+    }
+    return (array)$arr;
+  }
+
   function get_pending_tasks($invert=false) {
     $db = new db_alloc();
     $q = prepare("SELECT * FROM pendingTask WHERE %s = %d",($invert ? "pendingTaskID" : "taskID"),$this->get_id());
@@ -1281,13 +1296,7 @@ class task extends db_entity {
     $rtn["personOptions"] = page::select_options($ops+person::get_username_list($_FORM["personID"]), $_FORM["personID"]);
     $rtn["managerPersonOptions"] = page::select_options($ops+person::get_username_list($_FORM["managerID"]), $_FORM["managerID"]);
     $rtn["creatorPersonOptions"] = page::select_options(person::get_username_list($_FORM["creatorID"]), $_FORM["creatorID"]);
-
-    $q = prepare("SELECT DISTINCT name FROM tag ORDER BY name");
-    $db->query($q);
-    while ($row = $db->row()) {
-      $all_tags[$row["name"]] = $row["name"];
-    }
-    $rtn["all_tags"] = (array)$all_tags;
+    $rtn["all_tags"] = task::get_tags(true);
     $rtn["tags"] = $_FORM["tags"];
 
     $taskType = new meta("taskType");

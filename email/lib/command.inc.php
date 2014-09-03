@@ -76,7 +76,8 @@ class command {
      ,"pend"      => array("",                "The task ID(s), commar separated, that block this task")
      ,"reopen"    => array("",                "Reopen the task on this date. To be used with --status=pending.")
      ,"task"      => array("",                "A task ID, or the word 'new' to create a new task.")
-     ,"dip"    => array("",                   "Add some default interested parties.")
+     ,"dip"       => array("",                "Add some default interested parties.")
+     ,"tags"      => array("",                "Add some tags, comma separated tags")
     );
 
     $types = array("all"=>array_merge($comment,$item,$task)
@@ -283,6 +284,10 @@ class command {
         $changes["reopen"] = implode(",",(array)$rr_bits);
       }
 
+      if (isset($commands["tags"])) {
+        $changes["tags"] = implode(",",$task->get_tags());
+      }
+
       if (strtolower($commands["task"]) == "new") {
         if (!$commands["desc"] && is_object($email_receive)) {
           $task->set_value("taskDescription",$email_receive->get_converted_encoding());
@@ -313,6 +318,11 @@ class command {
           unset($rr_bits);
           foreach ($reopen_rows as $rr) { $rr_bits[] = $rr["reminderTime"]; }
           $changes["reopen"] = implode(",",(array)$rr_bits);
+        }
+
+        if (isset($commands["tags"])) {
+          $task->add_tags(array($commands["tags"]));
+          $changes["tags"] = implode(",",$task->get_tags());
         }
 
         $str = $this->condense_changes($changes,$task->row());

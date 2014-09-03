@@ -67,6 +67,7 @@ class alloc(object):
      ,"project_name"             :"Proj Name"
      ,"dateClosed"               :"Closed"
      ,"dateCreated"              :"Created"
+     ,"tags"                     :"Tags"
     },
 
     "timeSheet" : {
