@@ -222,9 +222,9 @@ class productSale extends db_entity {
     foreach((array)$this->get_productSaleItems() as $psiID => $psi_row) {
       $p = new product();
       $p->set_id($psi_row["productID"]);
-      $taskDesc[] = "  * ".$psi_row["quantity"]." x "
-                    .page::money($psi_row["sellPriceCurrencyTypeID"],$psi_row["sellPrice"],"%S%mo")
-                    ." ".$p->get_name();
+      $taskDesc[] = "  ".page::money($psi_row["sellPriceCurrencyTypeID"],$psi_row["sellPrice"],"%S%mo")
+                    ." for ".$psi_row["quantity"]
+                    ." x ".$p->get_name();
       $hasItems = true;
     }
 
