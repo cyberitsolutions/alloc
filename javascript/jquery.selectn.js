@@ -120,11 +120,13 @@ var selectn_unique_select_id_counter = 1;
             });
           } else if ($(this).attr("name") == "new") {
             var new_item = $(".selectn-search",dropdown).val();
-            select.append($('<option>', {value:new_item, text:new_item}));
-            dropdown.append(methods.make_item(new_item, new_item, 0));
-            $(".selectn-search",dropdown).val("").focus();
-            $("label",dropdown).show();
-            $(".selectn-cb[value='"+new_item+"']",dropdown).trigger("change");
+            if (new_item) {
+              select.append($('<option>', {value:new_item, text:new_item}));
+              dropdown.append(methods.make_item(new_item, new_item, 0));
+              $(".selectn-search",dropdown).val("").focus();
+              $("label",dropdown).show();
+              $(".selectn-cb[value='"+new_item+"']",dropdown).trigger("change");
+            }
           }
         });
 
