@@ -1,8 +1,6 @@
 """alloccli subcommand for billing time for work done."""
 from alloc import alloc
 import sys
-import datetime
-import time
 import re
 import tempfile
 import os
@@ -11,25 +9,30 @@ import subprocess
 class reminders(alloc):
     """Create and manipulate reminders."""
 
-    ops = [('', 'help', ''), # Wtf, if this is missing stuff breaks
-            ('R.', 'reminder=ID', 'Reminder ID or "new"'),
-            ('t.', 'task=ID|NAME', 'A task ID, or a fuzzy match for a task name.'),
-            ('p.', 'project=ID|NAME', 'A project ID, or a fuzzy match for a project name.'),
-            ('C.', 'client=ID|NAME', 'A client ID, or a fuzzy match for a client name.'),
-            ('c.', 'comment=COMMENT', 'The text of the reminder'),
-            ('n.', 'name=NAME', 'The title of the reminder'),
-            ('f.', 'frequency=FREQ', 'How often this reminder is to recur.\n'
-                                    'Specify as [number][unit], where unit is one of [h]our, [d]ay, [w]eek, [m]onth, [y]ear'),
-            ('N.', 'notice=WARNING', 'Advance warning for this reminder. Same specification as frequency.'),
-            ('d.', 'date=DATE', 'When this reminder is to trigger.'),
-            ('a.', 'active=true|false', 'Whether this reminder is active or not'),
-            ('e', 'edit', 'Spawn EDITOR to write comment.'),
-            ('r:', 'to=', 'Recipients'),
-            ('D:', 'remove=', 'Recipients to remove'),
-            ('', 'reopen', 'Reopen the task when this reminder triggers')
-            ]
+    # Setup the options that this cli can accept
+    ops = []
+    ops.append((''  , 'help           ', 'Show this help.'))
+    ops.append(('R.', 'reminder=ID    ', 'Reminder ID or "new".'))
+    ops.append(('t.', 'task=ID|NAME   ', 'A task ID, or a fuzzy match for a task name.'))
+    ops.append(('p.', 'project=ID|NAME', 'A project ID, or a fuzzy match for a project name.'))
+    ops.append(('C.', 'client=ID|NAME ', 'A client ID, or a fuzzy match for a client name.'))
+    ops.append(('c.', 'comment=COMMENT', 'The text of the reminder.'))
+    ops.append(('n.', 'name=NAME      ', 'The title of the reminder.'))
+    ops.append(('f.', 'frequency=FREQ ', 'How often this reminder is to recur.\n'
+                                         'Specify as [number][unit], where unit is one of\n'
+                                         '[h]our, [d]ay, [w]eek, [m]onth, [y]ear.'))
+    ops.append(('N.', 'notice=WARNING ', 'Advance warning for this reminder. Same format as frequency.'))
+    ops.append(('d.', 'date=DATE      ', 'When this reminder is to trigger.'))
+    ops.append(('a.', 'active=1|0     ', 'Whether this reminder is active or not.'))
+    ops.append(('e' , 'edit           ', 'Spawn EDITOR to write comment.'))
+    ops.append(('r:', 'to=PEOPLE      ', 'Recipients. Can be usernames, full names and/or email.'))
+    ops.append(('D:', 'remove=PEOPLE  ', 'Recipients to remove.'))
+    ops.append((''  , 'reopen         ', 'Reopen the task when this reminder triggers.'))
 
-    help_text = "Usage: %s [OPTIONS] %s"
+    # Specify some header and footer text for the help text
+    help_text = "Usage: %s [OPTIONS]\n"
+    help_text += __doc__
+    help_text += "\n\n%s\n\nCreate and edit reminders."
 
     def run(self, commands):
         op, _ = self.get_args(commands, self.ops, self.help_text)
@@ -39,12 +42,9 @@ class reminders(alloc):
 
         # hour day week month year
         if op['frequency'] and not re.match(r'\d+[hdwmy]', op['frequency'], re.IGNORECASE):
-            # EXPLODE
-            print("Invalid frequency specification")
-            exit(1)
+            self.die("Invalid frequency specification")
         if op['notice'] and not re.match(r'\d+[hdwmy]', op['notice'], re.IGNORECASE):
-            print("Invalid advance notice specification")
-            exit(1)
+            self.die("Invalid advance notice specification")
 
         if op['reminder']:
             args['method'] = 'edit_reminder'
@@ -82,8 +82,7 @@ class reminders(alloc):
                         comment = f.read()
                         options['comment'] = re.sub('^#.*$', '', comment, flags = re.MULTILINE)
                         if re.match('^\s*$', options['comment']):
-                            print("No comment entered. Aborting.")
-                            exit(1)
+                            self.die("No comment entered. Aborting.")
             elif op['reminder'] != 'new' and op['edit']:
                 comment_rq = {'method': 'get_reminder'}
                 comment_rq['id'] = op['reminder']
@@ -96,8 +95,7 @@ class reminders(alloc):
                     f.seek(0)
                     new_comment = f.read()
                     if comment == new_comment:
-                        print("Comment not changed. Aborting.")
-                        exit(1)
+                        self.die("Comment not changed. Aborting.")
                     options['comment'] = new_comment
 
             args['options'] = options
