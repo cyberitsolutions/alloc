@@ -17,7 +17,7 @@ from alloc_cli_arg_handler import alloc_cli_arg_handler
 class alloc(object):
   """Provide a parent class from which the alloc subcommands can extend"""
 
-  client_version = "1.8.8"
+  client_version = "1.8.9"
   client_name = os.path.basename(sys.argv[0])
   url = ''
   username = ''
