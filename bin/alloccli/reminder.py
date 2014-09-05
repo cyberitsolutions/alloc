@@ -1,132 +1,97 @@
-"""alloccli subcommand for billing time for work done."""
+"""alloccli subcommand for editing alloc reminders."""
 from alloc import alloc
-import sys
 import re
-import tempfile
-import os
-import subprocess
 
-class reminders(alloc):
-    """Create and manipulate reminders."""
+class reminder(alloc):
+  """Add or edit a reminder."""
 
-    # Setup the options that this cli can accept
-    ops = []
-    ops.append((''  , 'help           ', 'Show this help.'))
-    ops.append(('R.', 'reminder=ID    ', 'Reminder ID or "new".'))
-    ops.append(('t.', 'task=ID|NAME   ', 'A task ID, or a fuzzy match for a task name.'))
-    ops.append(('p.', 'project=ID|NAME', 'A project ID, or a fuzzy match for a project name.'))
-    ops.append(('C.', 'client=ID|NAME ', 'A client ID, or a fuzzy match for a client name.'))
-    ops.append(('c.', 'comment=COMMENT', 'The text of the reminder.'))
-    ops.append(('n.', 'name=NAME      ', 'The title of the reminder.'))
-    ops.append(('f.', 'frequency=FREQ ', 'How often this reminder is to recur.\n'
-                                         'Specify as [number][unit], where unit is one of\n'
-                                         '[h]our, [d]ay, [w]eek, [m]onth, [y]ear.'))
-    ops.append(('N.', 'notice=WARNING ', 'Advance warning for this reminder. Same format as frequency.'))
-    ops.append(('d.', 'date=DATE      ', 'When this reminder is to trigger.'))
-    ops.append(('a.', 'active=1|0     ', 'Whether this reminder is active or not.'))
-    ops.append(('e' , 'edit           ', 'Spawn EDITOR to write comment.'))
-    ops.append(('r:', 'to=PEOPLE      ', 'Recipients. Can be usernames, full names and/or email.'))
-    ops.append(('D:', 'remove=PEOPLE  ', 'Recipients to remove.'))
-    ops.append((''  , 'reopen         ', 'Reopen the task when this reminder triggers.'))
+  # Setup the options that this cli can accept
+  ops = []
+  ops.append((''  , 'help           ', 'Show this help.'))
+  ops.append(('q' , 'quiet          ', 'Run with less output.\n'))
 
-    # Specify some header and footer text for the help text
-    help_text = "Usage: %s [OPTIONS]\n"
-    help_text += __doc__
-    help_text += "\n\n%s\n\nCreate and edit reminders."
+  ops.append(('r.', '               ', 'Edit a reminder. Specify an ID or omit -r to create.'))
+  ops.append(('t.', 'task=ID|NAME   ', 'A task ID, or a fuzzy match for a task name.'))
+  ops.append(('p.', 'project=ID|NAME', 'A project ID, or a fuzzy match for a project name.'))
+  ops.append(('c.', 'client=ID|NAME ', 'A client ID, or a fuzzy match for a client name.'))
 
-    def run(self, commands):
-        op, _ = self.get_args(commands, self.ops, self.help_text)
-        self.authenticate()
+  ops.append(('s.', 'subject=TEXT   ', 'The subject line of the reminder.'))
+  ops.append(('b.', 'body=TEXT      ', 'The text body of the reminder.'))
+  ops.append((''  , 'frequency=FREQ ', 'How often this reminder is to recur.\n'
+                                       'Specify as [number][unit], where unit is one of\n'
+                                       '[h]our, [d]ay, [w]eek, [m]onth, [y]ear.'))
+  ops.append((''  , 'notice=WARNING ', 'Advance warning for this reminder. Same format as frequency.'))
+  ops.append(('d.', 'date=DATE      ', 'When this reminder is to trigger.'))
+  ops.append((''  , 'active=1|0     ', 'Whether this reminder is active or not.'))
+  ops.append(('T:', 'to=PEOPLE      ', 'Recipients. Can be usernames, full names and/or email.'))
+  ops.append(('D:', 'remove=PEOPLE  ', 'Recipients to remove.'))
 
-        args = {}
 
-        # hour day week month year
-        if op['frequency'] and not re.match(r'\d+[hdwmy]', op['frequency'], re.IGNORECASE):
-            self.die("Invalid frequency specification")
-        if op['notice'] and not re.match(r'\d+[hdwmy]', op['notice'], re.IGNORECASE):
-            self.die("Invalid advance notice specification")
+  # Specify some header and footer text for the help text
+  help_text = "Usage: %s [OPTIONS]\n"
+  help_text += __doc__
+  help_text += """\n\n%s
 
-        if op['reminder']:
-            args['method'] = 'edit_reminder'
-            args['id'] = op['reminder']
-            options = {}
+This program allows editing of the fields on a reminder.
 
-            if op['task'] and not op['task'].isdigit():
-                op['task'] = self.search_for_task({'taskName': op['task']})
-            elif op['project'] and not op['project'].isdigit():
-                op['project'] = self.search_for_project(op['project'])
-            elif op['client'] and not op['client'].isdigit():
-                op['client'] = self.search_for_client({'clientName': op['client']})
+Examples:
 
-            options.update(op)
+# Edit a particular reminder.
+alloc reminder -r 1234 --title 'Name for the reminder.' --to alla
 
-            if options['to']:
-                options['recipients'] = [x['personID'] for x in self.get_people(options['to']).values()]
-            if options['remove']:
-                options['recipients_remove'] = [x['personID'] for x in self.get_people(options['remove']).values()]
+# Omit -r to create a new reminder
+alloc reminder --title 'Name for the reminder.' --to alla"""
 
-            if op['reminder'] == 'new' and not op['comment']:
-                if not op['edit']:
-                    # read from stdin, same as comment
-                    print("Enter reminder text:")
-                    options['comment'] = sys.stdin.read()
-                else:
-                    # spawn EDITOR for user to play with
-                    editor = os.environ.get('EDITOR', 'vim')
-                    message = "# Enter your message\n# Lines starting with '#' will be ignored"
-                    with tempfile.NamedTemporaryFile() as f:
-                        f.write(message)
-                        f.flush()
-                        subprocess.call([editor, f.name])
-                        f.seek(0)
-                        comment = f.read()
-                        options['comment'] = re.sub('^#.*$', '', comment, flags = re.MULTILINE)
-                        if re.match('^\s*$', options['comment']):
-                            self.die("No comment entered. Aborting.")
-            elif op['reminder'] != 'new' and op['edit']:
-                comment_rq = {'method': 'get_reminder'}
-                comment_rq['id'] = op['reminder']
-                comment = self.make_request(comment_rq)
-                with tempfile.NamedTemporaryFile() as f:
-                    editor = os.environ.get('EDITOR', 'vim')
-                    f.write(comment)
-                    f.flush()
-                    subprocess.call([editor, f.name])
-                    f.seek(0)
-                    new_comment = f.read()
-                    if comment == new_comment:
-                        self.die("Comment not changed. Aborting.")
-                    options['comment'] = new_comment
 
-            args['options'] = options
-            print self.make_request(args)
-            return
-        else:
-            # Viewing reminders
-            options = {'fields': ['reminderID', 'reminderSubject',  'link', 'frequency']}
-            options['filter_reminderActive'] = False if op['active'] == 'false' else True
+  def run(self, command_list):
+    """Execute subcommand."""
 
-            if op['task']:
-                options['type'] = 'task'
-                options['id'] = op['task']
-            elif op['client']:
-                options['type'] = 'client'
-                options['id'] = op['client']
-            elif op['project']:
-                options['type'] = 'project'
-                options['project'] = op['project']
+    # Get the command line arguments into a dictionary
+    o, remainder_ = self.get_args(command_list, self.ops, self.help_text)
 
-            rows = self.get_list("reminder", options)
+    # Got this far, then authenticate
+    self.authenticate()
+    personID = self.get_my_personID()
 
-            # Compact the recurrency display
-            # And the link display
-            for k, row in rows.items():
-                row['link'] = ''
-                if row['reminderType']:
-                    row['link'] = "%s %s" % (row['reminderType'].capitalize(), row['reminderLinkID'])
+    args = {}
+    if not o['r']:
+      o['r'] = 'new'
 
-                row['frequency'] = ''
-                if int(row['reminderRecuringValue']):
-                    row['frequency'] = "%s %ss" % (row['reminderRecuringValue'], row['reminderRecuringInterval'])
-            self.print_table("reminder", rows, options['fields'])
+    args['entity'] = 'reminder'
+    args['id'] = o['r']
 
+    if o['date']:
+      o['date'] = self.parse_date(o['date'])
+
+    if o['project'] and not self.is_num(o['project']):
+      o['project'] = self.search_for_project(o['project'], personID)
+
+    if o['task'] and not self.is_num(o['task']):
+      o['task'] = self.search_for_task({'taskName': o['task']})
+
+    if o['client'] and not self.is_num(o['client']):
+      o['client'] = self.search_for_client({'clientName': o['client']})
+
+    if o['frequency'] and not re.match(r'\d+[hdwmy]', o['frequency'], re.IGNORECASE):
+      self.die("Invalid frequency specification")
+    if o['notice'] and not re.match(r'\d+[hdwmy]', o['notice'], re.IGNORECASE):
+      self.die("Invalid advance notice specification")
+
+    if o['to']:
+      o['recipients'] = [x['personID'] for x in self.get_people(o['to']).values()]
+    if o['remove']:
+      o['recipients_remove'] = [x['personID'] for x in self.get_people(o['remove']).values()]
+
+
+    package = {}
+    for key, val in o.items():
+      if val:
+        package[key] = val
+      if type(val)==type("") and val.lower() == 'null':
+        package[key] = ''
+
+    package['command'] = 'edit_reminder'
+    args['options'] = package
+    args['method'] = 'edit_entity'
+    rtn = self.make_request(args)
+    self.handle_server_response(rtn, not o['quiet'])

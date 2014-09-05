@@ -430,6 +430,7 @@ class reminder extends db_entity {
   function get_list_filter($filter=array()) {
     $filter["type"] and $sql[] = prepare("reminderType='%s'",$filter["type"]);
     $filter["id"]   and $sql[] = prepare("reminderLinkID=%d",$filter["id"]);
+    $filter["reminderID"] and $sql[] = prepare("reminder.reminderID=%d",$filter["reminderID"]);
     $filter["filter_recipient"] and $sql[] = prepare("personID = %d", $filter["filter_recipient"]);
     imp($filter["filter_reminderActive"]) and $sql[] = prepare("reminderActive = %d",$filter["filter_reminderActive"]);
 
@@ -455,7 +456,6 @@ class reminder extends db_entity {
       $reminder = new reminder();
       $reminder->read_db_record($db);
       $rows[$row['reminderID']] = $row;
-      //$rows[] = $row;
     }
     return $rows;
   }
