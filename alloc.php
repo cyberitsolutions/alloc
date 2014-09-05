@@ -29,7 +29,7 @@ function &singleton($name, $thing=null) {
   return $instances[$name];
 }
 
-ini_set("error_reporting", E_ALL & ~E_NOTICE);
+ini_set("error_reporting", E_ALL & ~E_NOTICE & ~E_STRICT);
 ini_set('include_path',ini_get('include_path').PATH_SEPARATOR.dirname(__FILE__).DIRECTORY_SEPARATOR."zend");
 singleton("errors_fatal",false);
 singleton("errors_format","html");
