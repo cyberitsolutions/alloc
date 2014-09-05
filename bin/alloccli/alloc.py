@@ -682,6 +682,20 @@ class alloc(object):
 
     return addr, name
 
+  def handle_server_response(self, rtn, verbose):
+    # If server returns a message, print it out
+    if rtn and 'status' in rtn and 'message' in rtn:
+      if type(rtn["status"]) == type([]):
+        k = 0
+        for v in rtn["status"]:
+          if (v == 'msg' and verbose) or (v == 'yay' and verbose) or v == 'err' or v == 'die':
+            meth = getattr(self, v)
+            meth(rtn['message'][k])
+          k += 1
+      else:
+        meth = getattr(self, rtn['status'])
+        meth(rtn['message'])
+
   def parse_date(self, text):
     """Convert a human readable date string into YYYY-MM-DD format."""
     if text:
