@@ -243,7 +243,7 @@ class alloc(object):
     self.quiet = ''
     self.csv = False
 
-    for k,v in self.config.items():
+    for k, v in self.config.items():
       self.dbg("CONF: "+k+ ": "+v)
 
   def initialize_http_connection(self):
@@ -452,7 +452,7 @@ class alloc(object):
         # print_table doesn't work here because the output of this is printed out of the return value.
         # self.print_table("task", tasks, ["taskID", "taskName"])
         s += '\nChild Tasks:\n\n'
-        # TODO: for CSV output this might need to do something saner
+        # For CSV output this might need to do something saner
         # on the other hand, view doesn't work right with CSV anyway
         for c in tasks.values():
           s += '%s %s\n' % (c['taskID'], c['taskName'])
@@ -689,7 +689,7 @@ class alloc(object):
     return addr, name
 
   def handle_server_response(self, rtn, verbose):
-    # If server returns a message, print it out
+    """If server returns a message, print it out"""
     if rtn and 'status' in rtn and 'message' in rtn:
       if type(rtn["status"]) == type([]):
         k = 0

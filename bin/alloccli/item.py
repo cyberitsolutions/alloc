@@ -42,7 +42,6 @@ alloc item --tsid 7941 --duration 3.5 --date 2011-07-24 --comment hey --task 151
 
     # Got this far, then authenticate
     self.authenticate()
-    personID = self.get_my_personID()
 
     args = {}
 
