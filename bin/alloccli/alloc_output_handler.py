@@ -10,12 +10,14 @@ from sys import stdout
 # https://code.google.com/p/prettytable/issues/detail?id=21
 # This can go if/when flora's OS is updated
 if 'set_field_names' not in dir(PrettyTable):
-    def set_field_names(self, fields):
-        self.field_names = fields
-    def set_field_align(self, field, align):
-        self.align[field] = align
-    PrettyTable.set_field_names = set_field_names
-    PrettyTable.set_field_align = set_field_align
+  def set_field_names(self, fields):
+    """pass lint"""
+    self.field_names = fields
+  def set_field_align(self, field, align):
+    """pass lint"""
+    self.align[field] = align
+  PrettyTable.set_field_names = set_field_names
+  PrettyTable.set_field_align = set_field_align
 
 class alloc_output_handler:
   """alloc library for outputting ascii or csv tables"""

@@ -27,10 +27,9 @@ Examples:
 alloc reminders -t 1234"""
 
   def run(self, commands):
-    o, _ = self.get_args(commands, self.ops, self.help_text)
+    """Print a list of reminders"""
+    o, remainder_ = self.get_args(commands, self.ops, self.help_text)
     self.authenticate()
-
-    args = {}
 
     # Viewing reminders
     options = {}
@@ -53,7 +52,7 @@ alloc reminders -t 1234"""
     rows = self.get_list("reminder", options)
 
     # Compact the type field and the frequency
-    for k, row in rows.items():
+    for k_, row in rows.items():
       row['link'] = ''
       if row['reminderType']:
         row['link'] = "%s %s" % (row['reminderType'].capitalize(), row['reminderLinkID'])
