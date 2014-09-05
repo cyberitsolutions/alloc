@@ -197,7 +197,7 @@ class alloc(object):
   row_timeSheetItem = ["timeSheetID", "timeSheetItemID", "dateTimeSheetItem", "taskID", "timeSheetItemDuration",
                        "rate", "worth", "hoursBilled", "timeLimit", "limitWarning", "comment"]
 
-  def __init__(self, url=""):
+  def __init__(self):
 
     # Grab a storage dir to work in
     if self.alloc_dir[-1:] != os.sep:
@@ -222,20 +222,29 @@ class alloc(object):
     # Load any user-customizations to table print output
     self.load_transforms()
 
-    if not url:
-      if "url" in self.config and self.config["url"]:
-        url = self.config["url"]
-      if not url:
-        self.die("No "+self.client_name+" url specified!")
+    # Permit environment variables to override ~/.alloc/config
+    a = self.client_name.upper()
+    if os.environ.get(a+"_URL"):       self.config['url']                  = os.environ.get(a+"_URL")
+    if os.environ.get(a+"_USER"):      self.config[a.lower()+'_user']      = os.environ.get(a+"_USER")
+    if os.environ.get(a+"_PASS"):      self.config[a.lower()+'_pass']      = os.environ.get(a+"_PASS")
+    if os.environ.get(a+"_HTTP_USER"): self.config[a.lower()+'_http_user'] = os.environ.get(a+"_HTTP_USER")
+    if os.environ.get(a+"_HTTP_PASS"): self.config[a.lower()+'_http_pass'] = os.environ.get(a+"_HTTP_PASS")
+    if os.environ.get(a+"_TRUNC"):     self.config[a.lower()+'_trunc']     = os.environ.get(a+"_TRUNC")
+
+    if 'url' not in self.config or not self.config['url']:
+      self.die("No "+a+" url specified!")
 
     # Grab session ~/.alloc/session
     if os.path.exists(self.alloc_dir+"session"):
       self.sessID = self.load_session(self.alloc_dir+"session")
 
-    self.url = url
+    self.url = self.config['url']
     self.username = ''
     self.quiet = ''
     self.csv = False
+
+    for k,v in self.config.items():
+      self.dbg("CONF: "+k+ ": "+v)
 
   def initialize_http_connection(self):
     """This is for a https connection with basic http auth,
@@ -273,12 +282,14 @@ class alloc(object):
     config = ConfigParser.ConfigParser()
     config.read([f])
     section = os.environ.get(self.client_name.upper()) or 'main'
-    options = config.options(section)
-    for option in options:
-      self.config[option.lower()] = config.get(section, option)
-      self.dbg("CONF: "+option.lower()+ ": "+self.config[option.lower()])
-    if self.client_name.upper()+'_TRUNC' in os.environ:
-      self.config[self.client_name+'_trunc'] = os.environ.get(self.client_name.upper()+'_TRUNC')
+    try:
+      options = config.options(section)
+      for option in options:
+        self.config[option.lower()] = config.get(section, option)
+      if self.client_name.upper()+'_TRUNC' in os.environ:
+        self.config[self.client_name+'_trunc'] = os.environ.get(self.client_name.upper()+'_TRUNC')
+    except:
+      pass
 
   def create_transforms(self, f):
     """Create a default ~/.alloc/transforms.py file for field manipulation."""
@@ -506,11 +517,6 @@ class alloc(object):
 
   def get_credentials(self):
     """Obtain user's alloc login and http auth credentials."""
-    env_u  = os.environ.get(self.client_name.upper()+'_USER')
-    env_p  = os.environ.get(self.client_name.upper()+'_PASS')
-    env_hu = os.environ.get(self.client_name.upper()+'_HTTP_USER')
-    env_hp = os.environ.get(self.client_name.upper()+'_HTTP_PASS')
-
     con_u  = self.config.get(self.client_name.lower()+'_user')
     con_p  = self.config.get(self.client_name.lower()+'_pass')
     con_hu = self.config.get(self.client_name.lower()+'_http_user')
@@ -527,10 +533,10 @@ class alloc(object):
     net_hp = net[1]
 
     # Priority: Shell vars, ~/.alloc/config, ~/.netrc
-    u  = env_u  or con_u  or net_u
-    p  = env_p  or con_p  or net_p
-    hu = env_hu or con_hu or net_hu
-    hp = env_hp or con_hp or net_hp
+    u  = con_u  or net_u
+    p  = con_p  or net_p
+    hu = con_hu or net_hu
+    hp = con_hp or net_hp
 
     self.dbg("USING CONF: user:"+str(u)+" pass:"+str(p)+" httpuser:"+str(hu)+" httppass:"+str(hp))
 

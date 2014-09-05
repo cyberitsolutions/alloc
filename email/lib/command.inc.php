@@ -372,14 +372,14 @@ class command {
     // Tear apart the frequency bits
     if ($options['frequency']) {
       list($freq, $units) = sscanf($options['frequency'], "%d%c");
-      $freq_units = ['h' => 'Hour', 'd' => 'Day', 'w' => 'Week', 'm' => 'Month', 'y' => 'Year'];
+      $freq_units = array('h' => 'Hour', 'd' => 'Day', 'w' => 'Week', 'm' => 'Month', 'y' => 'Year');
       $options['frequency'] = $freq;
       $options['frequency_units'] = $freq_units[strtolower($units)];
     }
 
     if ($options['notice']) {
       list($freq, $units) = sscanf($options['notice'], "%d%c");
-      $freq_units = ['h' => 'Hour', 'd' => 'Day', 'w' => 'Week', 'm' => 'Month', 'y' => 'Year'];
+      $freq_units = array('h' => 'Hour', 'd' => 'Day', 'w' => 'Week', 'm' => 'Month', 'y' => 'Year');
       $options['notice'] = $freq;
       $options['notice_units'] = $freq_units[strtolower($units)];
 
