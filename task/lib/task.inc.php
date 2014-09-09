@@ -181,7 +181,7 @@ class task extends db_entity {
     $db->query($q);
     $arr = array();
     while ($row = $db->row()) {
-      $row["name"] and $arr[] = $row["name"];
+      $row["name"] and $arr[$row["name"]] = $row["name"];
     }
     return (array)$arr;
   }
@@ -837,6 +837,7 @@ class task extends db_entity {
     if ($filter["tags"] && is_array($filter["tags"])) {
       foreach ((array)$filter["tags"] as $k => $tag) { $tag and $tags[] = $tag; }
       $tags and $sql[] = sprintf_implode("seltag.name = '%s'",$tags);
+      $having = prepare("HAVING count(DISTINCT seltag.name) = %d",count($tags));
     }
 
     // These filters are for the time sheet dropdown list
@@ -861,7 +862,7 @@ class task extends db_entity {
     }
 
     $filter["parentTaskID"] and $sql["parentTaskID"] = sprintf_implode("IFNULL(task.parentTaskID,0) = %d",$filter["parentTaskID"]);
-    return $sql;
+    return array($sql,$having);
   }
 
   function get_recursive_child_tasks($taskID_of_parent, $rows=array(), $padding=0) {
@@ -926,7 +927,7 @@ class task extends db_entity {
      *
      */
  
-    $filter = task::get_list_filter($_FORM);
+    list($filter, $having) = task::get_list_filter($_FORM);
 
     $debug = $_FORM["debug"];
     $debug and print "\n<pre>_FORM: ".print_r($_FORM,1)."</pre>";
@@ -970,7 +971,7 @@ class task extends db_entity {
                 ,rate
                 ,rateUnitID
                 ,GROUP_CONCAT(pendingTask.pendingTaskID) as pendingTaskIDs
-                ,GROUP_CONCAT(distinct alltag.name SEPARATOR ', ') as tags
+                ,GROUP_CONCAT(DISTINCT alltag.name SEPARATOR ', ') as tags
             FROM task
        LEFT JOIN project ON project.projectID = task.projectID
        LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID AND projectPerson.personID = '".$uid."'
@@ -979,6 +980,7 @@ class task extends db_entity {
        LEFT JOIN tag seltag ON seltag.taskID = task.taskID
                  ".$f."
         GROUP BY task.taskID
+                 ".$having."
                  ".$order_limit;
       
     $debug and print "\n<br>QUERY: ".$q;
