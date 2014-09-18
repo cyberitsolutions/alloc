@@ -227,8 +227,6 @@ class inbox extends db_entity {
         singleton("current_user",$current_user);
       } 
 
-      $quiet = interestedParty::adjust_by_email_subject($email_receive,$task);
-
       // swap back to normal user
       $current_user = &$orig_current_user;
       singleton("current_user",$current_user);
