@@ -757,7 +757,7 @@ class task extends db_entity {
 
     // No point continuing if primary key specified, so return
     if ($filter["taskID"]) {
-      return $sql;
+      return array($sql,"");
     }
 
     // This takes care of projectID singular and plural
