@@ -25,6 +25,7 @@ INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task cannot be pending its
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Task belongs to wrong project.\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Absence must have a start and end date.\n\n")$$
 INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Time not recorded. Task has been closed for too long.\n\n")$$
+INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Parent task loops not permitted.\n\n")$$
 
 
 -- if (NOT something) doesn't work for NULLs
@@ -461,21 +462,26 @@ $$
 
 -- task perm
 
-DROP PROCEDURE IF EXISTS check_task_cycle;
-CREATE PROCEDURE check_task_cycle (in self_id int, in parent_id int)
+DROP PROCEDURE IF EXISTS check_for_parent_task_loop;
+CREATE PROCEDURE check_for_parent_task_loop (IN parent_id INT, IN task_id INT)
 BEGIN
 
   DECLARE last_parent INT DEFAULT parent_id;
 
--- unique constraint failed
-   DECLARE EXIT HANDLER FOR SQLSTATE '23000' CALL alloc_error("Parent task loops not permitted.");
+  -- unique constraint failed
+  DECLARE EXIT HANDLER FOR SQLSTATE '23000' CALL alloc_error("Parent task loops not permitted.");
 
--- If a previous invocation failed the table might still be around
+  -- If a previous invocation failed the table might still be around
   DROP TEMPORARY TABLE IF EXISTS parent_search;
 
--- unique so this will explode if a cycle exists
+  -- unique so this will explode if a cycle exists
   CREATE TEMPORARY TABLE parent_search (parentid int, UNIQUE (parentid));
-  INSERT INTO parent_search(parentid) VALUES (parent_id), (self_id);
+  INSERT INTO parent_search (parentid) VALUES (parent_id);
+
+  -- there may not be a task ID if this proc is called from the before insert task trigger
+  IF task_id THEN
+    INSERT INTO parent_search (parentid) VALUES (task_id);
+  END IF;
 
   REPEAT
     SELECT parentTaskID FROM task WHERE taskID = last_parent INTO last_parent;
@@ -534,7 +540,7 @@ BEGIN
   DECLARE defTaskLimit DECIMAL(7,2);
   call check_edit_task(NEW.projectID);
 
-  IF (NEW.parentTaskID) THEN CALL check_task_cycle(NEW.parentTaskID); END IF;
+  IF (NEW.parentTaskID) THEN CALL check_for_parent_task_loop(NEW.parentTaskID, NULL); END IF;
 
   SET NEW.creatorID = personID();
   SET NEW.dateCreated = current_timestamp();
@@ -580,7 +586,7 @@ BEGIN
     call alloc_error('Must use: call change_task_status(taskID,status)');
   END IF;
 
-  IF (NEW.parentTaskID) THEN CALL check_task_cycle(OLD.taskID, NEW.parentTaskID); END IF;
+  IF (NEW.parentTaskID) THEN CALL check_for_parent_task_loop(NEW.parentTaskID, OLD.taskID); END IF;
 
   SET NEW.taskID = OLD.taskID;
   SET NEW.creatorID = OLD.creatorID;
