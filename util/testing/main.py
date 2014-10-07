@@ -42,7 +42,7 @@ class Test(unittest.TestCase):
         driver.find_element_by_name("timeLimit").clear()
         driver.find_element_by_name("timeLimit").send_keys("2")
         Select(driver.find_element_by_name("managerID")).select_by_visible_text("Con Zymaris")
-        driver.find_element_by_css_selector("save_button default").click()
+        driver.find_element_by_xpath("(//button[@name='save'])[2]").click()
     
     def is_element_present(self, how, what):
         try: self.driver.find_element(by=how, value=what)
