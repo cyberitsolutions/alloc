@@ -7,14 +7,14 @@ Syntax::
     >   do something
     <   expected result
 
-(1) Login test::
+#. Login test::
 
     |   go to login page
     >   enter correct username
     >   enter correct password
     <   login should succeed
 
-(2) Tasks tests::
+#. Tasks tests::
 
     |   get to the tasks tab
     >   click 'New Task'
@@ -33,6 +33,7 @@ Syntax::
     >   save the comment
     <   comment should be visible
 
+    |   NOT AUTOMATIBLE
     >   click 'New Comment'
     >   write a new comment
     >   attach a pdf file
@@ -89,7 +90,7 @@ Syntax::
     >   click 'PDF'
     <   should show a pdf
 
-(3) Home page tests::
+#. Home page tests::
 
     |   go to 'Home' tab
     >   click on the spanner for the tasks section
@@ -117,7 +118,7 @@ Syntax::
 
     <   adjusting the project list should work
 
-(4) Clients tests::
+#. Clients tests::
 
     |   go to the client page
     >   click show filter and make changes
@@ -140,7 +141,7 @@ Syntax::
     >   go to the project page again
     <   new project should be visible
 
-(5) Time tests::
+#. Time tests::
 
     |   go to time page
     >   go into some timesheets
@@ -153,7 +154,7 @@ Syntax::
     >   click 'New Time Sheet'
     <   should take you to the create new time sheet page
 
-(6) Sales tests::
+#. Sales tests::
 
     |   go to the Sales page
     >   go into a sales
@@ -178,7 +179,7 @@ Syntax::
     >   repeat above on Sales page
     <   should be no errors
 
-(7) People tests::
+#. People tests::
 
     |   go to People page
     <   a list of people should be shown
@@ -198,7 +199,7 @@ Syntax::
     >   click save
     <   should add a new person
 
-(8) Wiki tests::
+#. Wiki tests::
 
     |   go to the Wiki page
     <   choosing files and folders should work
@@ -208,7 +209,7 @@ Syntax::
     >   click on all the links
     <   they should work
 
-(9) ★ tests::
+#. ★ tests::
 
     |   go to the ★
     >   if there are stared items they should show
@@ -221,17 +222,17 @@ Syntax::
     >   adjust 'Preferences'
     <   all should work
 
-(10) Help tests::
+#. Help tests::
 
     |   go to Help page
     <   the help link should work
 
-(11) Search tests::
+#. Search tests::
 
     >   do a search
     <   should work
 
-(12) Logout test::
+#. Logout test::
 
     >   click logout
     <   should logout
