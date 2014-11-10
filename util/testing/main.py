@@ -159,6 +159,38 @@ class Test(unittest.TestCase):
         Select(driver.find_element_by_name("weeks")).select_by_visible_text("4")
         Select(driver.find_element_by_name("weeksBack")).select_by_visible_text("1")
         driver.find_element_by_name("customize_save").click()
+        # Test a link in the calendar
+        driver.find_element_by_link_text("test00019 (Limit 2.0hrs)").click()
+        driver.find_element_by_link_text("Home").click()
+        # Time sheets
+        driver.find_element_by_xpath("(//a[contains(text(),'Cy Support')])[2]").click()
+        driver.find_element_by_link_text("Home").click()
+        # Projects
+        driver.find_element_by_id("config_project_list").click()
+        Select(driver.find_element_by_name("projectListNum")).select_by_visible_text("All")
+        driver.find_element_by_name("customize_save").click()
+        driver.find_element_by_id("config_project_list").click()
+        Select(driver.find_element_by_name("projectListNum")).select_by_visible_text("5")
+        driver.find_element_by_name("customize_save").click()
+        # Time sheet stats
+        driver.find_element_by_css_selector("canvas.jqplot-event-canvas").click()
+        # Clients
+        driver.find_element_by_link_text("Clients").click()
+        driver.find_element_by_link_text("Show Filter").click()
+        driver.find_element_by_css_selector("span.selectn-label").click()
+        driver.find_element_by_name("none").click()
+        driver.find_element_by_name("applyFilter").click()
+        driver.find_element_by_link_text("Show Filter").click()
+        driver.find_element_by_css_selector("img").click()
+        driver.find_element_by_css_selector("input.selectn-cb").click()
+        driver.find_element_by_link_text("P").click()
+        driver.find_element_by_link_text("Show Filter").click()
+        driver.find_element_by_xpath("//div[@id='main2']/table/tbody/tr[2]/td/form/table/tbody/tr[2]/td[5]/span").click()
+        driver.find_element_by_css_selector("span.selectn-dropdown.selectn-active > label > input.selectn-cb").click()
+        driver.find_element_by_css_selector("span.selectn-dropdown.selectn-active > label.selectn-cb-selected > span").click()
+        driver.find_element_by_name("applyFilter").click()
+        driver.find_element_by_link_text("Show Filter").click()
+        driver.find_element_by_link_text("P").click()
         # test the search box
         driver.find_element_by_id("menu_form_needle").clear()
         driver.find_element_by_id("menu_form_needle").send_keys("test00019")
