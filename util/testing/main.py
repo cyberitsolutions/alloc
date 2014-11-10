@@ -11,6 +11,7 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException
 import unittest
 import time
+import random
 
 
 class Test(unittest.TestCase):
@@ -191,6 +192,29 @@ class Test(unittest.TestCase):
         driver.find_element_by_name("applyFilter").click()
         driver.find_element_by_link_text("Show Filter").click()
         driver.find_element_by_link_text("P").click()
+        # Add a client
+        word_file = "/usr/share/dict/words"
+        words = open(word_file).read().splitlines()
+        word = random.choice(words)
+        driver.find_element_by_link_text("New Client").click()
+        driver.find_element_by_id("clientName").clear()
+        driver.find_element_by_id("clientName").send_keys(word)
+        driver.find_element_by_name("clientStreetAddressOne").click()
+        driver.find_element_by_name("clientStreetAddressOne").clear()
+        driver.find_element_by_name("clientStreetAddressOne").send_keys(word)
+        driver.find_element_by_name("clientSuburbOne").clear()
+        driver.find_element_by_name("clientSuburbOne").send_keys(word)
+        driver.find_element_by_name("clientStateOne").clear()
+        driver.find_element_by_name("clientStateOne").send_keys(word)
+        driver.find_element_by_name("clientPostcodeOne").clear()
+        driver.find_element_by_name("clientPostcodeOne").send_keys("1029")
+        driver.find_element_by_name("clientCountryOne").clear()
+        driver.find_element_by_name("clientCountryOne").send_keys(word)
+        driver.find_element_by_name("clientPhoneOne").clear()
+        driver.find_element_by_name("clientPhoneOne").send_keys("01928374")
+        driver.find_element_by_name("clientURL").clear()
+        driver.find_element_by_name("clientURL").send_keys(word + ".com")
+        driver.find_element_by_name("save").click()
         # test the search box
         driver.find_element_by_id("menu_form_needle").clear()
         driver.find_element_by_id("menu_form_needle").send_keys("test00019")

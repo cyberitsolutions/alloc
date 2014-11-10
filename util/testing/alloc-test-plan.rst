@@ -108,7 +108,7 @@ Syntax::
 
     >   clicking on links in the calendar should work
 
-    >   now try adding time with the 'add time' tool
+    >   now try adding time with the 'add time' tool <-- can't be automated
     <   should add time
 
     >   click on the 'Time Sheet Statistics'
