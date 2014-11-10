@@ -150,6 +150,15 @@ class Test(unittest.TestCase):
         driver.find_element_by_css_selector("span.selectn-dropdown.selectn-active > label > input.selectn-cb").click()
         driver.find_element_by_css_selector("span.selectn-dropdown.selectn-active > label.selectn-cb-selected").click()
         driver.find_element_by_name("applyFilter").click()
+        # Test the calendar
+        driver.find_element_by_id("config_task_calendar_home_item").click()
+        Select(driver.find_element_by_name("weeks")).select_by_visible_text("3")
+        Select(driver.find_element_by_name("weeksBack")).select_by_visible_text("2")
+        driver.find_element_by_name("customize_save").click()
+        driver.find_element_by_id("config_task_calendar_home_item").click()
+        Select(driver.find_element_by_name("weeks")).select_by_visible_text("4")
+        Select(driver.find_element_by_name("weeksBack")).select_by_visible_text("1")
+        driver.find_element_by_name("customize_save").click()
         # test the search box
         driver.find_element_by_id("menu_form_needle").clear()
         driver.find_element_by_id("menu_form_needle").send_keys("test00019")
