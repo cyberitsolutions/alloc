@@ -14,6 +14,10 @@ import time
 import random
 
 
+word_file = "/usr/share/dict/words"
+words = open(word_file).read().splitlines()
+word = random.choice(words)
+
 class Test(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Firefox()
@@ -21,20 +25,18 @@ class Test(unittest.TestCase):
         self.base_url = "http://alloc-scratch.cyber.com.au/"
         self.verificationErrors = []
         self.accept_next_alert = True
-
-    def test_(self):
+        # Login:
         driver = self.driver
-        word_file = "/usr/share/dict/words"
-        words = open(word_file).read().splitlines()
-        word = random.choice(words)
-        # Login test:
         driver.get(self.base_url + "/login/login.php")
         driver.find_element_by_id("username").clear()
         driver.find_element_by_id("username").send_keys("cjb")
         driver.find_element_by_id("password").clear()
         driver.find_element_by_id("password").send_keys("password")
         driver.find_element_by_name("login").click()
-        '''# Tasks tests:
+
+    def tasks(self):
+        driver = self.driver
+        # Tasks tests:
         driver.find_element_by_link_text("Tasks").click()
         driver.find_element_by_link_text("New Task").click()
         driver.find_element_by_id("taskName").clear()
@@ -67,6 +69,9 @@ class Test(unittest.TestCase):
         driver.find_element_by_id("comment").clear()
         driver.find_element_by_id("comment").send_keys("Test")
         driver.find_element_by_name("comment_save").click()
+
+    def home(self):
+        driver = self.driver
         # Home page tests:
         driver.get(self.base_url + "/home/home.php?showProject=on&showParentID=on&projectType=Current&search=&search=&search=&search=&taskTypeID%5B%5D=Task&taskTypeID%5B%5D=Parent&search=&personID%5B%5D=194&search=&taskDate=&dateOne=&dateTwo=&search=&limit=&applyFilter=1&sessID=")
         driver.find_element_by_id("config_top_ten_tasks").click()
@@ -179,6 +184,9 @@ class Test(unittest.TestCase):
         driver.find_element_by_name("customize_save").click()
         # Time sheet stats
         driver.find_element_by_css_selector("canvas.jqplot-event-canvas").click()
+
+    def clients(self):
+        driver = self.driver
         # Clients
         driver.find_element_by_link_text("Clients").click()
         driver.find_element_by_link_text("Show Filter").click()
@@ -216,6 +224,9 @@ class Test(unittest.TestCase):
         driver.find_element_by_name("clientURL").clear()
         driver.find_element_by_name("clientURL").send_keys(word + ".com")
         driver.find_element_by_name("save").click()
+
+    def projects(self):
+        driver = self.driver
         # Project filter test
         driver.find_element_by_link_text("Projects").click()
         driver.find_element_by_link_text("Show Filter").click()
@@ -243,6 +254,9 @@ class Test(unittest.TestCase):
         driver.find_element_by_name("projectBudget").clear()
         driver.find_element_by_name("projectBudget").send_keys("1000")
         driver.find_element_by_css_selector("div.edit > button[name=\"save\"]").click()
+
+    def time(self):
+        driver = self.driver
         # Time tests
         driver.find_element_by_link_text("Time").click()
         driver.find_element_by_link_text("Show Filter").click()
@@ -280,6 +294,9 @@ class Test(unittest.TestCase):
         driver.find_element_by_id("timeSheetItem_comment").send_keys("afsd")
         driver.find_element_by_name("timeSheetItem_save").click()
         driver.find_element_by_name("save").click()
+
+    def sales(self):
+        driver = self.driver
         # Sales tests.
         driver.find_element_by_link_text("Sales").click()
         driver.find_element_by_link_text("85").click()
@@ -303,6 +320,9 @@ class Test(unittest.TestCase):
         driver.find_element_by_link_text("Products").click()
         driver.find_element_by_link_text("ATENKVM8").click()
         driver.find_element_by_link_text("Sales").click()
+
+    def people(self):
+        driver = self.driver
         # People tests
         driver.find_element_by_link_text("People").click()
         driver.find_element_by_css_selector("tr.even > td > a").click()
@@ -317,6 +337,9 @@ class Test(unittest.TestCase):
         driver.find_element_by_link_text("Person Graphs").click()
         driver.find_element_by_link_text("People").click()
         driver.find_element_by_link_text("Skill Matrix").click()
+
+    def wiki(self):
+        driver = self.driver
         # Wiki tests
         driver.find_element_by_link_text("Wiki").click()
         driver.find_element_by_id("newFile").click()
@@ -333,7 +356,10 @@ class Test(unittest.TestCase):
         driver.find_element_by_id("newDirectory").click()
         driver.find_element_by_id("dirName").clear()
         driver.find_element_by_id("dirName").send_keys(word)
-        driver.find_element_by_id("save").click()'''
+        driver.find_element_by_id("save").click()
+
+    def tools(self):
+        driver = self.driver
         # Tools tests
         driver.find_element_by_link_text("Tools").click()
         driver.find_element_by_link_text("Reminders").click()
@@ -360,13 +386,42 @@ class Test(unittest.TestCase):
         driver.find_element_by_link_text("Tools").click()
         driver.find_element_by_link_text("Repeating Expense List").click()
         driver.find_element_by_link_text("Tools").click()
+
+    def user(self):
+        driver = self.driver
+        # Username tests
+        driver.find_element_by_css_selector("a.icon-star").click()
+        driver.find_element_by_link_text("Investigate and resolve a package update diagnostic").click()
+        driver.find_element_by_link_text("Christopher Bayliss").click()
+        driver.find_element_by_name("phoneNo2").clear()
+        driver.find_element_by_name("phoneNo2").send_keys("")
+        driver.find_element_by_name("phoneNo2").clear()
+        driver.find_element_by_name("phoneNo2").send_keys("0481363005")
+        driver.find_element_by_id("areasOfInterest").clear()
+        driver.find_element_by_id("areasOfInterest").send_keys("Photography")
+        driver.find_element_by_name("save").click()
+        driver.find_element_by_link_text("Christopher Bayliss").click()
+        Select(driver.find_element_by_name("theme")).select_by_visible_text("Default")
+        driver.find_element_by_name("customize_save").click()
+        driver.find_element_by_link_text("Christopher Bayliss").click()
+        Select(driver.find_element_by_name("theme")).select_by_visible_text("Rams")
+        driver.find_element_by_name("customize_save").click()
+        driver.find_element_by_link_text("Christopher Bayliss").click()
+        driver.find_element_by_name("personExpertiseItem_add").click()
+        driver.find_element_by_link_text("New Absence").click()
+        driver.find_element_by_id("calendar_1").clear()
+        driver.find_element_by_id("calendar_1").send_keys("2014-11-16")
+        driver.find_element_by_id("calendar_2").clear()
+        driver.find_element_by_id("calendar_2").send_keys("2014-11-21")
+        driver.find_element_by_css_selector("td > button[name=\"save\"]").click()
+        driver.find_element_by_name("personExpertiseItem_delete").click()
+        self.assertEqual("Click OK to confirm deletion.", self.close_alert_and_get_its_text())
+        # Help page
+        driver.find_element_by_link_text("Help").click()
         # test the search box
         driver.find_element_by_id("menu_form_needle").clear()
-        driver.find_element_by_id("menu_form_needle").send_keys("test00019")
+        driver.find_element_by_id("menu_form_needle").send_keys(word)
         driver.find_element_by_id("menu_form_needle").send_keys(Keys.RETURN)
-        # Logout test:
-        driver.find_element_by_link_text("Logout").click()
-        time.sleep(2)
 
     def is_element_present(self, how, what):
         try:
@@ -395,6 +450,8 @@ class Test(unittest.TestCase):
             self.accept_next_alert = True
 
     def tearDown(self):
+        self.driver.find_element_by_link_text("Logout").click()
+        time.sleep(2)
         self.driver.quit()
         self.assertEqual([], self.verificationErrors)
 
