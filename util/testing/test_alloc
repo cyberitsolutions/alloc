@@ -19,7 +19,7 @@ word_file = "/usr/share/dict/words"
 words = open(word_file).read().splitlines()
 word = random.choice(words)
 
-class Test(unittest.TestCase):
+class alloc(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Firefox()
         self.driver.implicitly_wait(30)
