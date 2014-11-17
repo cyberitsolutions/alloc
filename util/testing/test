@@ -14,6 +14,7 @@ import time
 import random
 
 
+
 word_file = "/usr/share/dict/words"
 words = open(word_file).read().splitlines()
 word = random.choice(words)
@@ -34,7 +35,7 @@ class Test(unittest.TestCase):
         driver.find_element_by_id("password").send_keys("password")
         driver.find_element_by_name("login").click()
 
-    def tasks(self):
+    def test_tasks(self):
         driver = self.driver
         # Tasks tests:
         driver.find_element_by_link_text("Tasks").click()
@@ -70,7 +71,7 @@ class Test(unittest.TestCase):
         driver.find_element_by_id("comment").send_keys("Test")
         driver.find_element_by_name("comment_save").click()
 
-    def home(self):
+    def test_home(self):
         driver = self.driver
         # Home page tests:
         driver.get(self.base_url + "/home/home.php?showProject=on&showParentID=on&projectType=Current&search=&search=&search=&search=&taskTypeID%5B%5D=Task&taskTypeID%5B%5D=Parent&search=&personID%5B%5D=194&search=&taskDate=&dateOne=&dateTwo=&search=&limit=&applyFilter=1&sessID=")
@@ -185,7 +186,7 @@ class Test(unittest.TestCase):
         # Time sheet stats
         driver.find_element_by_css_selector("canvas.jqplot-event-canvas").click()
 
-    def clients(self):
+    def test_clients(self):
         driver = self.driver
         # Clients
         driver.find_element_by_link_text("Clients").click()
@@ -225,7 +226,7 @@ class Test(unittest.TestCase):
         driver.find_element_by_name("clientURL").send_keys(word + ".com")
         driver.find_element_by_name("save").click()
 
-    def projects(self):
+    def test_projects(self):
         driver = self.driver
         # Project filter test
         driver.find_element_by_link_text("Projects").click()
@@ -255,7 +256,7 @@ class Test(unittest.TestCase):
         driver.find_element_by_name("projectBudget").send_keys("1000")
         driver.find_element_by_css_selector("div.edit > button[name=\"save\"]").click()
 
-    def time(self):
+    def test_time(self):
         driver = self.driver
         # Time tests
         driver.find_element_by_link_text("Time").click()
@@ -295,7 +296,7 @@ class Test(unittest.TestCase):
         driver.find_element_by_name("timeSheetItem_save").click()
         driver.find_element_by_name("save").click()
 
-    def sales(self):
+    def test_sales(self):
         driver = self.driver
         # Sales tests.
         driver.find_element_by_link_text("Sales").click()
@@ -321,7 +322,7 @@ class Test(unittest.TestCase):
         driver.find_element_by_link_text("ATENKVM8").click()
         driver.find_element_by_link_text("Sales").click()
 
-    def people(self):
+    def test_people(self):
         driver = self.driver
         # People tests
         driver.find_element_by_link_text("People").click()
@@ -338,7 +339,7 @@ class Test(unittest.TestCase):
         driver.find_element_by_link_text("People").click()
         driver.find_element_by_link_text("Skill Matrix").click()
 
-    def wiki(self):
+    def test_wiki(self):
         driver = self.driver
         # Wiki tests
         driver.find_element_by_link_text("Wiki").click()
@@ -358,7 +359,7 @@ class Test(unittest.TestCase):
         driver.find_element_by_id("dirName").send_keys(word)
         driver.find_element_by_id("save").click()
 
-    def tools(self):
+    def test_tools(self):
         driver = self.driver
         # Tools tests
         driver.find_element_by_link_text("Tools").click()
@@ -387,7 +388,7 @@ class Test(unittest.TestCase):
         driver.find_element_by_link_text("Repeating Expense List").click()
         driver.find_element_by_link_text("Tools").click()
 
-    def user(self):
+    def test_user(self):
         driver = self.driver
         # Username tests
         driver.find_element_by_css_selector("a.icon-star").click()
