@@ -36,7 +36,7 @@ Pty. Ltd. All other products and services are the registered trademarks of
 their respective holders 
 
 This document was written by: Kei, Con Zymaris, Alex Lance, Jeremy Chin,
-Robbie, Erick Fabre, Trent Buck, Manjula Arulananther.
+Robbie, Erick Fabre, Trent Buck, Manjula Arulananther, Christopher Bayliss.
 
 Creation Date: 2001-10-25, Modification Date: |date|
 
@@ -362,7 +362,7 @@ Project Management
 Tasks
 -----
 
-1. Implements Tasks, subTasks, Project phases, faults and messages.
+1. Implements Tasks, Subtasks, Project phases, faults and messages.
 
 2. Unlimited number of Tasks per Project.
 
@@ -370,7 +370,8 @@ Tasks
 
 4. Unlimited number of reminders/escalations per Task
 
-5. Ability to establish time estimates (best, worst, expected), dates etc, per-task
+5. Ability to establish time estimates (best, worst, expected), dates, etc.,
+   per-task
 
 6. Task comment emails, both to and from allocPSA, maintained in
    threaded discussion form.
@@ -382,7 +383,8 @@ Tasks
 9. A full history of changes to task meta-data, so that management can
    see who changed what attributes and when.
 
-10. Ability to sort task commentary on a threaded or date basis, also incorporating time-sheet time entries.
+10. Ability to sort task commentary on a threaded or date basis, also
+    incorporating time-sheet time entries.
 
 11. Ability to set task status (Open, Pending, Closed) in a granular
     manner.
@@ -452,8 +454,8 @@ Clients
 7. Actual and potential Project revenue from this company.
 
 
-Wiki Knowledgebase
-------------------
+Wiki Knowledge Base
+-------------------
 
 1. Offers an easy-to-use interface.
 
@@ -503,7 +505,8 @@ Reporting
 2. Every field in the core component tables can be queried, filtered and
    exported.
 
-3. Task Comment Summary, which provides the tools needed to determine if all work performed has been billed to the appropriate projects and customers.
+3. Task Comment Summary, which provides the tools needed to determine if all
+   work performed has been billed to the appropriate projects and customers.
 
 
 Fault & Issue Tracking
@@ -513,7 +516,7 @@ Fault & Issue Tracking
    system.
 
 2. Full email gateway facility, so that all task comments and responses
-   to these can be routed to approprite internatl and external
+   to these can be routed to appropriate internal and external
    stake-holders associated with the task/fault.
 
 4. Visibility of billable-time spent on a per-task basis.
@@ -786,7 +789,8 @@ How do I Re-Edit a Task's Name?
 
 4. Select the Task you want to edit from the 'Task Summary' Table
 
-5. Click 'Edit' button at the bottom of the screen. (Or just double-click the main Task panel).
+5. Click 'Edit' button at the bottom of the screen. (Or just double-click the
+   main Task panel).
 
 6. Edit the name or any other aspect of the Task header.
 
@@ -839,8 +843,8 @@ project and task(s) first.
 
 8. Repeat step 7 to add more line item entries if needed.
 
-9. Press 'Time Sheet to Admin' button when done. An email will be sent off to the
-   person designated as the next stop in the Time Sheet workflow process.
+9. Press 'Time Sheet to Admin' button when done. An email will be sent off to
+   the person designated as the next stop in the Time Sheet workflow process.
 
 HINT: You can save the Time Sheet as-is, then return to it later on.
 
@@ -951,9 +955,9 @@ Reject a Time Sheet?`_ .
 How do I Authorise a Time Sheet?
 --------------------------------
 
-NOTE: You must be setup as a Project Manager + Time Sheet Recipient (on the Project
-screen) or be setup as the Time Sheet Admin on the Setup screen in order to
-authorise Time Sheets.
+NOTE: You must be setup as a Project Manager + Time Sheet Recipient (on the
+Project screen) or be setup as the Time Sheet Admin on the Setup screen in
+order to authorise Time Sheets.
 
 1. Log in to allocPSA
 
@@ -991,10 +995,10 @@ you can continue with the appropriate steps in this routine, below.
 #. To open each time-sheet in turn, click the Date link associated with
    that time-sheet.
 
-#. If you perceive that there is a problem with the a time-sheet, then add a
-   New Comment specifying what the originator should do to fix
-   then re-submit the time-sheet, ensuring that you add the appropriate
-   user (and yourself) to that comment thread.
+#. If you perceive that there is a problem with the time-sheet, then add a
+   New Comment specifying what the originator should do to fix then re-submit
+   the time-sheet, ensuring that you add the appropriate user (and yourself) to
+   that comment thread.
 
 #. Once the new comment has been entered, click the Save Comment button.
 
@@ -1026,7 +1030,7 @@ How do I Send a Copy of a Time Sheet to Others?
    text text, provide a message in the Comment text box.
 
 5. Click the Attach Time Sheet drop-list and select from the options the
-   apprpriate content and document format for the time sheet you wish to
+   appropriate content and document format for the time sheet you wish to
    send. Unless you know otherwise, you can just select the Default
    option.
 
@@ -1164,7 +1168,7 @@ How do I Quickly Jump to a Task if I have the Task ID?
 
 1. Log in to allocPSA.
 
-2. If you have a valid task ID (eg, '12762') then you can enter this
+2. If you have a valid task ID (e.g., '12762') then you can enter this
    directly into the Quick Search textbox near the top right of the
    allocPSA screen.
 
@@ -1182,7 +1186,7 @@ How do I Quickly Jump to a Time Sheet if I have the Time Sheet ID?
 
 1. Log in to allocPSA.
 
-2. If you have a valid time sheet ID (eg, '12762') then you can enter this
+2. If you have a valid time sheet ID (e.g., '12762') then you can enter this
    directly into the Quick Search textbox near the top right of the
    allocPSA screen.
 
@@ -1203,7 +1207,7 @@ How do I Add Task/Fault Comments?
 2. Open the Task/Fault you want to add a comment to.
 
 3. Depending on how you last viewed a Task, you may be presented with
-   the Task showing a particular tab (eg, Main, Comments or All). To
+   the Task showing a particular tab (e.g., Main, Comments or All). To
    show the Comments tab within the task, click on the Comments tab, or
    alternatively, the All tab.
 
@@ -1224,7 +1228,7 @@ How do I Add Task/Fault Comments?
    also be attached to this comment in this Task, for future reference.
 
 7. If your server is set up to receive email and you have configured allocPSA
-   correctly you should be able to send emails back and forthe to and from
+   correctly you should be able to send emails back and for the to and from
    clients, using only your regular email client, all the while having the emails
    going through the alloc gateway and being logged to the relevant task or
    fault.
@@ -1238,8 +1242,8 @@ thread in the first place.
 
 #. Open your email client.
 
-#. You will notice that allocPSA emails have a particular structure in the Subject:
-   line, perhaps something like:
+#. You will notice that allocPSA emails have a particular structure in the
+   Subject: line, perhaps something like:
 
    Task Comment: 16713 Investigate Anti-Virus options for Staff server [3. Normal] {Key:cijhkjuq}
 
@@ -1258,8 +1262,8 @@ thread in the first place.
    key as your search criterion in your email client, rather than just the
    Task ID.
 
-How do I Establish a Default Interested Paries List for a Project's Tasks?
---------------------------------------------------------------------------
+How do I Establish a Default Interested Parties List for a Project's Tasks?
+---------------------------------------------------------------------------
 
 NOTE: allocPSA has a concept of Interested Parties; namely, people both
 within and external to your organisation who may be involved in work and
@@ -1284,8 +1288,8 @@ refer to `How do I Add Task/Fault Comments?`_ .
 #. The Default Interested Parties drop-list should show you the various
    people, internal and external, associated with this project. If you
    click the drop-list, it will reveal the list, from which you can
-   click-toggle the people you want as members of any tasks's default
-   Intersted Parties.
+   click-toggle the people you want as members of any task's default
+   Interested Parties.
 
 #. Once you've established who should be on each new project task's
    Interested Parties list, you can click the project header's Save button.
@@ -1339,12 +1343,12 @@ How do I Bookmark Task List Filters for Future Use?
 How do I Mark a Task as Pending?
 --------------------------------
 
-Note: Under some circumstances, there may be value in marking some tasks
-in such a way that they don't appear in the nornal, day-to-day views,
-but are still available just on the periphery. This might occur when
-where you're waiting on information, or waiting on customer approval or
-feedback. allocPSA provides a convenient way to manage such 'paused'
-tasks, through the Pending attribute.
+Note: Under some circumstances, there may be value in marking some tasks in
+such a way that they don't appear in the normal, day-to-day views, but are
+still available just on the periphery. This might occur when where you're
+waiting on information, or waiting on customer approval or feedback. allocPSA
+provides a convenient way to manage such 'paused' tasks, through the Pending
+attribute.
 
 1. Log in to allocPSA.
 
@@ -1368,8 +1372,8 @@ tasks, through the Pending attribute.
    setting using the approach outlined above.
 
 Note: You will note that a task which has had its Status changed from Open: to
-Pending: may now not be included in the Task List filter or the Home
-Page filter, if these have been established to show only Open: tasks.
+Pending: may now not be included in the Task List filter or the Home Page
+filter, if these have been established to show only Open: tasks.  
 
 Note: If a user selects to show only Open and not Open and Pending tasks
 in their allocPSA 'home' page, then tasks marked Pending will not appear
@@ -1414,7 +1418,7 @@ date will be set to today's date.
 How do I Make (Attribute) Changes to Many Tasks at Once?
 --------------------------------------------------------
 
-Note: While you are able to make changes to attributes (eg, Task
+Note: While you are able to make changes to attributes (e.g., Task
 Assignee, Task Priority, Completion Date etc.) on a per-task basis,
 allocPSA offers you a mechanism by which you can change these properties
 across many tasks at once.
@@ -1422,7 +1426,7 @@ across many tasks at once.
 1. Log in to allocPSA.
 
 2. Go to the Tasks tab, and list the tasks you are interested in making
-   changes to. This may be a soper-set of the actual tasks you want to
+   changes to. This may be a super-set of the actual tasks you want to
    change, for example, all Open tasks, or all tasks assigned to a
    particular person for a select group of projects.
 
@@ -1469,10 +1473,10 @@ How do I Mark a Task as a Duplicate?
 
 4. Select the Closed: Duplicate option from the Status droplist.
 
-5. This will show a textbox beside the Status droplist, into which you
-   sould enter the Task ID of the the task which it's a duplicate of,
-   for record-keeping purposes. allocPSA allows for one and only one
-   'duplicate' task to be linked to.
+5. This will show a textbox beside the Status droplist, into which you should
+   enter the Task ID of the task which it's a duplicate of, for record-keeping
+   purposes. allocPSA allows for one and only one 'duplicate' task to be linked
+   to.
 
 6. Save the task.
 
@@ -1482,17 +1486,20 @@ How do I use the allocPSA Email Gateway?
 
 1. Log in to allocPSA.
 
-2. Ensure allocPSA and your webserver is configured to send and receive emails. (Setup -> Email screen)
+2. Ensure allocPSA and your webserver is configured to send and receive emails.
+   (Setup -> Email screen)
 
 3. Create a task, or open an existing task.
 
-4. Create a comment and select which recipients you would like to receive your comment.
+4. Create a comment and select which recipients you would like to receive your
+   comment.
 
 5. Hit the Save Comment button. Note that if you want to receive the
    replies to that comment you will need to select your own name from the list of
    recipients.
 
-6. You can also use certain keywords in your reply to access additional functionality via email.
+6. You can also use certain keywords in your reply to access additional
+   functionality via email.
 
    The allocPSA task email subject lines currently look something like this:
 
@@ -1511,7 +1518,7 @@ How do I use the allocPSA Email Gateway?
 
    Sub/Subscribe adds you to that alloc task conversation. Unsub/unsubscribe
    removes you from that conversation. Some text will be prepended to the
-   comment saying what has happened eg: "Jonny Apple has been added to this 
+   comment saying what has happened e.g.: "Jonny Apple has been added to this 
    conversation".
 
    Close closes the associated task. Open opens the task. And Pending makes the
@@ -1522,9 +1529,9 @@ How do I use the allocPSA Email Gateway?
    If you want to exert finer control over the Task Status, you may use one of
    the specific Task Sub-Status keywords: notstarted, inprogress, info,
    manager, client, invalid, duplicate, incomplete or complete. If the task is to
-   be a duplicate, specify the duplicate task ID after a colon eg: duplicate:1234
+   be a duplicate, specify the duplicate task ID after a colon e.g.: duplicate:1234
 
-   Quiet means do not re-send this email. Previously only unsubscription
+   Quiet means do not re-send this email. Previously only unsubscribe
    requests would *not* get re-sent. Now they *do* get re-emailed. You can
    quell them with this "quiet" keyword. Likewise if you just want to add a
    comment to the conversation thread without re-emailing everyone, quiet is
@@ -1536,7 +1543,7 @@ How do I use the allocPSA Email Gateway?
    is still created and the time sheet item entry is still added, however your
    rate will be set to zero, and you will have to fix it manually.
    Additionally some text will be prepended to the top of the comment which
-   says eg "Danielle Johnston has added 2.00 Hours to time sheet #34232." and/or
+   says e.g. "Danielle Johnston has added 2.00 Hours to time sheet #34232." and/or
    "Danielle Johnston has not been added to project #22".  The body of the email is
    added as the time sheet item comment. So it is best to keep the email
    short. It probably makes sense to add the quiet keyword when adding time.
@@ -1551,7 +1558,7 @@ How do I use the allocPSA Email Gateway?
    * No email is re-sent to people.
    * The task is closed.
 
-   or eg this:
+   or e.g. this:
 
    [allocPSA] 12321 Task name goes here {Key:fds432fd} open unsub 10
 
@@ -1584,15 +1591,14 @@ How do I use the allocPSA Email Gateway?
 How do I Monitor Tagged-Funds/Cost-Centres That I'm Interested In?
 ------------------------------------------------------------------
 
-Note: allocPSA supports cost-centres (also-known-as tagged-funds) for
-projects and staff. These allow for the tracking and movement of monies
-within an organisation and amongst an organisation's project and staff
-'boundaries'. tagged-funds are used to determine and track expenses,
-time sheets, etc. Some people, particularly Admin and Manager users, may
-need to track many such tagged-funds at once. As such, thay may find it
-useful to have those particular tagged-funds display their current
-account balance on the 'home' page. To make this happen, follow these
-steps.
+Note: allocPSA supports cost-centres (also-known-as tagged-funds) for projects
+and staff. These allow for the tracking and movement of monies within an
+organisation and amongst an organisation's project and staff 'boundaries'.
+Tagged-funds are used to determine and track expenses, time sheets, etc. Some
+people, particularly Admin and Manager users, may need to track many such
+tagged-funds at once. As such, they may find it useful to have those particular
+tagged-funds display their current account balance on the 'home' page. To make
+this happen, follow these steps.
 
 1. Log in to allocPSA.
 
@@ -1699,9 +1705,9 @@ How do I Customise my Home Page?
      entries straight from the Home page, rather than having to do so from
      the actual time-sheet.
 
-   - Enabling Private Mode ensures that any sensitive (i.e, financial)
+   - Enabling Private Mode ensures that any sensitive (i.e., financial)
      information which is normally visible on the user's Home page, is
-     now obfsucated, made visible obly by moving the mouse over those fields.
+     now obfuscated, made visible only by moving the mouse over those fields.
   
    - New Time Sheet Item Hint will make a text-entry box available on
      a manager-level user's Home page, which will allow them to quickly add
@@ -1711,7 +1717,7 @@ How do I Customise my Home Page?
 
 6. Once you've made the changes you need to make, click the Save button
    that relates to this Preferences section. If you've made changes you
-   dont want to keep, click the Cancel Edit button.
+   don't want to keep, click the Cancel Edit button.
 
 
 How do I Customise my Home Page Information Blocks?
@@ -1722,11 +1728,11 @@ How do I Customise my Home Page Information Blocks?
 2. If you're not already the, click on the Home page tab.
 
 3. Most of the information content blocks (for example Tasks, Project
-   List, New Time Sheet Item etc) have display configuration options. To
+   List, New Time Sheet Item, etc.) have display configuration options. To
    access this, you merely move your mouse around just above the
    top-right corner of the content block widget, you will notice a small
    spanner icon appear. If you click this, you will be presented with a
-   context-sentive configuration pop-up, in which, you'll be able to
+   context-sensitive configuration pop-up, in which, you'll be able to
    modify that content block's display options. 
 
 4. For more information on what the various content block options are,
@@ -1734,7 +1740,7 @@ How do I Customise my Home Page Information Blocks?
 
 5. Once you've made the changes you need to make, click the Save button
    that relates to this Preferences section. If you've made changes you
-   dont want to keep, click the Cancel button.
+   don't want to keep, click the Cancel button.
 
 
 How do I Hide any Sensitive Financial Data in my Home Page?
@@ -1759,14 +1765,14 @@ needs to:
    section; Click the Edit button within this section.
 
 5. Switch on the private mode by selecting Yes in the Private Mode
-   drop-list. This  ensures that any sensitive (i.e, financial)
+   drop-list. This  ensures that any sensitive (i.e., financial)
    information which is normally visible on the user's Home page, is
-   now obfsucated, made visible obly by moving the mouse over those
+   now obfuscated, made visible only by moving the mouse over those
    fields.
 
 6. Once you've made the changes you need to make, click the Save button
    that relates to this Preferences section. If you've made changes you
-   dont want to keep, click the Cancel Edit button.
+   don't want to keep, click the Cancel Edit button.
 
 
 
@@ -1795,8 +1801,8 @@ How do I Sort Tables of Data?
    column as the sorting criterion.
 
 
-How do I Bookmark Clients, Tasks, Projects, etc?
-------------------------------------------------
+How do I Bookmark Clients, Tasks, Projects, etc.?
+-------------------------------------------------
 
 allocPSA gives you the ability to add specific records (such as Tasks,
 Clients, Projects, Timesheets, Sales and Invoices) to the Star list.
@@ -1804,7 +1810,7 @@ These can then be accessed in a collective 'bookmarks' page, by clicking
 the 'star' icon tool, located in the top right section of the main menu,
 near the Help, Setup and Logout links.
 
-To add new Star list bookmaks:
+To add new Star list bookmarks:
 
 1. Log in to allocPSA.
 
@@ -1847,15 +1853,19 @@ How do I Specify Annual Leave or Absence?
 
 2. Click on the People tab
 
-3. Select/click your name from the list of people present. This will take you into your user record.
+3. Select/click your name from the list of people present. This will take you
+   into your user record.
 
-4. At the bottom of this record, you will find a link called 'New absence form'. Click this.
+4. At the bottom of this record, you will find a link called 'New absence
+   form'. Click this.
 
-5. On the Absence Form which appers, nominate the Date From and the Date To for your leave of absence.
+5. On the Absence Form which appears, nominate the Date From and the Date To
+   for your leave of absence.
 
 6. Select the type of Leave (Annual Leave, Holiday, etc.)
 
-7. Add any new/additional emergency contact details or pertinent information that your colleagues may find valuable.
+7. Add any new/additional emergency contact details or pertinent information
+   that your colleagues may find valuable.
 
 8. Click the Save button.
 
@@ -1869,17 +1879,21 @@ How do I Check that I've Billed Completely on a Task?
 
 3. Click onto the Comments tab.
 
-4. Click the Summary link on the top-right side of the task. This will switch the comments into summary mode, sorted on date.
+4. Click the Summary link on the top-right side of the task. This will switch
+   the comments into summary mode, sorted on date.
 
-5. Review the summary items, checking to see if you've done work on this task, for which there isn't a corresponding time-sheet entry.
-   The time-sheet entries are marked in **Bold**.
+5. Review the summary items, checking to see if you've done work on this task,
+   for which there isn't a corresponding time-sheet entry. The time-sheet
+   entries are marked in **Bold**.
 
-6. If you find that there is unbilled work, then you can Click back into the Main task tab, and then click the Time Sheet link near
-   the top-right side of this page. Now you can add an appropriately dated time-sheet item to an existing time-sheet, or create a new
-   time-sheet and do the same.
+6. If you find that there is un-billed work, then you can Click back into the
+   Main task tab, and then click the Time Sheet link near the top-right side of
+   this page. Now you can add an appropriately dated time-sheet item to an
+   existing time-sheet, or create a new time-sheet and do the same.  
 
-Note: You can 'expand' any of these task comments by clicking on them. This will help you establish the context of the actions taken,
-and to help determine if this is indeed work that needed to be billed.
+Note: You can 'expand' any of these task comments by clicking on them. This
+will help you establish the context of the actions taken, and to help determine
+if this is indeed work that needed to be billed.
 
 
 How do I Sort Task Comments by Date Order?
@@ -1891,11 +1905,13 @@ How do I Sort Task Comments by Date Order?
 
 3. Click onto the Comments tab.
 
-4. Click the Summary link on the top-right side of the task. This will switch the comments into summary mode, sorted on date.
+4. Click the Summary link on the top-right side of the task. This will switch
+   the comments into summary mode, sorted on date.
 
 5. You can 'expand' any of these task comments by clicking on them.
 
-6. To get back to the normal, full threaded view of the task comments, click the Full link, on the top-right side of the task.
+6. To get back to the normal, full threaded view of the task comments, click
+   the Full link, on the top-right side of the task.
 
 
 How do I Prepare an Un-billed Effort Exception Report?
@@ -1905,50 +1921,64 @@ How do I Prepare an Un-billed Effort Exception Report?
 
 2. Click on the Tools tab.
 
-3. Click on the Task Comment Summary link. This will bring up the Task Comment Summary page.
+3. Click on the Task Comment Summary link. This will bring up the Task Comment
+   Summary page.
 
-4. Click on the Show Filter link, near the top-right of this page, which will present you with the filter tool.
+4. Click on the Show Filter link, near the top-right of this page, which will
+   present you with the filter tool.
 
-5. Select/de-select the projects you're interested in preparing an un-billed effort exception report on.
+5. Select/de-select the projects you're interested in preparing an un-billed
+   effort exception report on.
 
-6. Select the time-sheeting person/people you're interested in including in this report.
+6. Select the time-sheeting person/people you're interested in including in
+   this report.
 
 7. Select the Start Date for this report.
 
 8. Select the End Date for this report.
 
-9. Select the Task Status, for the types of task you want to check the un-billed effort on. It's often best to leave this 'blank'.
+9. Select the Task Status, for the types of task you want to check the
+   un-billed effort on. It's often best to leave this 'blank'.
 
-10. For a full-overview of the actions taken and their context, you can also check the 'Include Client Comments' check-box,
-    but this isn't often needed.
+10. For a full-overview of the actions taken and their context, you can also
+    check the 'Include Client Comments' check-box, but this isn't often needed.
 
-11. Click the Filter button. You will now be presented with a list of tasks, which that person (or people) took actions on, along with
-    any corresponding time-sheet entries. This list is grouped per-task, sorted on date.
+11. Click the Filter button. You will now be presented with a list of tasks,
+    which that person (or people) took actions on, along with any corresponding
+    time-sheet entries. This list is grouped per-task, sorted on date.
 
-12. You can 'expand' any of these task comments by clicking on them. This will help you establish the context of the actions taken,
-    and to help determine if this is indeed work that needed to be billed.
+12. You can 'expand' any of these task comments by clicking on them. This will
+    help you establish the context of the actions taken, and to help determine if
+    this is indeed work that needed to be billed.
 
-13. Review the summary items, checking to see if you've done work on this task, for which there isn't a corresponding time-sheet entry.
-    The time-sheet entries are marked in **Bold**. A good rule-of-thumb is, if you see task comment entries, with no **bold** time-sheet
-    line beneath them, this is possible an item of worked which hasn't been time-sheeted.
+13. Review the summary items, checking to see if you've done work on this task,
+    for which there isn't a corresponding time-sheet entry.  The time-sheet
+    entries are marked in **Bold**. A good rule-of-thumb is, if you see task
+    comment entries, with no **bold** time-sheet line beneath them, this is
+    possible an item of worked which hasn't been time-sheeted.
 
-14. If you determine that a user has under billed for work performed, you can right-mouse button click on the related task link, or
-    otherwise cause it to be opened in a new browser tab, go to the Comments tab, and add a new entry, including appropriate
-    internal/external parties (specifically the user who under billed) and alert them to this possibility.
+14. If you determine that a user has under billed for work performed, you can
+    right-mouse button click on the related task link, or otherwise cause it to
+    be opened in a new browser tab, go to the Comments tab, and add a new
+    entry, including appropriate internal/external parties (specifically the
+    user who under billed) and alert them to this possibility.
 
-15. They can then review this, and remedy the situation by submitting a new time-sheet entry for this under (or non-) billed work.
+15. They can then review this, and remedy the situation by submitting a new
+    time-sheet entry for this under (or non-) billed work.
 
 
 How do I Print a Task Ticket so I can take it with me on a Job?
 ---------------------------------------------------------------
 
-Note: Assuming you want the total volume of information related to this task, it's history, the client it relates to, their address etc., allocPSA offers a mechanism to prepare a printer-friendly version of this information.
+Note: Assuming you want the total volume of information related to this task,
+it's history, the client it relates to, their address etc., allocPSA offers a
+mechanism to prepare a printer-friendly version of this information.
 
 1. Log in to allocPSA.
 
 2. Open the task you're interested in.
 
-3. Click on the Print link, which is situatied just to the side of the main screen tabs, along the top of the allocPSA page.
+3. Click on the Print link, which is situated just to the side of the main screen tabs, along the top of the allocPSA page.
 
 4. This will bring up a full-detail, printer-friendly version of the information relating to this task, including the address and contact 
    details of the client, which you can then print off your browser, and take with you on an on-site visit.
@@ -2049,14 +2079,14 @@ older than 7 days.
 
 14. Click the New link at the lower-right side of the time-sheet page. This will open up a modified form of the comments tool found in tasks.
 
-15. Select the time-sheet creattor/user, and any other interested parties (time-sheet managers, admin etc) from the list of Email Recipients.
+15. Select the time-sheet creator/user, and any other interested parties (time-sheet managers, admin, etc.) from the list of Email Recipients.
 
-16. Using either a pre-scripted response (i.e, from the Comment Template drop-list) or entering your own message, send out a note saying that
+16. Using either a pre-scripted response (i.e., from the Comment Template drop-list) or entering your own message, send out a note saying that
     this time-sheet is old and should be submitted.
 
-17. When complete, click the Save Comment button. This email will now be sent to thes email recipients.
+17. When complete, click the Save Comment button. This email will now be sent to these email recipients.
 
-18. Return to the previous tab, the one that listed the filtered time-sheets, (i.e, step 10. above) and work your way down the list.
+18. Return to the previous tab, the one that listed the filtered time-sheets, (i.e., step 10. above) and work your way down the list.
 
 .. _How_do_I_Email_a_Time-Sheet_to_Customers:
 
@@ -2068,11 +2098,11 @@ How do I Email a Time-Sheet to Customers?
 
 2. Go to the time-sheet that you want to send out.
 
-3. Go to the botton of the time-sheet, where you'll find the Comments section.
+3. Go to the bottom of the time-sheet, where you'll find the Comments section.
 
 4. Click the New link at the lower-right side of the time-sheet page. This will open up a modified form of the comments tool found in tasks.
 
-5. Select the appropriate interested parties (customer contact(s), time-sheet manager, admin etc) from the list of Email Recipients.
+5. Select the appropriate interested parties (customer contact(s), time-sheet manager, admin, etc.) from the list of Email Recipients.
 
 6. Using either a pre-scripted response (i.e, from the Comment Template drop-list) or entering your own message, add text to the comment text box, 
    letting everyone know the purpose of this message.
@@ -2080,13 +2110,13 @@ How do I Email a Time-Sheet to Customers?
 7. From the Attach Time Sheet drop-list, select one of the options. Unless you have reason to specify otherwise, select Default. This will cause 
    a copy of the time-sheet to be attached to the outgoing email, as a PDF.
 
-8. When complete, click the Save Comment button. This email will now be sent to thes email recipients.
+8. When complete, click the Save Comment button. This email will now be sent to the email recipients.
 
 
 How do I Manage Support and Help Desk Tasks
 -------------------------------------------
 
-**Note**: Some help-desk systems call suppprt tasks 'tickets'. In this
+**Note**: Some help-desk systems call support tasks 'tickets'. In this
 documentation, tickets and tasks can be used inter-changeably.  While there are
 no functional differences between tasks assigned in 'help-desk' type projects
 or tasks assigned to more traditional 'life-cycle' projects, these are
@@ -2122,15 +2152,24 @@ tasks is therefore related to these attributes.
    choose these from the Created By, Managed By and Assigned To drop-lists. If you
    don't have requirements for further filtering, leave these blank.
 
-10. You can now select to see a variety of fields on the list of tasks to be filtered. For instance, if you want to see all the details of each task, you can check the Desc & Comments. The following gives you more information about each of these options:
+10. You can now select to see a variety of fields on the list of tasks to be
+    filtered. For instance, if you want to see all the details of each task,
+    you can check the Description & Comments. The following gives you more
+    information about each of these options:
 
-- Desc & Comments: This will show you the description of each task listed, along with all the comments. **Note** Use this option carefully, as the volume of data may be substantial. In general, unless you know there are only a few tasks in the returned task list, don't check this checkbox. 
+- Description & Comments: This will show you the description of each task
+  listed, along with all the comments. **Note** Use this option carefully, as
+  the volume of data may be substantial. In general, unless you know there are
+  only a few tasks in the returned task list, don't check this checkbox. 
 
-- Task Dates: This gives you additional information on each task's Target Start, Target Completion,  Actual Start, Actual Completion and Task Created dates.
+- Task Dates: This gives you additional information on each task's Target
+  Start, Target Completion,  Actual Start, Actual Completion and Task Created
+  dates.
 
 - Task Creator: This will display the name of the user who created each task
 
-- Task Manager: This will display the name of the user who is set up on the task as the task manager.
+- Task Manager: This will display the name of the user who is set up on the
+  task as the task manager.
 
 - Est, Act & Percent: This will display information on the task's time
   Estimate, the Actual time time-sheeted thus far, and the overall percentage
@@ -2187,7 +2226,7 @@ tasks is therefore related to these attributes.
 How do I Manage Project Tasks
 -----------------------------
 
-Managing project tasks is essentially a similar exercise to managint
+Managing project tasks is essentially a similar exercise to managing
 Help Desk tasks.
 
 **Note**: While there are no functional differences between tasks assigned in
@@ -2254,7 +2293,7 @@ How do I Import Project Tasks From External Applications?
    drop-list. The information link beside this drop-list provides more
    details about the options.
 
-5. You can nominate the file you want to inport from, via the Import
+5. You can nominate the file you want to import from, via the Import
    File field. Either click on the field, or click on the Choose...
    button to be offered a File Open dialog box, with which you can
    navigate to the file that you want to import, and select it.
@@ -2502,7 +2541,7 @@ will be shown in here, as well as any Reminders which have been set up or
 Absences which are scheduled.
 
 You can view the details of any single Task by clicking on that Task. You can
-modify the the date-range shown within the calendar by clicking on the single
+modify the date-range shown within the calendar by clicking on the single
 or multi-week options shown. Only your Tasks are shown in the calendar. As with
 all other parts of allocPSA, you can print this page, including your full
 calendar, to any printer configured on your workstation. You can create new
@@ -2583,7 +2622,7 @@ New Time Sheet Item Hint
 
 If you have manager privileges and if you've switched on this option,
 allocPSA can provide you with a quick-and-easy mechanism for noting when
-you believe specific staff are woring on specific tasks, which could
+you believe specific staff are working on specific tasks, which could
 then be used to ensure appropriate billing information is captured.  For
 more on how to use this facility, see: `How do I Ensure Staff Effort on
 Tasks is Captured as Time Sheets?`_ .
@@ -2667,7 +2706,7 @@ the filter segment of the page. Using this filter, you can select
 portions of a client name or a contact name within a client
 organisation, which you want to filter on, along with the client's
 Status (Current, Potential, Archived) and the client's Category (Client,
-Vendor, Supplier, Non-profit, etc).
+Vendor, Supplier, Non-profit, etc.).
 
 Once you have selected the filter criteria, you click the Filter button,
 and allocPSA will show you the matching entries. You can remove a
@@ -2806,12 +2845,12 @@ Listing and Adding Sales to Clients
 You can view the existing, and add new sales entities to this client, by
 clicking into the Sales tab. This will show you all the sales related to this
 client. You can also create a new sale item, linked to this client, by clicking
-the New Salelink, and then completing the process required to add a new sale.
+the New Sale link, and then completing the process required to add a new sale.
 
 Finding the Client Address on a Map
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-allocPSA has been integrated with Google Maps, so you are able to jump straigh
+allocPSA has been integrated with Google Maps, so you are able to jump straight
 to any client address, by clicking on the View map link, shown on the main
 Client page. This will take you straight to the nominated client address, as
 rendered by Google maps.
@@ -2865,11 +2904,11 @@ filter, by clearing out the values in the filter text boxes, and
 clicking the Filter button once more.
 
 Much like a Task, a Project has a header component, which is not likely to
-change that frequently. Within this header component are informational details
-about a the Project, including the Project's name, who the Client is,
+change that frequently. Within this header component is informational details
+about the Project, including the Project's name, who the Client is,
 Project-specific details about the Client's contact person, a number of start
-and finish dates, along with Project budget details, Project manager (for
-Time Sheet sign off purposes) and a Project modification history. 
+and finish dates, along with Project budget details, Project manager (for Time
+Sheet sign off purposes) and a Project modification history. 
 
 Once the header has been defined and saved, you will be able to set any
 per-Project assignment of Commission (used for tracking revenues to account
@@ -3397,7 +3436,7 @@ If you are creating a New Task, or are updating a Task, you may see any of the f
      - Work that is time sheeted for Tasks that have a Time Limit set will
        be flagged red if they go over their Time Limit Hours.
    - - Percent Complete
-     - This is an autocalculated field bases on the Estimated Hours versus the
+     - This is an auto calculated field bases on the Estimated Hours versus the
        Hours that have actually been billed against this Task in the time
        sheet section.
    - - Dates
@@ -3566,7 +3605,9 @@ Any submitted Time Sheet is and sent to either the Manager specified in the
 Project or to the financial Admin person as specified in the allocPSA
 configuration, for approval and to perhaps be Invoiced. 
 
-**NOTE:** You can, at any point, elect to send comment email to others, and even attach this time-sheet to that email. For information on this, see How do I Email a Time-Sheet to Customers? How_do_I_Email_a_Time-Sheet_to_Customers_ 
+**NOTE:** You can, at any point, elect to send comment email to others, and
+even attach this time-sheet to that email. For information on this, see How do
+I Email a Time-Sheet to Customers? How_do_I_Email_a_Time-Sheet_to_Customers_ 
 
 Printing Time Sheets
 ~~~~~~~~~~~~~~~~~~~~
@@ -3652,7 +3693,7 @@ first installed. This model works as follows.
 
 3. When you have downloaded and emailed the PDF to your Client, you can click
    the Approve/Reject button. To mark that this Invoice is waiting to be approved
-   or rejected (ie the Client has paid, or is not going to pay it).
+   or rejected (i.e. the Client has paid, or is not going to pay it).
 
 4. When the Client lets you know if the Invoice has been paid (or isn't going
    to pay), you can mark each Invoice item as Not Going To Be Paid, In
@@ -3753,7 +3794,7 @@ from the various particular TF's that the transactions should occur between.
 There are also Meta TF's that may be auto-calculated for each sale. There is
 the "Meta: Project TF", which defaults to the relevant Project (if any), TF. If
 no project is specified as part of this Sale, then this Meta TF will fall back
-to whatever you have specifed as the "Main Finance TF".
+to whatever you have specified as the "Main Finance TF".
 
 The "Meta: Salesperson TF" allows you to specify transactions that should occur
 for the TF of the person who created the Sale. This gives you an easy way to
@@ -3843,7 +3884,7 @@ absence from, and allocPSA will take you to this
 Wiki
 ----
 
-The Wiki in allocPSA is a user-generated knowledgebase and communal
+The Wiki in allocPSA is a user-generated knowledge base and communal
 book. Its interface and syntax will be familiar to anyone who has
 created or managed documentation or content on a wiki on similar content
 systems.
@@ -3936,7 +3977,7 @@ Here's a quick primer on *markdown*:
 - Words can be *italicised* (i.e., emphasised) by putting a single
   asterisk on either side of the word.
 
-- Words can be **bolded** (i.e., strongly-emphasised) by putting
+- Words can be **bold** (i.e., strongly-emphasised) by putting
   double-quotes on either side of the word.
 
 - Links can be made to other wiki pages, by putting the file-name of the
@@ -3953,15 +3994,15 @@ it easy to make this change via a config option.
 Inbox
 -----
 
-allocPSA provides a facility for accessing the current Inbox for the
+allocPSA provides a facility for accessing the current inbox for the
 primary account used to sent mail to the gateway. 
 
 Normally, this Inbox contains all the mail incoming into allocPSA, which
-allocPSA then processes and remove from the Inbox. However, there are
+allocPSA then processes and remove from the inbox. However, there are
 occasions when that email can't be properly processed by allocPSA, such
 as when there are no identifying mechanisms in the email header (e.g, a
 missing 'key'). Under these circumstances, email isn't processed, and
-accumulates in the Inbox. The allocPSA Inbox tool exists to allow an
+accumulates in the inbox. The allocPSA inbox tool exists to allow an
 allocPSA super-user administrator to manage this accumulated mail,
 manually.
 
@@ -3969,7 +4010,7 @@ manually.
 Inbox Table
 ~~~~~~~~~~~
 
-The allocPSA mail Inbox is presented as a table, with a number of data
+The allocPSA mail inbox is presented as a table, with a number of data
 columns:
 
 .. list-table::
@@ -3981,7 +4022,7 @@ columns:
    - - Date
      - Indicates the date the mail was sent.
    - - Email
-     - Displayes who the mail is from, along with the Subject: line.
+     - Displays who the mail is from, along with the Subject: line.
 
 
 Arching, Creating New Tasks and Attaching Emails to Existing Tasks
@@ -3995,11 +4036,11 @@ actions on each of the emails:
    - - Archive
      - Clicking on this will cause that mail item to be archived, into
        a separate mail folder.x
-   - - New Taskx
+   - - New Tasks
      - Clicking on this will extract information from that mail, to turn
        it into a new ticket. The Task ID for the new ticket is provided
-       in the informational response, given at the top of the Inbox
-       page.x
+       in the informational response, given at the top of the inbox
+       page.
    - - Existing Task
      - This will provide a mechanism for you to nominate an existing
        Task ID that this email relates to, along with a choice of which
@@ -4031,7 +4072,7 @@ allocPSA includes a modular and flexible finance management system whose
 purpose is to provide the conduit for any and all financial transactions with
 the professional services organisation's accounting software. As such, allocPSA
 offers the necessary modules to conduct financial transactional activities
-within allocPSA (for Time Sheets, for Project-related Expense Forms etc) as well
+within allocPSA (for Time Sheets, for Project-related Expense Forms etc.) as well
 as a shadow of many of the financial transactional activities which are found
 in standard modern business accounting systems, such as invoicing, cost-centre
 and wages management. As with many other aspects of allocPSA, non-privileged
@@ -4150,7 +4191,7 @@ search the database and return a list of matching records.
 
    A cost-centre is like an internal bank account. You can review its contents much like you would any online bank account.
 
-A user with higher privileges can drill down into the the transactions by
+A user with higher privileges can drill down into the transactions by
 clicking on any 'ID / Invoice Numbers' links will show you the Invoice details. 
 
 Repeating Expenses can let user create an expense that repeats on a fixed
@@ -4317,14 +4358,14 @@ tool, you can add new announcements and edit existing ones.
 
 3. Press the 'Save' button.
 
-4. click the 'Return to Announcement List' link to return to the Announcement
+4. Click the 'Return to Announcement List' link to return to the Announcement
    page.
 
 allocPSA will automatically save and display the announcement on each user's
 Home page, under the Announcement section, during the dates you specified. If
 you want to edit or delete an announcement, from the Announcements page:
 
-1. click the 'Edit' link, located at the right of each announcement.
+1. Click the 'Edit' link, located at the right of each announcement.
 
 2. Press the 'Save' button if you have made your changes
 
@@ -4344,7 +4385,7 @@ actions.
 
 NOTE: In general, you would not need to make any changes at all to this section.
 
-NOTE: Due to the critical nature of this configuration system. only 'god' level
+NOTE: Due to the critical nature of this configuration system, only 'god' level
 users are able to see this configuration option.
 
 1. To add a new permission, click the 'New Permission' link. This will take you
@@ -4627,7 +4668,7 @@ Indexed keyword fields for Comments
    - - typeid
      - The ID of the related comment type
    - - typename
-     - The name of the related entity, eg the Task's name
+     - The name of the related entity, e.g. the Task's name
    - - desc
      - The body of the comment text
    - - creator
@@ -4674,8 +4715,8 @@ Edit Skill Items
 ````````````````
 
 This tool allows you to add edit and delete the various classes of skill and
-abilities from which your organisation draws. Ie in a tech field the Skill
-Classes might be Hardware, Software, Networking etc, and the Skill names might
+abilities from which your organisation draws. I.E. in a tech field the Skill
+Classes might be Hardware, Software, Networking etc., and the Skill names might
 be Harddisks, Optical Drives, Java, etc.
 
 
@@ -4701,7 +4742,7 @@ button.
 
 You can add new templates, which then become available from
 a droplist in new Tasks. These templates can have place-holders, such as
-Company Contact Details, Project Name etc, and allocPSA will replace these
+Company Contact Details, Project Name, etc., and allocPSA will replace these
 place-holders with real values.
 
 You can also edit and delete a Task Template by select it from the list, making
@@ -4824,7 +4865,7 @@ reporting tools.
     the form of a text file.
 
 13. You can also select a number of delimiters, comma (,), TAB (tab),
-    double-hash (##) etc, which you can then use to separate your fields when
+    double-hash (##) etc., which you can then use to separate your fields when
     you pull them into your report analysis application, or mail-merge
     facility.
 
@@ -4872,9 +4913,3 @@ allocPSA Source Code
 This mechanism allows the casual user to browse through the source code of
 allocPSA. It is included mainly as directed by the Affero GNU General Public
 License.
-
-
-
-
-
-
