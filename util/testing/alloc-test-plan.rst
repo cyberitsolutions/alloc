@@ -154,6 +154,8 @@ Syntax::
     >   click 'New Time Sheet'
     <   should take you to the create new time sheet page
 
+    | FIXME! We need to add more time sheet tests.
+
 #. Sales tests::
 
     |   go to the Sales page
