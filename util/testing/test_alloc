@@ -14,7 +14,6 @@ import time
 import random
 
 
-
 word_file = "/usr/share/dict/words"
 words = open(word_file).read().splitlines()
 word = random.choice(words)
@@ -78,7 +77,23 @@ class alloc(unittest.TestCase):
             driver.find_element_by_id("comment").send_keys("Test")
             driver.find_element_by_name("comment_save").click()
         except:
-            print('Replying to a comment did not work')
+            print('Replying to a comment did not work.')
+        try:
+            # Various
+            driver.find_element_by_link_text("Home").click()
+            driver.find_element_by_link_text("test00006").click()
+            driver.find_element_by_id("sbs_link_comments").click()
+            driver.find_element_by_link_text("Summary").click()
+            driver.find_element_by_link_text("Full").click()
+            driver.find_element_by_id("sbs_link_reminders").click()
+            driver.find_element_by_link_text("Add Reminder").click()
+            driver.find_element_by_name("reminder_save").click()
+            driver.find_element_by_link_text("Home").click()
+            driver.find_element_by_link_text("test00006").click()
+            driver.find_element_by_id("sbs_link_history").click()
+            driver.find_element_by_id("sbs_link_sbsAll").click()
+        except:
+            print('Various tests failed.')
         try:
             # rename task
             driver.find_element_by_link_text("Home").click()
