@@ -13,10 +13,10 @@ import unittest
 import time
 import random
 
-
 word_file = "/usr/share/dict/words"
 words = open(word_file).read().splitlines()
 word = random.choice(words)
+
 
 class alloc(unittest.TestCase):
     def setUp(self):
@@ -512,14 +512,14 @@ class alloc(unittest.TestCase):
     def is_element_present(self, how, what):
         try:
             self.driver.find_element(by=how, value=what)
-        except NoSuchElementException, e:
+        except NoSuchElementException:
             return False
         return True
 
     def is_alert_present(self):
         try:
             self.driver.switch_to_alert()
-        except NoAlertPresentException, e:
+        except NoAlertPresentException:
             return False
         return True
 
