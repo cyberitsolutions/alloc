@@ -752,10 +752,10 @@ steps.
 #.  If you now go to the 'Task Calendar' of the 'Home' page again, you should
     find there is a new reminder for that meeting.
 
-HINT: It is a good idea, when creating a meeting Task, to give it a name
-which includes information about who/what/when and when. Here's an example:
-Meeting with Yvonne Smith (Partek Partners) to discuss support issues. Office,
-Tuesday, 10am'
+.. HINT:: It is a good idea, when creating a meeting Task, to give it a name
+          which includes information about who/what/when and when. Here's an
+          example: Meeting with Yvonne Smith (Partek Partners) to discuss
+          support issues.  Office, Tuesday, 10am'
 
 How do I Add a Meeting Reminder?
 --------------------------------
@@ -844,13 +844,14 @@ How do I Create a New Time Sheet?
 #.  Press 'Time Sheet to Admin' button when done. An email will be sent off to
     the person designated as the next stop in the Time Sheet workflow process.
 
-HINT: You can save the Time Sheet as-is, then return to it later on.
+.. HINT:: You can save the Time Sheet as-is, then return to it later on.
 
-HINT: You can track the progress of your Time Sheets from the 'Time Sheet'
-section of your 'Homepage'.
+.. HINT:: You can track the progress of your Time Sheets from the 'Time Sheet'
+          section of your 'Homepage'.
 
-HINT: If you're a manager designated to receive requests to authorise Time
-Sheets, you can view them from the 'Time Sheet' section of your 'Homepage'.
+.. HINT:: If you're a manager designated to receive requests to authorise Time
+          Sheets, you can view them from the 'Time Sheet' section of your
+          'Homepage'.  
 
 How do I Ensure Staff Effort on Tasks is Captured as Time Sheets?
 -----------------------------------------------------------------
@@ -925,8 +926,8 @@ How do I Make My Time-sheet Editable Again?
 
 .. NOTE:: Once a time-sheet has been submitted by a user, then that user can no
           longer edit it. To make it editable again, the user needs to ask the
-          the appropriate person (time-sheet or project manager, Admin) to send
-          the time-sheet back.
+          appropriate person (time-sheet or project manager, Admin) to send the
+          time-sheet back.
 
 #.  Log in to allocPSA
 
@@ -1023,11 +1024,11 @@ How do I Send a Copy of a Time Sheet to Others?
     timesheets visible in the Time tab, select a time sheet that you want
     to send a copy of to someone.
 
-#.  From inside the time sheet, click the New link near the bottom right.
+#.  From inside the time sheet, click the New Comment near the bottom right.
     This will expand the Comments functionality.
 
 #.  Using either a boiler-plate comment template, or by adding your own
-    text text, provide a message in the Comment text box.
+    text, provide a message in the Comment text box.
 
 #.  Click the Attach Time Sheet drop-list and select from the options the
     appropriate content and document format for the time sheet you wish to
@@ -1050,31 +1051,37 @@ How do I Find Client Information?
 
 #.  From the toolbar, select the 'Clients' tab.
 
+#.  Click 'Show Filter'.
+
 #.  Choose the status of the Client you want to find, by default 'Current' is
     set.
 
-#.  You now have two options. You can select the first letter of the Client
+#.  You now have three options. You can select the first letter of the Client
     organisation's name and be shown a list of Clients starting with that name.
 
-#.  Alternatively, you can type the part of the Client organisation's name in
-    the 'Name Containing' text box, then press the 'Filter' button.
+#.  Alternatively, you can type the Client organisation's name in the 'Client
+    Name' text box, then press the 'Filter' button.
+
+#.  Or, you and enter the contact name.
+
+#.  You can also filter the list of clients by category.
 
 #.  A list of Clients matching the criteria is shown.
 
-HINT: You can also use your browser's Find facility, to locate any known
-part of the text of Client's information.
+.. HINT:: You can also use your browser's Find facility, to locate any known
+          part of the text of Client's information.
 
-HINT: If the Client's name begins with a number or other, non-alphabetical
-letter, then they will be listed under the 'A' filter list.
+.. HINT:: If the Client's name begins with a number or other, non-alphabetical
+          character, then they will be listed under the 'A' filter list.
 
-HINT: If you're looking at the list of Clients, you can send email to their
-primary contact, assuming that one exists and they have an email address listed
-in allocPSA, by clicking on their email address as shown in the Client listing
-page.
+.. HINT:: If you're looking at the list of Clients, you can send email to their
+          primary contact, assuming that one exists and they have an email
+          address listed in allocPSA, by clicking on their email address as
+          shown in the 'Clients' listing page.
 
-HINT: If you're presently in any particular Client's page, you can send
-email to any of the contacts by clicking on their email address (once again,
-assuming they have one) as shown in the Client contact page.
+.. HINT:: If you're presently in any particular Client's page, you can send
+          email to any of the contacts by clicking on their email address (once
+          again, assuming they have one) as shown in the Client contact page.
 
 How do I Add Client Information?
 --------------------------------
@@ -1090,26 +1097,25 @@ How do I Add Client Information?
 
 #.  Fill in the details of the Client.
 
-#.  Press 'Add' button.
+#.  Press the 'Save' button.
 
 #.  You are now able to attach as many Contacts to this Client record
     information header as you want.
 
 #.  To do so, fill in the first 'Add New Contact' sub-form.
 
-#.  Press 'Add' button.
+#.  Press the 'Save Client Contact' button.
 
-#.  If you have add more than one Contact person, and want to make one of them
-    to the primary contact person, use the 'Make Primary Contact' button
-    associated with that Contact.
+#.  If you have added more than one Contact person, and want to make one of them
+    to the primary contact person, edit the contact and use the 'Primary
+    Contact' checkbox associated with that Contact.
 
 #.  If you want to add any Client-level comments, you can do so via the
-    'Comment' text area.
+    'Comment' tab.
 
 #.  Furthermore, if you want to add a document (such as a contract, agreement,
-    photo, database etc.) related to the Client, you could press 'Browse' from
-    the 'Files' section to select a file from your computer, then press the
-    'Save Document' to upload and store it.
+    photo, database etc.) related to the Client, go to the 'Attachments' tab
+    and upload attachments.
 
 
 How do I Find Map References for a Client Address?
@@ -1117,29 +1123,28 @@ How do I Find Map References for a Client Address?
 
 #.  Log in to allocPSA.
 
-#.  Click into the Client tab and locate the client you want to add a map
+#.  Click into the 'Clients' tab and locate the client you want to add a map
     reference for. Alternatively, use the Quick Search facility to locate
     a specific client.
 
-#.  In the Client page, click the 'View map' link, located in the main,
-    header portion of the page.
+#.  On the 'Clients' page, click the 'View map' link, under the address field.
 
 How do I Archive Old Client Contacts?
 -------------------------------------
 
 #.  Log in to allocPSA.
 
-#.  Click into the Client tab and locate the client you're interested in.
+#.  Click on the 'Clients' tab and locate the client you're interested in.
     Alternatively, use the Quick Search facility to locate a specific client.
 
-#.  Within the Client page, locate the specific contact that you want to
+#.  Within the 'Clients' page, locate the specific contact that you want to
     archive from the Client Contacts section.
 
-#.  Click the Edit buttn for that contact.
+#.  Click the Edit button for that contact.
 
-#.  Un-check the Enabled checkbox.
+#.  Un-check the 'Enabled' checkbox.
 
-#.  Click the Save Client Contact button, to save your changes. 
+#.  Click the 'Save Client Contact' button, to save your changes. 
 
 .. NOTE:: This action will cause the specific contact details to be still
           available and visible, but it moves this information to the bottom of
@@ -1151,12 +1156,12 @@ How do I Check the Modification History for Tasks, Projects?
 
 #.  Log in to allocPSA.
 
-#.  Click into the Tasks or Projects tab and locate the record you're
-    interested in. Alternatively, use the Quick Search facility to locate
-    that task or project.
+#.  Click on the 'Tasks' or 'Projects' tab and locate the task or project
+    you're interested in. Alternatively, use the Quick Search facility to
+    locate that task or project.
 
-#.  Once that task or project page is opened, click into the History tab
-    of that page.
+#.  Once you-re on the task or project page, click on the History tab to view
+    the history.
 
 #.  This will display any information regarding changes to the 'header'
     of this record, such as changes in key settings, when they were made,
@@ -1206,14 +1211,11 @@ How do I Add Task/Fault Comments?
 
 #.  Open the Task/Fault you want to add a comment to.
 
-#.  Depending on how you last viewed a Task, you may be presented with
-    the Task showing a particular tab (e.g., Main, Comments or All). To
-    show the Comments tab within the task, click on the Comments tab, or
-    alternatively, the All tab.
+#.  Click on the Comments tab.
 
-#.  You will be presented with the form to add new comments. You can now
-    add the comment, select intended recipients, and then click Save
-    Comment.
+#.  Click 'New Comment'.
+
+#.  Write your comment, and then choose the recipients.
 
 #.  If you want to add an additional recipient who doesn't appear on the
     prepared list of recipients, you can add them by click-expanding the
@@ -1228,10 +1230,10 @@ How do I Add Task/Fault Comments?
     also be attached to this comment in this Task, for future reference.
 
 #.  If your server is set up to receive email and you have configured allocPSA
-    correctly you should be able to send emails back and for the to and from
-    clients, using only your regular email client, all the while having the emails
-    going through the alloc gateway and being logged to the relevant task or
-    fault.
+    correctly you should be able to send emails to and from clients, using only
+    your regular email client, all the while having the emails going through
+    the alloc gateway and being logged to the relevant task or fault.
+
 
 How do I Continue with a Task Comment Conversation Thread?
 ----------------------------------------------------------
@@ -1243,7 +1245,7 @@ How do I Continue with a Task Comment Conversation Thread?
 #.  Open your email client.
 
 #.  You will notice that allocPSA emails have a particular structure in the
-    Subject: line, perhaps something like:
+    subject line, perhaps something like:
 
     Task Comment: 16713 Investigate Anti-Virus options for Staff server [3. Normal] {Key:cijhkjuq}
 
@@ -1251,7 +1253,7 @@ How do I Continue with a Task Comment Conversation Thread?
     thus continuing the discussion thread, find an email which relates to
     that task.
 
-#.  Use your email client's standard Reply to reply to that task.
+#.  Use your email client's standard 'Reply to' button to reply to that task.
     
         .. NOTE:: you do not need to do a Reply-all or Group-reply, as replying
                   through the allocPSA email gateway will ensure that all the
@@ -1294,7 +1296,7 @@ How do I Establish a Default Interested Parties List for a Project's Tasks?
     Interested Parties.
 
 #.  Once you've established who should be on each new project task's
-    Interested Parties list, you can click the project header's Save button.
+    Interested Parties list, you can click the 'Save' button.
 
 How do I Establish Default Rates for People?
 --------------------------------------------
@@ -1312,7 +1314,7 @@ How do I Establish Default Rates for People?
 #.  In the Default Rate field, enter the rate and then select the
     duration (hourly, daily, weekly, etc) from the drop-list.   
 
-#.  Click the Person Details header Save button.
+#.  Click the 'Save' button.
 
 .. NOTE:: When you next add this person to a project, their rate and duration
           will be entered automatically.
@@ -1408,14 +1410,14 @@ How do I Close a Task?
 #.  You can, at any point, change the Status back to Open: or any other
     setting using the approach outlined above.
 
-You will note that if you mark the task Closed: Duplicate, then you will
-be prompted for the Task ID of the task which it's a duplicate of, for
-record-keeping purposes. This is covered in detail elsewhere in this
-documentation. allocPSA allows for one and only one 'duplicate' task to
-be linked to.
+.. NOTE:: You will note that if you mark the task Closed: Duplicate, then you
+          will be prompted for the Task ID of the task which it's a duplicate
+          of, for record-keeping purposes. This is covered in detail elsewhere
+          in this documentation. allocPSA allows for one and only one
+          'duplicate' task to be linked to.
 
-You will also note that once you close a task, the Actual Completion
-date will be set to today's date.
+.. NOTE:: You will also note that once you close a task, the Actual Completion
+          date will be set to today's date.
 
 
 How do I Make (Attribute) Changes to Many Tasks at Once?
@@ -1458,7 +1460,7 @@ How do I Make (Attribute) Changes to Many Tasks at Once?
     Update Tasks button, to make the actual change across your list of
     selected tasks.
 
-#.  If you more than one attribute change to make across this list of
+#.  If you have more than one attribute change to make across this list of
     tasks, follow the above steps, and change additional attributes.
 
 
@@ -1467,8 +1469,7 @@ How do I Mark a Task as a Duplicate?
 
 #.  Log in to allocPSA.
 
-#.  Open the task (fault, message) that you would like to mark as
-    as a duplicate.
+#.  Open the task (fault, message) that you would like to mark as a duplicate.
 
 #.  From the Main (or All) task tab, click the Edit Task button. This
     will open the task header section for editing. By default, a task is
@@ -2324,7 +2325,7 @@ How do I Import Project Tasks From External Applications?
     navigate to the file that you want to import, and select it.
 
 #.  Once you've nominated the file to import and the type of file, click
-    on the Import button. This will now now add the tasks nominated in
+    on the Import button. This will now add the tasks nominated in
     the import file, into this Project.
 
 
@@ -2459,7 +2460,7 @@ in allocPSA. Therefore:
 
 #.  You can print a whole (or part) page to any printer your workstation has
     been configured to use, at any time, just like you would print a web-page.
-    If you see a "Print" link at the top of the screen that indicates that that
+    If you see a "Print" link at the top of the screen that indicates that
     particular pages have been optimised for printing.
 
 #.  You can find any piece of text in a page by using your browser's page Find
@@ -2827,7 +2828,7 @@ document within the browser, or launch a helper application to display the
 document on screen, which greatly facilitates easy retrieval and viewing.
 
 To add a document to the Project document 'tree', you can click on the 'Choose'
-button which is visible on the Client page. This will bring up a File
+button which is visible on the 'Clients' page. This will bring up a File
 Open-style dialog box (depending on your web-browser) with which you can
 navigate to the document that you want to upload to allocPSA's document
 repository. When you have selected the file you want to upload, and are back to
@@ -2840,7 +2841,7 @@ Adding Reminders to Clients
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You can add a new reminder to the Client Project (rather than to just a
-specific Task) by clicking on the 'Add Reminder' link on the Client page.
+specific Task) by clicking on the 'Add Reminder' link on the 'Clients' page.
 
 .. figure:: images/new_reminder.png
 
@@ -2881,7 +2882,7 @@ Finding the Client Address on a Map
 
 allocPSA has been integrated with Google Maps, so you are able to jump straight
 to any client address, by clicking on the View map link, shown on the main
-Client page. This will take you straight to the nominated client address, as
+'Clients' page. This will take you straight to the nominated client address, as
 rendered by Google maps.
 
 Modifying Client Information
@@ -3611,8 +3612,8 @@ Adding New Time Sheet
 
 #.  For each Time Sheet line item, fill in Date, Duration, Task and Location.
 
-#.  HINT: If the Task you need to link a Time Sheet line item to doesn't exist
-    yet, you can create it by clicking on the 'New Task' link.
+    .. HINT:: If the Task you need to link a Time Sheet line item to doesn't
+              exist yet, you can create it by clicking on the 'New Task' link.
 
 #.  Press the 'Add' button to add each new item.
 
@@ -3621,14 +3622,14 @@ Adding New Time Sheet
 #.  Press 'Save and Submit' button when done. An email will be sent off to the
     person designated as the next stop in the Time Sheet workflow process.
 
-#.  HINT: You can save the Time Sheet as-is, then return to it later on.
+    .. HINT:: You can save the Time Sheet as-is, then return to it later on.
 
-#.  HINT: You can track the progress of your Time Sheets from the 'Time Sheet'
-    section of your 'Homepage'.
+    .. HINT:: You can track the progress of your Time Sheets from the 'Time Sheet'
+              section of your 'Homepage'.
 
-#.  HINT: If you're a manager designated to receive requests to authorise
-    Time Sheets, you can view them from the 'Time Sheet' section of your
-    'Homepage'.
+    .. HINT:: If you're a manager designated to receive requests to authorise
+              Time Sheets, you can view them from the 'Time Sheet' section of
+              your 'Homepage'.
 
 Any submitted Time Sheet is and sent to either the Manager specified in the
 Project or to the financial Admin person as specified in the allocPSA
@@ -3711,15 +3712,17 @@ first installed. This model works as follows.
 #.  Once the Invoice has been created and Invoice line items have been added to
     it, a PDF can be generated and downloaded for it.
 
-    HINT: Invoice items can be generic, and/or can be tied directly to a
-    Time Sheet by clicking the "From Time Sheet" button, and/or invoice items can
-    be tied directly to Expense Forms by clicking the "From Expense Form" button.
+    .. HINT:: Invoice items can be generic, and/or can be tied directly to a
+              Time Sheet by clicking the "From Time Sheet" button, and/or
+              invoice items can be tied directly to Expense Forms by clicking
+              the "From Expense Form" button.  
 
-    HINT: Only Time Sheets at status "Invoice" will appear in the "From Time
-    Sheet" Invoice item select box.
+    .. HINT:: Only Time Sheets at status "Invoice" will appear in the "From
+              Time Sheet" Invoice item select box.
 
-    HINT: Only Expense Forms that have their "Seek Client Reimbursement"
-    checkbox ticked will appear in the "From Expense Form" select box.
+    .. HINT:: Only Expense Forms that have their "Seek Client Reimbursement"
+              checkbox ticked will appear in the "From Expense Form" select
+              box.
 
 #.  When you have downloaded and emailed the PDF to your Client, you can click
     the Approve/Reject button. To mark that this Invoice is waiting to be approved
@@ -3740,11 +3743,12 @@ first installed. This model works as follows.
 #.  Once all Invoice items have been marked off you can click the button to
     move the "Invoice to Completed".
 
-    HINT: If you had any Invoice items that were generated "From Time Sheets"
-    or "From Expense Form", then the associated Time Sheet or Expense Form will
-    have its transactions marked as Paid or Rejected (depending on the status of
-    the associated Invoice item) and be moved to status Completed once the
-    Invoice is moved to status Completed. 
+    .. HINT:: If you had any Invoice items that were generated "From Time
+              Sheets" or "From Expense Form", then the associated Time Sheet or
+              Expense Form will have its transactions marked as Paid or
+              Rejected (depending on the status of the associated Invoice item)
+              and be moved to status Completed once the Invoice is moved to
+              status Completed. 
 
 
 Reviewing Existing Invoices
