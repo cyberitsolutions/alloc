@@ -1611,7 +1611,7 @@ How do I Monitor Tagged-Funds/Cost-Centres That I'm Interested In?
 #.  Go to the Tools tab of the main menu.
 
 #.  From the Finance list, click the List of Tagged Funds link. The
-    Tagged Funds list will appear, but it make take a while, as allocPSA
+    Tagged Funds list will appear, but it may take a while, as allocPSA
     has to perform quite a few calculations.
 
 #.  If the list is too long, you can expand the Filter to allow you to
@@ -1665,13 +1665,11 @@ How do I Customise my Home Page?
 
 #.  Log in to allocPSA.
 
-#.  Click on the People tab from the main menu.
+#.  Click on your name on the right side of the page near 'Help' and 'Login'.
+    This will open up your personal settings page, called 'Person Details'.
 
-#.  Click on your name from the list of names presented. This will open
-    up you Person Details personal settings page.
-
-#.  On the right of the Person Details page, you will see the Preferences
-    section; Click the Edit button within this section.
+#.  On the right of the 'Person Details' page, you will see the Preferences
+    section.
 
 #.  Change the settings for Font size, Theme, Top Tasks etc.
 
@@ -1679,51 +1677,33 @@ How do I Customise my Home Page?
 
     - Theme will alter the colours (look and feel) of allocPSA
 
-    - Top tasks will alter how many tasks are shown in your Home page.
+    - Daily Email: Control whether or not you receive a daily task email.
 
-    - Status allows you to select which tasks are shown on your Home
-      page, based on their status, It is possible to do
-      multiple-selections, for example, all Open and all Pending tasks.
+    - Self Mail: Whether or not you receive a copy of you own comment in an
+      email.
 
-    - Calendar weeks allows you to specify how many weeks forward are
-      displayed on your Home page calender.
+    - Homepage Projects: displays project list box on the home page.
 
-    - Daily email is deprecated in use, but used-to send out a daily
-      summary of tasks to the user.
+    - Show Filters: Control whether or not the filters are displayed by default
+      on the various tabs in alloc.
 
-    - Receive my comments (Self Mail) allows the user to specify of they are sent
-      their own comments, as part of a task comment discussion thread.
+    - Homepage Tasks: Display the task list box on the home page.
 
-    - Project list specifies how many projects that the user is assigned
-      to, are to be shown on the Home page.
+    - Homepage Calendar: Display the calendar box on the home page.
 
-    - Show Filters allows the user to specify if the various list filters
-      are shown by default when the user goes to those lists. Examples
-      are the Client, Project, Time & Task filters.
+    - Homepage Time Sheet Stats: Display the time sheet stats box on the home
+      page.
 
-    - Time Sheet Stats will show the user an information block on their Home
-      page which presents details about the number of hours worked
-      yesterday and today, the last two weeks and the two-week average
-      over all time.
+    - Homepage New Time Sheet Item: Display the add new time sheet item box on
+      the home page.
 
-    - New Time Sheet Item will make a text-entry box available on the
-      user's Home page, which will allow them to quickly add time-sheet
-      entries straight from the Home page, rather than having to do so from
-      the actual time-sheet.
+    - Homepage Private Mode: Prevent someone who is standing over your shoulder
+      from seeing financial amounts on the homepage.
 
-    - Enabling Private Mode ensures that any sensitive (i.e., financial)
-      information which is normally visible on the user's Home page, is
-      now obfuscated, made visible only by moving the mouse over those fields.
-  
-    - New Time Sheet Item Hint will make a text-entry box available on
-      a manager-level user's Home page, which will allow them to quickly add
-      indications (or hints) of what work different teams members are
-      doing. This information can then be used at a latter date to improve the
-      quality and completion of those team members' time-sheeting.
+    - Homepage New Time Sheet Item Hint: Display the add new time sheet item
+      hint box on the home page.
 
-#.  Once you've made the changes you need to make, click the Save button
-    that relates to this Preferences section. If you've made changes you
-    don't want to keep, click the Cancel Edit button.
+#.  Once you've made the changes you need to make, click the 'Save' button.
 
 
 How do I Customise my Home Page Information Blocks?
@@ -1731,55 +1711,46 @@ How do I Customise my Home Page Information Blocks?
 
 #.  Log in to allocPSA.
 
-#.  If you're not already the, click on the Home page tab.
+#.  Go to the Home page tab.
 
-#.  Most of the information content blocks (for example Tasks, Project
-    List, New Time Sheet Item, etc.) have display configuration options. To
-    access this, you merely move your mouse around just above the
-    top-right corner of the content block widget, you will notice a small
-    spanner icon appear. If you click this, you will be presented with a
-    context-sensitive configuration pop-up, in which, you'll be able to
-    modify that content block's display options. 
+    .. NOTE:: Most of the information content blocks (for example Tasks, Project
+              List, New Time Sheet Item, etc.) have display configuration options.
 
-#.  For more information on what the various content block options are,
-    please refer to `How do I Customise my Home Page?`_ . 
+#.  Click the spanner icon next to the block you wish to adjust.
 
-#.  Once you've made the changes you need to make, click the Save button
-    that relates to this Preferences section. If you've made changes you
-    don't want to keep, click the Cancel button.
+    .. NOTE:: For more information on what the various content block options are,
+              please refer to `How do I Customise my Home Page?`_ .
+
+#.  Once you've made the changes you need to make, click the 'Save' button that
+    relates to this Preferences section. (For the tasks block click 'Filter')
+    If you've made changes you don't want to keep, click Cancel.
 
 
 How do I Hide any Sensitive Financial Data in my Home Page?
 -----------------------------------------------------------
 
-There are a number of pages in allocPSA which display financial data.
-Most of these relate to work arranged by managers or admin staff, and
-are accessed infrequently or under specific circumstances. There is also
-potentially sensitive financial data on each user's Home page. allocPSA
-therefore provides a method to obfuscate this sensitive data, if the
-user deems that necessary. To instantiate this obfuscation, the user
-needs to:
+There are a number of pages in allocPSA which display financial data. Most of
+these relate to work arranged by managers or admin staff, and are accessed
+infrequently or under specific circumstances. There is also potentially
+sensitive financial data on each user's Home page. allocPSA therefore provides
+a method to obfuscate this sensitive data, if the user deems that necessary. To
+instantiate this obfuscation, the user needs to:
 
 #.  Log in to allocPSA.
 
-#.  Click on the People tab from the main menu.
-
-#.  Click on your name from the list of names presented. This will open
-    up you Person Details personal settings page.
+#.  Click on your name on the right side of the page near 'Help' and 'Login'.
+    This will open up your personal settings page, called 'Person Details'.
 
 #.  On the right of the Person Details page, you will see the Preferences
-    section; Click the Edit button within this section.
+    section.
 
-#.  Switch on the private mode by selecting Yes in the Private Mode
-    drop-list. This  ensures that any sensitive (i.e., financial)
-    information which is normally visible on the user's Home page, is
-    now obfuscated, made visible only by moving the mouse over those
-    fields.
+#.  Switch on the private mode by selecting Yes in the 'Homepage Private Mode'
+    drop-list. This ensures that any sensitive (i.e., financial) information
+    which is normally visible on the user's Home page, is now obfuscated, made
+    visible only by moving the mouse over those fields.
 
 #.  Once you've made the changes you need to make, click the Save button
-    that relates to this Preferences section. If you've made changes you
-    don't want to keep, click the Cancel Edit button.
-
+    that relates to this Preferences section.
 
 
 How do I Sort Tables of Data?
@@ -1787,69 +1758,47 @@ How do I Sort Tables of Data?
 
 #.  Log in to allocPSA.
 
-#.  Bring up and of the mainstream data entity tables, such as the list
-    of tasks in the Home page, the list of clients in the Clients tab
-    page, the list of projects in the Projects tab page, Time, Invoices
-    etc.
+#.  Go to the table of data you would like to sort.
 
-#.  You will notice that if you hover your mouse pointer over the table
-    column headings, for instance, the ID table column heading on the
-    Tasks table, that a small up-down-arrow icon will appear. This is
-    there to tell you that you can click this table column heading text,
-    and allocPSA will sort the data in the table using this column as the
-    sorting criterion.
-
-#.  Click the same table column heading text again, and the sort order
-    will be reversed.
-
-#.  Click on another table column heading text, for instance, TASK on the
-    Tasks table, and allocPSA will sort the data in the table using this
-    column as the sorting criterion.
+#.  Click on the heading text of the column that you would like to sort by.
 
 
-How do I Bookmark Clients, Tasks, Projects, etc.?
--------------------------------------------------
+How do I Star Clients, Tasks, Projects, etc.?
+---------------------------------------------
 
-allocPSA gives you the ability to add specific records (such as Tasks,
-Clients, Projects, Timesheets, Sales and Invoices) to the Star list.
-These can then be accessed in a collective 'bookmarks' page, by clicking
-the 'star' icon tool, located in the top right section of the main menu,
-near the Help, Setup and Logout links.
-
-To add new Star list bookmarks:
+allocPSA gives you the ability to add specific records (such as Tasks, Clients,
+Projects, Timesheets, Sales, and Invoices) to the Star list. These can then be
+accessed in a collective 'star' page, by clicking the '★' icon, located in the
+top right section of the main menu, near the Help, Setup and Logout links.
 
 #.  Log in to allocPSA.
 
 #.  Go to the specific data item that is of interest, for example a Task,
-    or a Client record. Alternatively, click into the Clients, Tasks,
-    Projects, Time, Invoices or Sales tab, to display the corresponding
-    list for that type.
-  
-#.  If on a specific record, for example a single Task, you will notice a
-    small 'star' icon, near the top right of that item's menu. Click on
-    that small 'star' icon. This will fill the icon with a solid colour.
-    This indicates that this record is now in your Star list of
-    bookmarks. If you click that filled-in 'star' icon once more, it will
-    toggle-off the bookmark. 
+    or a Client record.
 
-#.  If you're looking a list of Tasks for instance, you will see a list
-    of 'star' icons along the right edge of the table. Clicking on any of
-    these will toggle the 'stars' on (filled) or off (empty),
-    corresponding to that item being in or out of your Star bookmark list.    
+#.  If on a specific record, for example a single Task, you will notice a small
+    '☆' icon, near the top right of that item's menu. Click on that small '☆'
+    icon.  This will fill the icon with a solid colour, which indicates that
+    this record is now in your 'star' list of bookmarks. If you click that
+    filled-in '★' icon once more, it will toggle-off the bookmark.
 
-#.  To view your Star list of bookmarks, click on the main 'filled in'
-    star icon, near the top right of your main screen's menu items.
+    .. HINT:: If you're looking a list of Tasks for instance, you will see a
+              list of '☆' icons along the right edge of the table. Clicking on
+              any of these will toggle the 'stars' on (filled ★) or off (empty
+              ☆), corresponding to that item being in or out of your Star list.
 
-#.  This will open the Star list, showing you all your various bookmarks
-    for the different types of items that you've bookmarked. 
+#.  To view your 'star' list of bookmarks, click on the main 'filled in' ★
+    icon, near the top right of your main screen's menu items.
+
+#.  This will open the 'star' list, showing you all your various bookmarks for
+    the different types of items that you've stared.
 
 #.  To remove an item from your Star bookmark list, click (that is,
     uncheck) the 'filled in' star associated with that item (on the far
     right of that item's entry in the table). This will toggle-off the
     bookmark. If you refresh the page, or click on the Star list icon (near
     the top right of your main screen's menu items) again, the item you
-    had unchecked should no longer be present. You're always welcome to
-    find that item again, and add it to your Star list of bookmarks.
+    had unchecked should no longer be present.
 
 
 How do I Specify Annual Leave or Absence?
@@ -1857,13 +1806,10 @@ How do I Specify Annual Leave or Absence?
 
 #.  Log in to allocPSA
 
-#.  Click on the People tab
+#.  Click on your name on the right side of the page near 'Help' and 'Login'.
 
-#.  Select/click your name from the list of people present. This will take you
-    into your user record.
-
-#.  At the bottom of this record, you will find a link called 'New absence
-    form'. Click this.
+#.  At the bottom of the page, you will find a link called 'New Absence'. Click
+    this.
 
 #.  On the Absence Form which appears, nominate the Date From and the Date To
     for your leave of absence.
@@ -1888,14 +1834,13 @@ How do I Check that I've Billed Completely on a Task?
 #.  Click the Summary link on the top-right side of the task. This will switch
     the comments into summary mode, sorted on date.
 
-#.  Review the summary items, checking to see if you've done work on this task,
-    for which there isn't a corresponding time-sheet entry. The time-sheet
-    entries are marked in **Bold**.
+#.  Review the summary items, checking to see if you've done work on the task.
+    The time-sheet entries are marked in **Bold**.
 
 #.  If you find that there is un-billed work, then you can Click back into the
     Main task tab, and then click the Time Sheet link near the top-right side of
     this page. Now you can add an appropriately dated time-sheet item to an
-    existing time-sheet, or create a new time-sheet and do the same.  
+    existing time-sheet, or create a new time-sheet and do the same.
 
 .. NOTE:: You can 'expand' any of these task comments by clicking on them. This
           will help you establish the context of the actions taken, and to help
@@ -1961,7 +1906,7 @@ How do I Prepare an Un-billed Effort Exception Report?
     for which there isn't a corresponding time-sheet entry.  The time-sheet
     entries are marked in **Bold**. A good rule-of-thumb is, if you see task
     comment entries, with no **bold** time-sheet line beneath them, this is
-    possible an item of worked which hasn't been time-sheeted.
+    possibly an item of work which hasn't been time-sheeted.
 
 #.  If you determine that a user has under billed for work performed, you can
     right-mouse button click on the related task link, or otherwise cause it to
@@ -1989,9 +1934,9 @@ How do I Print a Task Ticket so I can take it with me on a Job?
     screen tabs, along the top of the allocPSA page.
 
 #.  This will bring up a full-detail, printer-friendly version of the
-    information relating to this task, including the address and contact details
-    of the client, which you can then print off your browser, and take with you
-    on an on-site visit.
+    information relating to this task, including the address and contact
+    details of the client, which you can then print off your browser, and take
+    with you on an on-site visit.
 
 #.  To get back to your normal allocPSA page, just use your browser's Back
     button.
@@ -2006,51 +1951,7 @@ How do I Print a Printer-Friendly Version of the Task List?
 
 #.  Use the filter tool to prepare a list of the tasks you're interested in.
 
-#.  Click on the Print link, which is situated just to the side of the main
-    screen tabs, along the top of the allocPSA page.
-
-#.  This will produce a more printer-friendly version of the list shown
-    on-screen.
-
-#.  Click on your browser's Print toolbar or select Print from your browser's
-    File menu.
-
-#.  To get back to your normal allocPSA page, just use your browser's Back
-    button.
-
-
-How do I Print a Printer-Friendly Version of the Clients List?
---------------------------------------------------------------
-
-#.  Log in to allocPSA.
-
-#.  Click on the Clients tab.
-
-#.  Use the filter tool to prepare a list of the clients you're interested in
-
-#.  Click on the Print link, which is situated just to the side of the main
-    screen tabs, along the top of the allocPSA page.
-
-#.  This will produce a more printer-friendly version of the list shown
-    on-screen.
-
-#.  Click on your browser's Print toolbar or select Print from your browser's
-    File menu.
-
-#.  To get back to your normal allocPSA page, just use your browser's Back button.
-
-
-How do I Print a Printer-Friendly Version of the Projects List?
----------------------------------------------------------------
-
-#.  Log in to allocPSA.
-
-#.  Click on the Projects tab.
-
-#.  Use the filter tool to prepare a list of the projects you're interested in.
-
-#.  Click on the Print link, which is situated just to the side of the main
-    screen tabs, along the top of the allocPSA page.
+#.  Click on the 'PDF' link.
 
 #.  This will produce a more printer-friendly version of the list shown
     on-screen.
@@ -2076,39 +1977,53 @@ How do I Check to Ensure Users are Submitting Their Time-sheets in a Timely Mann
 
 #.  Click the Show Filter link, to reveal the filter tool.
 
-#.  If you want to check a particular user's time-sheet, select that user, otherwise leave the User Name drop-list blank.
+#.  If you want to check a particular user's time-sheet, select that user,
+    otherwise leave the User Name drop-list blank.
 
-#.  Supply the Start Date From field. This sets the 'lower-bound' of what time-sheet item dates to include in the filter.
+#.  Supply the Start Date From field. This sets the 'lower-bound' of what
+    time-sheet item dates to include in the filter.
 
-#.  Supply the Start Date To field. This sets the 'upper-bound' of what time-sheet item dates to include in the filter.
+#.  Supply the Start Date To field. This sets the 'upper-bound' of what
+    time-sheet item dates to include in the filter.
 
-#.  In the Status drop-list, select Add Time, as this will show you the time-sheets that users have created, but not yet submitted to management.
+#.  In the Status drop-list, select Add Time, as this will show you the
+    time-sheets that users have created, but not yet submitted to management.
 
-#.  If you want to check time-sheets lodged with a particular project, select that project from the Project drop-list, otherwise leave it blank.
+#.  If you want to check time-sheets lodged with a particular project, select
+    that project from the Project drop-list, otherwise leave it blank.
 
-#.  Click the Filter button. This will generate a (possibly lengthy) list of time-sheets, assigned to projects, users etc.
+#.  Click the Filter button. This will generate a (possibly lengthy) list of
+    time-sheets, assigned to projects, users etc.
 
-#.  Sort the list by Start Date, by clicking on the START DATE column header. This will show you the time-sheet with the oldest time-sheet
-    item at the top of the table.
+#.  Sort the list by Start Date, by clicking on the START DATE column header.
+    This will show you the time-sheet with the oldest time-sheet item at the
+    top of the table.
 
-#.  Check that this date is no further in the past than your organisations time-sheet submission policy allows for.
+#.  Check that this date is no further in the past than your organisations
+    time-sheet submission policy allows for.
 
-#.  If it is, and **if** you want to notify your user of this possible infraction, right-click on the record link (in the Project) column,
-    and cause that time-sheet to be brought up on a new browser tab.
+#.  If it is, and **if** you want to notify your user of this possible
+    infraction, right-click on the record link (in the Project) column, and
+    cause that time-sheet to be brought up on a new browser tab.
 
-#.  In that new tab, review the time-sheet, confirm that it's now overdue, then go to the botton of the time-sheet, where you'll
-    find the Comments section.
+#.  In that new tab, review the time-sheet, confirm that it's now overdue, then
+    go to the button of the time-sheet, where you'll find the Comments section.
 
-#.  Click the New link at the lower-right side of the time-sheet page. This will open up a modified form of the comments tool found in tasks.
+#.  Click the New link at the lower-right side of the time-sheet page. This
+    will open up a modified form of the comments tool found in tasks.
 
-#.  Select the time-sheet creator/user, and any other interested parties (time-sheet managers, admin, etc.) from the list of Email Recipients.
+#.  Select the time-sheet creator/user, and any other interested parties
+    (time-sheet managers, admin, etc.) from the list of Email Recipients.
 
-#.  Using either a pre-scripted response (i.e., from the Comment Template drop-list) or entering your own message, send out a note saying that
-    this time-sheet is old and should be submitted.
+#.  Using either a pre-scripted response (i.e., from the Comment Template
+    drop-list) or entering your own message, send out a note saying that this
+    time-sheet is old and should be submitted.
 
-#.  When complete, click the Save Comment button. This email will now be sent to these email recipients.
+#.  When complete, click the Save Comment button. This email will now be sent
+    to these email recipients.
 
-#.  Return to the previous tab, the one that listed the filtered time-sheets, (i.e., step 10. above) and work your way down the list.
+#.  Return to the previous tab, the one that listed the filtered time-sheets,
+    (i.e., step 10. above) and work your way down the list.
 
 .. _How_do_I_Email_a_Time-Sheet_to_Customers:
 
@@ -2122,17 +2037,22 @@ How do I Email a Time-Sheet to Customers?
 
 #.  Go to the bottom of the time-sheet, where you'll find the Comments section.
 
-#.  Click the New link at the lower-right side of the time-sheet page. This will open up a modified form of the comments tool found in tasks.
+#.  Click the New link at the lower-right side of the time-sheet page. This
+    will open up a modified form of the comments tool found in tasks.
 
-#.  Select the appropriate interested parties (customer contact(s), time-sheet manager, admin, etc.) from the list of Email Recipients.
+#.  Select the appropriate interested parties (customer contact(s), time-sheet
+    manager, admin, etc.) from the list of Email Recipients.
 
-#.  Using either a pre-scripted response (i.e, from the Comment Template drop-list) or entering your own message, add text to the comment text box, 
+#.  Using either a pre-scripted response (i.e., from the Comment Template
+    drop-list) or entering your own message, add text to the comment text box,
     letting everyone know the purpose of this message.
 
-#.  From the Attach Time Sheet drop-list, select one of the options. Unless you have reason to specify otherwise, select Default. This will cause 
-    a copy of the time-sheet to be attached to the outgoing email, as a PDF.
+#.  From the Attach Time Sheet drop-list, select one of the options. Unless you
+    have reason to specify otherwise, select Default. This will cause a copy of
+    the time-sheet to be attached to the outgoing email, as a PDF.
 
-#.  When complete, click the Save Comment button. This email will now be sent to the email recipients.
+#.  When complete, click the Save Comment button. This email will now be sent
+    to the email recipients.
 
 
 How do I Manage Support and Help Desk Tasks
@@ -2180,57 +2100,58 @@ How do I Manage Support and Help Desk Tasks
     you can check the Description & Comments. The following gives you more
     information about each of these options:
 
-- Description & Comments: This will show you the description of each task
-  listed, along with all the comments.
+    - Description & Comments: This will show you the description of each task
+      listed, along with all the comments.
 
-  .. NOTE:: Use this option carefully, as the volume of data may be
-            substantial. In general, unless you know there are only a few tasks
-            in the returned task list, don't check this checkbox. 
+    .. NOTE:: Use this option carefully, as the volume of data may be
+              substantial. In general, unless you know there are only a few tasks
+              in the returned task list, don't check this checkbox.
 
-- Task Dates: This gives you additional information on each task's Target
-  Start, Target Completion,  Actual Start, Actual Completion and Task Created
-  dates.
+    - Task Dates: This gives you additional information on each task's Target
+      Start, Target Completion,  Actual Start, Actual Completion and Task Created
+      dates.
 
-- Task Creator: This will display the name of the user who created each task
+    - Task Creator: This will display the name of the user who created each task
 
-- Task Manager: This will display the name of the user who is set up on the
-  task as the task manager.
+    - Task Manager: This will display the name of the user who is set up on the
+      task as the task manager.
 
-- Est, Act & Percent: This will display information on the task's time
-  Estimate, the Actual time time-sheeted thus far, and the overall percentage
-  of the time time-sheeted versus the estimate. *If* the amount of time
-  time-sheeted for this task is more than the time estimated, then the percentage
-  will be displayed in **red**.
+    - Est, Act & Percent: This will display information on the task's time
+      Estimate, the Actual time time-sheeted thus far, and the overall percentage
+      of the time time-sheeted versus the estimate. *If* the amount of time
+      time-sheeted for this task is more than the time estimated, then the
+      percentage will be displayed in **red**.
 
-- Assigned To:  This will display the name of the user who this task is assigned to.
+    - Assigned To:  This will display the name of the user who this task is assigned to.
 
-- Priority Info: This will display each task's Project and Task priority, along
-  with an overall computed Priority, based on the age of the task, attributed
-  priorities, etc.
+    - Priority Info: This will display each task's Project and Task priority, along
+      with an overall computed Priority, based on the age of the task, attributed
+      priorities, etc.
 
-- Date Status: This will display a computed date estimate to complete the task,
-  based on effort and time spent thus far. A typical output would be something
-  like 'Started 2010-06-30, forecast completion date of 2010-12-06'.
+    - Date Status: This will display a computed date estimate to complete the task,
+      based on effort and time spent thus far. A typical output would be something
+      like 'Started 2010-06-30, forecast completion date of 2010-12-06'.
 
-#.  You can also select to filter based on Task Date attributes, by selecting items from the Task Date droplist. Options include:
+#.  You can also select to filter based on Task Date attributes, by selecting
+    items from the Task Date droplist. Options include:
 
-- New Tasks:
+    - New Tasks,
 
-- Due Today:
+    - Due Today,
 
-- Overdue:
+    - Overdue,
 
-- Date Created and then supply a data range on which to filter:
+    - Date Created (and then supply a data range on which to filter),
 
-- Date Assigned and then supply a data range on which to filter:
+    - Date Assigned (and then supply a data range on which to filter),
 
-- Estimated Start and then supply a data range on which to filter:
+    - Estimated Start (and then supply a data range on which to filter),
 
-- Estimated Completion and then supply a data range on which to filter:
+    - Estimated Completion (and then supply a data range on which to filter),
 
-- Date Started and then supply a data range on which to filter:
+    - Date Started (and then supply a data range on which to filter),
 
-- Date Completed and then supply a data range on which to filter:
+    - Date Completed (and then supply a data range on which to filter).
 
 #.  Once all the filter options have been selected, click the Filter button.
     This will generate the list of tasks which match your filter criteria and
