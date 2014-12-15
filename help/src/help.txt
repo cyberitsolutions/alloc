@@ -2216,12 +2216,11 @@ How do I Modify a Task's Interested Parties List for an Existing Comment Thread?
 How does a Task Re-Open Automatically on New Activity?
 ------------------------------------------------------
 
-If you've placed a Task in Pending or Closed, that task will be
-re-activated if an email is received by the email gateway, from one of
-the potential *external* Interested Parties (as defined by the list of
-email addresses in the Interested Parties list on the main page of that
-Task. Email from an *internal* address will not trigger this
-state-change.
+If you've placed a Task in Pending or Closed, that task will be re-activated if
+an email is received by the email gateway, from one of the potential *external*
+Interested Parties (as defined by the list of email addresses in the Interested
+Parties list on the main page of that Task. Email from an *internal* address
+will not trigger this state-change.
 
 
 How do I Import Project Tasks From External Applications?
@@ -2233,21 +2232,19 @@ How do I Import Project Tasks From External Applications?
 
 #.  Click into the Import/Export tab.
 
-#.  Presently, allocPSA allows you to import a specifically formatted
-    Comma Separated Value (CSV) text file, or a project from a Gnome
-    Planner ( http://live.gnome.org/Planner ). You can select what type
-    of file you're about to import into the project using the File Type
-    drop-list. The information link beside this drop-list provides more
-    details about the options.
+    .. NOTE:: Presently, allocPSA allows you to import a specifically formatted
+              Comma Separated Value (CSV) text file, or a project from Gnome
+              Planner ( https://wiki.gnome.org/Apps/Planner ). You can select
+              what type of file you're about to import into the project using
+              the File Type drop-list. The information link beside this
+              drop-list provides more details about the options.
 
-#.  You can nominate the file you want to import from, via the Import
-    File field. Either click on the field, or click on the Choose...
-    button to be offered a File Open dialog box, with which you can
-    navigate to the file that you want to import, and select it.
+#.  You can choose the file you want to import via the import field. Click on
+    the 'Browse...' button to be offered a File Open dialog box, with which you
+    can navigate to the file that you want to import.
 
-#.  Once you've nominated the file to import and the type of file, click
-    on the Import button. This will now add the tasks nominated in
-    the import file, into this Project.
+#.  Once you've choosen the file to import, click on the 'Open' button. This
+    will now add the tasks in the import file to this Project.
 
 
 How do I Export Project Tasks?
@@ -2259,9 +2256,10 @@ How do I Export Project Tasks?
 
 #.  Click into the Import/Export tab.
 
-#.  Presently, allocPSA allows you to export a specifically formatted
-    Comma Separated Value (CSV) text file, or a project file compatible with
-    Gnome Planner ( http://live.gnome.org/Planner ).
+    .. NOTE:: Presently, allocPSA allows you to export a specifically formatted
+              Comma Separated Value (CSV) text file, or a project file
+              compatible with Gnome Planner (
+              https://wiki.gnome.org/Apps/Planner ).
 
 #.  To export the Project's task data as a Gnome Project file, click on
     the 'GNOME Planner format XML file' link. This will present you with a
@@ -2280,26 +2278,26 @@ How do I Search for Task Contents?
 
 #.  Log in to allocPSA.
 
-#.  Enter the text that you are looking for in the Search text-box, near
-    the top-right of the main allocPSA screen. (This normally has a
-    greyed-out text string which says 'Enter search text or ID').
+#.  Enter the text that you are looking for in the Search text-box, near the
+    top-right of the main allocPSA screen. (This normally has a greyed-out text
+    string which says 'Enter search text or ID...').
 
-#.  If you are looking for contents which are likely to be in the
-    'header' part of the task, you can select Search Tasks from the
-    drop-list which is on the left of the Search text-box.
+#.  If you are looking for contents which are likely to be in the 'header' part
+    of the task, you can select Search Tasks from the drop-list which is on the
+    left of the Search text-box.
 
-#.  If you are looking for contents which are likely to be in the
-    Comments section of the task, select Search Comments from the 
-    drop-list which is on the left of the Search text-box.
+#.  If you are looking for contents which are likely to be in the Comments
+    section of the task, select Search Comments from the drop-list which is on
+    the left of the Search text-box.
 
-#.  Once you've supplied both the text to search for and specified where
-    to search, press the Enter key on your keyboard.
+#.  Once you've supplied both the text to search for and specified where to
+    search, press the Enter key on your keyboard.
 
-#.  The search results will be presented on-screen, for you to peruse.
+#.  The search results will be presented on-screen for you to peruse.
 
 .. NOTE:: allocPSA has a sophisticated search lexicon which you can use to hone
-          your searches. For more information, read the `Search`_ of this
-          document.
+          your searches. For more information, read the `Search`_ section of
+          this document.
 
 
 How do I Quickly Add Time Sheet Entries?
@@ -2344,8 +2342,8 @@ How do I Quickly Add Time Sheet Entries?
 Using allocPSA via the Command Line
 ===================================
 
-allocPSA has a powerful and very functional command-line interface.
-Using this command-line tool, you can 
+allocPSA has a powerful and very functional command-line interface. Using this
+command-line tool, you can 
 
 
 - ktokens        :Retrieve alloc token information.
@@ -2364,8 +2362,8 @@ Using this command-line tool, you can
 - edit           :Modify an alloc entity.
 
 
-For more information on the ``alloc`` command-line tool, you can issue
-the help command: ``alloc help``
+For more information on the ``alloc`` command-line tool, you can issue the help
+command: ``alloc help``
 
 
 Useful Tips for using allocPSA
