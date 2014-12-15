@@ -2343,24 +2343,48 @@ Using allocPSA via the Command Line
 ===================================
 
 allocPSA has a powerful and very functional command-line interface. Using this
-command-line tool, you can 
+command-line tool, you can:
 
+.. list-table::
 
-- ktokens        :Retrieve alloc token information.
-- comment        :Add a new comment to a task, project, time sheet or client.
-- timesheets     :Print a list of time sheets.
-- projects       :Print a list of projects.
-- view           :View a single alloc entity.
-- version        :View the version of the alloc-cli and alloc-server.
-- subscriptions  :Modify interested party subscriptions for an email address.
-- browse         :Provide web browser access to particular entities.
-- tasks          :Print a list of tasks.
-- accounts       :Print a list of your TF accounts.
-- submit         :Submit time sheets forwards. Read time sheets from standard in.
-- work           :Add time to a time sheet. Create the time sheet if necessary.
-- mbox           :Download a task's emails to an mbox file.
-- edit           :Modify an alloc entity.
-
+    - - work
+      - Add time to a time sheet. Create the time sheet if necessary.
+    - - comment
+      - Add a new comment to a task, project, time sheet or client.
+    - - edit
+      - Modify an entity.
+    - - view
+      - View an entity.
+    - - projects
+      - Print a list of projects.
+    - - tasks
+      - Print a list of tasks.
+    - - timesheets
+      - Print a list of time sheets.
+    - - reminders
+      - Print a list of reminders.
+    - - invoices
+      - Print a list of invoices.
+    - - accounts
+      - Print a list of your TF accounts.
+    - - browse
+      - Provide web browser access to particular entities.
+    - - mbox
+      - Download a task's emails to an mbox file.
+    - - submit
+      - Submit time sheets forwards. Read time sheets from standard in.
+    - - subscriptions
+      - Modify interested party subscriptions for an email address.
+    - - ktokens
+      - Retrieve token information.
+    - - task
+      - Add or edit a task.
+    - - item
+      - Add or edit a time sheet item.
+    - - reminder
+      - Add or edit a reminder.
+    - - version
+      - View the version of the cli and server.
 
 For more information on the ``alloc`` command-line tool, you can issue the help
 command: ``alloc help``
@@ -2377,21 +2401,20 @@ in allocPSA. Therefore:
     can always scroll down (and up) with the scrollbar or Page Up or Page Down
     on your keyboard.
 
-#.  You can print a whole (or part) page to any printer your workstation has
+#.  You can print whole or part of a page to any printer your workstation has
     been configured to use, at any time, just like you would print a web-page.
     If you see a "Print" link at the top of the screen that indicates that
     particular pages have been optimised for printing.
 
 #.  You can find any piece of text in a page by using your browser's page Find
-    function (often a Ctrl + F keystroke or available from the Edit menu)
+    function (often a ``Ctrl + f`` or ``Command + f`` keystroke)
 
 #.  You can save the complete contents of a page to a file, for later review, by
-    using your browser's Save Page As... function (often a Ctrl + S keystroke or
-    available from the Edit menu)
+    using your browser's Save Page As... function (often a ``Ctrl + s`` or
+    ``Command + s`` keystroke)
 
 #.  You can trace your steps back to any specific point that you have been
-    during this session, by using your browser's Back button (or function, often
-    accessed via a Ctrl + Left Keyboard Arrow)
+    during this session, by using your browser's Back button.
 
 #.  You can establish specific browser Bookmarks for particular, commonly used
     Projects, Tasks or function pages in allocPSA
@@ -2404,9 +2427,9 @@ in allocPSA. Therefore:
     via an extranet system, which may help them better understand how their
     Project with your firm is progressing.
 
-#.  You can Bookmark pages in your web-browser. For example, if you
-    establish a specific filter, with options, for showing Tasks,
-    bookmark it, and recall the same filter settings on future occasions.
+#.  You can Bookmark pages in your web-browser. e.g.: if you establish a
+    specific filter, with options, for showing Tasks, bookmark it, and recall
+    the same filter settings on future occasions.
 
 .. NOTE:: It is a good idea to bookmark at least one allocPSA page in your
           web-browser, and this should be your regular, 'safe' and 'sane' view
@@ -2425,8 +2448,8 @@ A Note on Dates in allocPSA
 
 As this system is intended for use in multiple countries, it has been designed
 to work with International Standards Organisation (ISO) standard dates, which
-are in the format of YYYY-MM-DD. Thus the 1st of November, 2002 is displayed as
-2002-11-01.
+are in the format of YYYY-MM-DD. Thus the 11th of November, 2011 is displayed
+as 2011-11-11.
 
 A note on viewing levels and privileges
 ---------------------------------------
@@ -2440,14 +2463,14 @@ appropriate access privileges.
 allocPSA Tab Menu
 =================
 
-The tab menu in allocPSA is at the top of every page of the application. It
-is perhaps the most often used component of the allocPSA application. From this
+The tab menu in allocPSA is at the top of every page of the application. It is
+perhaps the most often used component of the allocPSA application. From this
 tab bar, you will be able to jump directly to almost all of the main
 application modules (Home, Projects, Clients, Tasks, Finances, etc.) There is
 also a search facility with which you will be able to look for almost all
 important data-sets archived in allocPSA. Finally, there is also an Quick List,
 from which, you will be able to create new Tasks, Project, Client entries, as
-well as see a list of recently visited pages of the allocPSA application.
+well as see a list of recently visited pages of the allocPSA application.  
 
 
 Home
@@ -2464,17 +2487,9 @@ Top Tasks
 
 .. figure:: images/top_tasks.png
 
-    The highest priority Tasks are arranged according to their urgency by a formula
+    A list of tasks, this displays as many tasks as you configure it to.
 
-This section shows you view the top five Tasks which have been allocated to
-you. allocPSA uses a weighted formula to determine which of your Tasks should
-ranked at the top, based on the Task, phase and Project priority, percentage
-complete, target completion etc.
-
-The Tasks should be listed with the Task title (or name), the Project that the
-Task belongs to, and the completion status (for example overdue for
-completion). Click the Task title (or name) and you will be taken to the
-content of that Task.
+This section shows you as many tasks as you configure it to. Thay are only tasks assigned to you.
 
 
 Calendar
@@ -2482,10 +2497,10 @@ Calendar
 
 .. figure:: images/calendar.png
 
-    The calendar show the Tasks, reminders and absences
+    The calendar shows tasks, reminders and absences.
 
 The Calendar will show you a date-centric view of the current week, fortnight,
-month etc. Tasks which are due to begin or finish which fall on specific days,
+month, etc. Tasks which are due to begin or finish which fall on specific days,
 will be shown in here, as well as any Reminders which have been set up or
 Absences which are scheduled.
 
@@ -2516,19 +2531,18 @@ Task Graph, for a that Project.
 For more information, please refer to the 'Project' section.
 
 
-Cost Centres & TF (Tagged Fund)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Tagged Funds
+~~~~~~~~~~~~
 
-allocPSA uses the concept of Cost Centres (called Tagged Funds or just TFs) to
-show the maintain and track the financial state of each Project's or Person's
-accounts.
+allocPSA uses the concept of Cost Centres (called Tagged Funds) to show,
+maintain, and track the financial state of each Project's or Person's accounts.
 
 As a Professional Services Automation system, allocPSA must keep track of both
 the expenses and revenues of a Project as well as cost-centres for individual
 consultants and resources. It does so with a form of cost centre called a
-tagged fund (TF for short). In this home page view, a user will be shown
-their own personal cost centre account balance, as well as the present balance
-of any Projects they have been allocated to oversee financially.
+tagged fund (TF for short). In this home page view, a user will be shown their
+own personal tagged fund account balance, as well as the present balance of any
+Projects they have been allocated to oversee financially.
 
 Click the account name you want to view in greater detail, and you will be
 taken to that account. The account information page is described in detail
@@ -2537,6 +2551,7 @@ very much like an online bank account statement, with money being debited and
 credited for any number of other accounts and source, reflecting the generation
 and processing of Time Sheets, billable hours, Expense Forms and financial
 injections from external systems like invoicing etc.
+
 
 Current Time Sheets
 ~~~~~~~~~~~~~~~~~~~
@@ -2569,62 +2584,13 @@ use this facility, see: `How do I Quickly Add Time Sheet Entries?`_ .
 New Time Sheet Item Hint
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you have manager privileges and if you've switched on this option,
-allocPSA can provide you with a quick-and-easy mechanism for noting when
-you believe specific staff are working on specific tasks, which could
-then be used to ensure appropriate billing information is captured.  For
-more on how to use this facility, see: `How do I Ensure Staff Effort on
-Tasks is Captured as Time Sheets?`_ .
+If you have manager privileges and if you've switched on this option, allocPSA
+can provide you with a quick-and-easy mechanism for noting when you believe
+specific staff are working on specific tasks, which could then be used to
+ensure appropriate billing information is captured. For more on how to use this
+facility, see: `How do I Ensure Staff Effort on Tasks is Captured as Time
+Sheets?`_ .
 
-
-
-Customize Interface
-~~~~~~~~~~~~~~~~~~~
-
-The appearance and font-size of allocPSA can be changed to suit the user's taste.
-Additionally the Top Tasks, Calendar and Project List on the home page can be
-customized to individual preference.
-
-The list of items which can be configured on a per-user basis includes:
-
-.. list-table::
-
-  - - Setting
-    - What it affects
-  - - Font Size
-    - the size of the standard font to use. 
-  - - Theme 
-    - the visual theme the user prefers.
-  - - Top tasks 
-    - the number of the user's tasks to show in the Home page.
-  - - Status 
-    - used to nominate which tasks (selected by status) the user
-      wants displayed in their Home page.
-  - - Calendar Weeks 
-    - the number of (forward) weeks displayed in the Calendar.
-  - - Weeks Back 
-    - the number of preceding weeks displayed in the Calendar.
-  - - Project List 
-    - the number of the user's projects to show in the Home page.
-  - - Show Filters 
-    - on pages which have filters, shows the 'filter' section of the form by default when you go to pages with a filter, e.g. the
-      task list, etc.
-  - - New Time Sheet Item
-    - Enables the hiding/display of the quick-entry time-sheet tool.
-  - - Time Sheet Item Hint 
-    - Enables the hiding/display of the quick-entry time-sheet hinting
-      tool.
-  - - Time Sheet Statistics
-    - Enables the hiding/display of the stats display for past
-      time-sheeted work.
-  - - Current Time Sheets
-    - Enables the hiding/display of the stats display for past 
-      time-sheeted work.
-
-
-Settings can be changed in those sections of the Home page which are
-indeed configurable by following these instructions: `How do I Customise
-my Home Page?`_ .
 
 Clients
 -------
@@ -2632,7 +2598,7 @@ Clients
 .. figure:: images/client_list.png
 
     List(s) of current, potential and archived Clients are
-    shown in the Clients section of allocPSA
+    shown in the Clients section of allocPSA.
 
 All Professional Services Organisations (PSO) have a notion of Clients. This
 normally includes all main companies and organisations that the PSO has contact
@@ -2640,67 +2606,67 @@ with. allocPSA has the ability to track all current, potential and archived
 (i.e. lapsed) Clients. Besides the core organisational information, any number
 of contacts can also be entered for each organisation tracked. The information
 maintained includes the Client Name, Contact Name, Contact Phone, Contact
-E-mail etc.
+E-mail, etc.
 
 allocPSA also allows for the attachment of documents which pertain to this
 Client, as well as any per-Client reminders that need to be added.
 
-To view the list of current Clients, you need to click on the 'Clients'
-tab in the allocPSA main menu. You will then be taken to the Clients tab
-page, where you will be shown a table of current Clients.
+To view the list of current Clients, you need to click on the 'Clients' tab in
+the allocPSA main menu. You will then be taken to the Clients tab page, where
+you will be shown a table of current Clients.
 
-You can filter the list of clients shown in the Clients tab page, by
-clicking the Show Filter link, if this is presented, which will open up
-the filter segment of the page. Using this filter, you can select
-portions of a client name or a contact name within a client
-organisation, which you want to filter on, along with the client's
-Status (Current, Potential, Archived) and the client's Category (Client,
-Vendor, Supplier, Non-profit, etc.).
+You can filter the list of clients shown in the Clients tab page, by clicking
+the Show Filter link, if this is presented, which will open up the filter
+segment of the page. Using this filter, you can select portions of a client
+name or a contact name within a client organisation, which you want to filter
+on, along with the client's Status (Current, Potential, Archived) and the
+client's Category (Client, Vendor, Supplier, Non-profit, etc.).  
 
-Once you have selected the filter criteria, you click the Filter button,
-and allocPSA will show you the matching entries. You can remove a
-filter, by clearing out the values in the filter text boxes, and
-clicking the Filter button once more.
+Once you have selected the filter criteria, you click the Filter button, and
+allocPSA will show you the matching entries. You can remove a filter, by
+clearing out the values in the filter text boxes, and clicking the Filter
+button once more.
 
-You can also using the alphabetic quick-links shown at the bottom of the
-filter segment, to show all the client organisations which start with
-A, B, C etc.
+You can also use the alphabetic quick-links shown at the bottom of the filter
+segment, to show all the client organisations which start with A, B, C, etc.
 
-You can view and edit details for each Client, by clicking on that
-client's link.
+You can view and edit details for each Client, by clicking on that client's
+link.
 
-Hint: When allocPSA lists the list of current Client's, you can use your
-browser's Find facility (often a Ctrl + F keystroke or available from the Edit
-menu) to find any piece of text in this page. Thus, if you know that the
-surname of the contact that you want is Purcell, you can quickly locate this
-contact and jump straight to that contact's details on this Client list page.
+.. Hint:: When allocPSA lists the list of current Client's, you can use your
+          browser's Find facility (usually ``Ctrl + f`` or ``Command + f``
+          keystroke) to find any piece of text in this page. Thus, if you know
+          that the surname of the contact that you want is Purcell, you can
+          quickly locate this contact and jump straight to that contact's
+          details on this Client list page.
 
 If you want to view the list of Potential Clients, you can change the drop-list
 which specifies Client type, and press the 'Filter' button. The same process
 can be used to list All or Archived Clients.
 
-Hint: If you have nominated a primary contacts for a Client, then that primary
-contact's details will be shown in the Client listing. If those details include
-an email address, that email address will be hyperlinked, so that you can click
-on it to send that person mail, straight from within your mail Client.  You
-will note that much like Task and Project forms, the Client forms have a header
-component, as well as the body or main component. The header is used to store
-information for the company or organisation which is common to all of the
-contacts, such as headquarters address details, main switch and fax number.
+.. Hint:: If you have nominated a primary contact for a Client, then that
+          primary contact's details will be shown in the Client listing. If
+          those details include an email address, that email address will be
+          hyperlinked, so that you can click on it to send that person mail,
+          straight from within your mail Client. You will note that much like
+          Task and Project forms, the Client forms have a header component, as
+          well as the body or main component. The header is used to store
+          information for the company or organisation which is common to all of
+          the contacts, such as headquarters address details, main switch and
+          fax number.
 
 .. figure:: images/client.png
 
-    Each Client record is defined as a Client organisation
-    detail header and any number of contacts, reminders, documents, comments
-    etc.
+    Each Client record is defined as a Client organisation detail header and
+    any number of contacts, reminders, documents, comments, etc.
 
 .. figure:: images/client_contact.png
 
     For each Client you can have as many contacts as you liked. Just click the
-    "New+" link in the top right hand corner of the Client Contact box, fill in
-    the details and then click the "Save Client Contact" button.
-    You can designate one Client Contact to be the Primary, which will make it then
-    show up on the Client tab list.
+    "New Client Contact" link in the top right hand corner of the Client
+    Contact box, fill in the details and then click the "Save Client Contact"
+    button. You can designate one Client Contact to be the Primary, which will
+    make it then show up on the Client tab list.
 
 Adding a Primary Contact to a Client
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2720,7 +2686,7 @@ Adding Notes to a Client
 .. figure:: images/client_comment.png
 
     Add as many free-form comments as you need to a Client record. Just click
-    the "New+" link in the top right hand corner.
+    the "New Comment" link in the top right hand corner.
 
 allocPSA provides the facility to add Client-level status notes to your
 Project. To do so, simply add text into the 'New Comment' field and click on
