@@ -1,0 +1,120 @@
+#!/usr/bin/python
+
+# -*- coding: utf-8 -*-
+
+# So we clear() input fields first to make sure there is nothing in them.
+
+from selenium import webdriver
+from selenium.webdriver.support.ui import Select
+from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoAlertPresentException
+import unittest
+import time
+import random
+
+word_file = "/usr/share/dict/words"
+words = open(word_file).read().splitlines()
+word = random.choice(words)
+
+
+class alloc(unittest.TestCase):
+    def setUp(self):
+        self.driver = webdriver.Firefox()
+        self.driver.implicitly_wait(30)
+        self.base_url = "http://alloc-scratch.cyber.com.au/"
+        self.verificationErrors = []
+        self.accept_next_alert = True
+        # Login:
+        driver = self.driver
+        driver.get(self.base_url + "/login/login.php")
+        driver.find_element_by_id("username").clear()
+        driver.find_element_by_id("username").send_keys("conz")
+        driver.find_element_by_id("password").clear()
+        driver.find_element_by_id("password").send_keys("password")
+        driver.find_element_by_name("login").click()
+
+    def test_admin(self):
+        driver = self.driver
+        try:
+            driver.find_element_by_link_text("Sales").click()
+            driver.find_element_by_link_text("New Product").click()
+            driver.find_element_by_id("productName").clear()
+            driver.find_element_by_id("productName").send_keys(word)
+            driver.find_element_by_id("description").clear()
+            driver.find_element_by_id("description").send_keys(word)
+            driver.find_element_by_id("comment").clear()
+            driver.find_element_by_id("comment").send_keys(word)
+            driver.find_element_by_id("sellPrice").clear()
+            driver.find_element_by_id("sellPrice").send_keys("10000")
+            driver.find_element_by_name("save").click()
+        except:
+            print('Creating a new product failed.')
+        try:
+            driver.find_element_by_link_text("New Sale").click()
+            driver.find_element_by_name("extRef").clear()
+            driver.find_element_by_name("extRef").send_keys(word)
+            Select(driver.find_element_by_id("clientID")).select_by_visible_text("aaaaaa")
+            Select(driver.find_element_by_id("projectID")).select_by_visible_text("AAA Template - Fixed Price [Project]")
+            driver.find_element_by_name("save").click()
+            Select(driver.find_element_by_name("productID[]")).select_by_visible_text(word)
+            driver.find_element_by_name("save_items").click()
+            driver.find_element_by_name("delete_productSale").click()
+            self.assertEqual("Click OK to confirm deletion.", self.close_alert_and_get_its_text())
+        except:
+            print('Making a new sale failed')
+        try:
+            Select(driver.find_element_by_id("search_action")).select_by_visible_text("New Person")
+            driver.find_element_by_name("firstName").clear()
+            driver.find_element_by_name("firstName").send_keys(word)
+            driver.find_element_by_name("surname").clear()
+            driver.find_element_by_name("surname").send_keys(word)
+            driver.find_element_by_name("username").clear()
+            driver.find_element_by_name("username").send_keys(word)
+            driver.find_element_by_name("password2").clear()
+            driver.find_element_by_name("password2").send_keys(word)
+            driver.find_element_by_name("password1").clear()
+            driver.find_element_by_name("password1").send_keys(word)
+            driver.find_element_by_name("save").click()
+        except:
+            print('Adding a user failed.')
+        try:
+            driver.find_element_by_link_text(word + ' ' + word).click()
+            driver.find_element_by_name("delete").click()
+            self.assertEqual("Click OK to confirm deletion.", self.close_alert_and_get_its_text())
+        except:
+            print('Removing a user failed.')
+
+    def is_element_present(self, how, what):
+        try:
+            self.driver.find_element(by=how, value=what)
+        except NoSuchElementException:
+            return False
+        return True
+
+    def is_alert_present(self):
+        try:
+            self.driver.switch_to_alert()
+        except NoAlertPresentException:
+            return False
+        return True
+
+    def close_alert_and_get_its_text(self):
+        try:
+            alert = self.driver.switch_to_alert()
+            alert_text = alert.text
+            if self.accept_next_alert:
+                alert.accept()
+            else:
+                alert.dismiss()
+            return alert_text
+        finally:
+            self.accept_next_alert = True
+
+    def tearDown(self):
+        self.driver.find_element_by_link_text("Logout").click()
+        time.sleep(2)
+        self.driver.quit()
+        self.assertEqual([], self.verificationErrors)
+
+if __name__ == "__main__":
+    unittest.main()
