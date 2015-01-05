@@ -2,7 +2,7 @@
 
 # -*- coding: utf-8 -*-
 
-# So we clear() input fields first to make sure there is nothing in them.
+# We clear() input fields first to make sure there is nothing in them.
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -12,6 +12,7 @@ from selenium.common.exceptions import NoAlertPresentException
 import unittest
 import time
 import random
+import logging
 
 word_file = "/usr/share/dict/words"
 words = open(word_file).read().splitlines()
@@ -215,7 +216,7 @@ class alloc(unittest.TestCase):
             Select(driver.find_element_by_name("weeksBack")).select_by_visible_text("1")
             driver.find_element_by_name("customize_save").click()
             # Test a link in the calendar
-            driver.find_element_by_link_text("Test 00001 (Limit 50.0hrs)").click()
+            driver.find_element_by_link_text("9:00pm Task Reminder: 23064 test00006 [Normal]").click()
             driver.find_element_by_link_text("Home").click()
         except:
             print('The calendar tests failed.')
@@ -334,7 +335,6 @@ class alloc(unittest.TestCase):
             driver.find_element_by_css_selector("#projectDropdown > span.selectn-label").click()
             driver.find_element_by_css_selector("span.selectn-dropdown.selectn-active > div.selectn-buttons > button[name=\"none\"]").click()
             driver.find_element_by_css_selector("span.selectn-label").click()
-            driver.find_element_by_xpath("//input[@value='33']").click()
             driver.find_element_by_name("applyFilter").click()
             driver.find_element_by_link_text("Show Filter").click()
             driver.find_element_by_css_selector("img").click()
@@ -344,7 +344,9 @@ class alloc(unittest.TestCase):
             driver.find_element_by_css_selector("label.selectn-cb-selected > span").click()
             driver.find_element_by_name("applyFilter").click()
         except:
-            print('The filter tests on the time page fialed.')
+            excpt = logging.exception('loged')
+            print(excpt)
+            print('The filter tests on the time page failed.')
         try:
             # Create a time sheet.
             driver.find_element_by_link_text("New Time Sheet").click()
@@ -428,6 +430,7 @@ class alloc(unittest.TestCase):
             driver.find_element_by_id("commit_msg").clear()
             driver.find_element_by_id("commit_msg").send_keys(word)
             driver.find_element_by_id("save").click()
+            time.sleep(2)
             driver.find_element_by_id("newDirectory").click()
             driver.find_element_by_id("dirName").clear()
             driver.find_element_by_id("dirName").send_keys(word)
