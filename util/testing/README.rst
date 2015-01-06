@@ -23,3 +23,7 @@ It will run through all the tests that the average user does.
 You can test only one page, e.g.:
 
     $ ./test_alloc alloc.test_tasks
+
+To test the admin processes, use test_alloc_admin. e.g.:
+
+    $ ./test_alloc_admin
