@@ -13,6 +13,17 @@ import unittest
 import time
 import random
 import logging
+import ConfigParser
+import getpass
+
+config = ConfigParser.RawConfigParser()
+config.read('default.cfg')
+host = config.get('alloc', 'host')
+user = config.get('alloc', 'user')
+passwd = config.get('alloc', 'pass')
+
+if passwd == '':
+    passwd = getpass.getpass("Please enter a password for logging into alloc (does not print): ")
 
 word_file = "/usr/share/dict/words"
 words = open(word_file).read().splitlines()
@@ -23,16 +34,16 @@ class alloc(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Firefox()
         self.driver.implicitly_wait(30)
-        self.base_url = "http://alloc-scratch.cyber.com.au/"
+        self.base_url = host
         self.verificationErrors = []
         self.accept_next_alert = True
         # Login:
         driver = self.driver
         driver.get(self.base_url + "/login/login.php")
         driver.find_element_by_id("username").clear()
-        driver.find_element_by_id("username").send_keys("cjb")
+        driver.find_element_by_id("username").send_keys(user)
         driver.find_element_by_id("password").clear()
-        driver.find_element_by_id("password").send_keys("password")
+        driver.find_element_by_id("password").send_keys(passwd)
         driver.find_element_by_name("login").click()
 
     def test_tasks(self):
