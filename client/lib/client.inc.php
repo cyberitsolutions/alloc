@@ -423,21 +423,20 @@ class client extends db_entity {
       $f5 = $this->get_value("clientCountryTwo",DST_HTML_DISPLAY);
     }
 
-    if ($f1 != "") {
+    // Create a map link, this will give you a link even if you only have the
+    // street address and the suburb OR post code. -- cjbayliss 2015-01
+    
+    if ($map_link && !empty($f1) and !empty($f2) || !empty($f4)) {
+      $cfg = new config();
+      $map_base = $cfg->get_config_item('mapURL');
+      $address = str_replace("%ad", urlencode(implode(", ",array($f1,$f2,$f3,$f4,$f5))), $map_base);
+      $str .= '<a href="' . $address .'">'.$f1.'<br/>'.$f2.' '.$f3.' '.$f4.'<br/>'.$f5.'</a>';
+    } else if ($f1 != ""){
       $str = $f1;
       $f2 and $str.= "<br>".$f2;
       $f3 and $str.= " ".$f3;
       $f4 and $str.= " ".$f4;
       $f5 and $str.= "<br>".$f5;
-
-      // Create a map link, probably for google maps
-      // a street address and postcode works reasonably well
-      if ($map_link && !empty($f1) && !empty($f4)) {
-        $cfg = new config();
-        $map_base = $cfg->get_config_item('mapURL');
-        $address = str_replace("%ad", urlencode(implode(", ",array($f1,$f2,$f3,$f4,$f5))), $map_base);
-        $str .= '<br><br><a href="' . $address . '">View map</a>';
-      }
     }
 
     return $str;
