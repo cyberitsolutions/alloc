@@ -172,7 +172,7 @@ class clientContact extends db_entity {
     $this->get_value("clientContactPhone")         and $str.= $this->get_value("clientContactPhone",DST_HTML_DISPLAY)."<br>";
     $this->get_value("clientContactMobile")        and $str.= $this->get_value("clientContactMobile",DST_HTML_DISPLAY)."<br>";
     $this->get_value("clientContactFax")           and $str.= $this->get_value("clientContactFax",DST_HTML_DISPLAY)."<br>";
-    $this->get_value("clientContactEmail")         and $str.= $this->get_value("clientContactEmail",DST_HTML_DISPLAY)."<br>";  
+    $this->get_value("clientContactEmail")         and $str.= "<a href='mailto:\"".$this->get_value("clientContactName",DST_HTML_DISPLAY)."\" <".$this->get_value("clientContactEmail",DST_HTML_DISPLAY).">'>".$this->get_value("clientContactEmail",DST_HTML_DISPLAY)."</a><br>";
     return $str;
   }
 
