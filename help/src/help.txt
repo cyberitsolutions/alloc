@@ -4651,31 +4651,25 @@ be Harddisks, Optical Drives, Java, etc.
 Task Comment Templates
 ``````````````````````
 
-In allocPSA, Task Comment Templates are used primarily as a form of open-ended
-checklist system, allowing particular types of Tasks to be created quickly.
+When creating a comment on a task, project, etc. you can add a comment using a
+pre-made template. To create a new template, follow these steps:
 
-The Templates are created for oft-repeated jobs and Tasks. They can be enacted
-when creating new Tasks. 
+#. Click 'Tools' in the allocPSA, and click the 'Comment Templates' link.
 
-When creating a new comment for a Task, you have the option
-of invoking a pre-existing template for the text comment. This is useful if
-there is a set routine or process which the person who has been allocated
-the Task needs to undertake. 
+#. Click 'New Comment Template'.
 
-Task Comment Templates are created by pressing the 'New Comment/Template' link.
-Simply fill in the Name for this new template, and supply the check list
-content in the Text section. You can be as detailed as you like. Adding text
-which appears like bullet-points is a good idea. When ready, press the 'Save'
-button.
+#. Enter a name from the template, e.g. "Task Description".
 
-You can add new templates, which then become available from
-a droplist in new Tasks. These templates can have place-holders, such as
-Company Contact Details, Project Name, etc., and allocPSA will replace these
-place-holders with real values.
+#. Set the comment template type.
 
-You can also edit and delete a Task Template by select it from the list, making
-modifications and pressing the 'Save' button, or pressing the 'Delete' button.
+#. Enter any text and variables you want.
 
+   .. NOTE:: Look at the right for useful variables.
+
+#. Click 'Save' to keep the new template, or 'Delete' to forget it.
+
+When you go to make a comment on a, e.g. Task; you can click the 'Comment
+Templates' popup menu and choose a template for your comment.
 
 Item Loans
 ``````````
@@ -4739,9 +4733,6 @@ management system, you can upload a text file to accomplish this.
 #.  Click on the 'Import From File' button.
 
 
-
-
-
 Reports
 ```````
 
@@ -4752,11 +4743,11 @@ Reporting allows you to select which tables, fields and criteria you want to
 sort and filter data out from your allocPSA database. The data can be displayed
 on-screen within the web browser, or bundled into a text-based Comma Separated
 Value (CSV) or TAB delimited file, for downloading to your computer. This data
-can then be inserted into applications like Microsoft Excel, LibreOffice
-Calc (http://www.libreoffice.org/), Crystal Reports, Microsoft Access or other
+can then be inserted into applications like Microsoft Excel, LibreOffice Calc
+(http://www.libreoffice.org/), Crystal Reports, Microsoft Access or other
 reporting tools.
 
-#.  Click the 'Reports' link on the allocPSA toolbar to go to the Report page.
+#.  Click the 'Reports' link on the 'Tools' page.
 
 #.  Select which module you want to report on (Clients, Tasks etc.)
 
@@ -4776,13 +4767,10 @@ reporting tools.
 #.  Alternatively, you can specify number ranges, upper and lower, using the
     supplied numeric criteria fields.
 
-#.  Scroll down to the bottom and press the 'Dump Fields' button.
+#.  Scroll down to the bottom and press the 'Generate Database Report' button.
 
-#.  This will now dump the resulting records to your browser screen, below the
-    fields and selection criteria.
-
-#.  You can choose which suitable you use as the 'Group By' aggregator, by
-    selecting the choice button next to its title.
+#.  This will now show the resulting records below the fields and selection
+    criteria.
 
 #.  You can also elect to put quotes around the field data (handy when dealing
     with data which has commas etc.) by selecting the option from the 'Quotes
