@@ -220,7 +220,7 @@ services business.
 allocPSA consists of numerous software modules for business areas such as:
 resource planning, project management, time and expenses management, fault &
 issues tracking, messages, announcements, reminders, knowledge management,
-collaboration, services supply chain, human resources, staff skilling,
+collaboration, services supply chain, human resources, staff skills,
 certification, item loans, and management of cost-centres. allocPSA offers
 integration between the modules, as well as an open architecture and
 integration with existing external invoicing, book-keeping, and payroll
@@ -316,7 +316,7 @@ A Task and reminder Calendar is available for all staff on entry into allocPSA,
 via the Home page.
 
 A filtering drill-down facility to resource (personnel) availability and
-skilling makes it possible to determine which of your staff is suited for
+skills makes it possible to determine which of your staff is suited for
 particular Project and Tasks.
 
 allocPSA provides a simple inventory and loans management module, a framework
@@ -563,7 +563,7 @@ How do I Log In?
 
 In order to gain access to allocPSA, you will need the allocPSA administrator
 to create an account for you, and to assign you a password. You can then enter
-the Username and your Password in the login screen of allocPSA, as shown here.
+the username and your password in the login screen of allocPSA, as shown here.
 
 When you point your web-browser to the URL which contains allocPSA, you
 should see the Login screen. Enter your username and your password, then click
@@ -1005,7 +1005,7 @@ How do I Reject a Time Sheet?
 #.  To actually send the time-sheet back, then press the '<- Back' button on the
     Time Sheet (not the web-browser's Back button). Note that this will
     send the time-sheet back to the previous person in the time-sheet
-    worflow chain, which may be the time-sheet manager, if you're the
+    workflow chain, which may be the time-sheet manager, if you're the
     Admin user. If so, you should be able to click the '<- Back' button
     again, to ensure that the time-sheet reaches the actual original user
     who submitted the time-sheet.
@@ -1140,7 +1140,7 @@ How do I Archive Old Client Contacts?
 
 #.  Click the Edit button for that contact.
 
-#.  Un-check the 'Enabled' checkbox.
+#.  Uncheck the 'Enabled' checkbox.
 
 #.  Click the 'Save Client Contact' button, to save your changes. 
 
@@ -1309,7 +1309,7 @@ How do I Establish Default Rates for People?
     set a default rate for.
 
 #.  In the Default Rate field, enter the rate and then select the
-    duration (hourly, daily, weekly, etc) from the drop-list.
+    duration (hourly, daily, weekly, etc.) from the drop-list.
 
 #.  Click the 'Save' button.
 
@@ -1334,7 +1334,7 @@ How do I Bookmark Task List Filters for Future Use?
 #.  You will be shown the resulting filtered Task List.
 
 #.  If you want to view the updated list with the same filters applied in
-    future. you can now Bookmark this page, using your web-browsers standard
+    future. You can now Bookmark this page, using your web-browsers standard
     bookmarking functionality.
 
 #.  To bring up the Filter in the future, merely access the stored Bookmark,
