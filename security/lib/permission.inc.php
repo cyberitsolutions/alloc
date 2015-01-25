@@ -41,7 +41,7 @@ class permission extends db_entity {
     if (meta::$tables[$entity_class]) {
       $entity = new meta($entity_class);
       $permissions = $entity->permissions;
-    } else {
+    } else if (class_exists($entity_class)) {
       $entity = new $entity_class();
       $permissions = $entity->permissions;
     }
