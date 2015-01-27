@@ -4674,45 +4674,42 @@ Templates' popup menu and choose a template for your comment.
 Item Loans
 ``````````
 
-allocPSA can track any items that your firm needs to track. It can also keep
-track of who borrowed these items. The Item Loan facility is intended to be
-simple and easy to use, to increase the likelihood that staff use it.
+allocPSA can track any items that your firm needs to track. It also keeps track
+of who borrowed these items. The Item Loan facility is designed for this, and
+is simple and easy to use.
 
-allocPSA shows you a list of all the available items which
-can be loaned. Simply click on the item's 'Borrow' link to borrow it.
+allocPSA shows you a list of all the available items for lending. Simply click
+on the item's 'Borrow' link to borrow it.
 
 To Add a New Loan or to Return an Item:
 
-#.  From the allocPSA toolbar, select the 'Item Loans' link.
+#.  From the allocPSA toolbar click on the tools tab, then click the 'Item
+    Loans' link.
 
 #.  Click the link 'New Loan / Return Item'. allocPSA The system will go to the
-    'New Loan' page. Items and their status will be shown on this page.
+    'New Loan' page. The items and their status is on this page.
 
 #.  Click 'Return' if you have borrowed the item and want to return it.
 
 #.  Click 'Borrow' if you want to borrow an item.
 
-#.  The system will take you to the next page and you simply press the 'Return
-    Item' button to return the item.
+#.  If you clicked 'Return', the system will take you to the next page and you
+    simply press the 'Return Item' button to return the item.
 
-#.  Or in case you borrow the item, note the detail of it, select person to take
-    out loan, enter the number of months you want the item for and finally press
-    Borrow Item button
+#.  Or if you clicked 'Borrow' select the person who is borrowing the item,
+    enter the months the item will be lent for and finally press 'Borrow Item'
+    button
 
-The system will go back to the New Loan page and action will be taken
+The system goes back to the New Loan page and the action is complete.
 
-When borrowing an item, you can select the loan duration.
-
-You can add or edit individual items for loan or upload a file with multiple items.
-
+You can add or edit individual items or upload a file with multiple items.
 
 Add / Edit / Remove Item:
 
-#.  To add a new item (or items) to the loan list, click the link 'Add / Edit /
-    Remove Item'.
+#.  To add a new item (or items) to the loan list, click the 'Add/Edit/Remove
+    Item' link.
 
-#.  If you have one item to add, enter its details, specifying the Item Name and
-    Notes.
+#.  Specify the Item Name and Notes.
 
 #.  Select the 'Type'.
 
@@ -4727,7 +4724,7 @@ management system, you can upload a text file to accomplish this.
 
 #.  Select the 'Type' of item from the drop list.
 
-#.  Click on the 'Choose' button and select the file you want to upload to
+#.  Click on the 'Browse...' button and select the file you want to upload to
     allocPSA from your PC.
 
 #.  Click on the 'Import From File' button.
