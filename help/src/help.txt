@@ -4216,7 +4216,6 @@ Click the link to create all repeating expenses that are scheduled to be
 created.
 
 
-
 Miscellaneous
 ~~~~~~~~~~~~~
 
@@ -4224,21 +4223,17 @@ Miscellaneous
 Reminders
 `````````
 
-Remind recipient everything regarding Client, Project, Task etc.
+Reminders are posted in the calendar on the home page of the chosen recipients.
+Usually the recipients are the creator and user specified when created. To add
+Reminder:
 
-List of reminders which relate the user you're presently logged in as
+#.  Click on the 'Tools' tab and click 'Reminders'.
 
-Except for the high level user, all the reminders can only be read, edited and
-removed by those specific recipients!
+#.  Click the 'Add Reminder' link on the right.
 
-Add Reminder:
-
-#.  Click the 'Add Reminder' link and go into the Add Reminder - Select Type
-    page
-
-#.  Select what type of reminder you want to create from the drop list. Examples
-    include Client, Project, Task, General. If you want a reminder which is
-    independent of any Task, Project or Client life-spans, select General.
+#.  Select what type of reminder you want to create from the drop list. For
+    example: Client, Project, Task, General. If you want a reminder which is
+    independent of any Task, Project, or Client, select General.
 
 #.  Press the 'Next' button
 
@@ -4253,34 +4248,34 @@ Add Reminder:
 Your new reminder is now set and ready to trigger an email at the points you've
 defined.
 
-Update or Deleting the Reminder:
-
-You can also update an existing reminder, by jumping back into the Reminders
-page, and following these steps.
+To update or edit a reminder:
 
 #.  From the list of Reminders, click the Subject name link.
 
-#.  Update the reminder
+#.  Click 'Edit Reminder'.
 
-#.  Press 'Update' or 'Delete' button to finish your update.
+#.  Edit what you need to.
+
+#.  Press 'Save' to complete the edit.
+
+#.  Or click the 'Delete' button to delete the reminder.
 
 Changes will automatically be displayed and updated.
-
 
 
 Announcements
 `````````````
 
-You can publish announcements which will be displayed on the Home page of each
+You can publish announcements which get displayed on the Home page of each
 user's account, as well as within each allocPSA Daily Tasks email. From this
 tool, you can add new announcements and edit existing ones. 
 
+#.  Go to the tools tab, and click the 'Announcements' link.
 
-#.  Once you've entered the Announcement section, to add a new announcement
-    simply click the 'New Announcement' link.
+#.  To add a new announcement simply click the 'New Announcement' link.
 
-#.  Supply a Heading, a date from which to start displaying this announcement, a
-    date when this announcement should stop being shown, and the contents of
+#.  Supply a Heading, a date from which to start displaying this announcement,
+    a date when this announcement should stop being shown, and the contents of
     your message in the Body.
 
 #.  Press the 'Save' button.
@@ -4289,25 +4284,26 @@ tool, you can add new announcements and edit existing ones.
     page.
 
 allocPSA will automatically save and display the announcement on each user's
-Home page, under the Announcement section, during the dates you specified. If
-you want to edit or delete an announcement, from the Announcements page:
+Home page, under the Announcement section, during the dates you specified. To
+edit or delete an announcement:
 
 #.  Click the 'Edit' link, located at the right of each announcement.
 
-#.  Press the 'Save' button if you have made your changes
+#.  Change what you need to.
+
+#.  Press the 'Save' button.
+
+#.  Or you can click the 'Delete' link to remove the announcement.
 
 #.  Click the 'Return to Announcement List' link, and allocPSA will return to
     the Announcement page.
-
-#.  Alternatively, you can also select the 'Delete' link, to remove this
-    announcement.
 
 Security
 ````````
 
 This section allows you to tweak security permission for the database tables
-used by allocPSA. It is possible to establish different permissions for
-different user levels, for different (i.e. Read, Update, Delete, Create etc.)
+used by allocPSA. It is possible to set up different permissions for different
+user levels, for different (i.e. Read, Update, Delete, Create etc.)
 actions. 
 
 .. NOTE:: In general, you would not need to make any changes at all to this
@@ -4341,27 +4337,6 @@ To edit an existing permission:
 #.  Click the 'Return to Permission List' link to return to the Permission page.
 
 Your changes will be automatically updated on the Permission page and activated for all users.
-
-
-Cost & Time Estimator
-`````````````````````
-
-As an example of the kinds of functional extensions that can be made within
-allocPSA, the Simple Cost & Time Estimator is provided, and documented here. It
-is envisaged that this utility will not be of direct use to most users of
-allocPSA. It is hoped that by providing this simple utility as an example, your
-organization will be inspired to visualise and eventually add your own set of
-tools which can be used by your staff, to assist in day-to-day  operations at
-your organization.
-
-Based on a set of pre-determined programming and database languages, it is
-possible to input various values for the scope and size of a particular
-web-based database application, and this Estimator will produce a pre-figured
-determination of the best-effort time and cost estimation, along with a spread
-of values, based on number of resources. The values generated are based on a
-pre-computed seed metric, derived from several years' evaluation of similarly
-scoped Projects.
-
 
 
 Search
@@ -4625,13 +4600,14 @@ Company Skill Matrix
 
 .. figure:: images/skill_matrix.png
 
-    You have the ability to add your own skill types and
-    levels, and categorise your resources against those skill types.
+    You can add your own skill types and levels, and categorise your resources
+    against those skill types.
 
 This tool allows you to review, filter and drill down into the various
 skillsets of your resource list as known by allocPSA. Whilst the samples
 provided and screenshots shown display IT-related skills, this module can be
-configured to handle any type of skill set.
+configured to handle any type of skill set. e.g: Mechanic, Engine Rebuilder,
+Panel Beater.
 
 You can use the first droplist to select a primary (i.e. broad) skill type,
 then press the 'Filter' button. You should now be able to drill down into the
