@@ -3596,52 +3596,39 @@ Invoices
 Adding New Invoice
 ~~~~~~~~~~~~~~~~~~
 
-The Invoice system in allocPSA allows for the creation and management of
-Invoices by Financial Administrators. This Invoice system is built around a
-workflow model which is established as a 'factory default' when allocPSA is
-first installed. This model works as follows. 
+The allocPSA invoice system allows for the creation and management of invoices
+by financial administrators. It is built around a workflow model which is
+established as a 'factory default' when allocPSA is first installed. This model
+works as follows.
 
-#.  Invoices are created by allocPSA Admin Users
+#. Admin creates an invoice.
 
-#.  Once the Invoice has been created and Invoice line items have been added to
-    it, a PDF can be generated and downloaded for it.
+#. Add line items.
 
-    .. HINT:: Invoice items can be generic, and/or can be tied directly to a
-              Time Sheet by clicking the "From Time Sheet" button, and/or
-              invoice items can be tied directly to Expense Forms by clicking
-              the "From Expense Form" button.  
+	.. HINT:: Invoice items can be generic, and/or can be tied directly to a
+			  Time Sheet by clicking the "From Time Sheet" button, and/or
+			  invoice items can be tied directly to Expense Forms by clicking
+              the "From Expense Form" button.
 
-    .. HINT:: Only Time Sheets at status "Invoice" will appear in the "From
+	.. HINT:: Only Time Sheets at status "Invoice" will appear in the "From
               Time Sheet" Invoice item select box.
 
-    .. HINT:: Only Expense Forms that have their "Seek Client Reimbursement"
-              checkbox ticked will appear in the "From Expense Form" select
-              box.
+	.. HINT:: Only Expense Forms that have their "Seek Client Reimbursement"
+              checkbox ticked will appear in the "From Expense Form" select box.
 
-#.  When you have downloaded and emailed the PDF to your Client, you can click
-    the Approve/Reject button. To mark that this Invoice is waiting to be approved
-    or rejected (i.e. the Client has paid, or is not going to pay it).
+#. Download a PDF and send to client.
 
-#.  When the Client lets you know if the Invoice has been paid (or isn't going
-    to pay), you can mark each Invoice item as Not Going To Be Paid, In
-    Dispute, or Paid. You can also mark how much was Paid of each Invoice item by
-    editing the amount.
+#. Click "Approve/Reject".
 
-#.  Once you have clicked the radio buttons to nominate the payment status of
-    each Invoice item, you must click the save button. The colour of the Invoice
-    item boxes will change to green if the item was Paid, or Red if it wasn't paid.
+#. Choose "Not Going To Be Paid", "Pending", or "Paid" and click save.
 
-    After clicking save a new TF transaction will be created for each Invoice
-    item. This transaction reflects the input of funds from the Client. 
+#. Once the invoice process is completed, click "Invoice to Completed".
 
-#.  Once all Invoice items have been marked off you can click the button to
-    move the "Invoice to Completed".
-
-    .. HINT:: If you had any Invoice items that were generated "From Time
-              Sheets" or "From Expense Form", then the associated Time Sheet or
-              Expense Form will have its transactions marked as Paid or
-              Rejected (depending on the status of the associated Invoice item)
-              and be moved to status Completed once the Invoice is moved to
+	.. HINT:: If you had any Invoice items that were generated "From Time
+			  Sheets" or "From Expense Form", then the associated Time Sheet or
+			  Expense Form will have its transactions marked as Paid or
+			  Rejected (depending on the status of the associated Invoice item)
+			  and be moved to status Completed once the Invoice is moved to
               status Completed. 
 
 
@@ -3653,9 +3640,9 @@ You can review existing Invoices you've created.
 #.  From the toolbar, click on the 'Invoices' link.
 
 #.  Decide on the criteria by which you want to filter your list of Invoices
-    and click the Filter button. Only users with Finance Admin permissions are
-    able to see the full totals of Invoices. However, users can see Invoices which
-    contain Invoices related to their Time Sheets, or Expense Forms.
+	and click the Filter button. Only users with Finance Admin permissions are
+	able to see the full totals of Invoices. However, users can see Invoices
+    which contain Invoices related to their Time Sheets, or Expense Forms.
 
 #.  Click on the Invoice number of the Invoice you want to review.
 
@@ -3674,30 +3661,29 @@ Commissions to be auto-generated for any Sales of a particular Product.
     and sets up any related Product Costs or Commissions.
 
 #.  At some point in the future a manager or admin creates a Sale for a
-    Product. They can specify if the Sale is related to a particular Client or
+	Product. They can specify if the Sale is related to a particular Client or
     Project.
 
 #.  That manager or admin finalizes the Sale items that are on the Sale and
     moves the Sale to status Allocate.
 
-#.  That same manager or admin should then review the allocation of the *pending*
-    transactions for each Sale item. The "Total Unallocated" figure should be green
-    and equal to zero. This indicates that all the funds from the Sale have been
-    allocated. When they are satisfied they should push the Sale to status
-    Administrator.
+#.  That same manager or admin should then review the *pending* transactions
+	for each Sale item. If the "Total Unallocated" figure is green and equal to
+    zero, then the funds from the Sale have been allocated. When satisfied they
+    should push the Sale to status Administrator.
 
-#.  The Administrator should then review the Sale to ensure that everything is
-    correct and, once satisfied, should *approve* all the transactions and finally
-    move the Sale to status Finished.
+#.  The Administrator should then review the Sale to make sure that everything
+	is correct and, once satisfied, should *approve* all the transactions and
+    finally move the Sale to status Finished.
 
 
 Fixed Costs
 ~~~~~~~~~~~
 
-Fixed Product Costs are the list of monetary transactions that will be created
-whenever this Product is sold. They specify a particular amount that will be
-transferred between TF's, and may be used to represent certain known expenses
-that are generated every time there is a Sale of this Product.
+Fixed Product Costs are the list of monetary transactions that are created when
+a Product is sold. They specify a particular amount that will be transferred
+between TF's, and may be used to represent certain known expenses that are
+generated every time there is a Sale of this Product.
 
 
 Percentage Commissions
@@ -3708,9 +3694,8 @@ a Sale Price (the amount that you charge the customer). The difference between
 these two amounts is the Margin/Profit of the Sale.
 
 The margin/profit from each sale can be distributed based on any Percentage
-Commissions that you set up. For example you might specify that 10% of the
-profit from each Sale of a particular Product, should go to Alice, perhaps for
-a finders fee.
+Commissions that you set up. For example, you could set 10% of the sale from a
+particular Product go to Alice, perhaps for a finder's fee.
 
 
 Meta TF's
