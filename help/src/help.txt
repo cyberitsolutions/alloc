@@ -1,3 +1,4 @@
+.. vim: ft=rst fenc=utf-8 sts=4 sw=4 ts=4 tw=79 et :
 
 .. |date| date::
 
