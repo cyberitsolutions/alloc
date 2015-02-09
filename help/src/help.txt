@@ -3605,15 +3605,15 @@ works as follows.
 
 #. Add line items.
 
-	.. HINT:: Invoice items can be generic, and/or can be tied directly to a
-			  Time Sheet by clicking the "From Time Sheet" button, and/or
-			  invoice items can be tied directly to Expense Forms by clicking
+    .. HINT:: Invoice items can be generic, and/or can be tied directly to a
+              Time Sheet by clicking the "From Time Sheet" button, and/or
+              invoice items can be tied directly to Expense Forms by clicking
               the "From Expense Form" button.
 
-	.. HINT:: Only Time Sheets at status "Invoice" will appear in the "From
+    .. HINT:: Only Time Sheets at status "Invoice" will appear in the "From
               Time Sheet" Invoice item select box.
 
-	.. HINT:: Only Expense Forms that have their "Seek Client Reimbursement"
+    .. HINT:: Only Expense Forms that have their "Seek Client Reimbursement"
               checkbox ticked will appear in the "From Expense Form" select box.
 
 #. Download a PDF and send to client.
@@ -3624,11 +3624,11 @@ works as follows.
 
 #. Once the invoice process is completed, click "Invoice to Completed".
 
-	.. HINT:: If you had any Invoice items that were generated "From Time
-			  Sheets" or "From Expense Form", then the associated Time Sheet or
-			  Expense Form will have its transactions marked as Paid or
-			  Rejected (depending on the status of the associated Invoice item)
-			  and be moved to status Completed once the Invoice is moved to
+    .. HINT:: If you had any Invoice items that were generated "From Time
+              Sheets" or "From Expense Form", then the associated Time Sheet or
+              Expense Form will have its transactions marked as Paid or
+              Rejected (depending on the status of the associated Invoice item)
+              and be moved to status Completed once the Invoice is moved to
               status Completed. 
 
 
@@ -3640,8 +3640,8 @@ You can review existing Invoices you've created.
 #.  From the toolbar, click on the 'Invoices' link.
 
 #.  Decide on the criteria by which you want to filter your list of Invoices
-	and click the Filter button. Only users with Finance Admin permissions are
-	able to see the full totals of Invoices. However, users can see Invoices
+    and click the Filter button. Only users with Finance Admin permissions are
+    able to see the full totals of Invoices. However, users can see Invoices
     which contain Invoices related to their Time Sheets, or Expense Forms.
 
 #.  Click on the Invoice number of the Invoice you want to review.
@@ -3661,19 +3661,19 @@ Commissions to be auto-generated for any Sales of a particular Product.
     and sets up any related Product Costs or Commissions.
 
 #.  At some point in the future a manager or admin creates a Sale for a
-	Product. They can specify if the Sale is related to a particular Client or
+    Product. They can specify if the Sale is related to a particular Client or
     Project.
 
 #.  That manager or admin finalizes the Sale items that are on the Sale and
     moves the Sale to status Allocate.
 
 #.  That same manager or admin should then review the *pending* transactions
-	for each Sale item. If the "Total Unallocated" figure is green and equal to
+    for each Sale item. If the "Total Unallocated" figure is green and equal to
     zero, then the funds from the Sale have been allocated. When satisfied they
     should push the Sale to status Administrator.
 
 #.  The Administrator should then review the Sale to make sure that everything
-	is correct and, once satisfied, should *approve* all the transactions and
+    is correct and, once satisfied, should *approve* all the transactions and
     finally move the Sale to status Finished.
 
 
