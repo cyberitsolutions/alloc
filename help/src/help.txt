@@ -3500,9 +3500,9 @@ Adding New Time Sheet
 #.  Press the 'Save' button to continue or 'Delete Record' to remove any data
     added.
 
-#.  Time Sheets are made up of individual line items, pertaining to specific
-    Tasks. For instance, you may have worked for 3 hours on one problem (Task
-    A), 2 hours on Task B and 1 hour on Task C, all for the one Client.
+#.  Time Sheets are individual line items, pertaining to specific Tasks. For
+    instance, you may have worked for 3 hours on one problem (Task A), 2 hours
+    on Task B and 1 hour on Task C, all for the one Client.
 
 #.  For each Time Sheet line item, fill in Date, Duration, Task and Location.
 
@@ -3513,38 +3513,39 @@ Adding New Time Sheet
 
 #.  Repeat step 7 to add more line item entries if needed.
 
-#.  Press 'Save and Submit' button when done. An email will be sent off to the
+#.  Press 'Save and Submit' button when done. An email is sent off to the
     person designated as the next stop in the Time Sheet workflow process.
 
     .. HINT:: You can save the Time Sheet as-is, then return to it later on.
 
-    .. HINT:: You can track the progress of your Time Sheets from the 'Time Sheet'
-              section of your 'Homepage'.
+    .. HINT:: You can track the progress of your Time Sheets from the 'Time
+              Sheet' section of your 'Homepage'.
 
     .. HINT:: If you're a manager designated to receive requests to authorise
               Time Sheets, you can view them from the 'Time Sheet' section of
               your 'Homepage'.
 
-Any submitted Time Sheet is and sent to either the Manager specified in the
-Project or to the financial Admin person as specified in the allocPSA
-configuration, for approval and to perhaps be Invoiced. 
+Submitted Time Sheets go to either the project manager or the financial
+administrator. The manager or administrator either approve or reject the time
+sheet, and may create an invoice using the time sheet.
 
 .. NOTE:: You can, at any point, elect to send comment email to others, and
           even attach this time-sheet to that email. For information on this,
           see How do I Email a Time-Sheet to Customers?
-          How_do_I_Email_a_Time-Sheet_to_Customers_ 
+          How_do_I_Email_a_Time-Sheet_to_Customers_
+
 
 Printing Time Sheets
 ~~~~~~~~~~~~~~~~~~~~
 
-Click the links in the top right hand corner to generate a PDF version of
-the Time Sheet which conforms to Australian government standards for Tax
+Click the links in the top right hand corner to generate a PDF version of the
+Time Sheet which conforms to the Australian government standards for Tax
 Invoices.
 
 Adding a Time Sheet within a Project
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can also add a Time Sheet from within a Project.
+You can add a Time Sheet from within a Project.
 
 #.  To create a new Time Sheet, enter the Project which you want to add the
     Time Sheet to.
@@ -3552,20 +3553,20 @@ You can also add a Time Sheet from within a Project.
 #.  Enter the details and add a Time Sheet header.
 
 #.  Add individual Time Sheet items, specifying charge rates, durations, dates
-    and locations.
+    and locations.  
 
 Reviewing Existing Time Sheets
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can also review existing Time Sheets you've created. 
+You can also review existing Time Sheets you've created.
 
 #.  From the toolbar, click on the 'Time Sheet' link.
 
 #.  Decide on what Project, Status, Date From you want to filter within.
-    Normally the results page will show those Time Sheets with edit status only.
-    Choose All if you want to see all of them. Users with Admin or Manager
-    privileges are able to see other people's Time Sheets by selecting the right
-    'User Name'.
+    Normally the results page will show those Time Sheets with edit status
+    only.  Choose All if you want to see all of them. Users with Admin or
+    Manager privileges are able to see other people's Time Sheets by selecting
+    the right 'User Name'.
 
 #.  Press the 'Filter' button
 
@@ -3573,7 +3574,7 @@ You can also review existing Time Sheets you've created.
 
 #.  Complete the details needed.
 
-#.  When complete, save or submit the Time Sheet as per usual.
+#.  When complete, save or submit the Time Sheet as usual.
 
 Because Time Sheeting is complicated, we've added special help links for
 reminders on the page.
@@ -4336,7 +4337,7 @@ itself or in combination with other search terms. The default is to search
 across ALL keyword fields.
 
 For more information about the Zend search syntax please read this article:
-http://framework.zend.com/manual/en/zend.search.lucene.query-language.html
+http://framework.zend.com/manual/1.12/en/zend.search.lucene.query-language.html
 
 
 Examples
