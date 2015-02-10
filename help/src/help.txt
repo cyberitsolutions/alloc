@@ -3387,17 +3387,17 @@ If you are creating a New Task, or are updating a Task, you may see any of the f
        minimise date-format errors, allocPSA uses ISO date format of
        YYYY-MM-DD. Therefore, the 1st of September 2002 is 2002-09-01
 
-Fill in all the information needed, then press the 'Save' button to create this
-new Task. You will then be shown the normal editable Task view which is used
-for normal operations on, and updating of Tasks. In general, the header, or top
-part of the Task wouldn't need to be modified, but additions can be made to the
-Task by way of Comments. You can now add such Comment updates (as they arise)
-to this Task, and change the percentage complete status where necessary.
+Fill in all the information needed, than press the 'Save' button to create this
+new Task. You will then be shown the normal editable Task view which is for
+editing Tasks. In general, the header, or top part of the Task don't modifying,
+but additions can be made to the Task by way of Comments. You can now add such
+Comment updates (as they arise) to this Task, and change the percentage
+complete status where necessary.
 
-You can add as many comments as you like. All comments will be stamped for
-date-time and username. You can also edit (or delete) a comment after it has
-been saved, by selecting it from the comments list to display it in the
-comments edit box, then updating or deleting it. 
+You can add as many comments as you like. All comments are stamped for
+date-time and username. You can also edit (or delete) a comment, by selecting
+it from the comments list to display it in the comments edit box, then updating
+or deleting it.
 
 
 Adding Reminders to Tasks
@@ -3408,12 +3408,13 @@ Adding Reminders to Tasks
     Add reminders for you and other members of the Project.
 
 Reminders are a wonderfully useful facility in allocPSA. They can be set
-globally, within the context of a Project (so that they cease being sent when
-the Project is complete,) and within the context of a Task, (so that they cease
+globally, within the context of a Project (so that they stop being sent when
+the Project is complete,) and within the context of a Task, (so that they stop
 being sent when the Project is complete.) You can set reminders for yourself,
 for other resources working on the Project, or for the whole Project team
-together (for example, to remind everyone of a Project meeting, or of a weekly
-Time Sheet submission policy.) 
+together (for example, to remind every one of a Project meeting, or of a weekly
+Time Sheet submission policy.)
+
 
 Closing a Task When Complete
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
