@@ -3433,57 +3433,23 @@ Time
 
 .. figure:: images/timeSheet_items.png
 
-    Once you've created the Time Sheet header, you can add as
-    many items from the Project to that Time Sheet. You can also add comments,
-    which will then be added to the Task comment list, and optionally displayed
-    with the printed version of the Time Sheet, if not marked private.
+The allocPSA Time Sheet system is designed to make it easy for staff/employees
+to keep track of their time. This is the default work flow:
 
-The Time Sheet system in allocPSA allows for creation and management of
-Time Sheets by users. This Time Sheet system is built around a workflow model
-which is established as a 'factory default' when allocPSA is first installed.
-This model works as follows. 
+#.  You create a time sheet, adding the project which the time sheet is for.
 
-#.  Time Sheets are created by staff/personnel/resources who have accounts in
-    allocPSA
+#.  Next time is added to the time sheet.
 
-#.  Once the Time Sheet has been created and Tasks and hours have been added to
-    it, it can be sent to the next person in the workflow queue.
+#.  The time sheet is then pushed to the manager.
 
-#.  Who this next person is depends on a number of factors and default rulesets
-    established in the ruleset and configuration of allocPSA when it's
-    installed.
+    .. NOTE:: The manager(s) are set on the project 'People' page.
 
-#.  By default, if the Project in which the Time Sheet was created in has a
-    Time Sheet Manager specified, then the Time Sheet will get routed to that
-    manager. An email will also be sent to that manager to notify of a pending
-    Time Sheet.
+#.  Once the manager has reviewed the time sheet, they push the time sheet to
+    the administrator. If there is a problem, they can push it back to the
+    time sheet submitter.
 
-#.  If this manager verifies all the data and times in the Time Sheet, they can
-    elect to send it onwards to the administrative officer, nominally the staff
-    member who handles office or financial administration. An email will also be
-    sent to that administrative officer to notify of a pending Time Sheet
-
-#.  If the manager disputes any of the details in the Time Sheet, the manager can
-    add a notice in the Time Sheet, and elect to send it back to the user who
-    created the Time Sheet for its rectification and re-submission.
-
-#.  If no Time Sheet Manager is specified within the Project, then the Time Sheet
-    will automatically be routed to the user who has been specified in the
-    configuration of allocPSA as the administrative officer, nominally the staff
-    member who handles office or financial administration. An email will also be
-    sent to that administrative officer to notify of a pending Time Sheet
-
-#.  If the administrative officer disputes any of the details in the Time Sheet,
-    the administrative officer can add a notice in the Time Sheet, and elect to
-    send it back to the user who created the Time Sheet for its rectification and
-    re-submission.
-
-#.  At any stage, a user has the option of sending an ado-hoc comment, from the
-    time-sheet, in a manner similar to comments email sent from tasks.
-
-#.  Similarly, a user has the option of sending the contents of this
-    time-sheet, as either a PDF or as a HTML attachment, in a manner similar to
-    comments email sent from tasks, with attachments. 
+#.  When the administrator receives the time sheet, they review it and can make
+    an invoice if they so desire. 
 
 
 Adding New Time Sheet
@@ -3494,16 +3460,14 @@ Adding New Time Sheet
 
 #.  Choose the Project that this Time Sheet belongs to.
 
-#.  Fill in 'Billing Note' if any. This could be something like 'Send the
-    Invoice relating to this Time Sheet to the Client before the end of the
-    month or Internal billing only.
+#.  Click 'Create Time Sheet'.
 
-#.  Press the 'Save' button to continue or 'Delete Record' to remove any data
-    added.
+#.  Create Time Sheet items.
 
-#.  Time Sheets are individual line items, pertaining to specific Tasks. For
-    instance, you may have worked for 3 hours on one problem (Task A), 2 hours
-    on Task B and 1 hour on Task C, all for the one Client.
+    .. HINT:: Time Sheets items are individual line items, pertaining to
+              specific Tasks. For instance, you may have worked for 3 hours on
+              one problem (Task A), 2 hours on Task B and 1 hour on Task C, all
+              for the one Client.  
 
 #.  For each Time Sheet line item, fill in Date, Duration, Task and Location.
 
@@ -3512,10 +3476,10 @@ Adding New Time Sheet
 
 #.  Press the 'Add' button to add each new item.
 
-#.  Repeat step 7 to add more line item entries if needed.
+#.  Repeat step 6 to add more line item entries if needed.
 
-#.  Press 'Save and Submit' button when done. An email is sent off to the
-    person designated as the next stop in the Time Sheet workflow process.
+#.  Press 'Time Sheet to Manager' button when done. An email goes to the person
+    designated as the next stop in the Time Sheet workflow process.
 
     .. HINT:: You can save the Time Sheet as-is, then return to it later on.
 
