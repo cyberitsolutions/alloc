@@ -3175,25 +3175,24 @@ Uploading Documents to Projects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 allocPSA allows you to add electronic documents to a Project. These could be
-specification documents, scanned images of signed contracts or manuals. All
+specification documents, scanned images of signed contracts, or manuals. All
 forms of electronic document are supported (PDF files, ASCII, HTML, all
-graphics files, MS Word, PowerPoint, Excel, MDF files and LibreOffice to name
-but a few.) These documents are then displayed in a list on the Project page,
-and can be downloaded or viewed very easily and quickly. Further, if your
+graphics files, MS Word, PowerPoint, Excel, MDF files, and OpenDocument files
+to name but a few.) These documents are then displayed in a list on the Project
+page, and can be downloaded or viewed very easily and quickly. Further, if your
 web-browser is able to, it will either display the uploaded document within the
-browser, or launch a help application to display the document on screen, which
+browser, or launch a help application to display the document on-screen, which
 greatly facilitates easy retrieval and viewing.
 
-To add a document to the Project document 'tree', you can click on the 'Browse'
-button which is visible on the Project page. This will bring up a File
-Open-style dialog box (depending on your web-browser) with which you can
-navigate to the document that you want to upload to allocPSA's document
-repository. When you have selected the file you want to upload, and are back to
-allocPSA's Project page, you should see the file path specified in the
-file-upload textbox. You can then click the 'Save Document' button, and your
-web-browser will upload the file to allocPSA. This process may take a moment,
-particularly if you have a large file. 
-
+To add a document to the Project document 'tree', go to 'Attachments' and click
+on the 'Browse' button. This will bring up a File Open-style dialog box
+(depending on your web-browser) with which you can navigate to the document
+that you want to upload to allocPSA's document repository. When you have
+selected the file you want to upload, and are back to allocPSA's Project page,
+you should see the file path specified in the file-upload textbox. You can then
+click the 'Upload Attathment' button, and your web-browser will upload the file
+to allocPSA. This process may take a moment, particularly if you have a large
+file.
 
 
 Adding a Time Sheet to a Project
@@ -3201,20 +3200,17 @@ Adding a Time Sheet to a Project
 
 In most services organizations, Time Sheets are used to co-ordinate the billing
 (internally or externally) of staff/resource times and for paying of
-staff/resources. As a user of allocPSA who is also entitled to submit
-Time Sheets against a Project (and correspondingly, against the cost-centre
-associated with that Project) you can to create Time Sheets from within the
-Project in question. Any Time Sheets which are created in this manner are
-automatically attached to the current Project. See the Time Sheets section for
-further details on how to create and manage Time Sheets.
+staff/resources. A user can create Time Sheets from within the Project in
+question. Any Time Sheets made this way are automatically attached to the
+current Project. See the Time Sheets section for further details on how to
+create and manage Time Sheets.
 
 Project Expense Forms
 ~~~~~~~~~~~~~~~~~~~~~
 
-If you need to raise a Project-specific expense, you can create those expenses
-with allocPSA's Expense Form (described later in this manual.) All such
-expenses will appear on your Project's Transactions section.
-
+If you need to raise a Project-specific cost, you can create one with
+allocPSA's Expense Form (described later in this manual.) All such expenses
+will appear on your Project's Transactions section.
 
 
 Tasks
@@ -3224,61 +3220,53 @@ Tasks
 
     A Task can have its specific details, reminders and comments
 
-A Task is a unit of work or a work requirement which needs to be accomplished.
-Tasks normally relate to specific Projects. Tasks normally have start and
-finish dates. Most Tasks are normally allocated to one specific user (i.e. a user
-resource in Project management parlance). Tasks can have associated
-descriptions, as well as priorities, and can be part of other Tasks or of
-Phases. Tasks can also have a number of user created comments, which can
-provide a running history of the Task.
+A Task is a piece of work to be done, usually related to a specific Project.
+Tasks normally have start and finish dates, and are allocated to one specific
+user (i.e. a user resource in Project management parlance). Tasks can have
+associated descriptions, as well as priorities, and be under a Parent Task.
+Tasks can also have a number of user-created comments, which provide some
+history about the Task.
 
-A Task can have Reminders associated with it which can be set to email the
-specified owner of the Task, or others within that Project, on certain dates
-and at certain times.
+A Task can have Reminders associated with it which can email the specified
+owner of the Task, or others within that Project, on certain dates and at
+certain times.
 
-Once a Task has been completed, it can be marked off as 100% done. It will then
-be archived within the Project, available in a Complete Task List, but not
-shown in the normal operational view of the Project. This reduces the overall
-clutter.
-
-A Phase is a special kind of Task, whose primary purpose is to contain other
-Tasks. Examples of a phases might be 'Documentation' or 'Testing' or 'Planning'
-or 'Contract Negotiation'. There is generally little different between a Task
-and a phase, except that a phase will be displayed differently in the Task
-List when doing a 'List by Project'.
 
 Special Tasks: Faults
 ~~~~~~~~~~~~~~~~~~~~~
 
 In allocPSA a fault is a special kind of Task which can be tracked specifically
-as the entity which relates to help-desk activities within allocPSA. 
+as the entity which relates to help-desk activities within allocPSA.
 
-Outside this change in task 'type', faults are actioned, managed and behave
-like any standard task.
+Outside this change in 'type' faults are actioned, managed, and behave like any
+standard task.
 
-.. NOTE:: When you create a fault, you have the option of establishing an
-          automated reminder for the assignee. The priority of the fault will
-          determine how frequently these reminder emails are sent.
+.. NOTE:: When you create a fault, you may create an automated reminder for the
+          assignee. The priority of the fault will set how often these reminder
+          emails get sent.
 
 While allocPSA does not purport to be a full Service Desk solution, the
-tracking of faults as part of the overall system framework provides quite a
-powerful system for companies which provide service-level support to track,
-manage, filter and archive any issues or problems which arise in the day-to-day
-operation of any services organization. 
+tracking of faults as part of the overall system framework provides a powerful
+system for companies which offer service-level support to track, manage, filter
+and archive any issues or problems which arise in the day-to-day operation of
+any services organization.
+
 
 Special Tasks: Messages
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-In allocPSA a message is a special kind of Task which can be tracked specifically 
-as the entity which relates to quick notes for users to take actions, such as calling others.
+In allocPSA a message is a special kind of Task which can be tracked
+specifically as the entity which relates to quick notes for users to take
+actions, such as calling others.
 
 Outside this change in task 'type', messages are actioned, managed and behave
 like any standard task. With one exception. Any messages created for a user,
 will appear in a separate Messages segment of the user's Home page.
 
-.. NOTE:: When you create a message, you have the option of establishing an
-          automated reminder for the assignee. The priority of the message will
-          determine how frequently these reminder emails are sent.
+.. NOTE:: When you create a message, you make an automated reminder for the
+          assignee. The priority of the message will decide how often these
+          reminder emails get sent.
+
 
 General Tasks
 ~~~~~~~~~~~~~
