@@ -3283,19 +3283,14 @@ will appear in a separate Messages segment of the user's Home page.
 General Tasks
 ~~~~~~~~~~~~~
 
-Tasks in allocPSA have a number of view. When creating a new Task, you will be
-presented with a view which primarily shows the header information. Once this
-is saved, and from that point on, viewing that Task should show you the normal
-operational view of the Task, with much of the header information now made
-read-only. 
+Tasks in allocPSA have a number of views. When creating a new Task you get a
+view which primarily shows the header information. Once saved, viewing that
+Task displays the normal working view of the Task, with the header information
+read-only.
 
-You can now process the Task through its normal workflow, by adding comments
-upon each atomic action of the Tasks history, updating the percentage complete
-and eventually closing the Task off when it's been fully realised or judged
-complete. Finally, you can view a Task with its full details displayed on
-screen at once (referred to as the printer-friendly view, as it is the most
-conducive to grabbing a hard-copy snapshot of the Task in totality.
-
+You can process the Task through its normal workflow, by adding comments upon
+each atomic action of the Tasks history, adding time and eventually closing the
+Task when it's complete.
 
 
 .. figure:: images/task_detail.png
