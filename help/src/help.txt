@@ -3302,54 +3302,62 @@ conducive to grabbing a hard-copy snapshot of the Task in totality.
 
     Task header, allowing you to specify the Project, Task name, description, interested parties and dates.
 
-Tasks have two views. The first view is the header view, where you can
-establish a number of attributes which are normally immutable (or change rather
-infrequently.) The header view shows only a limited subset of all the
-information which is normally associated with a Task. Once you have supplied
-whatever information you have and ensured that the Task has a name, you should
-then be able to Save the header component, and allocPSA will then take this
+Tasks have two views. The first view is the header view, in which most
+attributes don't usually change. The header view only shows a limited subset of
+all the information which is normally associated with a Task. Once you have
+supplied whatever information you have and ensured that the Task has a name,
+you should be able to Save the header, and allocPSA will then take this
 information and display it in read-only form, while opening a number of new
 attributes which you can now set or change. You may always re-enable editing of
-the Task header, by clicking on the 'Edit' link at the top of any
-fully-specified Task. 
+the Task header, by clicking on the 'Edit' link at the top of any fully
+specified Task.
 
-If you are creating a New Task, or are updating a Task, you may see any of the following data fields:
+If you are creating a New Task, or are updating a Task, you may see any of the
+following data fields:
 
 .. list-table::
 
    - - Field
      - Attributes
-   - - Name
+   - - Task*
      - The name of this particular Task. Provide a name which is reasonably
        memorable, descriptive and readable
-   - - Description
-     - A full account of what this Task is about. Provide as much detail as you
-       can.
-   - - Project
-     - Which Project is this Task associated with. 
-       Normally left to the default (current) Project, but can be assigned to
-       any other Project
-   - - Parent Task
-     - Select a parent Task (or phase) if this particular Task is a sub-Task.
    - - Priority
-     - Specify a priority (used for prioritisation sorting.) Level 1 is the
-       highest priority in allocPSA
-   - - Assigned to
-     - The Person Responsible is the user who is Tasked with undertaking this Task
+     - Specify a priority (used for prioritisation sorting.) Level Critical is the
+       highest priority in allocPSAi, and Normal is the default.
    - - Task Type
      - Select a Task type; Task, phase, message or fault. A phase is handled
        much the same as a Task, but displayed in different colour in charts.
-       Messages and faults are handled differently, Some Tasks or phases are (or have) milestones. For example,
-       code releases or document deliverables. As such, they need to be clearly
-       displayed as important date-points in online graphs. Setting a milestone
-       for this Task will result in a special vertical bar to be drawn in the
-       Project Graph.
-   - - Interested Parties
+       Messages and faults are handled differently, Some Tasks or phases are
+       (or have) milestones. For example, code releases or document
+       deliverables. As such, they need to be clearly displayed as important
+       date-points in online graphs. Setting a milestone for this Task will
+       result in a special vertical bar to be drawn in the Project Graph.
+   - - Project
+     - Which Project is this Task associated with. Normally left to the default
+       (current) Project, but can be assigned to any other Project
+   - - Parent Task
+     - Select a parent Task (or phase) if this particular Task is a sub-Task.
+   - - Description
+     - A full account of what this Task is about. Provide as much detail as you
+       can.
+   - - Tags
+     - The alloc tagging system. You can use as many tags as you need on a
+       task. Create a tag but pressing new.
+   - - Possible Duplicates
+     - A list of possible duplicate tasks.
+   - - Status
+     - Set the status for the task.
+   - - Managed By
+     - The task manager.
+   - - Assigned to
+     - The user that is assigned the task.
+   - - Default Interested Parties
      - allocPSA allows you to specify which other members of the Project (which
        the Task belongs to) as well as any Client contacts listed for the
        nominated Project Client, should be included in automated emails which
        are sent. This is a great way to keep a whole team of in-house and
-       external resource briefed on the Task status.  NOTE: Naturally, your and
+       external resource briefed on the Task status.  NOTE: Naturally, you and
        your staff need to be mindful of what messages are sent to these
        external resources.
    - - Time Estimate Hours (Best/Worst/Expected)
@@ -3357,15 +3365,14 @@ If you are creating a New Task, or are updating a Task, you may see any of the f
        units. This figure helps allocPSA produce Project timeline estimates and
        forecasts. It does not need to be the same as the final time effort
        which results in an entry in a Time Sheet.
-   - - Time Limit Hours
+   - - Estimator
+     - The person that made the estimate, usually this is filled out
+       automatically.
+   - - Actual Hours
+     - The actual hours that have been spent on this task so far.
+   - - Effort Limited To
      - Work that is time sheeted for Tasks that have a Time Limit set will
        be flagged red if they go over their Time Limit Hours.
-   - - Percent Complete
-     - This is an auto calculated field bases on the Estimated Hours versus the
-       Hours that have actually been billed against this Task in the time
-       sheet section.
-   - - Dates
-     - The date of action. It is automatically recorded when you get into this page
    - - Target Start
      - The estimated date you plan to start the Task. Click on the button at
        right to automatically enter today's date. For International reasons and
