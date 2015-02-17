@@ -2788,7 +2788,6 @@ If you need to modify the Client header information:
 #.  You can also modify the content you want to change or add for the other
     parts, and press appropriate 'Save' or 'Add' buttons
 
-
 Projects
 --------
 
@@ -2796,55 +2795,50 @@ Projects
 
     A Project's header information.
 
-A Project is a logical entity which is constituted by one or more
-people/resources/personnel working on one or more Tasks. Most Professional
-Services firms have very specific examples of what constitutes a Project. It
-might be implementing a new computer system for their own use or for a Client.
-It might be in the production of a report, or the development of a new device
-or item of software. allocPSA is very flexible in terms of how it handles the
-concept of a Project, and how the life-cycle of a Project is handled in your
-organization.
+A Project is a planed undertaking which gets completed by one or more
+people/resources working on one or more Tasks. Most Professional Services firms
+have very specific examples of what a Project is. It might be implementing a
+new computer system for a Client.  It might be the production of a report, or
+development of a new device, or piece software. allocPSA is very flexible how
+it handles the concept of a Project, and how the life-cycle of a Project is
+handled in your organization.
 
 To see a list of Projects in allocPSA, click on the Projects tab on the main
-menu. This will show you a tabulated view of (most likely) the currently active
-projects.
+menu.
 
-You can filter the list of projects shown in the Projects tab page, by
-clicking the Show Filter link, if this is presented, which will open up
-the filter segment of the page. Using this filter, you can select to
-filter projects by Status (Current, Potential, Archived), Type (Project,
-Job, Contract), allocated to a particular person, and portions of a
-project's name.
+You can filter the list of projects shown in the Projects tab page by clicking
+the Show Filter link which opens the filter pop-up. You can filter projects by
+Status (Current, Potential, Archived), Type (Project, Job, Contract), allocated
+to a particular person, and portions of a project's name.
 
-Once you have selected the filter criteria, you click the Filter button,
-and allocPSA will show you the matching entries. You can remove a
-filter, by clearing out the values in the filter text boxes, and
-clicking the Filter button once more.
+Once you have selected the filter criteria, you click the Filter button, and
+allocPSA will show you the matching entries. You can remove a filter, by
+clearing out the values in the filter text boxes, and clicking the Filter
+button once more.
 
-Much like a Task, a Project has a header component, which is not likely to
-change that frequently. Within this header component is informational details
-about the Project, including the Project's name, who the Client is,
-Project-specific details about the Client's contact person, a number of start
-and finish dates, along with Project budget details, Project manager (for Time
-Sheet sign off purposes) and a Project modification history. 
+Much like a Task, a Project has a header, which is unlikely to change that
+frequently. Within this header is information about the Project; including the
+Project's name, who the Client is, Project-specific details about the Client's
+contact person, a number of start and finish dates, along with Project budget
+details, Project manager (for Time Sheet sign off purposes) and the Project
+history.
 
-Once the header has been defined and saved, you will be able to set any
-per-Project assignment of Commission (used for tracking revenues to account
-managers of salespeople within your firm.) You can also establish which
-resources/personnel are assigned to work on this Project. Unless a resource is
+You can set per-Project assignment of Commission (used for tracking revenues to
+account managers of salespeople within your firm.) You can also set which
+resources/staff are assigned to work on this Project. Unless a staff user is
 assigned to a Project, they will not be able to view it or its attendant Tasks
 and phases (unless they have manager security privileges.) When establishing
 the staff resources who will work on this Project, you can also specify what
-their charge rates are to be. 
+their charge rates are.
 
 allocPSA allows for the flexible management of in-house per-Project rates, as
 well as externally charged rates which then bring revenues into particular
 staff, Project or departmental cost-centres (known as Tagged Funds or TFs).
 
 allocPSA also allows you to upload (and attach) any type of electronic document
-to this Project's repository, as well as establish Project-specific Reminders.
+to this Project's repository, as well as set up Project-specific Reminders.
 
-The header information which can be specified is listed below:
+These are the available options for the header:
 
 .. list-table::
 
@@ -2929,93 +2923,79 @@ After you have finished all the details:
 
 #.  Press the 'Save' button to create your new Project and then...
 
-#.  Add resources and add new comments for Modification History, Commission
-    To, Project People, uploading Project Files, creating a New Task, adding
-    Reminders or generating New Time Sheets, Transactions.
+#.  Add resources and add new comments for Modification History, Commission To,
+Project People, uploading Project Files, creating a New Task, adding Reminders
+or generating New Time Sheets, Transactions.
 
-A Project is constituted by one or more people/resource undertaking numerous
-Tasks. Tasks can be active (i.e. not-complete) or archived (i.e. completed).
-Normally, allocPSA's Project page will only show you the current (i.e. active
-and non-complete) Task list. You can elect to see the complete Task list, or
-the Project's Task Graph or the Task Allocation Report. A Project will also
-allow you to specify people/staff/resource, commissions and attach documents,
-which we will see how to manage later on.
-
+A Project made of one or more people/staff undertaking numerous Tasks. Tasks
+can be active (i.e. not-complete) or archived (i.e. completed).  Normally,
+allocPSA's Project page will only show you the current (i.e.
+active/non-complete) Task list. You can use the complete Task list, or the
+Project's Task Graph or the Task Allocation Report. A Project will also allow
+you to specify people/staff/resources, commissions and attach documents, which
+we will see how to manage later on.
 
 Adding Notes to your Project
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-allocPSA provides the facility to add Project-level modification history notes
-to your Project. To do so, simply add text into the New Comment field and click
-on the 'Save Comment' button. You can review any existing comments by selecting
-them from the comments list, and also update and delete them when they are in
-view.
-
+allocPSA can keep notes on each project. Just go to the 'Comments' tab and add
+comments.
 
 Project Sales Commission
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-In many professional services organizations, sales commissions are often
-allocated for the business development efforts. In allocPSA, these sales
-commissions are tracked on a per-Project basis. Each Project has the facility
-for the Project's owner to establish one or more staff/resources from your
-organization, who will receive the sales commission. To add a percentage
-commission to a specified staff member, select their name from the drop-list at
-left, then add the 'Commission %' in the text-box, then click on the 'Add'
-button. This will add that staff member as a commission holder in this Project.
-You can add more staff-members as commission-holders by following this simple
-procedure.
-
+In many professional services organizations, sales commissions are allocated
+for the business development efforts. In allocPSA, these sales commissions are
+tracked on a per-Project basis. The Project manager may establish one or more
+staff/resources from your organization who will receive the sales commission.
+To add a percentage commission to a specified staff member, select their name
+from the drop-list at left, then add the 'Commission %' in the text-box, then
+click on the 'Add' button. This will add that staff member as a commission
+holder in this Project.  You can add more staff-members as commission-holders
+by following this simple procedure.
 
 Adding Staff Resource to your Project
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. figure:: images/project_people.png
 
-    The people/resource related to the Project can be added or deleted according to your need
+    Staff can be added or deleted to a Project according to your needs.
 
 You can add as many people/resource to your Project as you wish. To do so,
-simply click on the 'People' section next to 'Commissions' which will display
-the 'Project People' segment of the Project form, which may show existing
-resources who have been added to the Project. You will note that the last-most
-row (also possibly the first row, if only one row exists) of the resource
-entries has a blank selected in the 'Person' drop-list.  You can select the
-person you wish to add, the type of email notifications they will receive for
-this Project: none, only for Tasks assigned to them, and if this person is the
-Project's manager, perhaps for all Project Tasks.
-
+simply click on the 'People' link next to 'Commissions' which displays the
+'Project People' segment of the Project form. You will note that the last row
+(or if only one row exists, the first row) of the resource entries is a blank
+in the 'Person' drop-list.  You can select the person you wish to add, the type
+of email notifications they will receive for this Project: none, only for Tasks
+assigned to them, and if this person is the Project's manager, perhaps for all
+Project Tasks.
 
 Complete Task List
 ~~~~~~~~~~~~~~~~~~
 
-This shows the total list of existing Tasks for this particular Project. Even
-completed (i.e. archived) Tasks are shown.
+This shows the total list of all existing Tasks for this Project.
 
-To view this list, click on the 'Tasks' link in the Project you are in. You
-will be shown a (possibly long) list of Tasks, which you can click on
+To view this list, click on the 'Tasks' link in the Project you are in.
+allocPSA shows a (possibly long) list of Tasks, which you can click on
 individually, to view and edit. You can always return to the normal Project
-view by clicking the Back button on your browser or clicking on the
-'Project' link at top.
-
+view by clicking the Back button on your browser or clicking on the 'Project'
+link at top.
 
 Task Graph - Project Task Summary
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This is like the Complete Task List, but also includes a graphical
-representation of the timeline of the Tasks and Phases, as well as a list of
-the existing Tasks for this particular Project. It can be used as a very simple
-facsimile of a Gantt chart for planning purposes. As with all things in
-allocPSA, you will always able to print this page to any printers you have
-configured to work from our workstation. 
+This is like the Complete Task List, except it is a graphical representation of
+the timeline of the Tasks and Phases, as well as a list of the existing Tasks
+for this particular Project. It can be used as a very simple facsimile of a
+Gantt chart for planning purposes. As with all things in allocPSA, you will
+always able to print this page to any printers you have configured.
 
-To view this list, click on the 'Graph' link in the Project you are in.
-You will be shown a (possibly) large graph with coloured lines, and a
-(possibly) long list of Tasks, which you can click on individually, to view and
-edit.
+To view this list, click on the 'Graph' link in the Project you are in. You get
+a (possibly large) graph with coloured lines, and a (possibly long) list of
+Tasks, which you can click on individually, to view and edit.
 
 The graph shows dates and the names of the Tasks and phases along the left-hand
-side. There are 8 separate pieces of information shown on the graph, including
-the:
+side. This information showed is:
 
 .. list-table::
 
@@ -3057,31 +3037,27 @@ the:
        the time and percentage complete estimates supplied within its child
        Tasks.
 
-The Project's phases and Tasks are then shown in a list below the graph. The
-child Tasks of any parent Task or phase are shown indented below that parent.
-Clicking on any of these will bring it to the screen.
-
+The Project's phases and Tasks display in a list below the graph. The child
+Tasks of any parent Task or phase is indented below that parent. Clicking on
+any of these will bring it to the screen.
 
 Task Allocation Report
 ~~~~~~~~~~~~~~~~~~~~~~
 
-This report works in a manner very similar to the Task Graph. The difference
-being that each individual user/resource's allocation of Tasks are listed and
-displayed in their own separate graphs. You can use this report to determine
-where possible overload work situations might arise for specific
-people/resources on your Projects.
+Task Allocation Reports are similar to Task Graphs. The difference being, each
+user/resource's allocation of Tasks gets listed and displayed in their own
+separate graphs. You can use this report to find possible overload work for
+specific people/resources in your Projects.
 
-To view this list, click on the 'Allocation' link in the Project you are
-in. You will be shown one or more large graphs with coloured lines, and a
-possibly long list of Tasks, which you can click on individually, to view and
-edit.
+To view the list, click on the 'Allocation' link in the Project you are in. You
+get one or more large graphs with coloured lines, and a possibly long list of
+Tasks, which you can click on individually, to view and edit.
 
-Each allocPSA user/resource/personnel who has been allocated to this Project,
-has their graph and list of Tasks.
+All staff on the Project are graphed, with a list of their tasks below their
+name.
 
 The graph shows the dates along the top, and the names of the Tasks and phases
-along the left-hand side. There are 8 separate pieces of information shown on
-the graphs, including the:
+along the left-hand side. This is what is graphed:
 
 .. list-table::
 
@@ -3123,53 +3099,45 @@ the graphs, including the:
        the time and percentage complete estimates supplied within its child
        Tasks.
 
-The Project's phases and Tasks for each specific user/resource are then shown
-in a list below the graph. The child Tasks of any parent Task or phase are
-shown indented below that parent. Clicking on any of these will bring it to the
-screen.
+The Project's phases and Tasks for each specific user/resource are in a list
+below the graph. The child Tasks of any parent Task or phase are indented below
+that parent. Clicking on any of these will bring it to the screen.
 
 
 List of the Current Uncompleted Tasks in a Project
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Either from within a Project or from the Tasks view, you can drill down into
-those Tasks for a particular Project which are still not complete. These Tasks
-may be tracking well or may be overdue. When overdue, allocPSA will flag them
-in a brighter colour for obvious recognition.
-
-
+Within a Project or from the Tasks view, you can drill down into Tasks that are
+not complete. These Tasks may be tracking well or may be overdue. When overdue,
+allocPSA flags them in brighter colours for obvious recognition.
 
 New Task
 ~~~~~~~~
 
 .. figure:: images/task_detail.png
 
-    When adding new Tasks, you first create the Task header
-    itself, which specifies the Task name, initial description of the Task,
-    start, end dates, estimated hours work etc.
+    When adding new Tasks, you fill out the Task header.
 
 Allows you to create a new Task for this particular Project.
 
-Whenever you are in a Project, and can see the 'New Task' link, click on it to
-be presented with a blank new Task screen, which you can then complete, and
-submit as per normal. Any Tasks created in this manner will automatically
-belong to the Project you are currently viewing.
+Whenever you are in a Project, and can see the 'New Task' link, clicking on it
+presents a new blank Task screen, which you can then fill out and save. Any
+Tasks created this way will automatically belong to the Project you are
+currently viewing.
 
 Adding Reminders to Projects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can add a new reminder to the Project (rather than to just a specific Task
-or Client) by clicking on the New Reminder link on the Project page
+You can add a new reminder to the Project (not just a specific Task or Client)
+by clicking on the New Reminder link on the Project page
 
 Reminders are a wonderfully useful facility in allocPSA. They can be set
-globally, within the context of a Project (so that they cease being sent when
-the Project is complete) and within the context of a Task, (so that they cease
+globally, within the context of a Project (so that they stop being sent when
+the Project is complete) and within the context of a Task, (so that they stop
 being sent when that Task or its parent Project is complete.) You can set
 reminders for yourself, for other resources working on the Project, or for the
-whole Project team together (for example, to remind everyone of a Project
-meeting, or of a weekly Time Sheet submission policy.)
-
-
+Project team (such as, to remind everyone of a Project meeting, or of a weekly
+Time Sheet submission policy.)
 
 Uploading Documents to Projects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
