@@ -122,7 +122,10 @@ class db {
     if (!isset($this->pdo)) {
       $this->connect();
     }
-    return trim($this->pdo->quote($str),"'");
+    $v = $this->pdo->quote($str);
+    substr($v,-1) == "'" and $v = substr($v,0,-1);
+    substr($v,0,1) == "'" and $v = substr($v,1);
+    return $v;
   }
 
   function select_db($db="") { 
