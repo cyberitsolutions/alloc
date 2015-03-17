@@ -548,6 +548,8 @@ if ($clientID) {
   $temp = str_replace("<br>","",$fou);
   $temp and $thr = $fou;
 
+  $url = $TPL["url_alloc_client"]."clientID=".$clientID;
+
   if ($project->get_value("clientContactID")) {
     $cc = new clientContact();
     $cc->set_id($project->get_value("clientContactID"));
@@ -559,7 +561,7 @@ if ($clientID) {
 
   $TPL["clientDetails"] = "<table width=\"100%\">";
   $TPL["clientDetails"].= "<tr>";
-  $TPL["clientDetails"].= "<td colspan=\"3\"><h2 style=\"margin-bottom:0px; display:inline;\">".$TPL["client_clientName"]."</h2></td>";
+  $TPL["clientDetails"].= "<td colspan=\"3\"><h2 style=\"margin-bottom:0px; display:inline;\"><a href=".$url.">".$TPL["client_clientName"]."</a></h2></td>    ";
   $TPL["clientDetails"].= "</tr>";
   $TPL["clientDetails"].= "<tr>";
   $one and $TPL["clientDetails"].= "<td class=\"nobr\"><u>Postal Address</u></td>";
