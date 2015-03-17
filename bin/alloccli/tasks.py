@@ -10,6 +10,7 @@ class tasks(alloc):
   ops.append((''  , 'csv=[WHEN]     ', 'Return the results in CSV format. WHEN can be "auto",\n'
                                        '"never" or "always". If WHEN is omitted, assume "always".'))
   ops.append(('p:', 'project=ID|NAME', 'A project ID, or a fuzzy match for a project name.'))
+  ops.append(('g:', 'tag=TEXT       ', 'A tag'))
   ops.append(('t:', 'task=ID|NAME   ', 'A task ID, or a fuzzy match for a task name.'))
   ops.append(('s:', 'status=NAME    ', 'A task\'s status.\n'
                                        '(eg: open pending eg: open pending_info. Default: open)'))
@@ -66,6 +67,7 @@ class tasks(alloc):
     o["status"] = o["status"] or "open"
     ops['taskStatus'] = o['status']
     if o['type']: ops['taskTypeID'] = o['type']
+    if o['tag']: ops['tags'] = o['tag']
 
     # Get a taskID either passed via command line, or figured out from a task name
     if self.is_num(o['task']):
@@ -79,7 +81,7 @@ class tasks(alloc):
     if not o['fields']:
       if not order: order = ["priorityLabel", "taskTypeID", "_rate", "taskStatusLabel"]
       fields = ["taskID", "taskTypeID", "taskStatusLabel", "priorityLabel", "timeExpected",
-                "timeLimit", "timeActual", "rate", "projectName", "taskName"]
+                "timeLimit", "timeActual", "rate", "projectName", "taskName", "tags"]
     else:
       fields = o["fields"]
 
