@@ -170,9 +170,9 @@ In this example the recipients are going to be internal only, except for Clyde
       package['comment_text'] = comment_text
       package['entity'] = entity
       package['entityID'] = entityID
+      package['command'] = 'add_comment'
 
       args = {}
-      args['command'] = 'add_comment'
       args['entity'] = 'comment'
       args['id'] = 'new'
       args['options'] = package
