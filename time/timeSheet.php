@@ -612,7 +612,6 @@ if (($_POST["p_button"] || $_POST["a_button"] || $_POST["r_button"]) && $timeShe
   $query = prepare("UPDATE transaction SET status = '%s' WHERE timeSheetID = %d AND transactionType != 'invoice'", $status, $timeSheet->get_id());
   $db = new db_alloc();
   $db->query($query);
-  $db->next_record();
 
 // Take care of the transaction line items on an invoiced timesheet created by admin
 } else if (($_POST["transaction_save"] || $_POST["transaction_delete"]) && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
