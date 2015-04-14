@@ -224,8 +224,12 @@ class alloc_output_handler:
           
       if v in row:
         if v == "tags":
-          value = "[" + row[v].replace(", ", "][") + "]"
-          success = True
+          try:
+            value = "[" + row[v].replace(", ", "][") + "]"
+            success = True
+          except:
+            value = row[v]
+            success = True
         else:
           value = row[v]
           success = True
