@@ -34,7 +34,7 @@ contains.
 
 Cyber IT Solutions and allocPSA are registered trademarks of Cyber IT Solutions
 Pty. Ltd. All other products and services are the registered trademarks of
-their respective holders 
+their respective holders
 
 This document was written by: Kei, Con Zymaris, Alex Lance, Jeremy Chin,
 Robbie, Erick Fabre, Trent Buck, Manjula Arulananther, and Christopher Bayliss.
@@ -269,7 +269,7 @@ Installation and Configuration
 
 Once you've installed allocPSA, you must login and then change the default
 login account password. You can do this by accessing the default account
-through the People tab and supplying a new strong account password.  
+through the People tab and supplying a new strong account password.
 
 You should also update the allocPSA configuration settings, found by clicking
 the 'Setup' link in the top right hand corner of the allocPSA toolbar. You can
@@ -306,7 +306,7 @@ allocPSA a valuable platform for managing the priorities and objectives that
 drive your business.
 
 Using proven project management disciplines and processes, allocPSA helps you
-optimize resources and manage activities to meet project deadlines and budgets.  
+optimize resources and manage activities to meet project deadlines and budgets.
 
 allocPSA automatically generates customizable outgoing email alerts to
 instantly notify relevant assignees, managers and other people involved with
@@ -851,7 +851,7 @@ How do I Create a New Time Sheet?
 
 .. HINT:: If you're a manager designated to receive requests to authorise Time
           Sheets, you can view them from the 'Time Sheet' section of your
-          'Homepage'.  
+          'Homepage'.
 
 How do I Ensure Staff Effort on Tasks is Captured as Time Sheets?
 -----------------------------------------------------------------
@@ -892,11 +892,11 @@ How do I Ensure Staff Effort on Tasks is Captured as Time Sheets?
               being rendering them into a time-sheet hint entry, in the lower
               part of the information block, showing you the details in a
               fuller-form.
- 
+
 #.  Once you're satisfied that the information you've entered and had
     presented back to you is correct, press the Enter key. This will cause
     allocPSA to accept the material you've provided, and add it as a hint
-    in the corresponding task. 
+    in the corresponding task.
 
 .. NOTE:: This tool is useful in hinting at (and perhaps capturing) 'time
           effort' which is performed by staff, if the staff aren't transacting
@@ -933,16 +933,16 @@ How do I Make My Time-sheet Editable Again?
 
 #.  Click into the Home page.
 
-#.  Look in the Current Time Sheets information block. Any time-sheets 
-    which you can edit are marked as Add Time in Status. Any other 
+#.  Look in the Current Time Sheets information block. Any time-sheets
+    which you can edit are marked as Add Time in Status. Any other
     time-sheets are either with a Manager or with Admin.
 
-#.  To open a time-sheet, click on its corresponding Project link. 
-    
+#.  To open a time-sheet, click on its corresponding Project link.
+
 #.  Once opened, you can use the Comments section of the time-sheet to
     send the appropriate people (time-sheet or project manager, Admin) a
     message, asking for the time-sheet to be sent back. This will then
-    re-open the time-sheet for editing by the user. 
+    re-open the time-sheet for editing by the user.
 
 .. NOTE:: Some time-sheets have both a Manager who approves the time-sheet, and
           Admin, who processes it as part of the workflow. If a time-sheet is
@@ -982,7 +982,7 @@ How do I Reject a Time Sheet?
           to a time-sheet quickly, please refer to `How do I Quickly Jump to a
           Time Sheet if I have the Time Sheet ID?`_ . Once you've found the
           time-sheet, you can continue with the appropriate steps in this
-          routine, below.  
+          routine, below.
 
 #.  Log in to allocPSA
 
@@ -1143,7 +1143,7 @@ How do I Archive Old Client Contacts?
 
 #.  Uncheck the 'Enabled' checkbox.
 
-#.  Click the 'Save Client Contact' button, to save your changes. 
+#.  Click the 'Save Client Contact' button, to save your changes.
 
 .. NOTE:: This action will cause the specific contact details to be still
           available and visible, but it moves this information to the bottom of
@@ -1196,10 +1196,10 @@ How do I Quickly Jump to a Time Sheet if I have the Time Sheet ID?
 
 #.  Entering a number here indicates to allocPSA that you know it is a time
     sheet ID number and that you want to be taken straight to that task.
-    
-#.  This same approach works for some other search items available 
-    under the Quick Search facility; given a Project or Task ID, you can 
-    quickly jump to those by selecting the appropriate entity from 
+
+#.  This same approach works for some other search items available
+    under the Quick Search facility; given a Project or Task ID, you can
+    quickly jump to those by selecting the appropriate entity from
     the droplist associated with Quick Search.
 
 
@@ -1218,7 +1218,7 @@ How do I Add Task/Fault Comments?
 
 #.  If you want to add a recipient who doesn't appear on the prepared list of
     recipients, you can add them by click-expanding the Email Other Party link,
-    adding their details, and deciding about having them added permanently.  
+    adding their details, and deciding about having them added permanently.
 
 #.  If you want to add an attachment to this Comment, click the Attach File
     link to expand it, then browse to the file you want to attach and click the
@@ -1252,11 +1252,11 @@ How do I Continue with a Task Comment Conversation Thread?
     that task.
 
 #.  Use your email client's standard 'Reply to' button to reply to that task.
-    
+
         .. NOTE:: you do not need to do a Reply-all or Group-reply, as replying
                   through the allocPSA email gateway will ensure that all the
                   people on that conversation thread will be automatically sent
-                  a copy of your response. 
+                  a copy of your response.
 
 #.  If you want to reply to a specific conversation thread, as
     represented by a Key, for example {Key:cijhkjuq} from above, use that
@@ -1280,7 +1280,7 @@ How do I Establish a Default Interested Parties List for a Project's Tasks?
 
 #.  If you're creating a new project and want to add a default Interested
     Parties list for it, please refer to `How do I Create a New
-    Project?`_ first, then continue here. 
+    Project?`_ first, then continue here.
 
 #.  If you already have an existing project, open it.
 
@@ -1300,7 +1300,7 @@ How do I Establish Default Rates for People?
 --------------------------------------------
 
 .. NOTE:: This function assumes that your organization sets default rates for
-          some or all staff. 
+          some or all staff.
 
 #.  Log in to allocPSA.
 
@@ -1376,7 +1376,7 @@ How do I Mark a Task as Pending?
 .. NOTE:: You will note that a task which has had its Status changed from Open:
           to Pending: may now not be included in the Task List filter or the
           Home Page filter, if these have been established to show only Open:
-          tasks.  
+          tasks.
 
 .. NOTE:: If a user selects to show only Open and not Open and Pending tasks in
           their allocPSA 'home' page, then tasks marked Pending will not appear
@@ -1521,19 +1521,19 @@ How do I use the allocPSA Email Gateway?
 
     Sub/Subscribe adds you to that alloc task conversation. Unsub/unsubscribe
     removes you from that conversation. Some text will be prepended to the
-    comment saying what has happened e.g.: "Jonny Apple has been added to this 
+    comment saying what has happened e.g.: "Jonny Apple has been added to this
     conversation".
 
     Close closes the associated task. Open opens the task. And Pending makes the
     task status pending. The Actual Completion date is filled or unfilled and the
-    Task Status moves to Closed:Completed or Open:In progress or Pending:Info. 
+    Task Status moves to Closed:Completed or Open:In progress or Pending:Info.
     The action is logged on the Task History tab.
 
     If you want to exert finer control over the Task Status, you may use one of
     the specific Task Sub-Status keywords: notstarted, inprogress, info,
     manager, client, invalid, duplicate, incomplete or complete. If the task is
     to be a duplicate, specify the duplicate task ID after a colon e.g.:
-    duplicate:1234 
+    duplicate:1234
 
     Quiet means do not re-send this email. Previously only unsubscribe requests
     would *not* get re-sent. Now they *do* get re-emailed. You can quell them
@@ -2310,7 +2310,7 @@ How do I Quickly Add Time Sheet Entries?
           allow a user to quickly add time-sheet line items for either an
           existing time-sheet, or it will spawn a new time-sheet for in the
           project which corresponds with the task that the user will add time
-          for. 
+          for.
 
 .. NOTE:: To learn how to enable this feature on your Home page, please refer
           to `How do I Customise my Home Page?`_ .
@@ -2333,11 +2333,11 @@ How do I Quickly Add Time Sheet Entries?
               being rendering them into a time-sheet hint entry, in the lower
               part of the information block, showing you the details in a
               fuller-form.
- 
+
 #.  Once you're satisfied that the information you've entered and had
     presented back to you is correct, press the Enter key. This will cause
     allocPSA to accept the material you've provided, and add it as a
-    line-item for the corresponding time-sheet. 
+    line-item for the corresponding time-sheet.
 
 
 Using allocPSA via the Command Line
@@ -2442,7 +2442,7 @@ in allocPSA. Therefore:
           returned. In some web-server <-> web-browser combinations, this might
           cause timeouts. If you do find yourself in such a scenario, you can
           use your 'sane' bookmark, to 'reset' the task filter into something
-          manageable.  
+          manageable.
 
 A Note on Dates in allocPSA
 ---------------------------
@@ -2471,7 +2471,7 @@ modules (Home, Projects, Clients, Tasks, Finances, etc.) There is also a search
 facility with which you will be able to look for almost all important data-sets
 archived in allocPSA. Finally, there is also an Quick List, from which, you
 will be able to create new Tasks, Project, Client entries, as well as see a
-list of recently visited pages of the allocPSA application.  
+list of recently visited pages of the allocPSA application.
 
 
 Home
@@ -2621,7 +2621,7 @@ the Show Filter link, if this is presented, which will open up the filter
 segment of the page. Using this filter, you can select portions of a client
 name or a contact name within a client organization, which you want to filter
 on, along with the client's Status (Current, Potential, Archived) and the
-client's Category (Client, Vendor, Supplier, Non-profit, etc.).  
+client's Category (Client, Vendor, Supplier, Non-profit, etc.).
 
 Once you have selected the filter criteria, you click the Filter button, and
 allocPSA will show you the matching entries. You can remove a filter, by
@@ -2873,14 +2873,14 @@ These are the available options for the header:
        and end, and more likely to be fixed cost and on a timeline with
        milestones and deliverables.) If you select a Project, allocPSA
        establishes a number of boilerplate phases, which you can use, extend
-       or delete as you deem fit. 
+       or delete as you deem fit.
    - - Client
      - The name of the Client which may have already been added to allocPSA's
        Client database, or, if new, can be added by clicking "New Client".
        Remember, many Projects and jobs are for internal Clients. As such,
        your internal Clients should be added in allocPSA's Client database
        too.
-   - - Client Contact 
+   - - Client Contact
      - The Client's contact representative. This is on a per-Project basis,
        which may be different from the main contact(s) listed in the Client
        database.
@@ -2901,7 +2901,7 @@ These are the available options for the header:
        and 60% of the budget has been spent thus far, there are likely to be
        budget constraint or blow-out problems further down the track.
    - - Default Task Limit
-     - The initial limit of time budget set for each task. 
+     - The initial limit of time budget set for each task.
    - - Default Interested Parties
      - The initial default group of people who should be on the
        Interested Parties list of each new task.
@@ -2925,7 +2925,7 @@ After you have finished all the details:
 
 #.  Add resources and add new comments for Modification History, Commission To,
     Project People, uploading Project Files, creating a New Task, adding
-    Reminders or generating New Time Sheets, Transactions.  
+    Reminders or generating New Time Sheets, Transactions.
 
 A Project made of one or more people/staff undertaking numerous Tasks. Tasks
 can be active (i.e. not-complete) or archived (i.e. completed).  Normally,
@@ -3408,7 +3408,7 @@ to keep track of their time. This is the default work flow:
     time sheet submitter.
 
 #.  When the administrator receives the time sheet, they review it and can make
-    an invoice if they so desire. 
+    an invoice if they so desire.
 
 
 Adding New Time Sheet
@@ -3426,7 +3426,7 @@ Adding New Time Sheet
     .. HINT:: Time Sheets items are individual line items, pertaining to
               specific Tasks. For instance, you may have worked for 3 hours on
               one problem (Task A), 2 hours on Task B and 1 hour on Task C, all
-              for the one Client.  
+              for the one Client.
 
 #.  For each Time Sheet line item, fill in Date, Duration, Task and Location.
 
@@ -3477,7 +3477,7 @@ You can add a Time Sheet from within a Project.
 #.  Enter the details and add a Time Sheet header.
 
 #.  Add individual Time Sheet items, specifying charge rates, durations, dates
-    and locations.  
+    and locations.
 
 Reviewing Existing Time Sheets
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -3515,7 +3515,7 @@ Invoices
 .. figure:: images/invoiceItem_new.png
 
     Once you've created the Invoice header, you can add as
-    many Invoice line items as you like to that Invoice. 
+    many Invoice line items as you like to that Invoice.
 
 
 Adding New Invoice
@@ -3554,13 +3554,13 @@ works as follows.
               Expense Form will have its transactions marked as Paid or
               Rejected (depending on the status of the associated Invoice item)
               and be moved to status Completed once the Invoice is moved to
-              status Completed. 
+              status Completed.
 
 
 Reviewing Existing Invoices
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can review existing Invoices you've created. 
+You can review existing Invoices you've created.
 
 #.  From the toolbar, click on the 'Invoices' link.
 
@@ -3648,13 +3648,13 @@ the Setup screen.
 
 If the Sale Price includes Tax, then when a Sale is made a separate transaction
 is created for tax, and the corresponding margin/profit for that Sale will be
-smaller.  
+smaller.
 
 
 Default Sale Transactions
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#.  Product Sale: [PRODUCT] 
+#.  Product Sale: [PRODUCT]
 
     The amount that is incoming from the customer who purchased the Product,
     i.e. the Sale Price. And it will transfer monies from the Incoming TF to
@@ -3706,7 +3706,7 @@ This includes Name, Last Login, Availability, Task Summary, Graph and On Leave.
 It comprises of sending email to personnel.
 
 For both higher and lower level users: Allow Changes of your personal
-information including Preferred Payment TF, Skill and Absence Forms, etc.  
+information including Preferred Payment TF, Skill and Absence Forms, etc.
 
 #.  Availability and On Leave are displayed on the front page.
 
@@ -3788,7 +3788,7 @@ Creating a New Wiki Page
 
 Click the *New File* link in the top right hand corner of the wiki screen; you
 can also create a new file by linking to a file that doesn't exist, using the
-wiki-page link syntax: e.g., [[newfile.txt]] 
+wiki-page link syntax: e.g., [[newfile.txt]]
 
 
 Wiki Syntax
@@ -3824,7 +3824,7 @@ Inbox
 -----
 
 allocPSA provides a facility for accessing the current inbox for the
-primary account used to sent mail to the gateway. 
+primary account used to sent mail to the gateway.
 
 Normally, this Inbox contains all the mail incoming into allocPSA, which
 allocPSA then processes and remove from the inbox. However, there are
@@ -3856,7 +3856,7 @@ columns:
 
 Arching, Creating New Tasks and Attaching Emails to Existing Tasks
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
+
 There are also a number of Action buttons, which allow you to perform
 actions on each of the emails:
 
@@ -3944,7 +3944,7 @@ Privileged users see the following items:
  * View Pending Transaction.
 
 
-Finance 
+Finance
 ~~~~~~~
 
 New Tagged Fund
@@ -4031,7 +4031,7 @@ search the database and return a list of matching records.
     much like you would any online bank account.
 
 A user with higher privileges can drill down into the transactions by
-clicking on any 'ID' links will show you the Invoice details. 
+clicking on any 'ID' links will show you the Invoice details.
 
 Repeating Expenses can let user create an expense that repeats on a fixed
 basis. All that needs to be done to process the next cycle is for the financial
@@ -4066,7 +4066,7 @@ To create a once off expense form, follow the instructions below:
 
 #.  In general, you may want to print a hardcopy of this form, so you can
     attach expense receipts or Invoices for taxation purposes. You can do this
-    by clicking on the 'Printer Friendly Version' in the top right-hand corner.  
+    by clicking on the 'Printer Friendly Version' in the top right-hand corner.
 
 
 View Pending Expenses
@@ -4112,7 +4112,7 @@ the regularity and description and TF etc.
 Repeating Expense List
 ``````````````````````
 
-This is a list of all the Repeating Expenses. 
+This is a list of all the Repeating Expenses.
 
 
 Execute Repeating Expenses
@@ -4178,7 +4178,7 @@ Announcements
 
 You can publish announcements which get displayed on the Home page of each
 user's account, as well as within each allocPSA Daily Tasks email. From this
-tool, you can add new announcements and edit existing ones. 
+tool, you can add new announcements and edit existing ones.
 
 #.  Go to the tools tab, and click the 'Announcements' link.
 
@@ -4214,7 +4214,7 @@ Security
 This section allows you to tweak security permission for the database tables
 used by allocPSA. It is possible to set up different permissions for different
 user levels, for different (i.e. Read, Update, Delete, Create etc.)
-actions. 
+actions.
 
 .. NOTE:: In general, you would not need to make any changes at all to this
           section.
@@ -4254,7 +4254,7 @@ Search
 
 The search functionality within allocPSA searches various fields in the
 database and also the files in the wiki. It uses the Zend port of the Lucene
-search engine. 
+search engine.
 
 Any of the keyword fields that are indexed may be searched upon. Either by
 itself or in combination with other search terms. The default is to search
@@ -4290,7 +4290,7 @@ Examples
      - A search for all the tasks that are managed by jsmith and are targetted for completion in 2010 and have a status of open.
    - - "to be completed asap" name:todo
      - A search for "to be completed asap" across ALL the keyword fields, OR the task's name must contain the word todo.
-   - - project:"Building Project" and manager:mjones 
+   - - project:"Building Project" and manager:mjones
      - Will search all the tasks which are in a project titled
        "Building Project" and managed by 'mjones'
    - - pid:167 and manager:mjones
@@ -4302,13 +4302,13 @@ Indexed keyword fields for Tasks
 
 .. list-table::
 
-   - - id 
+   - - id
      - The unique ID.
    - - name
      - The task's name.
    - - project
      - The name or the nickname (i.e, short name) of the project the task belongs to.
-   - - pid 
+   - - pid
      - The ID of the project that the task belongs to.
    - - creator
      - The person who created the task.
@@ -4356,7 +4356,7 @@ Indexed keyword fields for Projects
 
 .. list-table::
 
-   - - id 
+   - - id
      - The unique ID.
    - - name
      - The project's name.
@@ -4394,7 +4394,7 @@ Indexed keyword fields for Time Sheets
 
 .. list-table::
 
-   - - id 
+   - - id
      - The unique ID.
    - - project
      - The time sheet's project stored as project name and project nickname.
@@ -4426,14 +4426,14 @@ Indexed keyword fields for Loan Items
 
 .. list-table::
 
-   - - id 
+   - - id
      - The unique ID.
    - - name
-     - The name of the item 
+     - The name of the item
    - - desc
      - The item's notes
    - - type
-     - The item's type i.e. book, cd, other 
+     - The item's type i.e. book, cd, other
    - - author
      - The item's author
    - - creator
@@ -4442,13 +4442,13 @@ Indexed keyword fields for Loan Items
      - The last person to modify this item
    - - dateModified
      - The date the item was last modified
- 
+
 
 Indexed keyword fields for Clients
 
 .. list-table::
 
-   - - id 
+   - - id
      - The unique ID.
    - - name
      - The client's name with the phone number and fax number appended
@@ -4466,13 +4466,13 @@ Indexed keyword fields for Clients
      - The category of the client i.e. Client, Vendor, Supplier, Consultant, Government, Non-profit, Internal
    - - dateCreated
      - The date the client was created
-  
+
 
 Indexed keyword fields for Comments
 
 .. list-table::
 
-   - - id 
+   - - id
      - The unique ID.
    - - name
      - The created date along with the comment's author
@@ -4488,21 +4488,21 @@ Indexed keyword fields for Comments
      - The person who created the comment
    - - dateCreated
      - The date the comment was created
- 
+
 
 Indexed keyword fields for the Wiki
 
 .. list-table::
 
-   - - id 
+   - - id
      - The unique ID.
-   - - name 
+   - - name
      - The path and file name
    - - desc
      - The body of the file
    - - pdfstr
      - If the file was a PDF then the body of the pdf may be specifically searched using this keyword
-    
+
 
 
 Company Skill Matrix
@@ -4687,7 +4687,7 @@ then subsequently download, upload or restore a backup file.
     your computer.
 
 #.  If you click the 'Restore' button next to a backup file, that backup file
-    will be used to overwrite your current allocPSA database and file uploads. 
+    will be used to overwrite your current allocPSA database and file uploads.
     Be careful with this feature. (A backup will be auto-created before all
     'Restore' operations).
 
