@@ -2924,8 +2924,8 @@ After you have finished all the details:
 #.  Press the 'Save' button to create your new Project and then...
 
 #.  Add resources and add new comments for Modification History, Commission To,
-Project People, uploading Project Files, creating a New Task, adding Reminders
-or generating New Time Sheets, Transactions.
+    Project People, uploading Project Files, creating a New Task, adding
+    Reminders or generating New Time Sheets, Transactions.  
 
 A Project made of one or more people/staff undertaking numerous Tasks. Tasks
 can be active (i.e. not-complete) or archived (i.e. completed).  Normally,
