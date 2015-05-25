@@ -1,3 +1,4 @@
+.. vim: ft=rst fenc=utf-8 sts=4 sw=4 ts=4 tw=79 et :
 
 .. |date| date::
 
@@ -33,7 +34,7 @@ contains.
 
 Cyber IT Solutions and allocPSA are registered trademarks of Cyber IT Solutions
 Pty. Ltd. All other products and services are the registered trademarks of
-their respective holders 
+their respective holders
 
 This document was written by: Kei, Con Zymaris, Alex Lance, Jeremy Chin,
 Robbie, Erick Fabre, Trent Buck, Manjula Arulananther, and Christopher Bayliss.
@@ -220,7 +221,7 @@ services business.
 allocPSA consists of numerous software modules for business areas such as:
 resource planning, project management, time and expenses management, fault &
 issues tracking, messages, announcements, reminders, knowledge management,
-collaboration, services supply chain, human resources, staff skilling,
+collaboration, services supply chain, human resources, staff skills,
 certification, item loans, and management of cost-centres. allocPSA offers
 integration between the modules, as well as an open architecture and
 integration with existing external invoicing, book-keeping, and payroll
@@ -268,7 +269,7 @@ Installation and Configuration
 
 Once you've installed allocPSA, you must login and then change the default
 login account password. You can do this by accessing the default account
-through the People tab and supplying a new strong account password.  
+through the People tab and supplying a new strong account password.
 
 You should also update the allocPSA configuration settings, found by clicking
 the 'Setup' link in the top right hand corner of the allocPSA toolbar. You can
@@ -305,7 +306,7 @@ allocPSA a valuable platform for managing the priorities and objectives that
 drive your business.
 
 Using proven project management disciplines and processes, allocPSA helps you
-optimize resources and manage activities to meet project deadlines and budgets.  
+optimize resources and manage activities to meet project deadlines and budgets.
 
 allocPSA automatically generates customizable outgoing email alerts to
 instantly notify relevant assignees, managers and other people involved with
@@ -316,7 +317,7 @@ A Task and reminder Calendar is available for all staff on entry into allocPSA,
 via the Home page.
 
 A filtering drill-down facility to resource (personnel) availability and
-skilling makes it possible to determine which of your staff is suited for
+skills makes it possible to determine which of your staff is suited for
 particular Project and Tasks.
 
 allocPSA provides a simple inventory and loans management module, a framework
@@ -563,7 +564,7 @@ How do I Log In?
 
 In order to gain access to allocPSA, you will need the allocPSA administrator
 to create an account for you, and to assign you a password. You can then enter
-the Username and your Password in the login screen of allocPSA, as shown here.
+the username and your password in the login screen of allocPSA, as shown here.
 
 When you point your web-browser to the URL which contains allocPSA, you
 should see the Login screen. Enter your username and your password, then click
@@ -850,7 +851,7 @@ How do I Create a New Time Sheet?
 
 .. HINT:: If you're a manager designated to receive requests to authorise Time
           Sheets, you can view them from the 'Time Sheet' section of your
-          'Homepage'.  
+          'Homepage'.
 
 How do I Ensure Staff Effort on Tasks is Captured as Time Sheets?
 -----------------------------------------------------------------
@@ -891,11 +892,11 @@ How do I Ensure Staff Effort on Tasks is Captured as Time Sheets?
               being rendering them into a time-sheet hint entry, in the lower
               part of the information block, showing you the details in a
               fuller-form.
- 
+
 #.  Once you're satisfied that the information you've entered and had
     presented back to you is correct, press the Enter key. This will cause
     allocPSA to accept the material you've provided, and add it as a hint
-    in the corresponding task. 
+    in the corresponding task.
 
 .. NOTE:: This tool is useful in hinting at (and perhaps capturing) 'time
           effort' which is performed by staff, if the staff aren't transacting
@@ -932,16 +933,16 @@ How do I Make My Time-sheet Editable Again?
 
 #.  Click into the Home page.
 
-#.  Look in the Current Time Sheets information block. Any time-sheets 
-    which you can edit are marked as Add Time in Status. Any other 
+#.  Look in the Current Time Sheets information block. Any time-sheets
+    which you can edit are marked as Add Time in Status. Any other
     time-sheets are either with a Manager or with Admin.
 
-#.  To open a time-sheet, click on its corresponding Project link. 
-    
+#.  To open a time-sheet, click on its corresponding Project link.
+
 #.  Once opened, you can use the Comments section of the time-sheet to
     send the appropriate people (time-sheet or project manager, Admin) a
     message, asking for the time-sheet to be sent back. This will then
-    re-open the time-sheet for editing by the user. 
+    re-open the time-sheet for editing by the user.
 
 .. NOTE:: Some time-sheets have both a Manager who approves the time-sheet, and
           Admin, who processes it as part of the workflow. If a time-sheet is
@@ -981,7 +982,7 @@ How do I Reject a Time Sheet?
           to a time-sheet quickly, please refer to `How do I Quickly Jump to a
           Time Sheet if I have the Time Sheet ID?`_ . Once you've found the
           time-sheet, you can continue with the appropriate steps in this
-          routine, below.  
+          routine, below.
 
 #.  Log in to allocPSA
 
@@ -1005,7 +1006,7 @@ How do I Reject a Time Sheet?
 #.  To actually send the time-sheet back, then press the '<- Back' button on the
     Time Sheet (not the web-browser's Back button). Note that this will
     send the time-sheet back to the previous person in the time-sheet
-    worflow chain, which may be the time-sheet manager, if you're the
+    workflow chain, which may be the time-sheet manager, if you're the
     Admin user. If so, you should be able to click the '<- Back' button
     again, to ensure that the time-sheet reaches the actual original user
     who submitted the time-sheet.
@@ -1140,9 +1141,9 @@ How do I Archive Old Client Contacts?
 
 #.  Click the Edit button for that contact.
 
-#.  Un-check the 'Enabled' checkbox.
+#.  Uncheck the 'Enabled' checkbox.
 
-#.  Click the 'Save Client Contact' button, to save your changes. 
+#.  Click the 'Save Client Contact' button, to save your changes.
 
 .. NOTE:: This action will cause the specific contact details to be still
           available and visible, but it moves this information to the bottom of
@@ -1195,10 +1196,10 @@ How do I Quickly Jump to a Time Sheet if I have the Time Sheet ID?
 
 #.  Entering a number here indicates to allocPSA that you know it is a time
     sheet ID number and that you want to be taken straight to that task.
-    
-#.  This same approach works for some other search items available 
-    under the Quick Search facility; given a Project or Task ID, you can 
-    quickly jump to those by selecting the appropriate entity from 
+
+#.  This same approach works for some other search items available
+    under the Quick Search facility; given a Project or Task ID, you can
+    quickly jump to those by selecting the appropriate entity from
     the droplist associated with Quick Search.
 
 
@@ -1217,7 +1218,7 @@ How do I Add Task/Fault Comments?
 
 #.  If you want to add a recipient who doesn't appear on the prepared list of
     recipients, you can add them by click-expanding the Email Other Party link,
-    adding their details, and deciding about having them added permanently.  
+    adding their details, and deciding about having them added permanently.
 
 #.  If you want to add an attachment to this Comment, click the Attach File
     link to expand it, then browse to the file you want to attach and click the
@@ -1251,11 +1252,11 @@ How do I Continue with a Task Comment Conversation Thread?
     that task.
 
 #.  Use your email client's standard 'Reply to' button to reply to that task.
-    
+
         .. NOTE:: you do not need to do a Reply-all or Group-reply, as replying
                   through the allocPSA email gateway will ensure that all the
                   people on that conversation thread will be automatically sent
-                  a copy of your response. 
+                  a copy of your response.
 
 #.  If you want to reply to a specific conversation thread, as
     represented by a Key, for example {Key:cijhkjuq} from above, use that
@@ -1279,7 +1280,7 @@ How do I Establish a Default Interested Parties List for a Project's Tasks?
 
 #.  If you're creating a new project and want to add a default Interested
     Parties list for it, please refer to `How do I Create a New
-    Project?`_ first, then continue here. 
+    Project?`_ first, then continue here.
 
 #.  If you already have an existing project, open it.
 
@@ -1299,7 +1300,7 @@ How do I Establish Default Rates for People?
 --------------------------------------------
 
 .. NOTE:: This function assumes that your organization sets default rates for
-          some or all staff. 
+          some or all staff.
 
 #.  Log in to allocPSA.
 
@@ -1309,7 +1310,7 @@ How do I Establish Default Rates for People?
     set a default rate for.
 
 #.  In the Default Rate field, enter the rate and then select the
-    duration (hourly, daily, weekly, etc) from the drop-list.
+    duration (hourly, daily, weekly, etc.) from the drop-list.
 
 #.  Click the 'Save' button.
 
@@ -1334,7 +1335,7 @@ How do I Bookmark Task List Filters for Future Use?
 #.  You will be shown the resulting filtered Task List.
 
 #.  If you want to view the updated list with the same filters applied in
-    future. you can now Bookmark this page, using your web-browsers standard
+    future. You can now Bookmark this page, using your web-browsers standard
     bookmarking functionality.
 
 #.  To bring up the Filter in the future, merely access the stored Bookmark,
@@ -1375,7 +1376,7 @@ How do I Mark a Task as Pending?
 .. NOTE:: You will note that a task which has had its Status changed from Open:
           to Pending: may now not be included in the Task List filter or the
           Home Page filter, if these have been established to show only Open:
-          tasks.  
+          tasks.
 
 .. NOTE:: If a user selects to show only Open and not Open and Pending tasks in
           their allocPSA 'home' page, then tasks marked Pending will not appear
@@ -1520,19 +1521,19 @@ How do I use the allocPSA Email Gateway?
 
     Sub/Subscribe adds you to that alloc task conversation. Unsub/unsubscribe
     removes you from that conversation. Some text will be prepended to the
-    comment saying what has happened e.g.: "Jonny Apple has been added to this 
+    comment saying what has happened e.g.: "Jonny Apple has been added to this
     conversation".
 
     Close closes the associated task. Open opens the task. And Pending makes the
     task status pending. The Actual Completion date is filled or unfilled and the
-    Task Status moves to Closed:Completed or Open:In progress or Pending:Info. 
+    Task Status moves to Closed:Completed or Open:In progress or Pending:Info.
     The action is logged on the Task History tab.
 
     If you want to exert finer control over the Task Status, you may use one of
     the specific Task Sub-Status keywords: notstarted, inprogress, info,
     manager, client, invalid, duplicate, incomplete or complete. If the task is
     to be a duplicate, specify the duplicate task ID after a colon e.g.:
-    duplicate:1234 
+    duplicate:1234
 
     Quiet means do not re-send this email. Previously only unsubscribe requests
     would *not* get re-sent. Now they *do* get re-emailed. You can quell them
@@ -1768,7 +1769,7 @@ How do I Star Clients, Tasks, Projects, etc.?
 
 allocPSA gives you the ability to add specific records (such as Tasks, Clients,
 Projects, Timesheets, Sales, and Invoices) to the Star list. These can then be
-accessed in a collective 'star' page, by clicking the '★' icon, located in the
+accessed in a collective 'star' page, by clicking the 'star' icon, located in the
 top right section of the main menu, near the Help, Setup and Logout links.
 
 #.  Log in to allocPSA.
@@ -1777,17 +1778,17 @@ top right section of the main menu, near the Help, Setup and Logout links.
     or a Client record.
 
 #.  If on a specific record, for example a single Task, you will notice a small
-    '☆' icon, near the top right of that item's menu. Click on that small '☆'
+    'star' icon, near the top right of that item's menu. Click on that small 'star'
     icon.  This will fill the icon with a solid colour, which indicates that
     this record is now in your 'star' list of bookmarks. If you click that
-    filled-in '★' icon once more, it will toggle-off the bookmark.
+    filled-in 'star' icon once more, it will toggle-off the bookmark.
 
     .. HINT:: If you're looking a list of Tasks for instance, you will see a
-              list of '☆' icons along the right edge of the table. Clicking on
-              any of these will toggle the 'stars' on (filled ★) or off (empty
-              ☆), corresponding to that item being in or out of your Star list.
+              list of 'star' icons along the right edge of the table. Clicking on
+              any of these will toggle the 'stars' on (filled star) or off (empty
+              star), corresponding to that item being in or out of your Star list.
 
-#.  To view your 'star' list of bookmarks, click on the main 'filled in' ★
+#.  To view your 'star' list of bookmarks, click on the main 'filled in' star
     icon, near the top right of your main screen's menu items.
 
 #.  This will open the 'star' list, showing you all your various bookmarks for
@@ -2309,7 +2310,7 @@ How do I Quickly Add Time Sheet Entries?
           allow a user to quickly add time-sheet line items for either an
           existing time-sheet, or it will spawn a new time-sheet for in the
           project which corresponds with the task that the user will add time
-          for. 
+          for.
 
 .. NOTE:: To learn how to enable this feature on your Home page, please refer
           to `How do I Customise my Home Page?`_ .
@@ -2332,11 +2333,11 @@ How do I Quickly Add Time Sheet Entries?
               being rendering them into a time-sheet hint entry, in the lower
               part of the information block, showing you the details in a
               fuller-form.
- 
+
 #.  Once you're satisfied that the information you've entered and had
     presented back to you is correct, press the Enter key. This will cause
     allocPSA to accept the material you've provided, and add it as a
-    line-item for the corresponding time-sheet. 
+    line-item for the corresponding time-sheet.
 
 
 Using allocPSA via the Command Line
@@ -2441,7 +2442,7 @@ in allocPSA. Therefore:
           returned. In some web-server <-> web-browser combinations, this might
           cause timeouts. If you do find yourself in such a scenario, you can
           use your 'sane' bookmark, to 'reset' the task filter into something
-          manageable.  
+          manageable.
 
 A Note on Dates in allocPSA
 ---------------------------
@@ -2470,7 +2471,7 @@ modules (Home, Projects, Clients, Tasks, Finances, etc.) There is also a search
 facility with which you will be able to look for almost all important data-sets
 archived in allocPSA. Finally, there is also an Quick List, from which, you
 will be able to create new Tasks, Project, Client entries, as well as see a
-list of recently visited pages of the allocPSA application.  
+list of recently visited pages of the allocPSA application.
 
 
 Home
@@ -2620,7 +2621,7 @@ the Show Filter link, if this is presented, which will open up the filter
 segment of the page. Using this filter, you can select portions of a client
 name or a contact name within a client organization, which you want to filter
 on, along with the client's Status (Current, Potential, Archived) and the
-client's Category (Client, Vendor, Supplier, Non-profit, etc.).  
+client's Category (Client, Vendor, Supplier, Non-profit, etc.).
 
 Once you have selected the filter criteria, you click the Filter button, and
 allocPSA will show you the matching entries. You can remove a filter, by
@@ -2787,7 +2788,6 @@ If you need to modify the Client header information:
 #.  You can also modify the content you want to change or add for the other
     parts, and press appropriate 'Save' or 'Add' buttons
 
-
 Projects
 --------
 
@@ -2795,55 +2795,50 @@ Projects
 
     A Project's header information.
 
-A Project is a logical entity which is constituted by one or more
-people/resources/personnel working on one or more Tasks. Most Professional
-Services firms have very specific examples of what constitutes a Project. It
-might be implementing a new computer system for their own use or for a Client.
-It might be in the production of a report, or the development of a new device
-or item of software. allocPSA is very flexible in terms of how it handles the
-concept of a Project, and how the life-cycle of a Project is handled in your
-organization.
+A Project is a planed undertaking which gets completed by one or more
+people/resources working on one or more Tasks. Most Professional Services firms
+have very specific examples of what a Project is. It might be implementing a
+new computer system for a Client.  It might be the production of a report, or
+development of a new device, or piece software. allocPSA is very flexible how
+it handles the concept of a Project, and how the life-cycle of a Project is
+handled in your organization.
 
 To see a list of Projects in allocPSA, click on the Projects tab on the main
-menu. This will show you a tabulated view of (most likely) the currently active
-projects.
+menu.
 
-You can filter the list of projects shown in the Projects tab page, by
-clicking the Show Filter link, if this is presented, which will open up
-the filter segment of the page. Using this filter, you can select to
-filter projects by Status (Current, Potential, Archived), Type (Project,
-Job, Contract), allocated to a particular person, and portions of a
-project's name.
+You can filter the list of projects shown in the Projects tab page by clicking
+the Show Filter link which opens the filter pop-up. You can filter projects by
+Status (Current, Potential, Archived), Type (Project, Job, Contract), allocated
+to a particular person, and portions of a project's name.
 
-Once you have selected the filter criteria, you click the Filter button,
-and allocPSA will show you the matching entries. You can remove a
-filter, by clearing out the values in the filter text boxes, and
-clicking the Filter button once more.
+Once you have selected the filter criteria, you click the Filter button, and
+allocPSA will show you the matching entries. You can remove a filter, by
+clearing out the values in the filter text boxes, and clicking the Filter
+button once more.
 
-Much like a Task, a Project has a header component, which is not likely to
-change that frequently. Within this header component is informational details
-about the Project, including the Project's name, who the Client is,
-Project-specific details about the Client's contact person, a number of start
-and finish dates, along with Project budget details, Project manager (for Time
-Sheet sign off purposes) and a Project modification history. 
+Much like a Task, a Project has a header, which is unlikely to change that
+frequently. Within this header is information about the Project; including the
+Project's name, who the Client is, Project-specific details about the Client's
+contact person, a number of start and finish dates, along with Project budget
+details, Project manager (for Time Sheet sign off purposes) and the Project
+history.
 
-Once the header has been defined and saved, you will be able to set any
-per-Project assignment of Commission (used for tracking revenues to account
-managers of salespeople within your firm.) You can also establish which
-resources/personnel are assigned to work on this Project. Unless a resource is
+You can set per-Project assignment of Commission (used for tracking revenues to
+account managers of salespeople within your firm.) You can also set which
+resources/staff are assigned to work on this Project. Unless a staff user is
 assigned to a Project, they will not be able to view it or its attendant Tasks
 and phases (unless they have manager security privileges.) When establishing
 the staff resources who will work on this Project, you can also specify what
-their charge rates are to be. 
+their charge rates are.
 
 allocPSA allows for the flexible management of in-house per-Project rates, as
 well as externally charged rates which then bring revenues into particular
 staff, Project or departmental cost-centres (known as Tagged Funds or TFs).
 
 allocPSA also allows you to upload (and attach) any type of electronic document
-to this Project's repository, as well as establish Project-specific Reminders.
+to this Project's repository, as well as set up Project-specific Reminders.
 
-The header information which can be specified is listed below:
+These are the available options for the header:
 
 .. list-table::
 
@@ -2878,14 +2873,14 @@ The header information which can be specified is listed below:
        and end, and more likely to be fixed cost and on a timeline with
        milestones and deliverables.) If you select a Project, allocPSA
        establishes a number of boilerplate phases, which you can use, extend
-       or delete as you deem fit. 
+       or delete as you deem fit.
    - - Client
      - The name of the Client which may have already been added to allocPSA's
        Client database, or, if new, can be added by clicking "New Client".
        Remember, many Projects and jobs are for internal Clients. As such,
        your internal Clients should be added in allocPSA's Client database
        too.
-   - - Client Contact 
+   - - Client Contact
      - The Client's contact representative. This is on a per-Project basis,
        which may be different from the main contact(s) listed in the Client
        database.
@@ -2906,7 +2901,7 @@ The header information which can be specified is listed below:
        and 60% of the budget has been spent thus far, there are likely to be
        budget constraint or blow-out problems further down the track.
    - - Default Task Limit
-     - The initial limit of time budget set for each task. 
+     - The initial limit of time budget set for each task.
    - - Default Interested Parties
      - The initial default group of people who should be on the
        Interested Parties list of each new task.
@@ -2928,93 +2923,79 @@ After you have finished all the details:
 
 #.  Press the 'Save' button to create your new Project and then...
 
-#.  Add resources and add new comments for Modification History, Commission
-    To, Project People, uploading Project Files, creating a New Task, adding
+#.  Add resources and add new comments for Modification History, Commission To,
+    Project People, uploading Project Files, creating a New Task, adding
     Reminders or generating New Time Sheets, Transactions.
 
-A Project is constituted by one or more people/resource undertaking numerous
-Tasks. Tasks can be active (i.e. not-complete) or archived (i.e. completed).
-Normally, allocPSA's Project page will only show you the current (i.e. active
-and non-complete) Task list. You can elect to see the complete Task list, or
-the Project's Task Graph or the Task Allocation Report. A Project will also
-allow you to specify people/staff/resource, commissions and attach documents,
-which we will see how to manage later on.
-
+A Project made of one or more people/staff undertaking numerous Tasks. Tasks
+can be active (i.e. not-complete) or archived (i.e. completed).  Normally,
+allocPSA's Project page will only show you the current (i.e.
+active/non-complete) Task list. You can use the complete Task list, or the
+Project's Task Graph or the Task Allocation Report. A Project will also allow
+you to specify people/staff/resources, commissions and attach documents, which
+we will see how to manage later on.
 
 Adding Notes to your Project
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-allocPSA provides the facility to add Project-level modification history notes
-to your Project. To do so, simply add text into the New Comment field and click
-on the 'Save Comment' button. You can review any existing comments by selecting
-them from the comments list, and also update and delete them when they are in
-view.
-
+allocPSA can keep notes on each project. Just go to the 'Comments' tab and add
+comments.
 
 Project Sales Commission
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-In many professional services organizations, sales commissions are often
-allocated for the business development efforts. In allocPSA, these sales
-commissions are tracked on a per-Project basis. Each Project has the facility
-for the Project's owner to establish one or more staff/resources from your
-organization, who will receive the sales commission. To add a percentage
-commission to a specified staff member, select their name from the drop-list at
-left, then add the 'Commission %' in the text-box, then click on the 'Add'
-button. This will add that staff member as a commission holder in this Project.
-You can add more staff-members as commission-holders by following this simple
-procedure.
-
+In many professional services organizations, sales commissions are allocated
+for the business development efforts. In allocPSA, these sales commissions are
+tracked on a per-Project basis. The Project manager may establish one or more
+staff/resources from your organization who will receive the sales commission.
+To add a percentage commission to a specified staff member, select their name
+from the drop-list at left, then add the 'Commission %' in the text-box, then
+click on the 'Add' button. This will add that staff member as a commission
+holder in this Project.  You can add more staff-members as commission-holders
+by following this simple procedure.
 
 Adding Staff Resource to your Project
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. figure:: images/project_people.png
 
-    The people/resource related to the Project can be added or deleted according to your need
+    Staff can be added or deleted to a Project according to your needs.
 
 You can add as many people/resource to your Project as you wish. To do so,
-simply click on the 'People' section next to 'Commissions' which will display
-the 'Project People' segment of the Project form, which may show existing
-resources who have been added to the Project. You will note that the last-most
-row (also possibly the first row, if only one row exists) of the resource
-entries has a blank selected in the 'Person' drop-list.  You can select the
-person you wish to add, the type of email notifications they will receive for
-this Project: none, only for Tasks assigned to them, and if this person is the
-Project's manager, perhaps for all Project Tasks.
-
+simply click on the 'People' link next to 'Commissions' which displays the
+'Project People' segment of the Project form. You will note that the last row
+(or if only one row exists, the first row) of the resource entries is a blank
+in the 'Person' drop-list.  You can select the person you wish to add, the type
+of email notifications they will receive for this Project: none, only for Tasks
+assigned to them, and if this person is the Project's manager, perhaps for all
+Project Tasks.
 
 Complete Task List
 ~~~~~~~~~~~~~~~~~~
 
-This shows the total list of existing Tasks for this particular Project. Even
-completed (i.e. archived) Tasks are shown.
+This shows the total list of all existing Tasks for this Project.
 
-To view this list, click on the 'Tasks' link in the Project you are in. You
-will be shown a (possibly long) list of Tasks, which you can click on
+To view this list, click on the 'Tasks' link in the Project you are in.
+allocPSA shows a (possibly long) list of Tasks, which you can click on
 individually, to view and edit. You can always return to the normal Project
-view by clicking the Back button on your browser or clicking on the
-'Project' link at top.
-
+view by clicking the Back button on your browser or clicking on the 'Project'
+link at top.
 
 Task Graph - Project Task Summary
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This is like the Complete Task List, but also includes a graphical
-representation of the timeline of the Tasks and Phases, as well as a list of
-the existing Tasks for this particular Project. It can be used as a very simple
-facsimile of a Gantt chart for planning purposes. As with all things in
-allocPSA, you will always able to print this page to any printers you have
-configured to work from our workstation. 
+This is like the Complete Task List, except it is a graphical representation of
+the timeline of the Tasks and Phases, as well as a list of the existing Tasks
+for this particular Project. It can be used as a very simple facsimile of a
+Gantt chart for planning purposes. As with all things in allocPSA, you will
+always able to print this page to any printers you have configured.
 
-To view this list, click on the 'Graph' link in the Project you are in.
-You will be shown a (possibly) large graph with coloured lines, and a
-(possibly) long list of Tasks, which you can click on individually, to view and
-edit.
+To view this list, click on the 'Graph' link in the Project you are in. You get
+a (possibly large) graph with coloured lines, and a (possibly long) list of
+Tasks, which you can click on individually, to view and edit.
 
 The graph shows dates and the names of the Tasks and phases along the left-hand
-side. There are 8 separate pieces of information shown on the graph, including
-the:
+side. This information showed is:
 
 .. list-table::
 
@@ -3056,31 +3037,27 @@ the:
        the time and percentage complete estimates supplied within its child
        Tasks.
 
-The Project's phases and Tasks are then shown in a list below the graph. The
-child Tasks of any parent Task or phase are shown indented below that parent.
-Clicking on any of these will bring it to the screen.
-
+The Project's phases and Tasks display in a list below the graph. The child
+Tasks of any parent Task or phase is indented below that parent. Clicking on
+any of these will bring it to the screen.
 
 Task Allocation Report
 ~~~~~~~~~~~~~~~~~~~~~~
 
-This report works in a manner very similar to the Task Graph. The difference
-being that each individual user/resource's allocation of Tasks are listed and
-displayed in their own separate graphs. You can use this report to determine
-where possible overload work situations might arise for specific
-people/resources on your Projects.
+Task Allocation Reports are similar to Task Graphs. The difference being, each
+user/resource's allocation of Tasks gets listed and displayed in their own
+separate graphs. You can use this report to find possible overload work for
+specific people/resources in your Projects.
 
-To view this list, click on the 'Allocation' link in the Project you are
-in. You will be shown one or more large graphs with coloured lines, and a
-possibly long list of Tasks, which you can click on individually, to view and
-edit.
+To view the list, click on the 'Allocation' link in the Project you are in. You
+get one or more large graphs with coloured lines, and a possibly long list of
+Tasks, which you can click on individually, to view and edit.
 
-Each allocPSA user/resource/personnel who has been allocated to this Project,
-has their graph and list of Tasks.
+All staff on the Project are graphed, with a list of their tasks below their
+name.
 
 The graph shows the dates along the top, and the names of the Tasks and phases
-along the left-hand side. There are 8 separate pieces of information shown on
-the graphs, including the:
+along the left-hand side. This is what is graphed:
 
 .. list-table::
 
@@ -3122,77 +3099,68 @@ the graphs, including the:
        the time and percentage complete estimates supplied within its child
        Tasks.
 
-The Project's phases and Tasks for each specific user/resource are then shown
-in a list below the graph. The child Tasks of any parent Task or phase are
-shown indented below that parent. Clicking on any of these will bring it to the
-screen.
+The Project's phases and Tasks for each specific user/resource are in a list
+below the graph. The child Tasks of any parent Task or phase are indented below
+that parent. Clicking on any of these will bring it to the screen.
 
 
 List of the Current Uncompleted Tasks in a Project
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Either from within a Project or from the Tasks view, you can drill down into
-those Tasks for a particular Project which are still not complete. These Tasks
-may be tracking well or may be overdue. When overdue, allocPSA will flag them
-in a brighter colour for obvious recognition.
-
-
+Within a Project or from the Tasks view, you can drill down into Tasks that are
+not complete. These Tasks may be tracking well or may be overdue. When overdue,
+allocPSA flags them in brighter colours for obvious recognition.
 
 New Task
 ~~~~~~~~
 
 .. figure:: images/task_detail.png
 
-    When adding new Tasks, you first create the Task header
-    itself, which specifies the Task name, initial description of the Task,
-    start, end dates, estimated hours work etc.
+    When adding new Tasks, you fill out the Task header.
 
 Allows you to create a new Task for this particular Project.
 
-Whenever you are in a Project, and can see the 'New Task' link, click on it to
-be presented with a blank new Task screen, which you can then complete, and
-submit as per normal. Any Tasks created in this manner will automatically
-belong to the Project you are currently viewing.
+Whenever you are in a Project, and can see the 'New Task' link, clicking on it
+presents a new blank Task screen, which you can then fill out and save. Any
+Tasks created this way will automatically belong to the Project you are
+currently viewing.
 
 Adding Reminders to Projects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can add a new reminder to the Project (rather than to just a specific Task
-or Client) by clicking on the New Reminder link on the Project page
+You can add a new reminder to the Project (not just a specific Task or Client)
+by clicking on the New Reminder link on the Project page
 
 Reminders are a wonderfully useful facility in allocPSA. They can be set
-globally, within the context of a Project (so that they cease being sent when
-the Project is complete) and within the context of a Task, (so that they cease
+globally, within the context of a Project (so that they stop being sent when
+the Project is complete) and within the context of a Task, (so that they stop
 being sent when that Task or its parent Project is complete.) You can set
 reminders for yourself, for other resources working on the Project, or for the
-whole Project team together (for example, to remind everyone of a Project
-meeting, or of a weekly Time Sheet submission policy.)
-
-
+Project team (such as, to remind everyone of a Project meeting, or of a weekly
+Time Sheet submission policy.)
 
 Uploading Documents to Projects
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 allocPSA allows you to add electronic documents to a Project. These could be
-specification documents, scanned images of signed contracts or manuals. All
+specification documents, scanned images of signed contracts, or manuals. All
 forms of electronic document are supported (PDF files, ASCII, HTML, all
-graphics files, MS Word, PowerPoint, Excel, MDF files and LibreOffice to name
-but a few.) These documents are then displayed in a list on the Project page,
-and can be downloaded or viewed very easily and quickly. Further, if your
+graphics files, MS Word, PowerPoint, Excel, MDF files, and OpenDocument files
+to name but a few.) These documents are then displayed in a list on the Project
+page, and can be downloaded or viewed very easily and quickly. Further, if your
 web-browser is able to, it will either display the uploaded document within the
-browser, or launch a help application to display the document on screen, which
+browser, or launch a help application to display the document on-screen, which
 greatly facilitates easy retrieval and viewing.
 
-To add a document to the Project document 'tree', you can click on the 'Browse'
-button which is visible on the Project page. This will bring up a File
-Open-style dialog box (depending on your web-browser) with which you can
-navigate to the document that you want to upload to allocPSA's document
-repository. When you have selected the file you want to upload, and are back to
-allocPSA's Project page, you should see the file path specified in the
-file-upload textbox. You can then click the 'Save Document' button, and your
-web-browser will upload the file to allocPSA. This process may take a moment,
-particularly if you have a large file. 
-
+To add a document to the Project document 'tree', go to 'Attachments' and click
+on the 'Browse' button. This will bring up a File Open-style dialog box
+(depending on your web-browser) with which you can navigate to the document
+that you want to upload to allocPSA's document repository. When you have
+selected the file you want to upload, and are back to allocPSA's Project page,
+you should see the file path specified in the file-upload textbox. You can then
+click the 'Upload Attathment' button, and your web-browser will upload the file
+to allocPSA. This process may take a moment, particularly if you have a large
+file.
 
 
 Adding a Time Sheet to a Project
@@ -3200,20 +3168,17 @@ Adding a Time Sheet to a Project
 
 In most services organizations, Time Sheets are used to co-ordinate the billing
 (internally or externally) of staff/resource times and for paying of
-staff/resources. As a user of allocPSA who is also entitled to submit
-Time Sheets against a Project (and correspondingly, against the cost-centre
-associated with that Project) you can to create Time Sheets from within the
-Project in question. Any Time Sheets which are created in this manner are
-automatically attached to the current Project. See the Time Sheets section for
-further details on how to create and manage Time Sheets.
+staff/resources. A user can create Time Sheets from within the Project in
+question. Any Time Sheets made this way are automatically attached to the
+current Project. See the Time Sheets section for further details on how to
+create and manage Time Sheets.
 
 Project Expense Forms
 ~~~~~~~~~~~~~~~~~~~~~
 
-If you need to raise a Project-specific expense, you can create those expenses
-with allocPSA's Expense Form (described later in this manual.) All such
-expenses will appear on your Project's Transactions section.
-
+If you need to raise a Project-specific cost, you can create one with
+allocPSA's Expense Form (described later in this manual.) All such expenses
+will appear on your Project's Transactions section.
 
 
 Tasks
@@ -3223,132 +3188,127 @@ Tasks
 
     A Task can have its specific details, reminders and comments
 
-A Task is a unit of work or a work requirement which needs to be accomplished.
-Tasks normally relate to specific Projects. Tasks normally have start and
-finish dates. Most Tasks are normally allocated to one specific user (i.e. a user
-resource in Project management parlance). Tasks can have associated
-descriptions, as well as priorities, and can be part of other Tasks or of
-Phases. Tasks can also have a number of user created comments, which can
-provide a running history of the Task.
+A Task is a piece of work to be done, usually related to a specific Project.
+Tasks normally have start and finish dates, and are allocated to one specific
+user (i.e. a user resource in Project management parlance). Tasks can have
+associated descriptions, as well as priorities, and be under a Parent Task.
+Tasks can also have a number of user-created comments, which provide some
+history about the Task.
 
-A Task can have Reminders associated with it which can be set to email the
-specified owner of the Task, or others within that Project, on certain dates
-and at certain times.
+A Task can have Reminders associated with it which can email the specified
+owner of the Task, or others within that Project, on certain dates and at
+certain times.
 
-Once a Task has been completed, it can be marked off as 100% done. It will then
-be archived within the Project, available in a Complete Task List, but not
-shown in the normal operational view of the Project. This reduces the overall
-clutter.
-
-A Phase is a special kind of Task, whose primary purpose is to contain other
-Tasks. Examples of a phases might be 'Documentation' or 'Testing' or 'Planning'
-or 'Contract Negotiation'. There is generally little different between a Task
-and a phase, except that a phase will be displayed differently in the Task
-List when doing a 'List by Project'.
 
 Special Tasks: Faults
 ~~~~~~~~~~~~~~~~~~~~~
 
 In allocPSA a fault is a special kind of Task which can be tracked specifically
-as the entity which relates to help-desk activities within allocPSA. 
+as the entity which relates to help-desk activities within allocPSA.
 
-Outside this change in task 'type', faults are actioned, managed and behave
-like any standard task.
+Outside this change in 'type' faults are actioned, managed, and behave like any
+standard task.
 
-.. NOTE:: When you create a fault, you have the option of establishing an
-          automated reminder for the assignee. The priority of the fault will
-          determine how frequently these reminder emails are sent.
+.. NOTE:: When you create a fault, you may create an automated reminder for the
+          assignee. The priority of the fault will set how often these reminder
+          emails get sent.
 
 While allocPSA does not purport to be a full Service Desk solution, the
-tracking of faults as part of the overall system framework provides quite a
-powerful system for companies which provide service-level support to track,
-manage, filter and archive any issues or problems which arise in the day-to-day
-operation of any services organization. 
+tracking of faults as part of the overall system framework provides a powerful
+system for companies which offer service-level support to track, manage, filter
+and archive any issues or problems which arise in the day-to-day operation of
+any services organization.
+
 
 Special Tasks: Messages
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-In allocPSA a message is a special kind of Task which can be tracked specifically 
-as the entity which relates to quick notes for users to take actions, such as calling others.
+In allocPSA a message is a special kind of Task which can be tracked
+specifically as the entity which relates to quick notes for users to take
+actions, such as calling others.
 
 Outside this change in task 'type', messages are actioned, managed and behave
 like any standard task. With one exception. Any messages created for a user,
 will appear in a separate Messages segment of the user's Home page.
 
-.. NOTE:: When you create a message, you have the option of establishing an
-          automated reminder for the assignee. The priority of the message will
-          determine how frequently these reminder emails are sent.
+.. NOTE:: When you create a message, you make an automated reminder for the
+          assignee. The priority of the message will decide how often these
+          reminder emails get sent.
+
 
 General Tasks
 ~~~~~~~~~~~~~
 
-Tasks in allocPSA have a number of view. When creating a new Task, you will be
-presented with a view which primarily shows the header information. Once this
-is saved, and from that point on, viewing that Task should show you the normal
-operational view of the Task, with much of the header information now made
-read-only. 
+Tasks in allocPSA have a number of views. When creating a new Task you get a
+view which primarily shows the header information. Once saved, viewing that
+Task displays the normal working view of the Task, with the header information
+read-only.
 
-You can now process the Task through its normal workflow, by adding comments
-upon each atomic action of the Tasks history, updating the percentage complete
-and eventually closing the Task off when it's been fully realised or judged
-complete. Finally, you can view a Task with its full details displayed on
-screen at once (referred to as the printer-friendly view, as it is the most
-conducive to grabbing a hard-copy snapshot of the Task in totality.
-
+You can process the Task through its normal workflow, by adding comments upon
+each atomic action of the Tasks history, adding time and eventually closing the
+Task when it's complete.
 
 
 .. figure:: images/task_detail.png
 
     Task header, allowing you to specify the Project, Task name, description, interested parties and dates.
 
-Tasks have two views. The first view is the header view, where you can
-establish a number of attributes which are normally immutable (or change rather
-infrequently.) The header view shows only a limited subset of all the
-information which is normally associated with a Task. Once you have supplied
-whatever information you have and ensured that the Task has a name, you should
-then be able to Save the header component, and allocPSA will then take this
+Tasks have two views. The first view is the header view, in which most
+attributes don't usually change. The header view only shows a limited subset of
+all the information which is normally associated with a Task. Once you have
+supplied whatever information you have and ensured that the Task has a name,
+you should be able to Save the header, and allocPSA will then take this
 information and display it in read-only form, while opening a number of new
 attributes which you can now set or change. You may always re-enable editing of
-the Task header, by clicking on the 'Edit' link at the top of any
-fully-specified Task. 
+the Task header, by clicking on the 'Edit' link at the top of any fully
+specified Task.
 
-If you are creating a New Task, or are updating a Task, you may see any of the following data fields:
+If you are creating a New Task, or are updating a Task, you may see any of the
+following data fields:
 
 .. list-table::
 
    - - Field
      - Attributes
-   - - Name
+   - - Task*
      - The name of this particular Task. Provide a name which is reasonably
        memorable, descriptive and readable
-   - - Description
-     - A full account of what this Task is about. Provide as much detail as you
-       can.
-   - - Project
-     - Which Project is this Task associated with. 
-       Normally left to the default (current) Project, but can be assigned to
-       any other Project
-   - - Parent Task
-     - Select a parent Task (or phase) if this particular Task is a sub-Task.
    - - Priority
-     - Specify a priority (used for prioritisation sorting.) Level 1 is the
-       highest priority in allocPSA
-   - - Assigned to
-     - The Person Responsible is the user who is Tasked with undertaking this Task
+     - Specify a priority (used for prioritisation sorting.) Level Critical is the
+       highest priority in allocPSAi, and Normal is the default.
    - - Task Type
      - Select a Task type; Task, phase, message or fault. A phase is handled
        much the same as a Task, but displayed in different colour in charts.
-       Messages and faults are handled differently, Some Tasks or phases are (or have) milestones. For example,
-       code releases or document deliverables. As such, they need to be clearly
-       displayed as important date-points in online graphs. Setting a milestone
-       for this Task will result in a special vertical bar to be drawn in the
-       Project Graph.
-   - - Interested Parties
+       Messages and faults are handled differently, Some Tasks or phases are
+       (or have) milestones. For example, code releases or document
+       deliverables. As such, they need to be clearly displayed as important
+       date-points in online graphs. Setting a milestone for this Task will
+       result in a special vertical bar to be drawn in the Project Graph.
+   - - Project
+     - Which Project is this Task associated with. Normally left to the default
+       (current) Project, but can be assigned to any other Project
+   - - Parent Task
+     - Select a parent Task (or phase) if this particular Task is a sub-Task.
+   - - Description
+     - A full account of what this Task is about. Provide as much detail as you
+       can.
+   - - Tags
+     - The alloc tagging system. You can use as many tags as you need on a
+       task. Create a tag but pressing new.
+   - - Possible Duplicates
+     - A list of possible duplicate tasks.
+   - - Status
+     - Set the status for the task.
+   - - Managed By
+     - The task manager.
+   - - Assigned to
+     - The user that is assigned the task.
+   - - Default Interested Parties
      - allocPSA allows you to specify which other members of the Project (which
        the Task belongs to) as well as any Client contacts listed for the
        nominated Project Client, should be included in automated emails which
        are sent. This is a great way to keep a whole team of in-house and
-       external resource briefed on the Task status.  NOTE: Naturally, your and
+       external resource briefed on the Task status.  NOTE: Naturally, you and
        your staff need to be mindful of what messages are sent to these
        external resources.
    - - Time Estimate Hours (Best/Worst/Expected)
@@ -3356,15 +3316,14 @@ If you are creating a New Task, or are updating a Task, you may see any of the f
        units. This figure helps allocPSA produce Project timeline estimates and
        forecasts. It does not need to be the same as the final time effort
        which results in an entry in a Time Sheet.
-   - - Time Limit Hours
+   - - Estimator
+     - The person that made the estimate, usually this is filled out
+       automatically.
+   - - Actual Hours
+     - The actual hours that have been spent on this task so far.
+   - - Effort Limited To
      - Work that is time sheeted for Tasks that have a Time Limit set will
        be flagged red if they go over their Time Limit Hours.
-   - - Percent Complete
-     - This is an auto calculated field bases on the Estimated Hours versus the
-       Hours that have actually been billed against this Task in the time
-       sheet section.
-   - - Dates
-     - The date of action. It is automatically recorded when you get into this page
    - - Target Start
      - The estimated date you plan to start the Task. Click on the button at
        right to automatically enter today's date. For International reasons and
@@ -3386,17 +3345,17 @@ If you are creating a New Task, or are updating a Task, you may see any of the f
        minimise date-format errors, allocPSA uses ISO date format of
        YYYY-MM-DD. Therefore, the 1st of September 2002 is 2002-09-01
 
-Fill in all the information needed, then press the 'Save' button to create this
-new Task. You will then be shown the normal editable Task view which is used
-for normal operations on, and updating of Tasks. In general, the header, or top
-part of the Task wouldn't need to be modified, but additions can be made to the
-Task by way of Comments. You can now add such Comment updates (as they arise)
-to this Task, and change the percentage complete status where necessary.
+Fill in all the information needed, than press the 'Save' button to create this
+new Task. You will then be shown the normal editable Task view which is for
+editing Tasks. In general, the header, or top part of the Task don't modifying,
+but additions can be made to the Task by way of Comments. You can now add such
+Comment updates (as they arise) to this Task, and change the percentage
+complete status where necessary.
 
-You can add as many comments as you like. All comments will be stamped for
-date-time and username. You can also edit (or delete) a comment after it has
-been saved, by selecting it from the comments list to display it in the
-comments edit box, then updating or deleting it. 
+You can add as many comments as you like. All comments are stamped for
+date-time and username. You can also edit (or delete) a comment, by selecting
+it from the comments list to display it in the comments edit box, then updating
+or deleting it.
 
 
 Adding Reminders to Tasks
@@ -3407,12 +3366,13 @@ Adding Reminders to Tasks
     Add reminders for you and other members of the Project.
 
 Reminders are a wonderfully useful facility in allocPSA. They can be set
-globally, within the context of a Project (so that they cease being sent when
-the Project is complete,) and within the context of a Task, (so that they cease
+globally, within the context of a Project (so that they stop being sent when
+the Project is complete,) and within the context of a Task, (so that they stop
 being sent when the Project is complete.) You can set reminders for yourself,
 for other resources working on the Project, or for the whole Project team
-together (for example, to remind everyone of a Project meeting, or of a weekly
-Time Sheet submission policy.) 
+together (for example, to remind every one of a Project meeting, or of a weekly
+Time Sheet submission policy.)
+
 
 Closing a Task When Complete
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -3432,57 +3392,23 @@ Time
 
 .. figure:: images/timeSheet_items.png
 
-    Once you've created the Time Sheet header, you can add as
-    many items from the Project to that Time Sheet. You can also add comments,
-    which will then be added to the Task comment list, and optionally displayed
-    with the printed version of the Time Sheet, if not marked private.
+The allocPSA Time Sheet system is designed to make it easy for staff/employees
+to keep track of their time. This is the default work flow:
 
-The Time Sheet system in allocPSA allows for creation and management of
-Time Sheets by users. This Time Sheet system is built around a workflow model
-which is established as a 'factory default' when allocPSA is first installed.
-This model works as follows. 
+#.  You create a time sheet, adding the project which the time sheet is for.
 
-#.  Time Sheets are created by staff/personnel/resources who have accounts in
-    allocPSA
+#.  Next time is added to the time sheet.
 
-#.  Once the Time Sheet has been created and Tasks and hours have been added to
-    it, it can be sent to the next person in the workflow queue.
+#.  The time sheet is then pushed to the manager.
 
-#.  Who this next person is depends on a number of factors and default rulesets
-    established in the ruleset and configuration of allocPSA when it's
-    installed.
+    .. NOTE:: The manager(s) are set on the project 'People' page.
 
-#.  By default, if the Project in which the Time Sheet was created in has a
-    Time Sheet Manager specified, then the Time Sheet will get routed to that
-    manager. An email will also be sent to that manager to notify of a pending
-    Time Sheet.
+#.  Once the manager has reviewed the time sheet, they push the time sheet to
+    the administrator. If there is a problem, they can push it back to the
+    time sheet submitter.
 
-#.  If this manager verifies all the data and times in the Time Sheet, they can
-    elect to send it onwards to the administrative officer, nominally the staff
-    member who handles office or financial administration. An email will also be
-    sent to that administrative officer to notify of a pending Time Sheet
-
-#.  If the manager disputes any of the details in the Time Sheet, the manager can
-    add a notice in the Time Sheet, and elect to send it back to the user who
-    created the Time Sheet for its rectification and re-submission.
-
-#.  If no Time Sheet Manager is specified within the Project, then the Time Sheet
-    will automatically be routed to the user who has been specified in the
-    configuration of allocPSA as the administrative officer, nominally the staff
-    member who handles office or financial administration. An email will also be
-    sent to that administrative officer to notify of a pending Time Sheet
-
-#.  If the administrative officer disputes any of the details in the Time Sheet,
-    the administrative officer can add a notice in the Time Sheet, and elect to
-    send it back to the user who created the Time Sheet for its rectification and
-    re-submission.
-
-#.  At any stage, a user has the option of sending an ado-hoc comment, from the
-    time-sheet, in a manner similar to comments email sent from tasks.
-
-#.  Similarly, a user has the option of sending the contents of this
-    time-sheet, as either a PDF or as a HTML attachment, in a manner similar to
-    comments email sent from tasks, with attachments. 
+#.  When the administrator receives the time sheet, they review it and can make
+    an invoice if they so desire.
 
 
 Adding New Time Sheet
@@ -3493,16 +3419,14 @@ Adding New Time Sheet
 
 #.  Choose the Project that this Time Sheet belongs to.
 
-#.  Fill in 'Billing Note' if any. This could be something like 'Send the
-    Invoice relating to this Time Sheet to the Client before the end of the
-    month or Internal billing only.
+#.  Click 'Create Time Sheet'.
 
-#.  Press the 'Save' button to continue or 'Delete Record' to remove any data
-    added.
+#.  Create Time Sheet items.
 
-#.  Time Sheets are made up of individual line items, pertaining to specific
-    Tasks. For instance, you may have worked for 3 hours on one problem (Task
-    A), 2 hours on Task B and 1 hour on Task C, all for the one Client.
+    .. HINT:: Time Sheets items are individual line items, pertaining to
+              specific Tasks. For instance, you may have worked for 3 hours on
+              one problem (Task A), 2 hours on Task B and 1 hour on Task C, all
+              for the one Client.
 
 #.  For each Time Sheet line item, fill in Date, Duration, Task and Location.
 
@@ -3511,40 +3435,41 @@ Adding New Time Sheet
 
 #.  Press the 'Add' button to add each new item.
 
-#.  Repeat step 7 to add more line item entries if needed.
+#.  Repeat step 6 to add more line item entries if needed.
 
-#.  Press 'Save and Submit' button when done. An email will be sent off to the
-    person designated as the next stop in the Time Sheet workflow process.
+#.  Press 'Time Sheet to Manager' button when done. An email goes to the person
+    designated as the next stop in the Time Sheet workflow process.
 
     .. HINT:: You can save the Time Sheet as-is, then return to it later on.
 
-    .. HINT:: You can track the progress of your Time Sheets from the 'Time Sheet'
-              section of your 'Homepage'.
+    .. HINT:: You can track the progress of your Time Sheets from the 'Time
+              Sheet' section of your 'Homepage'.
 
     .. HINT:: If you're a manager designated to receive requests to authorise
               Time Sheets, you can view them from the 'Time Sheet' section of
               your 'Homepage'.
 
-Any submitted Time Sheet is and sent to either the Manager specified in the
-Project or to the financial Admin person as specified in the allocPSA
-configuration, for approval and to perhaps be Invoiced. 
+Submitted Time Sheets go to either the project manager or the financial
+administrator. The manager or administrator either approve or reject the time
+sheet, and may create an invoice using the time sheet.
 
 .. NOTE:: You can, at any point, elect to send comment email to others, and
           even attach this time-sheet to that email. For information on this,
           see How do I Email a Time-Sheet to Customers?
-          How_do_I_Email_a_Time-Sheet_to_Customers_ 
+          How_do_I_Email_a_Time-Sheet_to_Customers_
+
 
 Printing Time Sheets
 ~~~~~~~~~~~~~~~~~~~~
 
-Click the links in the top right hand corner to generate a PDF version of
-the Time Sheet which conforms to Australian government standards for Tax
+Click the links in the top right hand corner to generate a PDF version of the
+Time Sheet which conforms to the Australian government standards for Tax
 Invoices.
 
 Adding a Time Sheet within a Project
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can also add a Time Sheet from within a Project.
+You can add a Time Sheet from within a Project.
 
 #.  To create a new Time Sheet, enter the Project which you want to add the
     Time Sheet to.
@@ -3557,15 +3482,15 @@ You can also add a Time Sheet from within a Project.
 Reviewing Existing Time Sheets
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can also review existing Time Sheets you've created. 
+You can also review existing Time Sheets you've created.
 
 #.  From the toolbar, click on the 'Time Sheet' link.
 
 #.  Decide on what Project, Status, Date From you want to filter within.
-    Normally the results page will show those Time Sheets with edit status only.
-    Choose All if you want to see all of them. Users with Admin or Manager
-    privileges are able to see other people's Time Sheets by selecting the right
-    'User Name'.
+    Normally the results page will show those Time Sheets with edit status
+    only.  Choose All if you want to see all of them. Users with Admin or
+    Manager privileges are able to see other people's Time Sheets by selecting
+    the right 'User Name'.
 
 #.  Press the 'Filter' button
 
@@ -3573,7 +3498,7 @@ You can also review existing Time Sheets you've created.
 
 #.  Complete the details needed.
 
-#.  When complete, save or submit the Time Sheet as per usual.
+#.  When complete, save or submit the Time Sheet as usual.
 
 Because Time Sheeting is complicated, we've added special help links for
 reminders on the page.
@@ -3590,72 +3515,59 @@ Invoices
 .. figure:: images/invoiceItem_new.png
 
     Once you've created the Invoice header, you can add as
-    many Invoice line items as you like to that Invoice. 
+    many Invoice line items as you like to that Invoice.
 
 
 Adding New Invoice
 ~~~~~~~~~~~~~~~~~~
 
-The Invoice system in allocPSA allows for the creation and management of
-Invoices by Financial Administrators. This Invoice system is built around a
-workflow model which is established as a 'factory default' when allocPSA is
-first installed. This model works as follows. 
+The allocPSA invoice system allows for the creation and management of invoices
+by financial administrators. It is built around a workflow model which is
+established as a 'factory default' when allocPSA is first installed. This model
+works as follows.
 
-#.  Invoices are created by allocPSA Admin Users
+#. Admin creates an invoice.
 
-#.  Once the Invoice has been created and Invoice line items have been added to
-    it, a PDF can be generated and downloaded for it.
+#. Add line items.
 
     .. HINT:: Invoice items can be generic, and/or can be tied directly to a
               Time Sheet by clicking the "From Time Sheet" button, and/or
               invoice items can be tied directly to Expense Forms by clicking
-              the "From Expense Form" button.  
+              the "From Expense Form" button.
 
     .. HINT:: Only Time Sheets at status "Invoice" will appear in the "From
               Time Sheet" Invoice item select box.
 
     .. HINT:: Only Expense Forms that have their "Seek Client Reimbursement"
-              checkbox ticked will appear in the "From Expense Form" select
-              box.
+              checkbox ticked will appear in the "From Expense Form" select box.
 
-#.  When you have downloaded and emailed the PDF to your Client, you can click
-    the Approve/Reject button. To mark that this Invoice is waiting to be approved
-    or rejected (i.e. the Client has paid, or is not going to pay it).
+#. Download a PDF and send to client.
 
-#.  When the Client lets you know if the Invoice has been paid (or isn't going
-    to pay), you can mark each Invoice item as Not Going To Be Paid, In
-    Dispute, or Paid. You can also mark how much was Paid of each Invoice item by
-    editing the amount.
+#. Click "Approve/Reject".
 
-#.  Once you have clicked the radio buttons to nominate the payment status of
-    each Invoice item, you must click the save button. The colour of the Invoice
-    item boxes will change to green if the item was Paid, or Red if it wasn't paid.
+#. Choose "Not Going To Be Paid", "Pending", or "Paid" and click save.
 
-    After clicking save a new TF transaction will be created for each Invoice
-    item. This transaction reflects the input of funds from the Client. 
-
-#.  Once all Invoice items have been marked off you can click the button to
-    move the "Invoice to Completed".
+#. Once the invoice process is completed, click "Invoice to Completed".
 
     .. HINT:: If you had any Invoice items that were generated "From Time
               Sheets" or "From Expense Form", then the associated Time Sheet or
               Expense Form will have its transactions marked as Paid or
               Rejected (depending on the status of the associated Invoice item)
               and be moved to status Completed once the Invoice is moved to
-              status Completed. 
+              status Completed.
 
 
 Reviewing Existing Invoices
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can review existing Invoices you've created. 
+You can review existing Invoices you've created.
 
 #.  From the toolbar, click on the 'Invoices' link.
 
 #.  Decide on the criteria by which you want to filter your list of Invoices
     and click the Filter button. Only users with Finance Admin permissions are
-    able to see the full totals of Invoices. However, users can see Invoices which
-    contain Invoices related to their Time Sheets, or Expense Forms.
+    able to see the full totals of Invoices. However, users can see Invoices
+    which contain Invoices related to their Time Sheets, or Expense Forms.
 
 #.  Click on the Invoice number of the Invoice you want to review.
 
@@ -3680,24 +3592,23 @@ Commissions to be auto-generated for any Sales of a particular Product.
 #.  That manager or admin finalizes the Sale items that are on the Sale and
     moves the Sale to status Allocate.
 
-#.  That same manager or admin should then review the allocation of the *pending*
-    transactions for each Sale item. The "Total Unallocated" figure should be green
-    and equal to zero. This indicates that all the funds from the Sale have been
-    allocated. When they are satisfied they should push the Sale to status
-    Administrator.
+#.  That same manager or admin should then review the *pending* transactions
+    for each Sale item. If the "Total Unallocated" figure is green and equal to
+    zero, then the funds from the Sale have been allocated. When satisfied they
+    should push the Sale to status Administrator.
 
-#.  The Administrator should then review the Sale to ensure that everything is
-    correct and, once satisfied, should *approve* all the transactions and finally
-    move the Sale to status Finished.
+#.  The Administrator should then review the Sale to make sure that everything
+    is correct and, once satisfied, should *approve* all the transactions and
+    finally move the Sale to status Finished.
 
 
 Fixed Costs
 ~~~~~~~~~~~
 
-Fixed Product Costs are the list of monetary transactions that will be created
-whenever this Product is sold. They specify a particular amount that will be
-transferred between TF's, and may be used to represent certain known expenses
-that are generated every time there is a Sale of this Product.
+Fixed Product Costs are the list of monetary transactions that are created when
+a Product is sold. They specify a particular amount that will be transferred
+between TF's, and may be used to represent certain known expenses that are
+generated every time there is a Sale of this Product.
 
 
 Percentage Commissions
@@ -3708,16 +3619,15 @@ a Sale Price (the amount that you charge the customer). The difference between
 these two amounts is the Margin/Profit of the Sale.
 
 The margin/profit from each sale can be distributed based on any Percentage
-Commissions that you set up. For example you might specify that 10% of the
-profit from each Sale of a particular Product, should go to Alice, perhaps for
-a finders fee.
+Commissions that you set up. For example, you could set 10% of the sale from a
+particular Product go to Alice, perhaps for a finder's fee.
 
 
 Meta TF's
 ~~~~~~~~~
 
 When specifying the Product Costs and Commissions, it is possible to select
-from the various particular TF's that the transactions should occur between.
+from the various TF's that the transactions should occur between.
 
 There are also Meta TF's that may be auto-calculated for each sale. There is
 the "Meta: Project TF", which defaults to the relevant Project (if any), TF. If
@@ -3732,31 +3642,31 @@ set up a commission for the person who makes the Sale.
 Including or Excluding Tax
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When first setting up a Product you may select whether the Sale
-Price is inclusive or exclusive of Tax. The Tax amount is the percentage
-specified on the Setup screen.
+When first setting up a Product you may select whether the Sale Price is
+inclusive or exclusive of Tax. The Tax amount is the percentage specified on
+the Setup screen.
 
-If Sale Price is including Tax, then when a Sale is
-made a separate transaction will be created for tax, and the corresponding
-margin/profit for that Sale will be smaller.
+If the Sale Price includes Tax, then when a Sale is made a separate transaction
+is created for tax, and the corresponding margin/profit for that Sale will be
+smaller.
 
 
 Default Sale Transactions
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#.  Product Sale: [PRODUCT] 
+#.  Product Sale: [PRODUCT]
 
-    The amount that is incoming from the customer who purchased the
-    Product, i.e. the Sale Price. And it will transfer monies from the
-    Incoming TF to the Sale's related Project TF (or if no Project is
-    related, then it will fall back to the Main Finance TF).
+    The amount that is incoming from the customer who purchased the Product,
+    i.e. the Sale Price. And it will transfer monies from the Incoming TF to
+    the Sale's related Project TF (or if no Project is related, then it will
+    fall back to the Main Finance TF).
 
 #.  Product Sale Tax: [PRODUCT]
 
     If Tax is included in the Sale Price, then another transaction will be
-    created representing the transfer of the tax amount from the related Project's
-    TF (or if there is no related Project, then the Main Finance TF) into the
-    nominated Tax TF.
+    created representing the transfer of the tax amount from the related
+    Project's TF (or if there is no related Project, then the Main Finance TF)
+    into the nominated Tax TF.
 
 #.  The other transactions that are created are from the Product Costs and
     Commissions that were set up for each Product.
@@ -3774,16 +3684,18 @@ quickly check that all the figures for this item are correct.
    - - Transactions Outgoing
      - The sum of the transactions that are for the Outgoing TF.
    - - Transactions Incoming
-     - The sum of the transactions that are for the Incoming TF. This amount should be the same as the Sell Price.
+     - The sum of the transactions that are for the Incoming TF. This amount
+       should be the same as the Sell Price.
    - - Transactions Other
-     - The sum of the other transactions (not including Tax transactions). This amount should be the same as the Margin.
+     - The sum of the other transactions (not including Tax transactions). This
+       amount should be the same as the Margin.
    - - Total Unallocated
-     - The difference between the Margin and the Transactions Other. This amount should be zero.
+     - The difference between the Margin and the Transactions Other. This
+       amount should be zero.
 
 If all the figures line up and reconcile then this Sale is ready to be
 progressed. Otherwise the admin or manager should review this Sale and adjust
 the transactions until the figures reconcile correctly.
-
 
 
 People
@@ -3791,138 +3703,128 @@ People
 
 People for higher lever user: Provide general information of each personnel.
 This includes Name, Last Login, Availability, Task Summary, Graph and On Leave.
-It comprises also the function of sending email to any personnel
+It comprises of sending email to personnel.
 
 For both higher and lower level users: Allow Changes of your personal
-information including Preferred Payment TF, Skill and Absence Forms etc.
+information including Preferred Payment TF, Skill and Absence Forms, etc.
 
-#.  Availability and On Leave are firstly displayed on the front page
+#.  Availability and On Leave are displayed on the front page.
 
 #.  If you want to see other information like Task Summary, Graph, Skill Matrix
-    etc., simply click the link to get into the detail
+    etc., simply click the link to get into the detail.
 
 Filter Section is the same as that in Tools - Miscellaneous Tools - Company
 Wide Skill Matrix. You can have a look at the detail under the section
-mentioned in the later part
+mentioned in the later part.
 
 You can now change your personal information as well as add or view your
-absence from, and allocPSA will take you to this
+absence from, and allocPSA will take you to this.
 
 
 Wiki
 ----
 
-The Wiki in allocPSA is a user-generated knowledge base and communal
-book. Its interface and syntax will be familiar to anyone who has
-created or managed documentation or content on a wiki on similar content
-systems.
+The Wiki in allocPSA is a user-generated knowledge base and communal book. Its
+interface and syntax will be familiar to anyone who has created or managed
+documentation or content on a wiki on similar content systems.
 
-After clicking the Wiki tab from the main tab menu, you will be
-presented with WIKI TREE content block, which sits on the left-hand side
-of the screen. This shows the current documents available in the wiki,
-along with any folders/sub-folders/directories. You can select any of
-the content items, or folders, by clicking on them.
+After clicking the Wiki tab from the main tab menu, you will see the 'WIKI
+TREE' content block, which sits on the left-hand side of the screen. This shows
+the current documents available in the wiki, along with any
+folders/sub-folders/directories. You can select any of the content items, or
+folders, by clicking on them.
 
-On the right is the HISTORY content block, which will present a list of
-change actions for the selected content item/wiki page.
+On the right is the 'HISTORY' content block, which shows a list of change
+actions for the selected content item/wiki page.
 
-In the middle is the wiki display area, which will show the marked-up
-wiki page rendering of your selected content item. You can click on any
-wiki page from the WIKI TREE, and it will appear here.
+In the middle is the wiki display area, which will show the marked-up wiki page
+rendering of your selected content item. You can click on any wiki page from
+the 'WIKI TREE', and it will appear here.
 
-To edit the wiki content item, click the 'Edit' button just beneath the
-content display area. This will open the content item in a text-editing
-area, and present a simple wiki-text markup toolbar across the top of
-this area.
+To edit the wiki content item, click the 'Edit' button just beneath the content
+display area. This will open the content item in a text-editing area, and
+present a simple wiki-text markup toolbar across the top of this area.
 
-You can now add or modify the content text as you like. If you're
-familiar with wiki syntax, you can insert it directly. Alternatively,
-you can use the markup toolbar to insert the markup syntax into the text
-area. You can also start by using the toolbar to insert items, and learn
-the wiki syntax as you progress - it's quite simple.
+You can now modify the content text how you like. If you're familiar with wiki
+syntax, you can insert it directly. Alternatively, you can use the markup
+toolbar to insert the markup syntax into the text area. You can also start by
+using the toolbar to insert items, and learn the wiki syntax as you progress -
+it's quite simple.
 
-As an example, to enter text as a top-level heading, click the *H1*
-toolbar button. This will insert sample marked-up heading text in the
-current cursor position in the text editing area, and highlight the
-sample text which you will need to replace with your own. 
+As an example, to enter text as a top-level heading, click the *H1* toolbar
+button. This will insert sample marked-up heading text in the current cursor
+position in the text editing area, and highlight the sample text which you will
+need to replace with your own.
 
-You may also notice that many of toolbar buttons have keyboard
-accelerators - simply hover your mouse cursor over one of these buttons
-to see the corresponding help tooltip. For example, the *H1* toolbar
-button uses the Ctrl + 1 keyboard accelerator. *H2* uses Ctrl + 2, etc.
-To insert **bold** text, you can use Ctrl + B, *italic* is Ctrl + I and
-so forth.
+Some of the toolbar buttons have keyboard accelerators - simply hover your
+mouse cursor over one of these buttons to see the corresponding help tooltip.
+For example, the *H1* toolbar button uses the Ctrl + 1 keyboard accelerator.
+*H2* uses Ctrl + 2, etc. To insert **bold** text, you can use Ctrl + B,
+*italic* is Ctrl + I and so forth.
 
-You can preview the changes you've made, without having to commit them,
-by clicking the *Preview* toolbar button. The preview page will be
-presented below your text-editing area.
+You can preview the changes you've made, without having to commit them, by
+clicking the *Preview* toolbar button. The preview page is below your
+text-editing area.
 
-Once you've added your first markup, you can continue with your editing,
-adding additional content and markups. 
+When done, you can save your changes by clicking the 'Save' button just below
+your text editing area.
 
-When done, you can save your changes by clicking the 'Save' button just
-below your text editing area. 
+Also, you should always consider adding a few words of text explaining the
+nature of your changes to this wiki page. Add these in the single-line text
+box, just below the wiki page text editing area.
 
-Also, you should always consider adding a few words of text explaining
-the nature of your changes to this wiki page. Add these in the
-single-line text box, just below the wiki page text editing area.
+Once you've saved your modified wiki page, you see a rendered version, and the
+modification note outlining the nature of the changes will appear in the
+'HISTORY' section on the right, along with the name of the allocPSA making the
+changes (i.e., you) and the date-time of this change.
 
-Once you've saved your modified wiki page, you will be shown a rendered
-version, and the modification note outlining the nature of the changes
-will appear in the HISTORY section on the right, along with the name of
-the allocPSA making the changes (i.e., you) and the date-time of this
-change.
-
-Note that to make the HISTORY functionality work, you will need to have a file
-version control system installed on the server. Currently allocPSA supports
-git, mercurial, or darcs for its VCS. Out of the box allocPSA is configured to
-use git. The config option called wikiVCS controls which VCS is used.
+Note that to make the 'HISTORY' functionality work, you will need to have a
+file version control system installed on the server. Currently allocPSA
+supports git, mercurial, or darcs for its VCS. Out of the box allocPSA uses
+git. The config option called wikiVCS controls which VCS is used.
 
 Creating a New Wiki Page
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Click the *New File* link in the top right hand corner of the wiki
-screen; you can also create a new file by linking to a file that doesn't
-exist, using the wiki-page link syntax: e.g., [[newfile.txt]] 
+Click the *New File* link in the top right hand corner of the wiki screen; you
+can also create a new file by linking to a file that doesn't exist, using the
+wiki-page link syntax: e.g., [[newfile.txt]]
 
 
 Wiki Syntax
 ~~~~~~~~~~~
 
 The wiki syntax used in allocPSA is called *markdown* You can get more
-information about how to write markdown wikis here: 
+information about how to write markdown wikis here:
 http://daringfireball.net/projects/markdown/
 
-We've added some additional extensions to cover syntax for links and
-maps.
+We've added some additional extensions to cover syntax for links and maps.
 
 Here's a quick primer on *markdown*:
 
-- Headings of various levels can be made by following the heading title
-  with an 'underlining' line of characters, such as: ~, -, _, etc.
+- Headings of various levels can be made by following the heading title with an
+  'underlining' line of characters, such as: ~, -, _, etc.
 
-- Words can be *italicised* (i.e., emphasised) by putting a single
-  asterisk on either side of the word.
+- Words can be *italicised* (i.e., emphasised) by putting a single asterisk on
+  either side of the word.
 
-- Words can be **bold** (i.e., strongly-emphasised) by putting
-  double-quotes on either side of the word.
+- Words can be **bold** (i.e., strongly-emphasised) by putting double-quotes on
+  either side of the word.
 
-- Links can be made to other wiki pages, by putting the file-name of the
-  target wiki page in double-square-brackets: i.e., [[ ]]
+- Links can be made to other wiki pages, by putting the file-name of the target
+  wiki page in double-square-brackets: i.e., [[ ]]
 
-
-
-allocPSA has been written such that any programmer can "drop-in" a new
-wiki syntax. At the moment, the code needs to be modified in order for
-this to happen. The allocPSA development team hopes to eventually make
-it easy to make this change via a config option.
+allocPSA has been written such that any programmer can "drop-in" a new wiki
+syntax. At the moment, the code needs to be modified in order for this to
+happen. The allocPSA development team hopes to eventually make it easy to make
+this change via a config option.
 
 
 Inbox
 -----
 
 allocPSA provides a facility for accessing the current inbox for the
-primary account used to sent mail to the gateway. 
+primary account used to sent mail to the gateway.
 
 Normally, this Inbox contains all the mail incoming into allocPSA, which
 allocPSA then processes and remove from the inbox. However, there are
@@ -3954,7 +3856,7 @@ columns:
 
 Arching, Creating New Tasks and Attaching Emails to Existing Tasks
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
+
 There are also a number of Action buttons, which allow you to perform
 actions on each of the emails:
 
@@ -3982,15 +3884,14 @@ actions on each of the emails:
 Tools
 -----
 
-In general, most of the tools on this tab provide additional management and
-resource information, allow for customisation and offer your firm a framework
-into which you can add your own, site-specific add-ons to your organization's
-allocPSA server.
+The tools tab provide more management tools, additional resources, and useful
+customizations. It is a framework wich you can use to add your own
+site-specific add-ons.
 
-The Finance section is the gateway to most of allocPSA's finance modules.
-It contains reasonably complicated functions which most users don't need to
-access. In general, only the user's TF account and Expense Forms need to be
-accessed by regular/employee users.
+The Finance section is the gateway to most of allocPSA's finance modules. It
+has reasonably complicated functions which most users don't need. In general,
+only the user's TF account and Expense Forms are needed by regular/employee
+users.
 
 Part of almost any professional services organization is the management of the
 finances associated with the Projects and Tasks which constitute the daily
@@ -3999,29 +3900,52 @@ allocPSA includes a modular and flexible finance management system whose
 purpose is to provide the conduit for any and all financial transactions with
 the professional services organization's accounting software. As such, allocPSA
 offers the necessary modules to conduct financial transactional activities
-within allocPSA (for Time Sheets, for Project-related Expense Forms etc.) as well
-as a shadow of many of the financial transactional activities which are found
-in standard modern business accounting systems, such as invoicing, cost-centre
-and wages management. As with many other aspects of allocPSA, non-privileged
-users will be shown a simplified view of the Finance section, while managers and
-administrative users will see the full offering.
+within allocPSA (for Time Sheets, for Project-related Expense Forms etc.) as
+well as a shadow of many of the financial transactional activities which are
+found in standard modern business accounting systems, such as invoicing,
+cost-centre and wages management. As with many other aspects of allocPSA,
+non-privileged users can only see a simplified view of the Finance section,
+while managers and administrative users will get the full offering.
 
-Reminder: A Tagged Fund (TF) is an allocPSA term referring to the per-Project,
-per-group/division or per-staff-member cost-centre which is tracked and managed
-by allocPSA.
+.. NOTE:: A Tagged Fund (TF) is an allocPSA term referring to the per-Project,
+          per-group/division or per-staff-member cost-centre which is tracked
+          and managed by allocPSA.
 
-Non-privileged users will be offered these items: TF List, New Expense Form,
-Search Invoices, View Pending Expense Forms and Search Transactions. Privileged
-users can also see the following items: Approve Invoices, Allocate Invoices,
-New Transaction, Upload Expenses File, New TF, Push
-Repeating Expenses Through, Upload Wages Files, Reconciliation Report, View
-Pending Transaction.
+Non-privileged users see these items:
+
+ * TF List,
+
+ * New Expense Form,
+
+ * Search Invoices,
+
+ * View Pending Expense Forms,
+
+ * Search Transactions.
+
+Privileged users see the following items:
+
+ * Approve Invoices,
+
+ * Allocate Invoices,
+
+ * New Transaction,
+
+ * Upload Expenses File,
+
+ * New TF,
+
+ * Push Repeating Expenses Through,
+
+ * Upload Wages Files,
+
+ * Reconciliation Report,
+
+ * View Pending Transaction.
 
 
-Finance 
+Finance
 ~~~~~~~
-
-
 
 New Tagged Fund
 ```````````````
@@ -4035,8 +3959,8 @@ When new staff or Projects that need a corresponding TF cost-centre are added
 to allocPSA, you can create such accounts from this section of the Finance
 area. By default, for staff cost-centres, allocPSA uses a standard Payroll ID
 based on a product call QuickPayroll, part of the QuickBooks accounting system.
-This number would need to be reconfigured for your site's specific requirements
-and accounting software. The instructions below would generally apply however.
+This number needs to be reconfigured for your site's specific requirements and
+accounting software. The instructions below generally apply.
 
 #.  Fill in the contents of the form which include TF Name, Quick Payroll
     Employee Number, Quicken Account Name, Comments, and Last Modified by.
@@ -4062,26 +3986,13 @@ expense items are taken out of (debited) upon reimbursements.
 If you are a manager, you may also be shown any TF cost-centres which have been
 allocated to you (among possibly other managers users) to manage.
 
-Within the TF List page, there are:
-
-#.  TF Name
-
-#.  Description
-
-#.  Balance and
-
-#.  Three specific action, namely 1. Statement 2. Repeating Expenses and 3. Edit
-    TF (lower level user does not have the item Edit TF)
-
-Statement shows all the information of your payment. They are as follows:
-
 
 New Transaction
 ```````````````
 
 .. figure:: images/transaction.png
 
-    Transaction detail view
+    Transaction detail view.
 
 This facility allows for the insertion of new ad-hoc transactions into any
 Project or staff TF cost-centre account.
@@ -4116,10 +4027,11 @@ search the database and return a list of matching records.
 
 .. figure:: images/statement.png
 
-    A cost-centre is like an internal bank account. You can review its contents much like you would any online bank account.
+    A cost-centre is like an internal bank account. You can review its contents
+    much like you would any online bank account.
 
 A user with higher privileges can drill down into the transactions by
-clicking on any 'ID / Invoice Numbers' links will show you the Invoice details. 
+clicking on any 'ID' links will show you the Invoice details.
 
 Repeating Expenses can let user create an expense that repeats on a fixed
 basis. All that needs to be done to process the next cycle is for the financial
@@ -4132,25 +4044,23 @@ with each TF account.
 New Expense Form
 ````````````````
 
-Expense forms can be created in allocPSA to better represent the Project
-accounting costs associated with each Project. For instance, if additional
-laptops are needed in order to meet certain Project deliverables, then the
-costs for these laptops should be borne by that Project. 
+Expense forms are created in allocPSA to better represent the Project
+accounting costs associated with each Project. For instance, if more laptops
+are needed to meet certain Project deliverables, then the costs for these
+laptops should be borne by that Project.
 
-To create a once off expense, follow the instructions below:
+To create a once off expense form, follow the instructions below:
 
-#.  From the allocPSA toolbar, click on the 'Finance' tab.
-
-#.  From the Finance page, click on the 'New Expense Form' link.
+#.  In the allocPSA toolbar, click on the 'Tools', then click 'New Expense
+    Form'.
 
 #.  Select your payment options and click the 'Create Expense Form' button.
 
-#.  Add your expense(s) by completing the details. Specify the
-    supplier you purchased from, and what was purchased, the date, unit cost and
-    number of units.
+#.  Add your expense(s) by completing the details. Specify the company name and
+    address, and product, the date, unit cost and number of units, etc.
 
-#.  Click 'Add To List' and repeat the previous step if necessary, adding as
-    many items, from as many suppliers as needed.
+#.  Click 'Add Item' and repeat the previous step if necessary, adding as many
+    items, from as many suppliers as needed.
 
 #.  Click the 'To Admin' button when you want to submit this Expense Form.
 
@@ -4168,7 +4078,7 @@ form ID, when it was Last Modified, who it was last Modified By, the Payment
 Method and Form Total.
 
 #.  Click the ID link you want and go into the detail of the expenses form. You
-    will access the same page as New Expense Form.
+    will use the same page as New Expense Form.
 
 #.  Follow the instructions and then press the 'Save' button to commit those
     changes.
@@ -4202,7 +4112,7 @@ the regularity and description and TF etc.
 Repeating Expense List
 ``````````````````````
 
-This is a list of all the Repeating Expenses. 
+This is a list of all the Repeating Expenses.
 
 
 Execute Repeating Expenses
@@ -4216,7 +4126,6 @@ Click the link to create all repeating expenses that are scheduled to be
 created.
 
 
-
 Miscellaneous
 ~~~~~~~~~~~~~
 
@@ -4224,21 +4133,17 @@ Miscellaneous
 Reminders
 `````````
 
-Remind recipient everything regarding Client, Project, Task etc.
+Reminders are posted in the calendar on the home page of the chosen recipients.
+Usually the recipients are the creator and user specified when created. To add
+Reminder:
 
-List of reminders which relate the user you're presently logged in as
+#.  Click on the 'Tools' tab and click 'Reminders'.
 
-Except for the high level user, all the reminders can only be read, edited and
-removed by those specific recipients!
+#.  Click the 'Add Reminder' link on the right.
 
-Add Reminder:
-
-#.  Click the 'Add Reminder' link and go into the Add Reminder - Select Type
-    page
-
-#.  Select what type of reminder you want to create from the drop list. Examples
-    include Client, Project, Task, General. If you want a reminder which is
-    independent of any Task, Project or Client life-spans, select General.
+#.  Select what type of reminder you want to create from the drop list. For
+    example: Client, Project, Task, General. If you want a reminder which is
+    independent of any Task, Project, or Client, select General.
 
 #.  Press the 'Next' button
 
@@ -4253,34 +4158,34 @@ Add Reminder:
 Your new reminder is now set and ready to trigger an email at the points you've
 defined.
 
-Update or Deleting the Reminder:
-
-You can also update an existing reminder, by jumping back into the Reminders
-page, and following these steps.
+To update or edit a reminder:
 
 #.  From the list of Reminders, click the Subject name link.
 
-#.  Update the reminder
+#.  Click 'Edit Reminder'.
 
-#.  Press 'Update' or 'Delete' button to finish your update.
+#.  Edit what you need to.
+
+#.  Press 'Save' to complete the edit.
+
+#.  Or click the 'Delete' button to delete the reminder.
 
 Changes will automatically be displayed and updated.
-
 
 
 Announcements
 `````````````
 
-You can publish announcements which will be displayed on the Home page of each
+You can publish announcements which get displayed on the Home page of each
 user's account, as well as within each allocPSA Daily Tasks email. From this
-tool, you can add new announcements and edit existing ones. 
+tool, you can add new announcements and edit existing ones.
 
+#.  Go to the tools tab, and click the 'Announcements' link.
 
-#.  Once you've entered the Announcement section, to add a new announcement
-    simply click the 'New Announcement' link.
+#.  To add a new announcement simply click the 'New Announcement' link.
 
-#.  Supply a Heading, a date from which to start displaying this announcement, a
-    date when this announcement should stop being shown, and the contents of
+#.  Supply a Heading, a date from which to start displaying this announcement,
+    a date when this announcement should stop being shown, and the contents of
     your message in the Body.
 
 #.  Press the 'Save' button.
@@ -4289,26 +4194,27 @@ tool, you can add new announcements and edit existing ones.
     page.
 
 allocPSA will automatically save and display the announcement on each user's
-Home page, under the Announcement section, during the dates you specified. If
-you want to edit or delete an announcement, from the Announcements page:
+Home page, under the Announcement section, during the dates you specified. To
+edit or delete an announcement:
 
 #.  Click the 'Edit' link, located at the right of each announcement.
 
-#.  Press the 'Save' button if you have made your changes
+#.  Change what you need to.
+
+#.  Press the 'Save' button.
+
+#.  Or you can click the 'Delete' link to remove the announcement.
 
 #.  Click the 'Return to Announcement List' link, and allocPSA will return to
     the Announcement page.
-
-#.  Alternatively, you can also select the 'Delete' link, to remove this
-    announcement.
 
 Security
 ````````
 
 This section allows you to tweak security permission for the database tables
-used by allocPSA. It is possible to establish different permissions for
-different user levels, for different (i.e. Read, Update, Delete, Create etc.)
-actions. 
+used by allocPSA. It is possible to set up different permissions for different
+user levels, for different (i.e. Read, Update, Delete, Create etc.)
+actions.
 
 .. NOTE:: In general, you would not need to make any changes at all to this
           section.
@@ -4343,40 +4249,19 @@ To edit an existing permission:
 Your changes will be automatically updated on the Permission page and activated for all users.
 
 
-Cost & Time Estimator
-`````````````````````
-
-As an example of the kinds of functional extensions that can be made within
-allocPSA, the Simple Cost & Time Estimator is provided, and documented here. It
-is envisaged that this utility will not be of direct use to most users of
-allocPSA. It is hoped that by providing this simple utility as an example, your
-organization will be inspired to visualise and eventually add your own set of
-tools which can be used by your staff, to assist in day-to-day  operations at
-your organization.
-
-Based on a set of pre-determined programming and database languages, it is
-possible to input various values for the scope and size of a particular
-web-based database application, and this Estimator will produce a pre-figured
-determination of the best-effort time and cost estimation, along with a spread
-of values, based on number of resources. The values generated are based on a
-pre-computed seed metric, derived from several years' evaluation of similarly
-scoped Projects.
-
-
-
 Search
 ``````
 
 The search functionality within allocPSA searches various fields in the
 database and also the files in the wiki. It uses the Zend port of the Lucene
-search engine. 
+search engine.
 
 Any of the keyword fields that are indexed may be searched upon. Either by
 itself or in combination with other search terms. The default is to search
 across ALL keyword fields.
 
 For more information about the Zend search syntax please read this article:
-http://framework.zend.com/manual/en/zend.search.lucene.query-language.html
+http://framework.zend.com/manual/1.12/en/zend.search.lucene.query-language.html
 
 
 Examples
@@ -4405,7 +4290,7 @@ Examples
      - A search for all the tasks that are managed by jsmith and are targetted for completion in 2010 and have a status of open.
    - - "to be completed asap" name:todo
      - A search for "to be completed asap" across ALL the keyword fields, OR the task's name must contain the word todo.
-   - - project:"Building Project" and manager:mjones 
+   - - project:"Building Project" and manager:mjones
      - Will search all the tasks which are in a project titled
        "Building Project" and managed by 'mjones'
    - - pid:167 and manager:mjones
@@ -4417,13 +4302,13 @@ Indexed keyword fields for Tasks
 
 .. list-table::
 
-   - - id 
+   - - id
      - The unique ID.
    - - name
      - The task's name.
    - - project
      - The name or the nickname (i.e, short name) of the project the task belongs to.
-   - - pid 
+   - - pid
      - The ID of the project that the task belongs to.
    - - creator
      - The person who created the task.
@@ -4471,7 +4356,7 @@ Indexed keyword fields for Projects
 
 .. list-table::
 
-   - - id 
+   - - id
      - The unique ID.
    - - name
      - The project's name.
@@ -4509,7 +4394,7 @@ Indexed keyword fields for Time Sheets
 
 .. list-table::
 
-   - - id 
+   - - id
      - The unique ID.
    - - project
      - The time sheet's project stored as project name and project nickname.
@@ -4541,14 +4426,14 @@ Indexed keyword fields for Loan Items
 
 .. list-table::
 
-   - - id 
+   - - id
      - The unique ID.
    - - name
-     - The name of the item 
+     - The name of the item
    - - desc
      - The item's notes
    - - type
-     - The item's type i.e. book, cd, other 
+     - The item's type i.e. book, cd, other
    - - author
      - The item's author
    - - creator
@@ -4557,13 +4442,13 @@ Indexed keyword fields for Loan Items
      - The last person to modify this item
    - - dateModified
      - The date the item was last modified
- 
+
 
 Indexed keyword fields for Clients
 
 .. list-table::
 
-   - - id 
+   - - id
      - The unique ID.
    - - name
      - The client's name with the phone number and fax number appended
@@ -4581,13 +4466,13 @@ Indexed keyword fields for Clients
      - The category of the client i.e. Client, Vendor, Supplier, Consultant, Government, Non-profit, Internal
    - - dateCreated
      - The date the client was created
-  
+
 
 Indexed keyword fields for Comments
 
 .. list-table::
 
-   - - id 
+   - - id
      - The unique ID.
    - - name
      - The created date along with the comment's author
@@ -4603,21 +4488,21 @@ Indexed keyword fields for Comments
      - The person who created the comment
    - - dateCreated
      - The date the comment was created
- 
+
 
 Indexed keyword fields for the Wiki
 
 .. list-table::
 
-   - - id 
+   - - id
      - The unique ID.
-   - - name 
+   - - name
      - The path and file name
    - - desc
      - The body of the file
    - - pdfstr
      - If the file was a PDF then the body of the pdf may be specifically searched using this keyword
-    
+
 
 
 Company Skill Matrix
@@ -4625,13 +4510,14 @@ Company Skill Matrix
 
 .. figure:: images/skill_matrix.png
 
-    You have the ability to add your own skill types and
-    levels, and categorise your resources against those skill types.
+    You can add your own skill types and levels, and categorise your resources
+    against those skill types.
 
 This tool allows you to review, filter and drill down into the various
 skillsets of your resource list as known by allocPSA. Whilst the samples
 provided and screenshots shown display IT-related skills, this module can be
-configured to handle any type of skill set.
+configured to handle any type of skill set. e.g: Mechanic, Engine Rebuilder,
+Panel Beater.
 
 You can use the first droplist to select a primary (i.e. broad) skill type,
 then press the 'Filter' button. You should now be able to drill down into the
@@ -4651,74 +4537,65 @@ be Harddisks, Optical Drives, Java, etc.
 Task Comment Templates
 ``````````````````````
 
-In allocPSA, Task Comment Templates are used primarily as a form of open-ended
-checklist system, allowing particular types of Tasks to be created quickly.
+When creating a comment on a task, project, etc. you can add a comment using a
+pre-made template. To create a new template, follow these steps:
 
-The Templates are created for oft-repeated jobs and Tasks. They can be enacted
-when creating new Tasks. 
+#. Click 'Tools' in the allocPSA, and click the 'Comment Templates' link.
 
-When creating a new comment for a Task, you have the option
-of invoking a pre-existing template for the text comment. This is useful if
-there is a set routine or process which the person who has been allocated
-the Task needs to undertake. 
+#. Click 'New Comment Template'.
 
-Task Comment Templates are created by pressing the 'New Comment/Template' link.
-Simply fill in the Name for this new template, and supply the check list
-content in the Text section. You can be as detailed as you like. Adding text
-which appears like bullet-points is a good idea. When ready, press the 'Save'
-button.
+#. Enter a name from the template, e.g. "Task Description".
 
-You can add new templates, which then become available from
-a droplist in new Tasks. These templates can have place-holders, such as
-Company Contact Details, Project Name, etc., and allocPSA will replace these
-place-holders with real values.
+#. Set the comment template type.
 
-You can also edit and delete a Task Template by select it from the list, making
-modifications and pressing the 'Save' button, or pressing the 'Delete' button.
+#. Enter any text and variables you want.
 
+   .. NOTE:: Look at the right for useful variables.
+
+#. Click 'Save' to keep the new template, or 'Delete' to forget it.
+
+When you go to make a comment on a, e.g. Task; you can click the 'Comment
+Templates' popup menu and choose a template for your comment.
 
 Item Loans
 ``````````
 
-allocPSA can track any items that your firm needs to track. It can also keep
-track of who borrowed these items. The Item Loan facility is intended to be
-simple and easy to use, to increase the likelihood that staff use it.
+allocPSA can track any items that your firm needs to track. It also keeps track
+of who borrowed these items. The Item Loan facility is designed for this, and
+is simple and easy to use.
 
-allocPSA shows you a list of all the available items which
-can be loaned. Simply click on the item's 'Borrow' link to borrow it.
+allocPSA shows you a list of all the available items for lending. Simply click
+on the item's 'Borrow' link to borrow it.
 
 To Add a New Loan or to Return an Item:
 
-#.  From the allocPSA toolbar, select the 'Item Loans' link.
+#.  From the allocPSA toolbar click on the tools tab, then click the 'Item
+    Loans' link.
 
 #.  Click the link 'New Loan / Return Item'. allocPSA The system will go to the
-    'New Loan' page. Items and their status will be shown on this page.
+    'New Loan' page. The items and their status is on this page.
 
 #.  Click 'Return' if you have borrowed the item and want to return it.
 
 #.  Click 'Borrow' if you want to borrow an item.
 
-#.  The system will take you to the next page and you simply press the 'Return
-    Item' button to return the item.
+#.  If you clicked 'Return', the system will take you to the next page and you
+    simply press the 'Return Item' button to return the item.
 
-#.  Or in case you borrow the item, note the detail of it, select person to take
-    out loan, enter the number of months you want the item for and finally press
-    Borrow Item button
+#.  Or if you clicked 'Borrow' select the person who is borrowing the item,
+    enter the months the item will be lent for and finally press 'Borrow Item'
+    button
 
-The system will go back to the New Loan page and action will be taken
+The system goes back to the New Loan page and the action is complete.
 
-When borrowing an item, you can select the loan duration.
-
-You can add or edit individual items for loan or upload a file with multiple items.
-
+You can add or edit individual items or upload a file with multiple items.
 
 Add / Edit / Remove Item:
 
-#.  To add a new item (or items) to the loan list, click the link 'Add / Edit /
-    Remove Item'.
+#.  To add a new item (or items) to the loan list, click the 'Add/Edit/Remove
+    Item' link.
 
-#.  If you have one item to add, enter its details, specifying the Item Name and
-    Notes.
+#.  Specify the Item Name and Notes.
 
 #.  Select the 'Type'.
 
@@ -4733,13 +4610,10 @@ management system, you can upload a text file to accomplish this.
 
 #.  Select the 'Type' of item from the drop list.
 
-#.  Click on the 'Choose' button and select the file you want to upload to
+#.  Click on the 'Browse...' button and select the file you want to upload to
     allocPSA from your PC.
 
 #.  Click on the 'Import From File' button.
-
-
-
 
 
 Reports
@@ -4752,11 +4626,11 @@ Reporting allows you to select which tables, fields and criteria you want to
 sort and filter data out from your allocPSA database. The data can be displayed
 on-screen within the web browser, or bundled into a text-based Comma Separated
 Value (CSV) or TAB delimited file, for downloading to your computer. This data
-can then be inserted into applications like Microsoft Excel, LibreOffice
-Calc (http://www.libreoffice.org/), Crystal Reports, Microsoft Access or other
+can then be inserted into applications like Microsoft Excel, LibreOffice Calc
+(http://www.libreoffice.org/), Crystal Reports, Microsoft Access or other
 reporting tools.
 
-#.  Click the 'Reports' link on the allocPSA toolbar to go to the Report page.
+#.  Click the 'Reports' link on the 'Tools' page.
 
 #.  Select which module you want to report on (Clients, Tasks etc.)
 
@@ -4776,13 +4650,10 @@ reporting tools.
 #.  Alternatively, you can specify number ranges, upper and lower, using the
     supplied numeric criteria fields.
 
-#.  Scroll down to the bottom and press the 'Dump Fields' button.
+#.  Scroll down to the bottom and press the 'Generate Database Report' button.
 
-#.  This will now dump the resulting records to your browser screen, below the
-    fields and selection criteria.
-
-#.  You can choose which suitable you use as the 'Group By' aggregator, by
-    selecting the choice button next to its title.
+#.  This will now show the resulting records below the fields and selection
+    criteria.
 
 #.  You can also elect to put quotes around the field data (handy when dealing
     with data which has commas etc.) by selecting the option from the 'Quotes
@@ -4816,7 +4687,7 @@ then subsequently download, upload or restore a backup file.
     your computer.
 
 #.  If you click the 'Restore' button next to a backup file, that backup file
-    will be used to overwrite your current allocPSA database and file uploads. 
+    will be used to overwrite your current allocPSA database and file uploads.
     Be careful with this feature. (A backup will be auto-created before all
     'Restore' operations).
 
