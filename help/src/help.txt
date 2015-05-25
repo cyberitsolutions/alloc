@@ -1769,7 +1769,7 @@ How do I Star Clients, Tasks, Projects, etc.?
 
 allocPSA gives you the ability to add specific records (such as Tasks, Clients,
 Projects, Timesheets, Sales, and Invoices) to the Star list. These can then be
-accessed in a collective 'star' page, by clicking the '★' icon, located in the
+accessed in a collective 'star' page, by clicking the 'star' icon, located in the
 top right section of the main menu, near the Help, Setup and Logout links.
 
 #.  Log in to allocPSA.
@@ -1778,17 +1778,17 @@ top right section of the main menu, near the Help, Setup and Logout links.
     or a Client record.
 
 #.  If on a specific record, for example a single Task, you will notice a small
-    '☆' icon, near the top right of that item's menu. Click on that small '☆'
+    'star' icon, near the top right of that item's menu. Click on that small 'star'
     icon.  This will fill the icon with a solid colour, which indicates that
     this record is now in your 'star' list of bookmarks. If you click that
-    filled-in '★' icon once more, it will toggle-off the bookmark.
+    filled-in 'star' icon once more, it will toggle-off the bookmark.
 
     .. HINT:: If you're looking a list of Tasks for instance, you will see a
-              list of '☆' icons along the right edge of the table. Clicking on
-              any of these will toggle the 'stars' on (filled ★) or off (empty
-              ☆), corresponding to that item being in or out of your Star list.
+              list of 'star' icons along the right edge of the table. Clicking on
+              any of these will toggle the 'stars' on (filled star) or off (empty
+              star), corresponding to that item being in or out of your Star list.
 
-#.  To view your 'star' list of bookmarks, click on the main 'filled in' ★
+#.  To view your 'star' list of bookmarks, click on the main 'filled in' star
     icon, near the top right of your main screen's menu items.
 
 #.  This will open the 'star' list, showing you all your various bookmarks for
