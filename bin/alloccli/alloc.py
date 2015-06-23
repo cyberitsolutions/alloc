@@ -20,14 +20,13 @@ class alloc(object):
     # Provide a parent class from which the alloc subcommands can extend
 
     client_version = "1.8.9"
-    client_name = os.path.basename(sys.argv[0])
     url = ''
     username = ''
     quiet = ''
     dryrun = ''
     sessID = ''
-    alloc_dir = os.environ.get(
-        client_name.upper() + '_HOME') or os.path.join(os.environ['HOME'], '.' + client_name)
+    client_name = os.path.basename(sys.argv[0])
+    alloc_dir = os.environ.get(client_name.upper() + '_HOME') or os.path.join(os.environ['HOME'], '.' + client_name)
     debug = os.environ.get(client_name.upper() + '_DEBUG')
     config = {}
     user_transforms = {}
@@ -196,10 +195,12 @@ class alloc(object):
     }
 
 
-    row_timeSheet = ["timeSheetID", "dateFrom", "dateTo", "status",
-                     "person", "duration", "totalHours", "amount", "projectName"]
-    row_timeSheetItem = ["timeSheetID", "timeSheetItemID", "dateTimeSheetItem", "taskID", "timeSheetItemDuration",
-                         "rate", "worth", "hoursBilled", "timeLimit", "limitWarning", "comment"]
+    row_timeSheet = ["timeSheetID", "dateFrom", "dateTo", "status", "person",
+                     "duration", "totalHours", "amount", "projectName"]
+
+    row_timeSheetItem = ["timeSheetID", "timeSheetItemID", "dateTimeSheetItem",
+                         "taskID", "timeSheetItemDuration", "rate", "worth",
+                         "hoursBilled", "timeLimit", "limitWarning", "comment"]
 
     def __init__(self):
 
@@ -265,18 +266,16 @@ class alloc(object):
             # create a password manager
             top_level_url = "/".join(self.url.split("/")[0:3])
             password_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
-            password_mgr.add_password(
-                None, top_level_url, self.http_username, self.http_password)
+            password_mgr.add_password(None, top_level_url, self.http_username, self.http_password)
             handler = urllib2.HTTPBasicAuthHandler(password_mgr)
             self.url_opener = urllib2.build_opener(handler)
         else:
             self.url_opener = urllib2.build_opener()
 
-        self.url_opener.addheaders = [
-            ('User-agent', self.client_name + '-cli %s' % self.username)]
+        self.url_opener.addheaders = [('User-agent', self.client_name + '-cli %s' % self.username)]
         urllib2.install_opener(self.url_opener)
 
-    def create_config(self, f):
+    def create_config(self, config_file):
         # Create a default ~/.alloc/config file.
         self.dbg("Creating and populating: " + f)
         default = "[main]"
@@ -287,42 +286,40 @@ class alloc(object):
         default += "\n#" + self.client_name + "_http_pass: $ALLOC_HTTP_PASS"
         default += "\n#" + self.client_name + "_trunc: 1"
         # Write it out to a file
-        fd = open(f, 'w')
-        fd.write(default)
-        fd.close()
+        write_config = open(config_file, 'w')
+        write_config.write(default)
+        write_config.close()
 
-    def load_config(self, f):
+    def load_config(self, config_file):
         # Read the ~/.alloc/config file and load it into self.config[].
         config = ConfigParser.ConfigParser()
-        config.read([f])
+        config.read([config_file])
         section = os.environ.get(self.client_name.upper()) or 'main'
         try:
             options = config.options(section)
             for option in options:
                 self.config[option.lower()] = config.get(section, option)
             if self.client_name.upper() + '_TRUNC' in os.environ:
-                self.config[
-                    self.client_name + '_trunc'] = os.environ.get(self.client_name.upper() + '_TRUNC')
+                self.config[self.client_name + '_trunc'] = os.environ.get(self.client_name.upper() + '_TRUNC')
         except:
             pass
 
-    def create_transforms(self, f):
+    def create_transforms(self, config_file):
         # Create a default ~/.alloc/transforms.py file for field manipulation.
         if os.path.exists(self.alloc_dir + "transforms") and not os.path.exists(self.alloc_dir + "transforms.py"):
             # upgrade old transforms to transforms.py
             self.dbg("Renaming: " + self.alloc_dir + "transforms" +
                      " to " + self.alloc_dir + "transforms.py")
-            os.rename(
-                self.alloc_dir + "transforms", self.alloc_dir + "transforms.py")
+            os.rename(self.alloc_dir + "transforms", self.alloc_dir + "transforms.py")
         else:
             # else create an example transforms.py
             self.dbg("Creating example transforms.py file: " + f)
             default = "# Add any field customisations here. eg:\n"
             default += "# user_transforms = { 'Priority' : lambda x,row: x[3:] }\n\n"
             # Write it out to a file
-            fd = open(f, 'w')
-            fd.write(default)
-            fd.close()
+            write_config = open(config_file, 'w')
+            write_config.write(default)
+            write_config.close()
 
     def load_transforms(self):
         # Load the ~/.alloc/transforms.py module into self.user_transforms.
@@ -339,16 +336,16 @@ class alloc(object):
         if not old_sessID or old_sessID != sessID:
             self.dbg("Writing to: " + self.alloc_dir + "session: " + sessID)
             # Write it out to a file
-            fd = open(self.alloc_dir + "session", 'w')
-            fd.write(sessID)
-            fd.close()
+            write_session = open(self.alloc_dir + "session", 'w')
+            write_session.write(sessID)
+            write_session.close()
 
-    def load_session(self, f):
+    def load_session(self, config_file):
         # Read the ~/.alloc/session and return the alloc session ID.
         try:
-            fd = open(f)
-            sessID = fd.read().strip()
-            fd.close()
+            read_config = open(config_file)
+            sessID = read_config.read().strip()
+            read_config.close()
         except:
             sessID = ""
         return sessID
@@ -611,13 +608,6 @@ class alloc(object):
         args["method"] = "get_list"
         return self.make_request(args)
 
-    def get_help(self, topic):
-        # Retrieve a help message from the alloc server regarding its API.
-        args = {}
-        args["topic"] = topic
-        args["method"] = "get_help"
-        return self.make_request(args)
-
     def authenticate(self):
         # Perform an authentication against the alloc server.
         self.dbg("calling authenticate()")
@@ -835,51 +825,40 @@ class alloc(object):
         # Get all the alloc subcommands/modules.
         return sys.modules['alloccli'].__all__
 
-    def get_cli_help(self, halt_on_error=True):
+    def get_cli_help(self):
+
+        # This is a yukky/hacky way of talling the user the alloc command they
+        # used is invalid. If the try clause in ../alloc has got to the
+        # except, then it runs the help function here. That means the user has
+        # either just typed 'alloc' or they tried using a command that does not
+        # exsit. If it is a command that does not exsit, we exit here.
+        if len(sys.argv) > 1:
+            if "-h" in sys.argv[1]:
+                pass
+            elif "--help" in sys.argv[1]:
+                pass
+            elif "help" in sys.argv[1]:
+                pass
+            else:
+                self.die("Invalid command: " + sys.argv[1] + "\nPlease pass --help for help")
+
         # Get the command line help.
-        print "Usage: " + self.client_name + " command [OPTIONS]"
-        print "Select one of the following commands:\n"
-        for m in self.get_alloc_modules():
-            if m == 'alloc':
-                continue
-            alloccli = __import__("alloccli." + m)
-            subcommand = getattr(getattr(alloccli, m), m)
+        print("Usage: " + self.client_name + " command [OPTIONS]")
+        print("Select one of the following commands:\n")
 
+        for module in self.get_alloc_modules():
+            if module == 'alloc':
+                continue
+            alloccli = __import__("alloccli." + module)
+            subcommand = getattr(getattr(alloccli, module), module)
             # Print out the module's doc
             tabs = "\t "
-            if len(m) <= 5:
+            if len(module) <= 5:
                 tabs = "\t\t "
-            print "  " + m + tabs + str(subcommand.__doc__)
+            print("  " + module + tabs + str(subcommand.__doc__))
 
-        print "\nEg: " + self.client_name + " command --help"
+        print("\nEg: " + self.client_name + " command --help")
 
-        if halt_on_error:
-            if len(sys.argv) > 1:
-                self.die("Invalid command: " + sys.argv[1])
-            else:
-                self.die("Select a command to run.")
-        else:
-            if len(sys.argv) > 1:
-                self.err("Invalid command: " + sys.argv[1])
-            else:
-                self.err("Select a command to run.")
-
-    def get_cmd_help(self):
-        # Get help for a particular command.
-        print "Select one of the following commands:\n"
-        for m in self.get_alloc_modules():
-            if m == 'alloc':
-                continue
-            alloccli = __import__("alloccli." + m)
-            subcommand = getattr(getattr(alloccli, m), m)
-
-            # Print out the module's doc
-            tabs = "\t "
-            if len(m) <= 5:
-                tabs = "\t\t "
-            print "  " + m + tabs + str(subcommand.__doc__)
-
-        print "\nEg: tasks -t 1234"
 
     def which(self, name, flags=os.X_OK):
         # Search PATH for executable files with the given name.

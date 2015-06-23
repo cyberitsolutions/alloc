@@ -15,12 +15,10 @@ try:
     acli = __import__("alloccli." + module)
     # Now we get the class from the module, e.g.: alloccli.task.task
     subcommand = getattr(getattr(acli, module), module)
+    subcommand().run(sys.argv)
 
-# Else bomb out with help message
-except:
+# Else bomb out with help message.
+# NOTE:: we must use `except Exception:` so the help does not get call
+# everytime a module calls sys.exit()
+except Exception:
     alloc.alloc().get_cli_help()
-
-# All clear, run the module
-# FIXME:: Is it just me? or does it seem like a stupid idea to run this outside
-# of the try cluse? -- cjb, 06-2015
-subcommand().run(sys.argv)
