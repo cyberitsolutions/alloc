@@ -826,22 +826,6 @@ class alloc(object):
         return sys.modules['alloccli'].__all__
 
     def get_cli_help(self):
-
-        # This is a yukky/hacky way of talling the user the alloc command they
-        # used is invalid. If the try clause in ../alloc has got to the
-        # except, then it runs the help function here. That means the user has
-        # either just typed 'alloc' or they tried using a command that does not
-        # exsit. If it is a command that does not exsit, we exit here.
-        if len(sys.argv) > 1:
-            if "-h" in sys.argv[1]:
-                pass
-            elif "--help" in sys.argv[1]:
-                pass
-            elif "help" in sys.argv[1]:
-                pass
-            else:
-                self.die("Invalid command: " + sys.argv[1] + "\nPlease pass --help for help")
-
         # Get the command line help.
         print("Usage: " + self.client_name + " command [OPTIONS]")
         print("Select one of the following commands:\n")

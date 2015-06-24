@@ -17,8 +17,18 @@ try:
     subcommand = getattr(getattr(acli, module), module)
     subcommand().run(sys.argv)
 
-# Else bomb out with help message.
 # NOTE:: we must use `except Exception:` so the help does not get call
 # everytime a module calls sys.exit()
 except Exception:
-    alloc.alloc().get_cli_help()
+    # Check if there is an option
+    if len(sys.argv) > 1:
+        # if there is an option, see if it is asking for help
+        if "-h" in sys.argv[1] or "--help" in sys.argv[1] or "help" in sys.argv[1]:
+            alloc.alloc().get_cli_help()
+        # else it is an unkown option
+        else:
+            sys.stderr.write("!!! Invalid command: " + sys.argv[1] + "\nPlease pass --help for help\n")
+            sys.exit()
+    # If no option was passed to alloc, print the help.
+    else:
+        alloc.alloc().get_cli_help()
