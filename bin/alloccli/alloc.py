@@ -25,6 +25,7 @@ class alloc(object):
     quiet = ''
     dryrun = ''
     sessID = ''
+    # FIXME:: Why do we need able to use a different client name? -- cjb, 2015-07
     client_name = os.path.basename(sys.argv[0])
     alloc_dir = os.environ.get(client_name.upper() + '_HOME') or os.path.join(os.environ['HOME'], '.' + client_name)
     debug = os.environ.get(client_name.upper() + '_DEBUG')
@@ -205,6 +206,7 @@ class alloc(object):
     def __init__(self):
 
         # Grab a storage dir to work in
+        # if seccond last charator self.alloc_dir is not /, add a /
         if self.alloc_dir[-1:] != os.sep:
             self.alloc_dir += os.sep
 
@@ -304,7 +306,7 @@ class alloc(object):
         except:
             pass
 
-    def create_transforms(self, config_file):
+    def create_transforms(self, trans_file):
         # Create a default ~/.alloc/transforms.py file for field manipulation.
         if os.path.exists(self.alloc_dir + "transforms") and not os.path.exists(self.alloc_dir + "transforms.py"):
             # upgrade old transforms to transforms.py
@@ -313,13 +315,13 @@ class alloc(object):
             os.rename(self.alloc_dir + "transforms", self.alloc_dir + "transforms.py")
         else:
             # else create an example transforms.py
-            self.dbg("Creating example transforms.py file: " + f)
+            self.dbg("Creating example transforms.py file: " + trans_file)
             default = "# Add any field customisations here. eg:\n"
             default += "# user_transforms = { 'Priority' : lambda x,row: x[3:] }\n\n"
             # Write it out to a file
-            write_config = open(config_file, 'w')
-            write_config.write(default)
-            write_config.close()
+            write_trans = open(trans_file, 'w')
+            write_trans.write(default)
+            write_trans.close()
 
     def load_transforms(self):
         # Load the ~/.alloc/transforms.py module into self.user_transforms.
