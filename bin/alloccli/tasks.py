@@ -39,6 +39,11 @@ class tasks(alloc):
     # Got this far, then authenticate
     self.authenticate()
 
+    if o['possible-fields']:
+      print("These are the possible fields you can use:\n")
+      for item in alloc.field_names["task"]:
+        print(item + " or '" + alloc.field_names["task"][item] +"'")
+
     order = []
     if o['order']: order = o['order']
 
