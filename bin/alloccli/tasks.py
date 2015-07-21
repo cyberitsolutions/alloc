@@ -23,6 +23,7 @@ class tasks(alloc):
                                        'Default: "-o Priority -o Type -o _Rate -o status" (underscore means reverse).'))
   ops.append(('f:', 'fields=LIST    ', 'The list of fields you would like printed.\n'
                                        '(eg: -f all eg: -f taskID -f Status -f taskStatus -f Proj\\ Pri)'))
+  ops.append((''  , 'possible-fields', 'List of possible fields.'))
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS]\n"
