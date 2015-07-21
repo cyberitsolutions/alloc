@@ -17,7 +17,7 @@ try:
     subcommand = getattr(getattr(acli, module), module)
     subcommand().run(sys.argv)
 
-# NOTE:: we must use `except Exception:` so the help does not get call
+# NOTE:: we must use `except Exception:` so the help does not get called
 # everytime a module calls sys.exit()
 except Exception:
     # Check if there is an option
