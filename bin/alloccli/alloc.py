@@ -279,7 +279,7 @@ class alloc(object):
 
     def create_config(self, config_file):
         # Create a default ~/.alloc/config file.
-        self.dbg("Creating and populating: " + f)
+        self.dbg("Creating and populating: " + config_file)
         default = "[main]"
         default += "\n#url: http://" + self.client_name + "/services/json.php"
         default += "\n#" + self.client_name + "_user: $ALLOC_USER"
