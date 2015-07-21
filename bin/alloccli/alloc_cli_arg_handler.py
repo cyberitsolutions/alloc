@@ -81,6 +81,15 @@ class alloc_cli_arg_handler:
       else:
         command_list[idx] = '--csv=always'
 
+    if '--possible-fields' in command_list:
+      # FIXME:: this is a yukky way of making sure the --possible-fields
+      # command only gets run if the 'tasks' command is used, there are
+      # probably edge cases.
+      if 'tasks' in command_list:
+        for x in alloc.field_names["task"]:
+          print(x + " or '" + alloc.field_names["task"][x] +"'")
+        sys.exit()
+
     no_arg_ops, all_ops, all_ops_list = self.__parse_args(ops)
     parser = argparse.ArgumentParser(prog=os.path.basename(" ".join(sys.argv[0:2])), add_help=False)
     for k, v in all_ops.items():
