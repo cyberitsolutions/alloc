@@ -866,3 +866,10 @@ class alloc(object):
             return result[0]
         else:
             return ''
+
+    def possible_fields(self, field_type):
+        print("These are the possible fields you can use:\n")
+        for item in self.field_names[field_type]:
+            print(item + " or '" + self.field_names[field_type][item] +"'")
+        print("")
+
