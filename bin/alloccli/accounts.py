@@ -20,6 +20,7 @@ class accounts(alloc):
                                         #'Default for accounts: "???" Default for transactions: "???"'))
   ops.append(('f:', 'field=NAME     ', 'A field you would like printed.\n'
                                        '(eg: -f all eg: -f tfID -f tfName -f tfBalance)')) 
+  ops.append((''  , 'possible-fields', 'List of possible fields.'))
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS]\n"
@@ -34,6 +35,9 @@ class accounts(alloc):
 
     # Got this far, then authenticate
     self.authenticate()
+
+    if o['possible-fields']:
+        alloc().possible_fields("transaction")
 
     # Initialize some variables
     #self.quiet = o['quiet']
