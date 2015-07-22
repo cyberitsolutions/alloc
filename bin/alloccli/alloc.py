@@ -279,7 +279,7 @@ class alloc(object):
 
     def create_config(self, config_file):
         # Create a default ~/.alloc/config file.
-        self.dbg("Creating and populating: " + f)
+        self.dbg("Creating and populating: " + config_file)
         default = "[main]"
         default += "\n#url: http://" + self.client_name + "/services/json.php"
         default += "\n#" + self.client_name + "_user: $ALLOC_USER"
@@ -866,3 +866,10 @@ class alloc(object):
             return result[0]
         else:
             return ''
+
+    def possible_fields(self, field_type):
+        print("These are the possible fields you can use:\n")
+        for item in self.field_names[field_type]:
+            print(item + " or '" + self.field_names[field_type][item] +"'")
+        print("")
+

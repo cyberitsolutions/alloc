@@ -26,6 +26,7 @@ class timesheets(alloc):
                                        'Time sheets default: -o From -o ID, Default for items: -o Date -o Item\\ ID'))
   ops.append(('f:', 'fields=LIST    ', 'The list of fields you would like printed.\n'
                                        '(eg: -f all eg: -f ID -f Item\\ ID -o Task\\ ID -o Comment)')) 
+  ops.append((''  , 'possible-fields', 'List of possible fields.'))
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS]\n"
@@ -51,6 +52,9 @@ alloc timesheets --date ">=2010-10-10" --items'''
 
     # Got this far, then authenticate
     self.authenticate()
+
+    if o['possible-fields']:
+        alloc().possible_fields("timeSheet")
 
     # Initialize some variables
     self.quiet = o['quiet']

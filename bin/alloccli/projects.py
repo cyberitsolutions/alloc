@@ -12,6 +12,7 @@ class projects(alloc):
   ops.append(('p:', 'project=ID|NAME', 'A project ID, or a fuzzy match for a project name.'))
   ops.append(('f:', 'fields=LIST    ', 'The list of fields you would like printed.\n'
                                        '(eg: all eg: projectID projectName)')) 
+  ops.append((''  , 'possible-fields', 'List of possible fields.'))
 
   # Specify some header and footer text for the help text
   help_text = "Usage: %s [OPTIONS]\n"
@@ -27,6 +28,9 @@ class projects(alloc):
 
     # Got this far, then authenticate
     self.authenticate()
+
+    if o['possible-fields']:
+      alloc().possible_fields("project")
 
     # Initialize some variables
     #self.quiet = o['quiet']
