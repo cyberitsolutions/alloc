@@ -1,4 +1,4 @@
-# alloccli subcommand for viewing a list of invoices.
+"""alloccli subcommand for viewing a list of invoices."""
 from alloc import alloc
 
 
@@ -8,19 +8,19 @@ class invoices(alloc):
 
     # Setup the options that this cli can accept
     ops = []
-    ops.append((''  , 'help           ', 'Show this help.'))
-    ops.append((''  , 'csv=[WHEN]     ', 'Return the results in CSV format. WHEN can be "auto",\n'
+    ops.append(('', 'help           ', 'Show this help.'))
+    ops.append(('', 'csv=[WHEN]     ', 'Return the results in CSV format. WHEN can be "auto",\n'
                                          '"never" or "always". If WHEN is omitted, assume "always".'))
-    ops.append(('i' , 'items          ', 'Show the invoice\'s items.'))
+    ops.append(('i', 'items          ', 'Show the invoice\'s items.'))
     ops.append(('c:', 'client=ID|NAME ', 'A client ID, or a fuzzy match for a client name.'))
     ops.append(('p:', 'project=ID|NAME', 'A project ID, or a fuzzy match for a project name.'))
     ops.append(('n:', 'num=ID         ', 'An invoice\'s number.'))
-    ops.append((''  , 'from=DATE      ', 'From this start date.'))
-    ops.append((''  , 'to=DATE        ', 'To this end date.'))
+    ops.append(('', 'from=DATE      ', 'From this start date.'))
+    ops.append(('', 'to=DATE        ', 'To this end date.'))
     ops.append(('s:', 'status=STATUS  ', 'The invoice\'s status eg: edit finished reconcile'))
     ops.append(('f:', 'fields=LIST    ', 'The list of fields you would like printed.\n'
                                          '(eg: all eg: clientID clientName)'))
-    ops.append((''  , 'possible-fields', 'List of possible fields.'))
+    ops.append(('', 'possible-fields', 'List of possible fields.'))
 
     # Specify some header and footer text for the help text
     help_text = "Usage: %s [OPTIONS]\n"

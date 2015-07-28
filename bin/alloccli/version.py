@@ -1,4 +1,4 @@
-# Subcommand for viewing the cli and server versions.
+"""Subcommand for viewing the cli and server versions."""
 from alloc import alloc
 import sys
 import os
@@ -10,7 +10,7 @@ class version(alloc):
 
     # Setup the options that this cli can accept
     ops = []
-    ops.append((''  , 'help           ', 'Show this help.'))
+    ops.append(('', 'help           ', 'Show this help.'))
     ops.append(('u.', 'url=URL        ', 'The alloc-server\'s URL'))
 
     # Specify some header and footer text for the help text
@@ -27,8 +27,9 @@ alloc version
 # Check the version of another alloc-server
 alloc version --url http://alloc.example.com/services/json.php"""
 
-    # Execute subcommand.
     def run(self, command_list):
+
+        """Execute subcommand."""
 
         # Get the command line arguments into a dictionary
         o, remainder_ = self.get_args(command_list, self.ops, self.help_text)

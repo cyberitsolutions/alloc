@@ -1,4 +1,4 @@
-# alloccli subcommand for launching your $BROWSER at alloc.
+"""alloccli subcommand for launching your $BROWSER at alloc."""
 import os
 from sys import stdout
 from alloc import alloc
@@ -10,8 +10,8 @@ class browse(alloc):
 
     # Setup the options that this cli can accept
     ops = []
-    ops.append((''  , 'help           ', 'Show this help.'))
-    ops.append(('q' , 'quiet          ', 'Run with no output except errors.'))
+    ops.append(('', 'help           ', 'Show this help.'))
+    ops.append(('q', 'quiet          ', 'Run with no output except errors.'))
     ops.append(('p.', 'project=ID|NAME', 'A project ID, or a fuzzy match for a project name.'))
     ops.append(('t.', 'task=ID|NAME   ', 'A task ID, or a fuzzy match for a task name.'))
     ops.append(('c.', 'client=ID|NAME ', 'A client ID, or a fuzzy match for a client\'s name.'))
@@ -33,8 +33,9 @@ alloc browse --project 1234
 alloc browse --client 43432
 alloc browse --time 213'''
 
-    # Execute subcommand.
     def run(self, command_list):
+
+        """Execute subcommand."""
 
         # Get the command line arguments into a dictionary
         o, remainder_ = self.get_args(command_list, self.ops, self.help_text)

@@ -82,40 +82,9 @@ install: ;
 test:
 	pyflakes bin/alloc
 	find -iname '*.py' -exec pyflakes {} +
-	# C0321: Too many inline statements eg: if hey: print hey
-	# W0702: No exception type(s) specified
-	# R0201: Method could be a function
-	# R0904: Too many public methods
-	# E1103: Disable poor type inference
-	# R0801: Duplicate line checking
-	# W0142: Argument * or ** magic
 	PYTHONPATH=$$PYTHONPATH:./bin/alloccli                  \
-	find -iname '*.py' -exec                                \
-	  pylint --indent-string   '  '                         \
-	         --disable         W0142                        \
-	         --disable         C0321                        \
-	         --disable         W0702                        \
-	         --disable         R0201                        \
-	         --disable         R0904                        \
-	         --disable         E1103                        \
-	         --disable         R0801                        \
-	         --disable         F0401                        \
-	         --max-locals      30                           \
-	         --max-args        8                            \
-	         --max-attributes  50                           \
-	         --max-line-length 135                          \
-	         --max-branchs     50                           \
-	         --method-rgx      '[a-z_][a-zA-Z0-9_]{2,30}$$' \
-	         --variable-rgx    '[a-z_][a-zA-Z0-9_]{0,30}$$' \
-	         --attr-rgx        '[a-z_][a-zA-Z0-9_]{2,30}$$' \
-	         --class-rgx       '[a-zA-Z_][a-zA-Z0-9_]+$$'    \
-	         --argument-rgx    '[a-z_][a-zA-Z0-9_]{0,30}$$' \
-	         --dummy-variables-rgx 'dummy|.+_$$'            \
-	         --max-statements     100                       \
-	         --max-module-lines   1200                      \
-	         --min-public-methods 1                         \
-	         --max-statement      200                       \
-	  {} +
+    # E501 is line lenth, this is best to ignore because 79 chars long is too short.
+	find -iname '*.py' -exec flake8 --ignore=E501 --count --benchmark {} +
 
 cache:
 	rm -rf cache_`cat util/alloc_version`

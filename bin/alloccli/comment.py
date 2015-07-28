@@ -1,4 +1,4 @@
-# alloccli subcommand for adding comments.
+"""alloccli subcommand for adding comments."""
 from alloc import alloc
 import sys
 
@@ -9,7 +9,7 @@ class comment(alloc):
 
     # Setup the options that this cli can accept
     ops = []
-    ops.append((''  , 'help           ', 'Show this help.'))
+    ops.append(('', 'help           ', 'Show this help.'))
     ops.append(('t.', 'task=ID|NAME   ', 'A task ID, or a fuzzy match for a task name.'))
     ops.append(('p.', 'project=ID|NAME', 'A project ID, or a fuzzy match for a project name.'))
     ops.append(('c.', 'client=ID|NAME ', 'A client ID, or a fuzzy match for a client name.'))
@@ -53,8 +53,9 @@ In this example the recipients are going to be internal only, except for Clyde
   $ alloc comment --task 1234 --to internal --to "Clyde Client <cc@example.com>"
 """
 
-    # Execute subcommand.
     def run(self, command_list):
+
+        """Execute subcommand."""
 
         # Get the command line arguments into a dictionary
         o, remainder_ = self.get_args(command_list, self.ops, self.help_text)

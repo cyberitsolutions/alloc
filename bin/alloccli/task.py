@@ -1,4 +1,4 @@
-# alloccli subcommand for editing alloc tasks.
+"""alloccli subcommand for editing alloc tasks."""
 from alloc import alloc
 
 
@@ -8,29 +8,29 @@ class task(alloc):
 
     # Setup the options that this cli can accept
     ops = []
-    ops.append((''  , 'help           ', 'Show this help.'))
-    ops.append(('q' , 'quiet          ', 'Run with less output.\n')) 
+    ops.append(('', 'help           ', 'Show this help.'))
+    ops.append(('q', 'quiet          ', 'Run with less output.\n')) 
     ops.append(('t.', '               ', 'Edit a task. Specify an ID or omit -t to create.'))
-    ops.append((''  , 'name=TEXT      ', 'task\'s title'))
-    ops.append((''  , 'desc=TEXT      ', 'task\'s long description'))
-    ops.append((''  , 'assign=USERNAME', 'username of the person that the task is assigned to'))
-    ops.append((''  , 'manage=USERNAME', 'username of the person that the task is managed by'))
-    ops.append((''  , 'dip=TEXT       ', 'default interested parties, comma separated usernames/emails/full names'))
-    ops.append((''  , 'tags=TEXT      ', 'comma separated task tags'))
-    ops.append((''  , 'priority=PRI   ', '1, 2, 3, 4 or 5; or one of Wishlist, Minor, Normal, Important or Critical'))
-    ops.append((''  , 'limit=HOURS    ', 'limit in hours for effort spend on this task'))
-    ops.append((''  , 'best=HOURS     ', 'shortest estimate of how many hours of effort this task will take'))
-    ops.append((''  , 'likely=HOURS   ', 'most likely amount of hours of effort this task will take'))
-    ops.append((''  , 'worst=HOURS    ', 'longest estimate of how many hours of effort this task will take'))
-    ops.append((''  , 'estimator=USERNAME', 'the person who created the estimates on this task'))
-    ops.append((''  , 'targetstart=DATE', 'estimated date for work to start on this task'))
-    ops.append((''  , 'targetcompletion=DATE', 'estimated date for when this task should be finished'))
-    ops.append((''  , 'project=ID|NAME', 'task\'s project ID, or a fuzzy match for a project name.'))
-    ops.append((''  , 'type=TYPE      ', 'Task, Fault, Message, Milestone or Parent'))
-    ops.append((''  , 'dupe=ID        ', 'task ID of the related dupe'))
-    ops.append((''  , 'pend=IDS       ', 'task ID(s), comma separated, that block this task.'))
-    ops.append((''  , 'reopen=DATE    ', 'Reopen the task on this date. To be used with --status=pending.'))
-    ops.append((''  , 'status=STATUS  ', 'inprogress, notstarted, info, client, manager, invalid, duplicate,\n'
+    ops.append(('', 'name=TEXT      ', 'task\'s title'))
+    ops.append(('', 'desc=TEXT      ', 'task\'s long description'))
+    ops.append(('', 'assign=USERNAME', 'username of the person that the task is assigned to'))
+    ops.append(('', 'manage=USERNAME', 'username of the person that the task is managed by'))
+    ops.append(('', 'dip=TEXT       ', 'default interested parties, comma separated usernames/emails/full names'))
+    ops.append(('', 'tags=TEXT      ', 'comma separated task tags'))
+    ops.append(('', 'priority=PRI   ', '1, 2, 3, 4 or 5; or one of Wishlist, Minor, Normal, Important or Critical'))
+    ops.append(('', 'limit=HOURS    ', 'limit in hours for effort spend on this task'))
+    ops.append(('', 'best=HOURS     ', 'shortest estimate of how many hours of effort this task will take'))
+    ops.append(('', 'likely=HOURS   ', 'most likely amount of hours of effort this task will take'))
+    ops.append(('', 'worst=HOURS    ', 'longest estimate of how many hours of effort this task will take'))
+    ops.append(('', 'estimator=USERNAME', 'the person who created the estimates on this task'))
+    ops.append(('', 'targetstart=DATE', 'estimated date for work to start on this task'))
+    ops.append(('', 'targetcompletion=DATE', 'estimated date for when this task should be finished'))
+    ops.append(('', 'project=ID|NAME', 'task\'s project ID, or a fuzzy match for a project name.'))
+    ops.append(('', 'type=TYPE      ', 'Task, Fault, Message, Milestone or Parent'))
+    ops.append(('', 'dupe=ID        ', 'task ID of the related dupe'))
+    ops.append(('', 'pend=IDS       ', 'task ID(s), comma separated, that block this task.'))
+    ops.append(('', 'reopen=DATE    ', 'Reopen the task on this date. To be used with --status=pending.'))
+    ops.append(('', 'status=STATUS  ', 'inprogress, notstarted, info, client, manager, invalid, duplicate,\n'
                                          'incomplete, complete; or: open, pending, closed\n'))
 
     # Specify some header and footer text for the help text
@@ -51,8 +51,9 @@ alloc task --name 'This task is fooed in the bar' --project 22
 # Use null to unset
 alloc task -t 1234 --assignee null"""
 
-    # Execute subcommand.
     def run(self, command_list):
+
+        """Execute subcommand."""
 
         # Get the command line arguments into a dictionary
         o, remainder_ = self.get_args(command_list, self.ops, self.help_text)

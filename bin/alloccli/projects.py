@@ -1,4 +1,4 @@
-# alloccli subcommand for viewing a list of projects.
+"""alloccli subcommand for viewing a list of projects."""
 from alloc import alloc
 
 
@@ -8,21 +8,22 @@ class projects(alloc):
 
     # Setup the options that this cli can accept
     ops = []
-    ops.append((''  , 'help           ', 'Show this help.'))
-    ops.append((''  , 'csv=[WHEN]     ', 'Return the results in CSV format. WHEN can be "auto",\n'
+    ops.append(('', 'help           ', 'Show this help.'))
+    ops.append(('', 'csv=[WHEN]     ', 'Return the results in CSV format. WHEN can be "auto",\n'
                                          '"never" or "always". If WHEN is omitted, assume "always".'))
     ops.append(('p:', 'project=ID|NAME', 'A project ID, or a fuzzy match for a project name.'))
     ops.append(('f:', 'fields=LIST    ', 'The list of fields you would like printed.\n'
                                          '(eg: all eg: projectID projectName)'))
-    ops.append((''  , 'possible-fields', 'List of possible fields.'))
+    ops.append(('', 'possible-fields', 'List of possible fields.'))
 
     # Specify some header and footer text for the help text
     help_text = "Usage: %s [OPTIONS]\n"
     help_text += __doc__
     help_text += "\n\n%s\n\nIf called without arguments this program will display all of your projects."
 
-    # Execute subcommand.
     def run(self, command_list):
+
+        """Execute subcommand."""
 
         # Get the command line arguments into a dictionary
         o, remainder_ = self.get_args(command_list, self.ops, self.help_text)

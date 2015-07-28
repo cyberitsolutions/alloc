@@ -1,4 +1,4 @@
-# alloccli subcommand for submitting time sheets.
+"""alloccli subcommand for submitting time sheets."""
 import sys
 from alloc import alloc
 
@@ -9,7 +9,7 @@ class submit(alloc):
 
     # Setup the options that this cli can accept
     ops = []
-    ops.append(('' , 'help           ', 'Show this help.'))
+    ops.append(('', 'help           ', 'Show this help.'))
     ops.append(('n', 'dryrun         ', 'Perform a dry run, no data gets updated.'))
     ops.append(('q', 'quiet          ', 'Run with no output except errors.'))
 
@@ -27,8 +27,9 @@ alloc timesheets | alloc submit --dryrun
 alloc timesheets | alloc submit
 alloc timesheets --status edit --hours ">=7" --date "1 week ago" | alloc submit'''
 
-    # Execute subcommand.
     def run(self, command_list):
+
+        """Execute subcommand."""
 
         # Get the command line arguments into a dictionary
         o, remainder_ = self.get_args(command_list, self.ops, self.help_text)
