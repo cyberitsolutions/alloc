@@ -121,7 +121,7 @@ class tasks(alloc):
                 fields.remove('timeActual')
 
         # Get list of tasks
-        r = self.get_list("task", ops)
+        task_list = self.get_list("task", ops)
 
-        if r:
-            self.print_table("task", r, fields, order)
+        if task_list:
+            self.print_table("task", task_list, fields, order)
