@@ -32,8 +32,8 @@ class tasks(alloc):
     help_text += __doc__
     help_text += "\n\n%s\n\nIf called without arguments this program will display all tasks that are assigned to you."
 
+    # Execute subcommand.
     def run(self, command_list):
-        # Execute subcommand.
 
         # Get the command line arguments into a dictionary
         o, remainder_ = self.get_args(command_list, self.ops, self.help_text)
