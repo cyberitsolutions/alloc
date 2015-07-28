@@ -41,8 +41,8 @@ alloc subscriptions --email example@example.com --key 1234abcd > foo.txt
 alloc subscriptions --del < foo.txt
 alloc subscriptions --add < foo.txt"""
 
+    # Execute subcommand.
     def run(self, command_list):
-        # Execute subcommand.
 
         # Get the command line arguments into a dictionary
         o, remainder_ = self.get_args(command_list, self.ops, self.help_text)

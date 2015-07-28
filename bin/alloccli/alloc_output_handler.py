@@ -210,7 +210,6 @@ class alloc_output_handler:
                     table.set_field_align(label, "r")
                 else:
                     table.set_field_align(label, "l")
-                    # table.align[label] = 'l'
 
             if stdout.isatty():
                 proc = subprocess.Popen(

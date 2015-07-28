@@ -33,8 +33,8 @@ alloc browse --project 1234
 alloc browse --client 43432
 alloc browse --time 213'''
 
+    # Execute subcommand.
     def run(self, command_list):
-        # Execute subcommand.
 
         # Get the command line arguments into a dictionary
         o, remainder_ = self.get_args(command_list, self.ops, self.help_text)

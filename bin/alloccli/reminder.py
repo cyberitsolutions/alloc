@@ -41,8 +41,8 @@ alloc reminder -r 1234 --title 'Name for the reminder.' --to alla
 # Omit -r to create a new reminder
 alloc reminder --title 'Name for the reminder.' --to alla"""
 
+    # Execute subcommand.
     def run(self, command_list):
-        # Execute subcommand.
 
         # Get the command line arguments into a dictionary
         o, remainder_ = self.get_args(command_list, self.ops, self.help_text)

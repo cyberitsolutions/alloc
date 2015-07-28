@@ -35,7 +35,6 @@ class accounts(alloc):
             alloc().possible_fields("transaction")
 
         # Initialize some variables
-        #self.quiet = o['quiet']
         ops = {}
 
         if 'account' in o and o['account']:
