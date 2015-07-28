@@ -33,9 +33,6 @@ alloc version --url http://alloc.example.com/services/json.php"""
         # Get the command line arguments into a dictionary
         o, remainder_ = self.get_args(command_list, self.ops, self.help_text)
 
-        # No authentication necessary
-        # self.authenticate();
-
         if o['url']:
             self.url = o['url']
 

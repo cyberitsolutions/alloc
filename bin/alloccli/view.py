@@ -24,8 +24,8 @@ Examples:
 # Display all the different fields on a task
 alloc view --task 1234"""
 
+    # Execute subcommand.
     def run(self, command_list):
-        # Execute subcommand.
 
         # Get the command line arguments into a dictionary
         o, remainder_ = self.get_args(command_list, self.ops, self.help_text)
@@ -35,12 +35,3 @@ alloc view --task 1234"""
 
         if o['task']:
             print self.print_task(o['task'], children=o['children'])
-
-        # elif o['timesheet']:
-        #   pass
-
-        # elif o['item']:
-        #   pass
-
-        # elif o['project']:
-        #   pass
