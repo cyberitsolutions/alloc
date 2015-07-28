@@ -1,4 +1,4 @@
-# alloccli subcommand for viewing a list of comment subscriptions.
+"""alloccli subcommand for viewing a list of comment subscriptions."""
 import sys
 from alloc import alloc
 
@@ -9,17 +9,17 @@ class subscriptions(alloc):
 
     # Setup the options that this cli can accept
     ops = []
-    ops.append((''  , 'help           ', 'Show this help.'))
-    ops.append((''  , 'csv=[WHEN]     ', 'Return the results in CSV format. WHEN can be "auto",\n'
+    ops.append(('', 'help           ', 'Show this help.'))
+    ops.append(('', 'csv=[WHEN]     ', 'Return the results in CSV format. WHEN can be "auto",\n'
                                          '"never" or "always". If WHEN is omitted, assume "always".'))
-    ops.append(('q' , 'quiet          ', 'Run with no output except errors.'))
-    ops.append(('n' , 'dryrun         ', 'Perform a dry run, no data gets updated.'))
+    ops.append(('q', 'quiet          ', 'Run with no output except errors.'))
+    ops.append(('n', 'dryrun         ', 'Perform a dry run, no data gets updated.'))
     ops.append(('k.', 'key=KEY        ', 'An 8 character email subject line key.'))
     ops.append(('t.', 'task=ID|NAME   ', 'A task ID, or a fuzzy match for a task name.'))
     ops.append(('e.', 'email=EMAIL    ', 'The email address. Any part of "Full Name \n'
                                          '<email@address.com>". Use % for wildcard.'))
-    ops.append(('a' , 'add            ', 'Add the following subscriptions from stdin.'))
-    ops.append(('d' , 'del            ', 'Delete the following subscriptions from stdin.'))
+    ops.append(('a', 'add            ', 'Add the following subscriptions from stdin.'))
+    ops.append(('d', 'del            ', 'Delete the following subscriptions from stdin.'))
 
     # Specify some header and footer text for the help text
     help_text = "Usage: %s [OPTIONS] [FILE]\n"
@@ -41,8 +41,9 @@ alloc subscriptions --email example@example.com --key 1234abcd > foo.txt
 alloc subscriptions --del < foo.txt
 alloc subscriptions --add < foo.txt"""
 
-    # Execute subcommand.
     def run(self, command_list):
+
+        """Execute subcommand."""
 
         # Get the command line arguments into a dictionary
         o, remainder_ = self.get_args(command_list, self.ops, self.help_text)

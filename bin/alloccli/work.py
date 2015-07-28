@@ -1,4 +1,4 @@
-# alloccli subcommand for billing time for work done.
+"""alloccli subcommand for billing time for work done."""
 from alloc import alloc
 import sys
 import datetime
@@ -24,11 +24,11 @@ class work(alloc):
 
     # Setup the options that this cli can accept
     ops = []
-    ops.append((''  , 'help           ', 'Show this help.'))
-    ops.append((''  , 'csv=[WHEN]     ', 'Return the results in CSV format. WHEN can be "auto",\n'
+    ops.append(('', 'help           ', 'Show this help.'))
+    ops.append(('', 'csv=[WHEN]     ', 'Return the results in CSV format. WHEN can be "auto",\n'
                                          '"never" or "always". If WHEN is omitted, assume "always".'))
-    ops.append(('q' , 'quiet          ', 'Run with no output except errors.'))
-    ops.append(('n' , 'dryrun         ', 'Perform a dry run, no data gets updated.'))
+    ops.append(('q', 'quiet          ', 'Run with no output except errors.'))
+    ops.append(('n', 'dryrun         ', 'Perform a dry run, no data gets updated.'))
     ops.append(('p.', 'project=ID|NAME', 'A project ID, or a fuzzy match for a project name.'))
     ops.append(('t.', 'task=ID|NAME   ', 'A task ID, or a fuzzy match for a task name.'))
     ops.append(('d.', 'date=YYYY-MM-DD', 'The date that the work was performed.'))
@@ -37,8 +37,8 @@ class work(alloc):
                                          '(eg: 0=no-charge, 1=standard, 1.5=time-and-a-half,\n'
                                          '2=double-time, 3=triple-time). Default: 1'))
     ops.append(('c.', 'comment=COMMENT', 'The time sheet item comment.'))
-    ops.append((''  , 'tsid=ID        ', 'Add time to a specific time sheet (optional).'))
-    ops.append(('i' , 'interactive    ', 'Run a live work timer interactively.'))
+    ops.append(('', 'tsid=ID        ', 'Add time to a specific time sheet (optional).'))
+    ops.append(('i', 'interactive    ', 'Run a live work timer interactively.'))
 
     # Specify some header and footer text for the help text
     help_text = "Usage: %s [OPTIONS]\n"
@@ -70,7 +70,8 @@ Unfortunately doing so appears to flush the input buffer!)
 """
 
     def run(self, command_list):
-        # Execute subcommand.
+
+        """Execute subcommand."""
 
         # Get the command line arguments into a dictionary
         o, remainder_ = self.get_args(command_list, self.ops, self.help_text)

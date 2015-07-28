@@ -1,4 +1,4 @@
-# alloccli subcommand for viewing a list of reminders.
+"""alloccli subcommand for viewing a list of reminders."""
 from alloc import alloc
 
 
@@ -8,8 +8,8 @@ class reminders(alloc):
 
     # Setup the options that this cli can accept
     ops = []
-    ops.append((''  , 'help           ', 'Show this help.'))
-    ops.append((''  , 'csv=[WHEN]     ', 'Return the results in CSV format. WHEN can be "auto",\n'
+    ops.append(('', 'help           ', 'Show this help.'))
+    ops.append(('', 'csv=[WHEN]     ', 'Return the results in CSV format. WHEN can be "auto",\n'
                                          '"never" or "always". If WHEN is omitted, assume "always".'))
     ops.append(('r.', 'reminder=ID    ', 'Reminder ID.'))
     ops.append(('t.', 'task=ID|NAME   ', 'A task ID, or a fuzzy match for a task name.'))

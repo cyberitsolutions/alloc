@@ -1,4 +1,4 @@
-# alloccli subcommand for TF accounts.
+"""alloccli subcommand for TF accounts."""
 from alloc import alloc
 
 
@@ -8,14 +8,14 @@ class accounts(alloc):
 
     # Setup the options that this cli can accept
     ops = []
-    ops.append((''  , 'help           ', 'Show this help.'))
-    ops.append((''  , 'csv=[WHEN]     ', 'Return the results in CSV format. WHEN can be "auto",\n'
+    ops.append(('', 'help           ', 'Show this help.'))
+    ops.append(('', 'csv=[WHEN]     ', 'Return the results in CSV format. WHEN can be "auto",\n'
                                          '"never" or "always". If WHEN is omitted, assume "always".'))
-    ops.append(('i' , 'items          ', 'Show accounts\' transactions.'))
+    ops.append(('i', 'items          ', 'Show accounts\' transactions.'))
     ops.append(('a:', 'account=TF     ', 'Show a particular TF. Default to your TFs.'))
     ops.append(('f:', 'field=NAME     ', 'A field you would like printed.\n'
                                          '(eg: -f all eg: -f tfID -f tfName -f tfBalance)'))
-    ops.append((''  , 'possible-fields', 'List of possible fields.'))
+    ops.append(('', 'possible-fields', 'List of possible fields.'))
 
     # Specify some header and footer text for the help text
     help_text = "Usage: %s [OPTIONS]\n"

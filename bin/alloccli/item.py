@@ -1,4 +1,4 @@
-# alloccli subcommand for editing alloc time sheet items.
+"""alloccli subcommand for editing alloc time sheet items."""
 from alloc import alloc
 
 
@@ -8,20 +8,20 @@ class item(alloc):
 
     # Setup the options that this cli can accept
     ops = []
-    ops.append((''  , 'help           ', 'Show this help.'))
-    ops.append(('q' , 'quiet          ', 'Run with less output.\n'))
+    ops.append(('', 'help           ', 'Show this help.'))
+    ops.append(('q', 'quiet          ', 'Run with less output.\n'))
     ops.append(('i.', '               ', 'Edit a time sheet item. Specify an ID or omit -i to create.'))
-    ops.append((''  , 'tsid=ID        ', 'time sheet that this item belongs to'))
-    ops.append((''  , 'date=DATE      ', 'time sheet item date'))
-    ops.append((''  , 'duration=HOURS ', 'time sheet item duration'))
-    ops.append((''  , 'unit=NUM       ', 'time sheet item unit of duration eg: 1=hours 2=days 3=week 4=month 5=fixed'))
-    ops.append((''  , 'task=ID        ', 'ID of the time sheet item\'s task'))
-    ops.append((''  , 'rate=NUM       ', '$rate of the time sheet item'))
-    ops.append((''  , 'private=1|0    ', 'privacy setting of the time sheet item\'s comment eg: 1=private 0=normal'))
-    ops.append((''  , 'comment=TEXT   ', 'time sheet item comment'))
-    ops.append((''  , 'multiplier=NUM ', 'time sheet item multiplier eg: 1=standard 1.5=time-and-a-half 2=double-time\n'
+    ops.append(('', 'tsid=ID        ', 'time sheet that this item belongs to'))
+    ops.append(('', 'date=DATE      ', 'time sheet item date'))
+    ops.append(('', 'duration=HOURS ', 'time sheet item duration'))
+    ops.append(('', 'unit=NUM       ', 'time sheet item unit of duration eg: 1=hours 2=days 3=week 4=month 5=fixed'))
+    ops.append(('', 'task=ID        ', 'ID of the time sheet item\'s task'))
+    ops.append(('', 'rate=NUM       ', '$rate of the time sheet item'))
+    ops.append(('', 'private=1|0    ', 'privacy setting of the time sheet item\'s comment eg: 1=private 0=normal'))
+    ops.append(('', 'comment=TEXT   ', 'time sheet item comment'))
+    ops.append(('', 'multiplier=NUM ', 'time sheet item multiplier eg: 1=standard 1.5=time-and-a-half 2=double-time\n'
                                          '3=triple-time 0=no-charge'))
-    ops.append((''  , 'delete=1       ', 'set this to 1 to delete the time sheet item\n'))
+    ops.append(('', 'delete=1       ', 'set this to 1 to delete the time sheet item\n'))
 
     # Specify some header and footer text for the help text
     help_text = "Usage: %s [OPTIONS]\n"
@@ -35,8 +35,9 @@ Examples:
 # Omit -i to create a new time sheet item. Note that tsid is mandatory.
 alloc item --tsid 7941 --duration 3.5 --date 2011-07-24 --comment hey --task 15180"""
 
-    # Execute subcommand.
     def run(self, command_list):
+
+        """Execute subcommand."""
 
         # Get the command line arguments into a dictionary
         o, remainder_ = self.get_args(command_list, self.ops, self.help_text)
