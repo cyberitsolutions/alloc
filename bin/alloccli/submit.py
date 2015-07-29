@@ -19,9 +19,9 @@ class submit(alloc):
     help_text += '''\n\n%s
 
 This program enables you to submit your time sheets to managers, admins etc.
-The time sheet is moved from eg: Edit to Manager status. The time sheet may 
+The time sheet is moved from eg: Edit to Manager status. The time sheet may
 no longer be editable once you have submitted it.
-  
+
 Examples:
 alloc timesheets | alloc submit --dryrun
 alloc timesheets | alloc submit

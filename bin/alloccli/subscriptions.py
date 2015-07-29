@@ -11,7 +11,7 @@ class subscriptions(alloc):
     ops = []
     ops.append(('', 'help           ', 'Show this help.'))
     ops.append(('', 'csv=[WHEN]     ', 'Return the results in CSV format. WHEN can be "auto",\n'
-                                         '"never" or "always". If WHEN is omitted, assume "always".'))
+                                       '"never" or "always". If WHEN is omitted, assume "always".'))
     ops.append(('q', 'quiet          ', 'Run with no output except errors.'))
     ops.append(('n', 'dryrun         ', 'Perform a dry run, no data gets updated.'))
     ops.append(('k.', 'key=KEY        ', 'An 8 character email subject line key.'))
@@ -31,7 +31,7 @@ Examples:
 # Print out a list of interested parties using different search criteria:
 alloc subscriptions --key 1234abcd
 alloc subscriptions --task 321
-alloc subscriptions --email example@example.com 
+alloc subscriptions --email example@example.com
 
 # Output the list in CSV format to a file
 alloc subscriptions --email example@example.com --key 1234abcd > foo.txt

@@ -25,9 +25,11 @@ class alloc(object):
     quiet = ''
     dryrun = ''
     sessID = ''
-    # FIXME:: Why do we need able to use a different client name? -- cjb, 2015-07
+    # FIXME:: Why do we need able to use a different client name? -- cjb,
+    # 2015-07
     client_name = os.path.basename(sys.argv[0])
-    alloc_dir = os.environ.get(client_name.upper() + '_HOME') or os.path.join(os.environ['HOME'], '.' + client_name)
+    alloc_dir = os.environ.get(
+        client_name.upper() + '_HOME') or os.path.join(os.environ['HOME'], '.' + client_name)
     debug = os.environ.get(client_name.upper() + '_DEBUG')
     config = {}
     user_transforms = {}
@@ -37,164 +39,163 @@ class alloc(object):
     http_username = ''
     http_password = ''
     field_names = {
-        "task" : {
-             "taskID"                   :"ID"
-           , "taskTypeID"               :"Type"
-           , "taskStatusLabel"          :"Status"
-           , "taskStatusColour"         :"Colour"
-           , "priority"                 :"Task Pri"
-           , "projectPriority"          :"Proj Pri"
-           , "priorityFactor"           :"Pri Factor"
-           , "priorityLabel"            :"Priority"
-           , "rate"                     :"Rate"
-           , "projectName"              :"Project"
-           , "taskName"                 :"Task"
-           , "taskDescription"          :"Description"
-           , "creator_name"             :"Creator"
-           , "manager_name"             :"Manager"
-           , "assignee_name"            :"Assigned"
-           , "projectShortName"         :"Proj Nick"
-           , "currency"                 :"Curr"
-           , "timeActualLabel"          :"Act Label"
-           , "timeBest"                 :"Best"
-           , "timeWorst"                :"Worst"
-           , "timeExpected"             :"Est"
-           , "timeLimit"                :"Limit"
-           , "timeActual"               :"Act"
-           , "dateTargetCompletion"     :"Targ Compl"
-           , "dateTargetStart"          :"Targ Start"
-           , "dateActualCompletion"     :"Act Compl"
-           , "dateActualStart"          :"Act Start"
-           , "taskStatus"               :"Stat"
-           , "dateAssigned"             :"Date Assigned"
-           , "project_name"             :"Proj Name"
-           , "dateClosed"               :"Closed"
-           , "dateCreated"              :"Created"
-           , "tags"                     :"Tags"
+        "task": {
+            "taskID":                       "ID",
+            "taskTypeID":                   "Type",
+            "taskStatusLabel":              "Status",
+            "taskStatusColour":             "Colour",
+            "priority":                     "Task Pri",
+            "projectPriority":              "Proj Pri",
+            "priorityFactor":               "Pri Factor",
+            "priorityLabel":                "Priority",
+            "rate":                         "Rate",
+            "projectName":                  "Project",
+            "taskName":                     "Task",
+            "taskDescription":              "Description",
+            "creator_name":                 "Creator",
+            "manager_name":                 "Manager",
+            "assignee_name":                "Assigned",
+            "projectShortName":             "Proj Nick",
+            "currency":                     "Curr",
+            "timeActualLabel":              "Act Label",
+            "timeBest":                     "Best",
+            "timeWorst":                    "Worst",
+            "timeExpected":                 "Est",
+            "timeLimit":                    "Limit",
+            "timeActual":                   "Act",
+            "dateTargetCompletion":         "Targ Compl",
+            "dateTargetStart":              "Targ Start",
+            "dateActualCompletion":         "Act Compl",
+            "dateActualStart":              "Act Start",
+            "taskStatus":                   "Stat",
+            "dateAssigned":                 "Date Assigned",
+            "project_name":                 "Proj Name",
+            "dateClosed":                   "Closed",
+            "dateCreated":                  "Created",
+            "tags":                         "Tags"
         },
 
-        "timeSheet" : {
-             "timeSheetID"              :"ID"
-           , "dateFrom"                 :"From"
-           , "dateTo"                   :"To"
-           , "status"                   :"Status"
-           , "person"                   :"Owner"
-           , "duration"                 :"Duration"
-           , "totalHours"               :"Hrs"
-           , "amount"                   :"Amount"
-           , "projectName"              :"Project"
-           , "currencyTypeID"           :"Currency"
-           , "customerBilledDollars"    :"Bill"
-           , "dateRejected"             :"Rejected"
-           , "dateSubmittedToManager"   :"Submitted"
-           , "dateSubmittedToAdmin"     :"Submitted Admin"
-           , "invoiceDate"              :"Invoiced"
-           , "billingNote"              :"Notes"
-           , "recipient_tfID"           :"TFID"
-           , "commentPrivate"           :"Comm Priv"
+        "timeSheet": {
+            "timeSheetID":                  "ID",
+            "dateFrom":                     "From",
+            "dateTo":                       "To",
+            "status":                       "Status",
+            "person":                       "Owner",
+            "duration":                     "Duration",
+            "totalHours":                   "Hrs",
+            "amount":                       "Amount",
+            "projectName":                  "Project",
+            "currencyTypeID":               "Currency",
+            "customerBilledDollars":        "Bill",
+            "dateRejected":                 "Rejected",
+            "dateSubmittedToManager":       "Submitted",
+            "dateSubmittedToAdmin":         "Submitted Admin",
+            "invoiceDate":                  "Invoiced",
+            "billingNote":                  "Notes",
+            "recipient_tfID":               "TFID",
+            "commentPrivate":               "Comm Priv"
         },
 
-        "timeSheetItem" : {
-             "timeSheetID"              :"ID"
-           , "timeSheetItemID"          :"Item ID"
-           , "dateTimeSheetItem"        :"Date"
-           , "taskID"                   :"Task ID"
-           , "comment"                  :"Comment"
-           , "timeSheetItemDuration"    :"Hours"
-           , "rate"                     :"Rate"
-           , "worth"                    :"Worth"
-           , "hoursBilled"              :"Total"
-           , "timeLimit"                :"Limit"
-           , "limitWarning"             :"Warning"
-           , "description"              :"Desc"
-           , "secondsBilled"            :"Seconds"
-           , "multiplier"               :"Mult"
-           , "approvedByManagerPersonID":"Managed"
-           , "approvedByAdminPersonID"  :"Admin"
+        "timeSheetItem": {
+            "timeSheetID":                  "ID",
+            "timeSheetItemID":              "Item ID",
+            "dateTimeSheetItem":            "Date",
+            "taskID":                       "Task ID",
+            "comment":                      "Comment",
+            "timeSheetItemDuration":        "Hours",
+            "rate":                         "Rate",
+            "worth":                        "Worth",
+            "hoursBilled":                  "Total",
+            "timeLimit":                    "Limit",
+            "limitWarning":                 "Warning",
+            "description":                  "Desc",
+            "secondsBilled":                "Seconds",
+            "multiplier":                   "Mult",
+            "approvedByManagerPersonID":    "Managed",
+            "approvedByAdminPersonID":      "Admin"
         },
 
-        "transaction" : {
-             "transactionID"            :"ID"
-           , "fromTfName"               :"From TF"
-           , "tfName"                   :"Dest TF"
-           , "amount"                   :"Amount"
-           , "status"                   :"Status"
-           , "transactionDate"          :"Transaction Date"
-        },
-  
-        "tf" : {
-             "tfID"                     :"ID"
-           , "tfBalancePending"         :"Pending"
-           , "tfBalance"                :"Approved"
+        "transaction": {
+            "transactionID":                "ID",
+            "fromTfName":                   "From TF",
+            "tfName":                       "Dest TF",
+            "amount":                       "Amount",
+            "status":                       "Status",
+            "transactionDate":              "Transaction Date"
         },
 
-        "client" : {
-             "clientID"                 :"ID"
-           , "clientName"               :"Name"
-        },
-              
-        "token" : {
-             "tokenID"                  :"ID"
-           , "tokenHash"                :"Key"
+        "tf": {
+            "tfID":                         "ID",
+            "tfBalancePending":             "Pending",
+            "tfBalance":                    "Approved"
         },
 
-        "interestedParty" : {
-             "interestedPartyID"        :"ID"
-           , "entity"                   :"Entity"
-           , "entityID"                 :"Entity ID"
-           , "fullName"                 :"Name"
-           , "emailAddress"             :"Email"
+        "client": {
+            "clientID":                     "ID",
+            "clientName":                   "Name"
         },
 
-        "person" : {
-             "personID"                 :"ID"
-           , "firstName"                :"First Name"
-           , "surname"                  :"Surname"
-           , "username"                 :"Username"
-           , "emailAddress"             :"Email"
+        "token": {
+            "tokenID":                      "ID",
+            "tokenHash":                    "Key"
         },
 
-        "project" : {
-             "projectID"                :"ID"
-           , "projectName"              :"Proj Name"
+        "interestedParty": {
+            "interestedPartyID":            "ID",
+            "entity":                       "Entity",
+            "entityID":                     "Entity ID",
+            "fullName":                     "Name",
+            "emailAddress":                 "Email"
         },
 
-        "invoice" : {
-             "invoiceID"                :"ID"
-           , "clientName"               :"Client"
-           , "invoiceNum"               :"Num"
-           , "invoiceDateFrom"          :"From"
-           , "invoiceDateTo"            :"To"
-           , "invoiceStatus"            :"Status"
-           , "status_label"             :"Payment"
-           , "amountPaidRejected"       :"Rejected"
-           , "amountPaidPending"        :"Pending"
-           , "amountPaidApproved"       :"Approved"
-           , "iiAmountSum"              :"Total"
+        "person": {
+            "personID":                     "ID",
+            "firstName":                    "First Name",
+            "surname":                      "Surname",
+            "username":                     "Username",
+            "emailAddress":                 "Email"
         },
 
-        "invoiceItem" : {
-             "invoiceID"                :"ID"
-           , "invoiceItemID"            :"Item ID"
-           , "clientName"               :"Client"
-           , "invoiceNum"               :"Num"
-           , "iiDate"                   :"Date"
-           , "iiAmount"                 :"Amount"
-           , "iiQuantity"               :"Qty"
-           , "iiUnitPrice"              :"Per unit"
-           , "iiMemo"                   :"Comment"
+        "project": {
+            "projectID":                    "ID",
+            "projectName":                  "Proj Name"
         },
 
-        "reminder" : {
-             "reminderID"                :"ID"
-           , "reminderSubject"           :"Subject"
-           , "reminderActive"            :"Active"
-           , "link"                      :"Entity"
-           , "frequency"                 :"Frequency"
-          # Plug in the target object
+        "invoice": {
+            "invoiceID":                    "ID",
+            "clientName":                   "Client",
+            "invoiceNum":                   "Num",
+            "invoiceDateFrom":              "From",
+            "invoiceDateTo":                "To",
+            "invoiceStatus":                "Status",
+            "status_label":                 "Payment",
+            "amountPaidRejected":           "Rejected",
+            "amountPaidPending":            "Pending",
+            "amountPaidApproved":           "Approved",
+            "iiAmountSum":                  "Total"
+        },
+
+        "invoiceItem": {
+            "invoiceID":                    "ID",
+            "invoiceItemID":                "Item ID",
+            "clientName":                   "Client",
+            "invoiceNum":                   "Num",
+            "iiDate":                       "Date",
+            "iiAmount":                     "Amount",
+            "iiQuantity":                   "Qty",
+            "iiUnitPrice":                  "Per unit",
+            "iiMemo":                       "Comment"
+        },
+
+        "reminder": {
+            "reminderID":                   "ID",
+            "reminderSubject":              "Subject",
+            "reminderActive":               "Active",
+            "link":                         "Entity",
+            "frequency":                    "Frequency"
+            # Plug in the target object
         },
     }
-
 
     row_timeSheet = ["timeSheetID", "dateFrom", "dateTo", "status", "person",
                      "duration", "totalHours", "amount", "projectName"]
@@ -268,13 +269,15 @@ class alloc(object):
             # create a password manager
             top_level_url = "/".join(self.url.split("/")[0:3])
             password_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
-            password_mgr.add_password(None, top_level_url, self.http_username, self.http_password)
+            password_mgr.add_password(
+                None, top_level_url, self.http_username, self.http_password)
             handler = urllib2.HTTPBasicAuthHandler(password_mgr)
             self.url_opener = urllib2.build_opener(handler)
         else:
             self.url_opener = urllib2.build_opener()
 
-        self.url_opener.addheaders = [('User-agent', self.client_name + '-cli %s' % self.username)]
+        self.url_opener.addheaders = [
+            ('User-agent', self.client_name + '-cli %s' % self.username)]
         urllib2.install_opener(self.url_opener)
 
     def create_config(self, config_file):
@@ -302,7 +305,8 @@ class alloc(object):
             for option in options:
                 self.config[option.lower()] = config.get(section, option)
             if self.client_name.upper() + '_TRUNC' in os.environ:
-                self.config[self.client_name + '_trunc'] = os.environ.get(self.client_name.upper() + '_TRUNC')
+                self.config[
+                    self.client_name + '_trunc'] = os.environ.get(self.client_name.upper() + '_TRUNC')
         except:
             pass
 
@@ -312,7 +316,8 @@ class alloc(object):
             # upgrade old transforms to transforms.py
             self.dbg("Renaming: " + self.alloc_dir + "transforms" +
                      " to " + self.alloc_dir + "transforms.py")
-            os.rename(self.alloc_dir + "transforms", self.alloc_dir + "transforms.py")
+            os.rename(
+                self.alloc_dir + "transforms", self.alloc_dir + "transforms.py")
         else:
             # else create an example transforms.py
             self.dbg("Creating example transforms.py file: " + trans_file)
@@ -534,7 +539,7 @@ class alloc(object):
         #
         # There's got to be a better way to tell if something is a number
         # if not a list, force it to a list
-        if type(obj) != type([]):
+        if not isinstance(obj, list):
             obj = [obj]
 
         ok = True
@@ -744,7 +749,7 @@ class alloc(object):
     def handle_server_response(self, rtn, verbose):
         # If server returns a message, print it out
         if rtn and 'status' in rtn and 'message' in rtn:
-            if type(rtn["status"]) == type([]):
+            if isinstance(rtn["status"], list):
                 k = 0
                 for v in rtn["status"]:
                     if (v == 'msg' and verbose) or (v == 'yay' and verbose) or v == 'err' or v == 'die':
@@ -789,7 +794,7 @@ class alloc(object):
 
     def person_to_personID(self, name):
         # Convert a person's name into their alloc personID.
-        if type(name) == type('string'):
+        if isinstance(name, str):
             name = [name]
 
         r = []
@@ -845,7 +850,6 @@ class alloc(object):
 
         print("\nEg: " + self.client_name + " command --help")
 
-
     def which(self, name, flags=os.X_OK):
         # Search PATH for executable files with the given name.
         result = []
@@ -870,6 +874,5 @@ class alloc(object):
     def possible_fields(self, field_type):
         print("These are the possible fields you can use:\n")
         for item in self.field_names[field_type]:
-            print(item + " or '" + self.field_names[field_type][item] +"'")
+            print(item + " or '" + self.field_names[field_type][item] + "'")
         print("")
-

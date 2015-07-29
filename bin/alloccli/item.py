@@ -20,7 +20,7 @@ class item(alloc):
     ops.append(('', 'private=1|0    ', 'privacy setting of the time sheet item\'s comment eg: 1=private 0=normal'))
     ops.append(('', 'comment=TEXT   ', 'time sheet item comment'))
     ops.append(('', 'multiplier=NUM ', 'time sheet item multiplier eg: 1=standard 1.5=time-and-a-half 2=double-time\n'
-                                         '3=triple-time 0=no-charge'))
+                                       '3=triple-time 0=no-charge'))
     ops.append(('', 'delete=1       ', 'set this to 1 to delete the time sheet item\n'))
 
     # Specify some header and footer text for the help text
@@ -63,7 +63,7 @@ alloc item --tsid 7941 --duration 3.5 --date 2011-07-24 --comment hey --task 151
         for key, val in o.items():
             if val:
                 package[key] = val
-            if type(val) == type("") and val.lower() == 'null':
+            if isinstance(val, str) and val.lower() == 'null':
                 package[key] = ''
 
         package['command'] = 'edit_timeSheetItem'

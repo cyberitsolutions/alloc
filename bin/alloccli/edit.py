@@ -12,10 +12,10 @@ class edit(alloc):
     # Setup the options that this cli can accept
     ops = []
     ops.append(('', 'help           ', 'Show this help.'))
-    ops.append(('v', 'verbose        ', 'Run with more output.\n'))
+    ops.append(('v', 'verbose       ', 'Run with more output.\n'))
 
     # task options
-    ops.append(('t.', '               ', 'Edit a task. Specify an ID or the word "new" to create.'))
+    ops.append(('t.', '             ', 'Edit a task. Specify an ID or the word "new" to create.'))
     ops.append(('', 'name=TEXT      ', 'task\'s title'))
     ops.append(('', 'desc=TEXT      ', 'task\'s long description'))
     ops.append(('', 'assign=USERNAME', 'username of the person that the task is assigned to'))
@@ -36,9 +36,9 @@ class edit(alloc):
     ops.append(('', 'pend=IDS       ', 'task ID(s), comma separated, that block this task.'))
     ops.append(('', 'reopen=DATE    ', 'Reopen the task on this date. To be used with --status=pending.'))
     ops.append(('', 'status=STATUS  ', 'inprogress, notstarted, info, client, manager, invalid, duplicate,\n'
-                                         'incomplete, complete; or: open, pending, closed\n'))
+                                       'incomplete, complete; or: open, pending, closed\n'))
     # time sheet item options
-    ops.append(('i.', '               ', 'Edit a time sheet item. Specify an ID or the word "new" to create.'))
+    ops.append(('i.', '             ', 'Edit a time sheet item. Specify an ID or the word "new" to create.'))
     ops.append(('', 'tsid=ID        ', 'time sheet that this item belongs to'))
     ops.append(('', 'date=DATE      ', 'time sheet item date'))
     ops.append(('', 'duration=HOURS ', 'time sheet item duration'))
@@ -48,7 +48,7 @@ class edit(alloc):
     ops.append(('', 'private=1|0    ', 'privacy setting of the time sheet item\'s comment eg: 1=private 0=normal'))
     ops.append(('', 'comment=TEXT   ', 'time sheet item comment'))
     ops.append(('', 'multiplier=NUM ', 'time sheet item multiplier eg: 1=standard 1.5=time-and-a-half 2=double-time\n'
-                                         '3=triple-time 0=no-charge'))
+                                       '3=triple-time 0=no-charge'))
     ops.append(('', 'delete=1       ', 'set this to 1 to delete the time sheet item\n'))
 
     # Specify some header and footer text for the help text
@@ -116,7 +116,7 @@ alloc edit -t 1234 --assignee null"""
         for key, val in o.items():
             if val:
                 package[key] = val
-            if type(val) == type("") and val.lower() == 'null':
+            if isinstance(val, str) and val.lower() == 'null':
                 package[key] = ''
 
         if 'reopen' in package:

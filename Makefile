@@ -83,8 +83,9 @@ test:
 	pyflakes bin/alloc
 	find -iname '*.py' -exec pyflakes {} +
 	PYTHONPATH=$$PYTHONPATH:./bin/alloccli                  \
-    # E501 is line lenth, this is best to ignore because 79 chars long is too short.
-	find -iname '*.py' -exec flake8 --ignore=E501 --count --benchmark {} +
+	# E501 is line lenth, this is best to ignore because 79 chars long is too short.#
+	# E241 is whitespace after a ',' or ':'
+	find -iname '*.py' -exec flake8 --ignore=E501,E241 --count --benchmark {} +
 
 cache:
 	rm -rf cache_`cat util/alloc_version`
