@@ -10,31 +10,30 @@ class alloc_cli_arg_handler:
 
     # alloc library for handling command line arguments
 
-    def __init__(self):
-        # Not necessary.
-        pass
-
     def get_subcommand_help(self, command_list, ops, text):
         # Get help text for a subcommand.
         help_str = ""
-        for x in ops:
-            # These are used to build up the help text for --help
+        for line in ops:
+            # These are null or spaces to keep things aligned.
             extra = ''
-            c = (" " * 1)
-            s = (" " * 4)
-            l = (" " * 19)
-            if x[0] and x[1]:
-                c = ","
-            if x[0]:
-                s = "  -" + x[0].replace(":", "").replace(".", "")
-            if x[1].strip():
-                l = c + " --" + x[1]
+            short_opt = (" " * 4)
+            long_opt = (" " * 26)
 
-            if ':' in x[0]:
+            if line[0]:
+                short_opt = "  -" + line[0].replace(":", "").replace(".", "")
+
+            if line[1].strip():
+                long_opt = "  --" + line[1].strip(" ").ljust(22)
+
+            # check if it is a repeatable item, e.g.: -f can be used many
+            # times.
+            if ':' in line[0]:
                 extra = ' (can repeat)'
-            # eg:  -q, --quiet             Run with less output.
-            help_str += s + l + "   " + \
-                x[2].replace("\n", "\n" + (" " * 26)) + extra + "\n"
+
+            # The resulting string should look similar to this:
+            #     -q  --quiet             Run with less output.
+            help_str += short_opt + long_opt + line[2].replace("\n", "\n".ljust(31)) + extra + "\n"
+
         return text % (os.path.basename(" ".join(command_list[0:2])), help_str.rstrip())
 
     def __parse_args(self, ops):

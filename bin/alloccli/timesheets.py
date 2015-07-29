@@ -8,13 +8,13 @@ class timesheets(alloc):
 
     # Setup the options that this cli can accept
     ops = []
-    ops.append(('', 'help           ', 'Show this help.'))
-    ops.append(('', 'csv=[WHEN]     ', 'Return the results in CSV format. WHEN can be "auto",\n'
-                                       '"never" or "always". If WHEN is omitted, assume "always".'))
-    ops.append(('q', 'quiet          ', 'Run with no output except errors.'))
-    ops.append(('i', 'items          ', 'Show time sheet\'s items.'))
+    ops.append(('', 'help             ', 'Show this help.'))
+    ops.append(('', 'csv=[WHEN]       ', 'Return the results in CSV format. WHEN can be "auto",\n'
+                                         '"never" or "always". If WHEN is omitted, assume "always".'))
+    ops.append(('q', 'quiet           ', 'Run with no output except errors.'))
+    ops.append(('i', 'items           ', 'Show time sheet\'s items.'))
     ops.append(('p:', 'project=ID|NAME', 'A project ID, or a fuzzy match for a project name.'))
-    ops.append(('', 'task=ID|NAME   ', 'A task ID, or a fuzzy match for a task name.'))
+    ops.append(('', 'task=ID|NAME     ', 'A task ID, or a fuzzy match for a task name.'))
     ops.append(('s:', 'status=STATUS  ', 'The time sheets\' status. Can accept multiple values.\n'
                                          '(eg: "edit,manager,admin,invoiced,finished,rejected" or "all". Default: edit)'))
     ops.append(('a:', 'account=TF     ', 'The time sheets\' TF name.'))
@@ -28,7 +28,7 @@ class timesheets(alloc):
                                          'Time sheets default: -o From -o ID, Default for items: -o Date -o Item\\ ID'))
     ops.append(('f:', 'fields=LIST    ', 'The list of fields you would like printed.\n'
                                          '(eg: -f all eg: -f ID -f Item\\ ID -o Task\\ ID -o Comment)'))
-    ops.append(('', 'possible-fields', 'List of possible fields.'))
+    ops.append(('', 'possible-fields  ', 'List of possible fields.'))
 
     # Specify some header and footer text for the help text
     help_text = "Usage: %s [OPTIONS]\n"

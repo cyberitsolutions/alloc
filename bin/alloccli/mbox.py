@@ -14,8 +14,8 @@ class mbox(alloc):
 
     # Setup the options that this cli can accept
     ops = []
-    ops.append(('', 'help           ', 'Show this help.'))
-    ops.append(('q', 'quiet          ', 'Run with no output except errors.'))
+    ops.append(('', 'help             ', 'Show this help.'))
+    ops.append(('q', 'quiet           ', 'Run with no output except errors.'))
     ops.append(('t.', 'task=ID|NAME   ', 'A task ID, or a fuzzy match for a task name.'))
 
     # Specify some header and footer text for the help text

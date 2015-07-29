@@ -8,9 +8,9 @@ class view(alloc):
 
     # Setup the options that this cli can accept
     ops = []
-    ops.append(('', 'help           ', 'Show this help.'))
+    ops.append(('', 'help             ', 'Show this help.'))
     ops.append(('t:', 'task=ID        ', 'An existing task\'s ID.'))
-    ops.append(('c', 'children       ', 'Show children for tasks.'))
+    ops.append(('c', 'children        ', 'Show children for tasks.'))
 
     # Specify some header and footer text for the help text
     help_text = "Usage: %s [OPTIONS]\n"
