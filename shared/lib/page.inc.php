@@ -23,9 +23,9 @@
 class page {
 
   // Initializer
-  function __construct() {
+  public static function __construct() {
   }
-  function header() {
+  public static function header() {
     global $TPL;
     $current_user = &singleton("current_user");
 
@@ -37,7 +37,7 @@ class page {
 
     include_template(ALLOC_MOD_DIR."shared/templates/headerS.tpl");
   }
-  function footer() {
+  public static function footer() {
     $current_user = &singleton("current_user");
 
     include_template(ALLOC_MOD_DIR."shared/templates/footerS.tpl");
@@ -48,7 +48,7 @@ class page {
       $current_user->store_prefs();
     }
   }
-  function tabs() {
+  public static function tabs() {
     global $TPL;
     $current_user = &singleton("current_user");
     $c = new config();
@@ -85,7 +85,7 @@ class page {
       }
     }
   }
-  function toolbar() {
+  public static function toolbar() {
     global $TPL;
     $current_user = &singleton("current_user");
     $db = new db_alloc(); 
@@ -117,7 +117,7 @@ class page {
     $TPL["needle"] = $_POST["needle"];
     include_template(ALLOC_MOD_DIR."shared/templates/toolbarS.tpl");
   }
-  function extra_links() {
+  public static function extra_links() {
     $current_user = &singleton("current_user");
     global $TPL;
     global $sess;
@@ -136,7 +136,7 @@ class page {
     $str.= "<a href=\"".$url."\">Logout</a>";
     return $str;
   }
-  function messages() {
+  public static function messages() {
     global $TPL;
 
     $class_to_icon["good"] = "icon-ok-sign";
@@ -179,7 +179,7 @@ class page {
     }
     return $str;
   }
-  function get_category_options($category="") {
+  public static function get_category_options($category="") {
     has("task")    and $category_options["search_tasks"] = "Search Tasks";
     has("project") and $category_options["search_projects"] = "Search Projects";
     has("time")    and $category_options["search_time"] = "Search Time Sheets";
@@ -190,7 +190,7 @@ class page {
     has("finance") and $category_options["search_expenseForm"] = "Search Expense Forms";
     return page::select_options($category_options, $category);
   } 
-  function help($topic, $hovertext=false) {
+  public static function help($topic, $hovertext=false) {
     global $TPL;
     $str = page::prepare_help_string(@file_get_contents($TPL["url_alloc_help"].$topic.".html"));
     if (strlen($str)) {
@@ -211,13 +211,13 @@ class page {
     }
     return $img;
   }
-  function prepare_help_string($str) {
+  public static function prepare_help_string($str) {
     $str = page::htmlentities(addslashes($str));
     $str = str_replace("\r"," ",$str);
     $str = str_replace("\n"," ",$str);
     return $str;
   }
-  function textarea($name, $default_value="", $ops=array()) {
+  public static function textarea($name, $default_value="", $ops=array()) {
     $heights = array("small"=>40, "medium"=>100, "large"=>340, "jumbo"=>440);
     $height = $ops["height"] or $height = "small";
 
@@ -238,7 +238,7 @@ class page {
     }
     return "<textarea".$str.">".page::htmlentities($default_value)."</textarea>\n";
   }
-  function calendar($name, $default_value="") {
+  public static function calendar($name, $default_value="") {
     global $TPL;
     $images = $TPL["url_alloc_images"];
     $year = date("Y");
@@ -247,7 +247,7 @@ class page {
 EOD;
     return $str;
   }
-  function select_options($options,$selected_value=NULL,$max_length=45,$escape=true) {
+  public static function select_options($options,$selected_value=NULL,$max_length=45,$escape=true) {
     /**
      * Builds up options for use in a html select widget (works with multiple selected too)
      *
@@ -312,13 +312,13 @@ EOD;
     }
     return $str;
   }
-  function expand_link($id, $text="New ",$id_to_hide="") {
+  public static function expand_link($id, $text="New ",$id_to_hide="") {
     global $TPL;
     $id_to_hide and $extra = "$('#".$id_to_hide."').slideToggle('fast');";
     $str = "<a class=\"growshrink nobr\" href=\"#x\" onClick=\"$('#".$id."').fadeToggle();".$extra."\">".$text."</a>";
     return $str;
   }
-  function side_by_side_links($items=array(),$url,$redraw="",$title="") {
+  public static function side_by_side_links($items=array(),$url,$redraw="",$title="") {
     $url = preg_replace("/[&?]+$/", "", $url);
     if (strpos($url, "?")) {
       $url.= "&";
@@ -333,7 +333,7 @@ EOD;
     $title and $s.= "<span style='font-size:140%;'>".$title."</span>";
     return $s;
   }
-  function mandatory($field="") {
+  public static function mandatory($field="") {
     $star = "&lowast;";
     if (stristr($_SERVER["HTTP_USER_AGENT"],"MSIE")) {
       $star = "*";
@@ -342,7 +342,7 @@ EOD;
       return "<b style=\"font-weight:bold;font-size:100%;color:red;display:inline;top:-5px !important;top:-3px;position:relative;\">".$star."</b>";
     }
   }
-  function exclaim($field="") {
+  public static function exclaim($field="") {
     $star = "&lowast;";
     if (stristr($_SERVER["HTTP_USER_AGENT"],"MSIE")) {
       $star = "*";
@@ -351,14 +351,14 @@ EOD;
       return "<b style=\"font-weight:bold;font-size:100%;color:green;display:inline;top:-5px !important;top:-3px;position:relative;\">".$star."</b>";
     }
   }
-  function warn() {
+  public static function warn() {
     $star = "&lowast;";
     if (stristr($_SERVER["HTTP_USER_AGENT"],"MSIE")) {
       $star = "*";
     }
     return "<b style=\"font-weight:bold;font-size:100%;color:orange;display:inline;top:-5px !important;top:-3px;position:relative;\">".$star."</b>";
   }
-  function stylesheet() {
+  public static function stylesheet() {
     if ($_GET["media"] == "print") {
       return "print.css";
     } else {
@@ -371,7 +371,7 @@ EOD;
       return "style_".$style.".css";
     }
   }
-  function default_font_size() {
+  public static function default_font_size() {
     $current_user = &singleton("current_user");
     $fonts  = page::get_customizedFont_array();
     $font = $fonts[sprintf("%d",$current_user->prefs["customizedFont"])];
@@ -379,10 +379,10 @@ EOD;
     $font+= 8;
     return $font;
   }
-  function get_customizedFont_array() {
+  public static function get_customizedFont_array() {
     return array("-3"=>1, "-2"=>2, "-1"=>3, "0"=>"4", "1"=>5, "2"=>6, "3"=>7, "4"=>8, "5"=>9, "6"=>10);
   }
-  function get_customizedTheme_array() {
+  public static function get_customizedTheme_array() {
     global $TPL;
     $dir = $TPL["url_alloc_styles"];
     $rtn = array();
@@ -398,23 +398,23 @@ EOD;
     }
     return $rtn;
   }
-  function to_html($str="",$maxlength=false) {
+  public static function to_html($str="",$maxlength=false) {
     $maxlength and $str = wordwrap($str,$maxlength,"\n");
     $str = page::htmlentities($str);
     $str = nl2br($str);
     return $str;
   }
-  function htmlentities($str="") {
+  public static function htmlentities($str="") {
     return htmlentities($str,ENT_QUOTES | ENT_IGNORE,"UTF-8");
   }
-  function money_fmt($c,$amount=null) {
+  public static function money_fmt($c,$amount=null) {
     $currencies =& get_cached_table("currencyType");
     $n = $currencies[$c]["numberToBasic"];
     $num = sprintf("%0.".$n."f",$amount);
     $num == sprintf("%0.".$n."f",-0) and $num = sprintf("%0.".$n."f",0); // *sigh* to prevent -0.00
     return $num;
   }
-  function money_out($c,$amount=null) {
+  public static function money_out($c,$amount=null) {
     // AUD,100        -> 100.00
     // AUD,0|''|false -> 0.00
     if (imp($amount)) {
@@ -428,7 +428,7 @@ EOD;
       return page::money_fmt($c, ($amount * pow(10,-$n)));
     }
   }
-  function money_in($c, $amount=null) {
+  public static function money_in($c, $amount=null) {
     // AUD,100.00 -> 100
     // AUD,0      -> 0
     // AUD        ->
@@ -443,7 +443,7 @@ EOD;
       return $amount * pow(10,$n);
     }
   }
-  function money($c, $amount=null, $fmt="%s%mo") {
+  public static function money($c, $amount=null, $fmt="%s%mo") {
     // Money print
     $c or $c = config::get_config_item('currency');
     $currencies =& get_cached_table("currencyType");
@@ -459,7 +459,7 @@ EOD;
     $fmt = str_replace(array("%mo","%mi","%m","%S","%s","%C","%c","%N","%n"),"",$fmt); // strip leftovers away
     return $fmt;
   }
-  function money_print($rows=array()) {
+  public static function money_print($rows=array()) {
     $mainCurrency = config::get_config_item("currency");
     foreach ((array)$rows as $row) {
       $sums[$row["currency"]] += $row["amount"];
@@ -489,7 +489,7 @@ EOD;
     }
     return $rtn;
   }
-  function star($entity,$entityID) {
+  public static function star($entity,$entityID) {
     $current_user = &singleton("current_user");
     global $TPL;
     if ($current_user->prefs["stars"][$entity][$entityID]) {
@@ -504,7 +504,7 @@ EOD;
     return '<a class="star'.$star_hot.'" href="'.$TPL["url_alloc_star"]
           .'entity='.$entity.'&entityID='.$entityID.'"><b class="'.$star_icon.'">'.$star_text.'</b></a>';
   }
-  function star_sorter($entity,$entityID) {
+  public static function star_sorter($entity,$entityID) {
     $current_user = &singleton("current_user");
     if ($current_user->prefs["stars"][$entity][$entityID]) {
       return 1;
