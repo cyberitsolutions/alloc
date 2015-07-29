@@ -10,7 +10,7 @@ class accounts(alloc):
     ops = []
     ops.append(('', 'help           ', 'Show this help.'))
     ops.append(('', 'csv=[WHEN]     ', 'Return the results in CSV format. WHEN can be "auto",\n'
-                                         '"never" or "always". If WHEN is omitted, assume "always".'))
+                                       '"never" or "always". If WHEN is omitted, assume "always".'))
     ops.append(('i', 'items          ', 'Show accounts\' transactions.'))
     ops.append(('a:', 'account=TF     ', 'Show a particular TF. Default to your TFs.'))
     ops.append(('f:', 'field=NAME     ', 'A field you would like printed.\n'

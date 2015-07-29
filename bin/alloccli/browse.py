@@ -10,8 +10,8 @@ class browse(alloc):
 
     # Setup the options that this cli can accept
     ops = []
-    ops.append(('', 'help           ', 'Show this help.'))
-    ops.append(('q', 'quiet          ', 'Run with no output except errors.'))
+    ops.append(('', 'help             ', 'Show this help.'))
+    ops.append(('q', 'quiet           ', 'Run with no output except errors.'))
     ops.append(('p.', 'project=ID|NAME', 'A project ID, or a fuzzy match for a project name.'))
     ops.append(('t.', 'task=ID|NAME   ', 'A task ID, or a fuzzy match for a task name.'))
     ops.append(('c.', 'client=ID|NAME ', 'A client ID, or a fuzzy match for a client\'s name.'))
@@ -22,10 +22,10 @@ class browse(alloc):
     help_text += __doc__
     help_text += '''\n\n%s
 
-This program allows you to quickly jump to a particular alloc web page. It fires up 
+This program allows you to quickly jump to a particular alloc web page. It fires up
 $BROWSER/sensible-browser/lynx/elinks on the location, or if the output is not a TTY
 it redirects to stdout instead.
-  
+
 Examples:
 alloc browse --task 123
 alloc browse --task 123 > task123.html

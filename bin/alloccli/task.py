@@ -9,8 +9,8 @@ class task(alloc):
     # Setup the options that this cli can accept
     ops = []
     ops.append(('', 'help           ', 'Show this help.'))
-    ops.append(('q', 'quiet          ', 'Run with less output.\n')) 
-    ops.append(('t.', '               ', 'Edit a task. Specify an ID or omit -t to create.'))
+    ops.append(('q', 'quiet         ', 'Run with less output.\n'))
+    ops.append(('t.', '             ', 'Edit a task. Specify an ID or omit -t to create.'))
     ops.append(('', 'name=TEXT      ', 'task\'s title'))
     ops.append(('', 'desc=TEXT      ', 'task\'s long description'))
     ops.append(('', 'assign=USERNAME', 'username of the person that the task is assigned to'))
@@ -31,7 +31,7 @@ class task(alloc):
     ops.append(('', 'pend=IDS       ', 'task ID(s), comma separated, that block this task.'))
     ops.append(('', 'reopen=DATE    ', 'Reopen the task on this date. To be used with --status=pending.'))
     ops.append(('', 'status=STATUS  ', 'inprogress, notstarted, info, client, manager, invalid, duplicate,\n'
-                                         'incomplete, complete; or: open, pending, closed\n'))
+                                       'incomplete, complete; or: open, pending, closed\n'))
 
     # Specify some header and footer text for the help text
     help_text = "Usage: %s [OPTIONS]\n"
@@ -81,7 +81,7 @@ alloc task -t 1234 --assignee null"""
         for key, val in o.items():
             if val:
                 package[key] = val
-            if type(val) == type("") and val.lower() == 'null':
+            if isinstance(val, str) and val.lower() == 'null':
                 package[key] = ''
 
         if 'reopen' in package:

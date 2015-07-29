@@ -10,7 +10,7 @@ class reminders(alloc):
     ops = []
     ops.append(('', 'help           ', 'Show this help.'))
     ops.append(('', 'csv=[WHEN]     ', 'Return the results in CSV format. WHEN can be "auto",\n'
-                                         '"never" or "always". If WHEN is omitted, assume "always".'))
+                                       '"never" or "always". If WHEN is omitted, assume "always".'))
     ops.append(('r.', 'reminder=ID    ', 'Reminder ID.'))
     ops.append(('t.', 'task=ID|NAME   ', 'A task ID, or a fuzzy match for a task name.'))
     ops.append(('p.', 'project=ID|NAME', 'A project ID, or a fuzzy match for a project name.'))
