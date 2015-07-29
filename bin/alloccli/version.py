@@ -10,7 +10,7 @@ class version(alloc):
 
     # Setup the options that this cli can accept
     ops = []
-    ops.append(('', 'help           ', 'Show this help.'))
+    ops.append(('', 'help             ', 'Show this help.'))
     ops.append(('u.', 'url=URL        ', 'The alloc-server\'s URL'))
 
     # Specify some header and footer text for the help text

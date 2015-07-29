@@ -9,7 +9,7 @@ class comment(alloc):
 
     # Setup the options that this cli can accept
     ops = []
-    ops.append(('', 'help           ', 'Show this help.'))
+    ops.append(('', 'help             ', 'Show this help.'))
     ops.append(('t.', 'task=ID|NAME   ', 'A task ID, or a fuzzy match for a task name.'))
     ops.append(('p.', 'project=ID|NAME', 'A project ID, or a fuzzy match for a project name.'))
     ops.append(('c.', 'client=ID|NAME ', 'A client ID, or a fuzzy match for a client name.'))

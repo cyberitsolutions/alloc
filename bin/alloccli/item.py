@@ -9,8 +9,8 @@ class item(alloc):
     # Setup the options that this cli can accept
     ops = []
     ops.append(('', 'help           ', 'Show this help.'))
-    ops.append(('q', 'quiet          ', 'Run with less output.\n'))
-    ops.append(('i.', '               ', 'Edit a time sheet item. Specify an ID or omit -i to create.'))
+    ops.append(('q', 'quiet         ', 'Run with less output.\n'))
+    ops.append(('i.', '             ', 'Edit a time sheet item. Specify an ID or omit -i to create.'))
     ops.append(('', 'tsid=ID        ', 'time sheet that this item belongs to'))
     ops.append(('', 'date=DATE      ', 'time sheet item date'))
     ops.append(('', 'duration=HOURS ', 'time sheet item duration'))

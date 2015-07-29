@@ -8,10 +8,10 @@ class ktokens(alloc):
 
     # Setup the options that this cli can accept
     ops = []
-    ops.append(('', 'help           ', 'Show this help.'))
-    ops.append(('', 'csv=[WHEN]     ', 'Return the results in CSV format. WHEN can be "auto",\n'
-                                       '"never" or "always". If WHEN is omitted, assume "always".'))
-    ops.append(('q', 'quiet          ', 'Run with no output except errors.'))
+    ops.append(('', 'help             ', 'Show this help.'))
+    ops.append(('', 'csv=[WHEN]       ', 'Return the results in CSV format. WHEN can be "auto",\n'
+                                         '"never" or "always". If WHEN is omitted, assume "always".'))
+    ops.append(('q', 'quiet           ', 'Run with no output except errors.'))
     ops.append(('k:', 'key=KEY        ', 'An 8 character email subject line key.'))
     ops.append(('i:', 'id=ID          ', 'A comment id.'))
 
