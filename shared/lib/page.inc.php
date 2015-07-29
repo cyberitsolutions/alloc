@@ -23,7 +23,7 @@
 class page {
 
   // Initializer
-  public static function __construct() {
+  public function __construct() {
   }
   public static function header() {
     global $TPL;
