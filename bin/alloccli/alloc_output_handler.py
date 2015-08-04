@@ -99,7 +99,7 @@ class alloc_output_handler:
             reverse = False
             if f and f[0] == "_":
                 reverse = True
-                f = f[1:] # chop leading underscore
+                f = f[1:]  # chop leading underscore
             rows = sorted(rows, key=sort_func, reverse=reverse)
         return rows
 
