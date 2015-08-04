@@ -92,6 +92,8 @@ class alloc_cli_arg_handler:
         no_arg_ops, all_ops, all_ops_list = self.__parse_args(ops)
         parser = argparse.ArgumentParser(
             prog=os.path.basename(" ".join(sys.argv[0:2])), add_help=False)
+
+        # FIXME:: this is not very nice to read, add explainations at some point.
         for k, v in all_ops.items():
             a1 = []
             a2 = {}
