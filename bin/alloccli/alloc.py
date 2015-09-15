@@ -421,6 +421,7 @@ class alloc(object):
       if r['projectName']:  s += '\nProject: '+r['projectName']
       if 'projectPriorityLabel' in r and r['projectPriorityLabel']: s += ' ['+r['projectPriorityLabel']+']'
       if r['parentTaskID']: s += '\nParent Task: '+r['parentTaskID']
+      if r['tags']: s += '\nTags: '+r['tags']
       if r['projectName'] or r['parentTaskID']: s += '\n'
       if r['creator_name']:  s += '\nCreator:  '+r['creator_name'].ljust(25)+' '+r['dateCreated']
       if r['assignee_name']: s += '\nAssigned: '+r['assignee_name'].ljust(25)+' '+r['dateAssigned']
