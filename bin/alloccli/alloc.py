@@ -664,8 +664,7 @@ class alloc(object):
   def dbg(self, s):
     """Print a message to the screen (stdout) for debugging only."""
     if self.debug:
-      print "DBG " + str(s)
-      sys.stdout.flush()
+      sys.stderr.write("DBG " + str(s) + '\n')
 
   def parse_email(self, email):
     """Parse an email address from this: Jon Smit <js@example.com> into: addr, name."""
