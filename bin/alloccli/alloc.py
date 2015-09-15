@@ -385,7 +385,7 @@ class alloc(object):
     """Coerce a dict with perhaps missing keys or a value of None to an empty string."""
     r = defaultdict(str)
     for a, b in row.items():
-      r[a] = str(b or '')
+      r[a] = b or ''
     return r
 
   def print_task(self, taskID, prependEmailHeader=False, children=False):
@@ -421,6 +421,7 @@ class alloc(object):
       if r['projectName']:  s += '\nProject: '+r['projectName']
       if 'projectPriorityLabel' in r and r['projectPriorityLabel']: s += ' ['+r['projectPriorityLabel']+']'
       if r['parentTaskID']: s += '\nParent Task: '+r['parentTaskID']
+      if r['tags']: s += '\nTags: '+r['tags']
       if r['projectName'] or r['parentTaskID']: s += '\n'
       if r['creator_name']:  s += '\nCreator:  '+r['creator_name'].ljust(25)+' '+r['dateCreated']
       if r['assignee_name']: s += '\nAssigned: '+r['assignee_name'].ljust(25)+' '+r['dateAssigned']
@@ -663,8 +664,7 @@ class alloc(object):
   def dbg(self, s):
     """Print a message to the screen (stdout) for debugging only."""
     if self.debug:
-      print "DBG " + str(s)
-      sys.stdout.flush()
+      sys.stderr.write("DBG " + str(s) + '\n')
 
   def parse_email(self, email):
     """Parse an email address from this: Jon Smit <js@example.com> into: addr, name."""
