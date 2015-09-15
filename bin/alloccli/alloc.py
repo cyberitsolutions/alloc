@@ -385,7 +385,7 @@ class alloc(object):
     """Coerce a dict with perhaps missing keys or a value of None to an empty string."""
     r = defaultdict(str)
     for a, b in row.items():
-      r[a] = str(b or '')
+      r[a] = b or ''
     return r
 
   def print_task(self, taskID, prependEmailHeader=False, children=False):
