@@ -9,20 +9,20 @@ class reminder(alloc):
 
     # Setup the options that this cli can accept
     ops = []
-    ops.append(('', 'help           ', 'Show this help.'))
-    ops.append(('q', 'quiet          ', 'Run with less output.\n'))
+    ops.append(('', 'help             ', 'Show this help.'))
+    ops.append(('q', 'quiet           ', 'Run with less output.\n'))
     ops.append(('r.', '               ', 'Edit a reminder. Specify an ID or omit -r to create.'))
     ops.append(('t.', 'task=ID|NAME   ', 'A task ID, or a fuzzy match for a task name.'))
     ops.append(('p.', 'project=ID|NAME', 'A project ID, or a fuzzy match for a project name.'))
     ops.append(('c.', 'client=ID|NAME ', 'A client ID, or a fuzzy match for a client name.'))
     ops.append(('s.', 'subject=TEXT   ', 'The subject line of the reminder.'))
     ops.append(('b.', 'body=TEXT      ', 'The text body of the reminder.'))
-    ops.append(('', 'frequency=FREQ ', 'How often this reminder is to recur.\n'
-                                       'Specify as [number][unit], where unit is one of:\n'
-                                       '[h]our, [d]ay, [w]eek, [m]onth, [y]ear.'))
-    ops.append(('', 'notice=WARNING ', 'Advance warning for this reminder. Same format as frequency.'))
+    ops.append(('', 'frequency=FREQ   ', 'How often this reminder is to recur.\n'
+                                         'Specify as [number][unit], where unit is one of:\n'
+                                         '[h]our, [d]ay, [w]eek, [m]onth, [y]ear.'))
+    ops.append(('', 'notice=WARNING   ', 'Advance warning for this reminder. Same format as frequency.'))
     ops.append(('d.', 'date=DATE      ', 'When this reminder is to trigger.'))
-    ops.append(('', 'active=1|0     ', 'Whether this reminder is active or not.'))
+    ops.append(('', 'active=1|0       ', 'Whether this reminder is active or not.'))
     ops.append(('T:', 'to=PEOPLE      ', 'Recipients. Can be usernames, full names and/or email.'))
     ops.append(('D:', 'remove=PEOPLE  ', 'Recipients to remove.'))
 

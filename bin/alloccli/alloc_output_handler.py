@@ -25,10 +25,6 @@ class alloc_output_handler:
 
     # alloc library for outputting ascii or csv tables
 
-    def __init__(self):
-        # Not necessary.
-        pass
-
     def __get_only_these_fields(self, alloc, entity, rows, only_these_fields):
         # Reduce a list by removing certain columns/fields.
         rtn = []
@@ -64,8 +60,7 @@ class alloc_output_handler:
         rows = rows.items()
         if not sortby:
             return rows
-        inverted_field_names = dict(
-            [[v, k] for k, v in alloc.field_names[entity].items()])
+        inverted_field_names = dict([[v, k] for k, v in alloc.field_names[entity].items()])
 
         sortby.reverse()
 
@@ -153,9 +148,6 @@ class alloc_output_handler:
             # Simulate a normal row in the table
             s = '| ' + s + ' |'
 
-            # Useful for debugging
-            # print s
-
             # fn will be the final cell in the row
             sum_of_bits = 0
             for k, l in lengths.items():
@@ -204,7 +196,6 @@ class alloc_output_handler:
         else:
             table = PrettyTable()
             table.set_field_names(field_names)
-            # table.field_names = field_names
             for label in field_names:
                 if '$' in label:
                     table.set_field_align(label, "r")
