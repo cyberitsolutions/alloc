@@ -9,7 +9,7 @@ class submit(alloc):
 
     # Setup the options that this cli can accept
     ops = []
-    ops.append(('', 'help           ', 'Show this help.'))
+    ops.append(('', 'help            ', 'Show this help.'))
     ops.append(('n', 'dryrun         ', 'Perform a dry run, no data gets updated.'))
     ops.append(('q', 'quiet          ', 'Run with no output except errors.'))
 
