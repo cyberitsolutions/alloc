@@ -51,9 +51,7 @@ class tasks(alloc):
 
         # Get personID, either assignee or logged in user
         personID = []
-        if "all" in o['assignee']:
-            pass
-        else:
+        if "all" not in o['assignee']:
             if not o['assignee']:
                 personID.append(self.get_my_personID())
             elif o['assignee']:
