@@ -31,7 +31,7 @@ class exchangeRate extends db_entity {
                              ,"exchangeRate"
                              );
 
-  function get_er($from, $to, $date="") {
+  public static function get_er($from, $to, $date="") {
     static $cache;
     if (imp($cache[$from][$to][$date])) {
       return $cache[$from][$to][$date];
@@ -68,14 +68,14 @@ class exchangeRate extends db_entity {
     return $row["exchangeRate"];
   }
 
-  function convert($currency, $amount, $destCurrency=false, $date=false, $format="%m") {
+  public static function convert($currency, $amount, $destCurrency=false, $date=false, $format="%m") {
     $date or $date = date("Y-m-d");
     $destCurrency or $destCurrency = config::get_config_item("currency");
     $er = exchangeRate::get_er($currency,$destCurrency,$date);
     return page::money($destCurrency,$amount*$er,$format);
   }
 
-  function update_rate($from, $to) {
+  public static function update_rate($from, $to) {
     $rate = get_exchange_rate($from,$to);
     if ($rate) {
       $er = new exchangeRate();
@@ -90,7 +90,7 @@ class exchangeRate extends db_entity {
     }
   }
 
-  function download() {
+  public static function download() {
     // Get default currency
     $default_currency = config::get_config_item("currency");
 
