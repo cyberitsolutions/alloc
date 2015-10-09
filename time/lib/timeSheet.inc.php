@@ -1063,16 +1063,12 @@ EOD;
     $rtn["projectName"] = $project->get_value("projectName");
     $rtn["timeSheet_personID_email"] = $people_cache[$this->get_value("personID")]["emailAddress"];
     $rtn["timeSheet_personID_name"]  = $people_cache[$this->get_value("personID")]["name"];
-
-    $config = new config();
-    $rtn["url"] = $config->get_config_item("allocURL")."time/timeSheet.php?timeSheetID=".$this->get_id();
-
-    $rtn["timeSheetAdministrators"] = $config->get_config_item('defaultTimeSheetAdminList');
+    $rtn["url"] = config::get_config_item("allocURL")."time/timeSheet.php?timeSheetID=".$this->get_id();
+    $rtn["timeSheetAdministrators"] = config::get_config_item('defaultTimeSheetAdminList');
     $rtn["approvedByManagerPersonID_email"] = $people_cache[$this->get_value("approvedByManagerPersonID")]["emailAddress"];
     $rtn["approvedByManagerPersonID_name"] = $people_cache[$this->get_value("approvedByManagerPersonID")]["name"];
     $rtn["approvedByAdminPersonID_name"] = $people_cache[$this->get_value("approvedByAdminPersonID")]["name"];
     $rtn["current_user_name"] = $people_cache[$current_user->get_id()]["name"];
-
     return $rtn;
   }
 

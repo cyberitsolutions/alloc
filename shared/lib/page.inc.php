@@ -52,7 +52,7 @@ class page {
     global $TPL;
     $current_user = &singleton("current_user");
     $c = new config();
-    $tabs = $c->get_config_item("allocTabs");
+    $tabs = config::get_config_item("allocTabs");
 
     $menu_links["home"]    = array("name"=>"Home",    "url"=>$TPL["url_alloc_home"],           "module"=>"home");
     $menu_links["client"]  = array("name"=>"Clients", "url"=>$TPL["url_alloc_clientList"],     "module"=>"client");
