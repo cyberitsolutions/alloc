@@ -335,16 +335,7 @@ if (is_object($expenseForm) && $expenseForm->get_value("expenseFormFinalised") &
 $paymentOptionNames = array("", "COD", "Cheque", "Company Amex Charge", "Company Amex Blue", "Company Virgin MasterCard", "Other Credit Card", "Account", "Direct Deposit");
 $paymentOptions = page::select_options($paymentOptionNames, $expenseForm->get_value("paymentMethod"));
 
-
-function get_reimbursementRequired_array() {
-  return array("0"=>"Unpaid"
-              ,"1"=>"Paid by me"
-              ,"2"=>"Paid by company"
-              );
-}
-
-
-$rr_options = $expenseForm->get_reimbursementRequired_array();
+$rr_options = expenseForm::get_reimbursementRequired_array();
 $rr_checked[sprintf("%d",$expenseForm->get_value("reimbursementRequired"))] = " checked";
 $expenseForm->get_value("paymentMethod") and $extra = " (".$paymentOptionNames[$expenseForm->get_value("paymentMethod")].")";
 $rr_label = $rr_options[$expenseForm->get_value("reimbursementRequired")].$extra;

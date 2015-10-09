@@ -71,7 +71,7 @@ class expenseForm extends db_entity {
     return false;
   }
 
-  function get_reimbursementRequired_array() {
+  public static function get_reimbursementRequired_array() {
     return array("0"=>"Unpaid"
                 ,"1"=>"Paid by me"
                 ,"2"=>"Paid by company"
