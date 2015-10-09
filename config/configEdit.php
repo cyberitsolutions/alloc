@@ -34,7 +34,7 @@ $TPL["configType"] = $configType;
 
 if ($configName) {
   $config = new config();
-  $id = $config->get_config_item_id($configName);
+  $id = config::get_config_item_id($configName);
   $config->set_id($id);  
   $config->select();  
 }
@@ -42,14 +42,14 @@ if ($configName) {
 if ($_POST["save"]) {
 
   if($configType == "people") {
-    $arr = $config->get_config_item($configName);
+    $arr = config::get_config_item($configName);
     if(!in_array($_POST['value'], $arr)) {
       $arr[] = $_POST["value"];
       $config->set_value("value",serialize($arr));
       $config->save();
     }
   } else {
-    $arr = $config->get_config_item($configName);
+    $arr = config::get_config_item($configName);
     $arr[$_POST["key"]] = $_POST["value"];
     $config->set_value("value",serialize($arr));
     $config->save();
@@ -57,7 +57,7 @@ if ($_POST["save"]) {
 
 } else if ($_POST["delete"]) {
 
-  $arr = $config->get_config_item($configName);
+  $arr = config::get_config_item($configName);
   if($configType == "people") {
     unset($arr[array_search($_POST["value"], $arr)]);
   } else {

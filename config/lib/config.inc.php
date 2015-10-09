@@ -28,7 +28,7 @@ class config extends db_entity {
                              ,"type"
                              );
 
-  function get_config_item($name='',$anew=false) {
+  public static function get_config_item($name='',$anew=false) {
     $table =& get_cached_table("config",$anew);
     if ($table[$name]["type"] == "array") {
       $val = unserialize($table[$name]["value"]) or $val = array();
@@ -40,14 +40,14 @@ class config extends db_entity {
     }
   }
 
-  function get_config_item_id($name='') {
+  public static function get_config_item_id($name='') {
     $db = new db_alloc();
     $db->query(prepare("SELECT configID FROM config WHERE name = '%s'",$name));
     $db->next_record();
     return $db->f('configID');
   }
 
-  function get_config_logo($anew=false) {
+  public static function get_config_logo($anew=false) {
     global $TPL;
     $table =& get_cached_table("config",$anew);
     $val = '';
@@ -59,7 +59,7 @@ class config extends db_entity {
     return $val;
   }
 
-  function for_cyber() {
+  public static function for_cyber() {
     return config::get_config_item("companyHandle") == "cybersource";
   }
 
