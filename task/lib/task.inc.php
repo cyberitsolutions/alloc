@@ -381,11 +381,27 @@ class task extends db_entity {
   }
 
   function get_task_cc_list_select($projectID="") {
+
+    // If task exists, grab existing IPs
     if (is_object($this)) {
       $interestedPartyOptions = $this->get_all_parties($projectID);
+
+    // Else get default IPs from project and config
     } else {
-      $interestedPartyOptions = task::get_all_parties($projectID);
+      if ($_GET["projectID"]) {
+        $projectID = $_GET["projectID"];
+      }
+      if ($projectID) {
+        $project = new project($projectID);
+        $interestedPartyOptions = $project->get_all_parties();
+      }
+      $extra_interested_parties = config::get_config_item("defaultInterestedParties");
+      foreach ((array)$extra_interested_parties as $name => $email) {
+        $interestedPartyOptions[$email]["name"] = $name;
+      }
+      $interestedPartyOptions = interestedParty::get_interested_parties("task",null,$interestedPartyOptions);
     }
+
     foreach ((array)$interestedPartyOptions as $email => $info) {
       if ($info["role"] == "interested" && $info["selected"]) {
         $selected[] = $info["identifier"];
@@ -400,58 +416,53 @@ class task extends db_entity {
   function get_all_parties($projectID="") {
     $db = new db_alloc();
     $interestedPartyOptions = array();
-  
     if ($_GET["projectID"]) {
       $projectID = $_GET["projectID"];
-    } else if (!$projectID && is_object($this)) {
+    } else if (!$projectID) {
       $projectID = $this->get_value("projectID");
     }
-
     if ($projectID) {
-      $interestedPartyOptions = project::get_all_parties($projectID,is_object($this) && $this->get_id());
+      $project = new project($projectID);
+      $interestedPartyOptions = $project->get_all_parties(false, $this->get_id());
     }
-
     $extra_interested_parties = config::get_config_item("defaultInterestedParties") or $extra_interested_parties=array();
     foreach ($extra_interested_parties as $name => $email) {
       $interestedPartyOptions[$email]["name"] = $name;
     }
-    if (is_object($this)) {
-      if ($this->get_value("creatorID")) {
-        $p = new person();
-        $p->set_id($this->get_value("creatorID"));
-        $p->select();
-        if ($p->get_value("emailAddress")) {
-          $interestedPartyOptions[$p->get_value("emailAddress")]["name"] = $p->get_name();
-          $interestedPartyOptions[$p->get_value("emailAddress")]["role"] = "creator";
-          $interestedPartyOptions[$p->get_value("emailAddress")]["personID"] = $this->get_value("creatorID");
-        }
+    if ($this->get_value("creatorID")) {
+      $p = new person();
+      $p->set_id($this->get_value("creatorID"));
+      $p->select();
+      if ($p->get_value("emailAddress")) {
+        $interestedPartyOptions[$p->get_value("emailAddress")]["name"] = $p->get_name();
+        $interestedPartyOptions[$p->get_value("emailAddress")]["role"] = "creator";
+        $interestedPartyOptions[$p->get_value("emailAddress")]["personID"] = $this->get_value("creatorID");
       }
-      if ($this->get_value("personID")) {
-        $p = new person();
-        $p->set_id($this->get_value("personID"));
-        $p->select();
-        if ($p->get_value("emailAddress")) {
-          $interestedPartyOptions[$p->get_value("emailAddress")]["name"] = $p->get_name();
-          $interestedPartyOptions[$p->get_value("emailAddress")]["role"] = "assignee";
-          $interestedPartyOptions[$p->get_value("emailAddress")]["personID"] = $this->get_value("personID");
-          $interestedPartyOptions[$p->get_value("emailAddress")]["selected"] = 1;
-        }
+    }
+    if ($this->get_value("personID")) {
+      $p = new person();
+      $p->set_id($this->get_value("personID"));
+      $p->select();
+      if ($p->get_value("emailAddress")) {
+        $interestedPartyOptions[$p->get_value("emailAddress")]["name"] = $p->get_name();
+        $interestedPartyOptions[$p->get_value("emailAddress")]["role"] = "assignee";
+        $interestedPartyOptions[$p->get_value("emailAddress")]["personID"] = $this->get_value("personID");
+        $interestedPartyOptions[$p->get_value("emailAddress")]["selected"] = 1;
       }
-      if ($this->get_value("managerID")) {
-        $p = new person();
-        $p->set_id($this->get_value("managerID"));
-        $p->select();
-        if ($p->get_value("emailAddress")) {
-          $interestedPartyOptions[$p->get_value("emailAddress")]["name"] = $p->get_name();
-          $interestedPartyOptions[$p->get_value("emailAddress")]["role"] = "manager";
-          $interestedPartyOptions[$p->get_value("emailAddress")]["personID"] = $this->get_value("managerID");
-          $interestedPartyOptions[$p->get_value("emailAddress")]["selected"] = 1;
-        }
+    }
+    if ($this->get_value("managerID")) {
+      $p = new person();
+      $p->set_id($this->get_value("managerID"));
+      $p->select();
+      if ($p->get_value("emailAddress")) {
+        $interestedPartyOptions[$p->get_value("emailAddress")]["name"] = $p->get_name();
+        $interestedPartyOptions[$p->get_value("emailAddress")]["role"] = "manager";
+        $interestedPartyOptions[$p->get_value("emailAddress")]["personID"] = $this->get_value("managerID");
+        $interestedPartyOptions[$p->get_value("emailAddress")]["selected"] = 1;
       }
-      $this_id = $this->get_id();
     }
     // return an aggregation of the current task/proj/client parties + the existing interested parties
-    $interestedPartyOptions = interestedParty::get_interested_parties("task",$this_id,$interestedPartyOptions);
+    $interestedPartyOptions = interestedParty::get_interested_parties("task",$this->get_id(),$interestedPartyOptions);
     return $interestedPartyOptions;
   }
 

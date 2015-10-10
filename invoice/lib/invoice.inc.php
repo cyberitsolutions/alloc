@@ -785,10 +785,12 @@ class invoice extends db_entity {
     }
 
     if ($projectID) {
-      $interestedPartyOptions = project::get_all_parties($projectID);
+      $project = new project($projectID);
+      $interestedPartyOptions = $project->get_all_parties();
     }
     if ($clientID) {
-      $interestedPartyOptions = array_merge((array)$interestedPartyOptions, (array)client::get_all_parties($clientID));
+      $client = new client($clientID);
+      $interestedPartyOptions = array_merge((array)$interestedPartyOptions, (array)$client->get_all_parties());
     }
   
     $extra_interested_parties = config::get_config_item("defaultInterestedParties") or $extra_interested_parties=array();
