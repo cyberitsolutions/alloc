@@ -285,7 +285,7 @@ class services {
       $e = new $entity;
       if (method_exists($e, "get_list")) {
         ob_start();
-        $rtn = $e->get_list($options);
+        $rtn = $entity::get_list($options);
         $echoed = ob_get_contents();
         if (!$rtn && $echoed) {
           return array("error"=>$echoed);
@@ -297,7 +297,7 @@ class services {
           }
         }
       } else {
-        die("Entity method '".$entity."->get_list()' does not exist."); 
+        die("Entity method '".$entity."::get_list()' does not exist.");
       }
     } else {
       die("Entity '".$entity."' does not exist."); 

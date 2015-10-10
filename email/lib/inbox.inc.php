@@ -311,7 +311,7 @@ class inbox extends db_entity {
     return $info;
   }
 
-  function get_list() {
+  public static function get_list() {
     // Get list of emails
     $info = inbox::get_mail_info();
     $email_receive = new email_receive($info);

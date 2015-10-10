@@ -22,7 +22,7 @@
 
 class wiki {
 
-  function get_list($_FORM) {
+  public static function get_list($_FORM) {
     global $TPL;
     $current_user = &singleton("current_user");
 

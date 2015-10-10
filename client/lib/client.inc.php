@@ -155,7 +155,7 @@ class client extends db_entity {
     return $sql;
   }
 
-  function get_list($_FORM) {
+  public static function get_list($_FORM) {
     /*
      * This is the definitive method of getting a list of clients that need a sophisticated level of filtering
      *

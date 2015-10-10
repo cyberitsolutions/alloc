@@ -186,7 +186,7 @@ class tf extends db_entity {
     return array($filter1,$filter2);
   }
 
-  function get_list($_FORM=array()) {
+  public static function get_list($_FORM=array()) {
     $current_user = &singleton("current_user");
 
     list($filter1,$filter2) = tf::get_list_filter($_FORM);

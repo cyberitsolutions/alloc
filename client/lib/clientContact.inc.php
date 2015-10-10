@@ -251,7 +251,7 @@ class clientContact extends db_entity {
     }
   }
 
-  function get_list($_FORM) {
+  public static function get_list($_FORM) {
     global $TPL;
     $filter = clientContact::get_list_filter($_FORM);
     if (is_array($filter) && count($filter)) {
