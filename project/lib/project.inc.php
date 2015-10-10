@@ -663,7 +663,8 @@ class project extends db_entity {
     if (is_object($this)) {
       $interestedPartyOptions = $this->get_all_parties($projectID);
     } else {
-      $interestedPartyOptions = project::get_all_parties($projectID);
+      $project = new project($projectID);
+      $interestedPartyOptions = $project->get_all_parties();
     }
 
     if (is_array($interestedPartyOptions)) {
@@ -712,7 +713,8 @@ class project extends db_entity {
       $db->next_record();
       $clientID = $db->f("clientID");
       if ($clientID) {
-        $interestedPartyOptions = array_merge((array)$interestedPartyOptions, (array)client::get_all_parties($clientID));
+        $client = new client($clientID);
+        $interestedPartyOptions = array_merge((array)$interestedPartyOptions, (array)$client->get_all_parties());
       }
 
       // Get all the project people for this tasks project
