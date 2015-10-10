@@ -214,8 +214,7 @@ class person extends db_entity {
     return $rtn;
   }
 
-  // Static
-  function get_fullname($personID) {
+  public static function get_fullname($personID) {
     // Get vars for the emails below
     $people_cache =& get_cached_table("person");
     return $people_cache[$personID]["name"];
