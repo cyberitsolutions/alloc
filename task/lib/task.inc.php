@@ -930,7 +930,7 @@ class task extends db_entity {
     return array(sprintf("%0.2f",($taskPriority * pow($projectPriority,2)) * $mult / 10), $daysUntilDue);
   }
 
-  function get_list($_FORM) {
+  public static function get_list($_FORM) {
     $current_user = &singleton("current_user");
 
     /*

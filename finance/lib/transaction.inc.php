@@ -297,7 +297,7 @@ class transaction extends db_entity {
     return $sql;
   }
 
-  function get_list($_FORM) {
+  public static function get_list($_FORM) {
     $current_user = &singleton("current_user");
     global $TPL;
 

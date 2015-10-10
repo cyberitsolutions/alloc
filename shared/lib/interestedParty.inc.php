@@ -359,7 +359,7 @@ class interestedParty extends db_entity {
     return $sql;
   }
 
-  function get_list($_FORM) {
+  public static function get_list($_FORM) {
 
     if ($_FORM["taskID"]) {
       $join = " LEFT JOIN comment ON ((interestedParty.entity = comment.commentType AND interestedParty.entityID = comment.commentLinkID) OR (interestedParty.entity = 'comment' and interestedParty.entityID = comment.commentID))";

@@ -32,7 +32,7 @@ class audit extends db_entity {
                              ,"value"
                              );
 
-  function get_list($_FORM) {
+  public static function get_list($_FORM) {
     /*
      *
      * Get a list of task history items with sophisticated filtering and somewhat sophisticated output

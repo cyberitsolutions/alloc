@@ -712,7 +712,7 @@ class comment extends db_entity {
     }
   }
 
-  function get_list($_FORM=array()) {
+  public static function get_list($_FORM=array()) {
 
     // Two modes, 1: get all comments for an entity, eg a task
     if ($_FORM["entity"] && in_array($_FORM["entity"],array("project","client","task","timeSheet")) && $_FORM["entityID"]) {

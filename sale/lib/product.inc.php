@@ -45,7 +45,7 @@ class product extends db_entity {
     return $sql;
   }
 
-  function get_list($_FORM=array()) {
+  public static function get_list($_FORM=array()) {
 
     $filter = product::get_list_filter($_FORM);
 
