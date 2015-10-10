@@ -798,6 +798,9 @@ class comment extends db_entity {
 
     $entity = $this->get_value("commentType");
     $entity_id = $this->get_value("commentLinkID");
+    if (!class_exists($entity)) {
+      return false;
+    }
     $e = new $entity;
     $e->set_id($entity_id);
     $e->select();
