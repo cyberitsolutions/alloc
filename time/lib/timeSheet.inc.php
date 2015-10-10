@@ -100,7 +100,7 @@ class timeSheet extends db_entity {
     }
   }
 
-  function get_timeSheet_statii() {
+  public static function get_timeSheet_statii() {
     return array("edit"      => "Add Time"
                 ,"manager"   => "Manager"
                 ,"admin"     => "Administrator"
@@ -111,7 +111,7 @@ class timeSheet extends db_entity {
   } 
 
   function get_timeSheet_status() {
-    $statii = $this->get_timeSheet_statii();
+    $statii = timeSheet::get_timeSheet_statii();
     return $statii[$this->get_value("status")];
   }
 
@@ -454,7 +454,7 @@ class timeSheet extends db_entity {
     return "<select name=\"timeSheetItem_taskID\" style=\"width:400px\"><option value=\"\">".$dropdown_options."</select>";
   }
 
-  function get_list_filter($filter=array()) {
+  public static function get_list_filter($filter=array()) {
     $current_user = &singleton("current_user");
 
     // If they want starred, load up the timeSheetID filter element

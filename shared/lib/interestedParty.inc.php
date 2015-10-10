@@ -126,7 +126,7 @@ class interestedParty extends db_entity {
     return strtolower($a["name"]) > strtolower($b["name"]);
   }
 
-  function get_interested_parties($entity,$entityID=false,$ops=array(),$dont_select=false) {
+  public static function get_interested_parties($entity,$entityID=false,$ops=array(),$dont_select=false) {
     $rtn = array();
 
     if ($entityID) {
@@ -162,7 +162,7 @@ class interestedParty extends db_entity {
     return $rtn;
   }
 
-  function get_encoded_interested_party_identifier($info=array()) {
+  public static function get_encoded_interested_party_identifier($info=array()) {
     return base64_encode(serialize($info));
   }
 

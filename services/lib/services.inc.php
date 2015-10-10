@@ -494,7 +494,7 @@ class services {
             if (method_exists($e, "get_list")) {
               $rtn.= "\n\nEntity: ".$entity."\nOptions:\n";
               if (method_exists($e, "get_list_vars")) {
-                $options = $e->get_list_vars();
+                $options = $entity::get_list_vars();
                 foreach ($options as $option=>$help) {
                   $padding = 30 - strlen($option);
                   $rtn.= $commar2."    ".$option.str_repeat(" ",$padding).$help;
