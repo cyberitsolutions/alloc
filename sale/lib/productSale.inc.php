@@ -428,7 +428,7 @@ class productSale extends db_entity {
     }
   }
 
-  function get_list_filter($filter=array()) {
+  public static function get_list_filter($filter=array()) {
     $current_user = &singleton("current_user");
 
     // If they want starred, load up the productSaleID filter element
@@ -457,7 +457,7 @@ class productSale extends db_entity {
     return $sql;
   }
 
-  function get_list($_FORM=array()) {
+  public static function get_list($_FORM=array()) {
 
     $filter = productSale::get_list_filter($_FORM);
 
@@ -504,7 +504,7 @@ class productSale extends db_entity {
     }
   }
 
-  function get_statii() {
+  public static function get_statii() {
     return array("create"=>"Create", "edit"=>"Add Sale Items", "allocate" =>"Allocate", "admin"=>"Administrator", "finished"=>"Completed");
   }
 

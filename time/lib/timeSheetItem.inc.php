@@ -211,7 +211,7 @@ class timeSheetItem extends db_entity {
     }
   }
   
-  function get_list_filter($filter=array()) {
+  public static function get_list_filter($filter=array()) {
 
     // If timeSheetID is an array
     if ($filter["timeSheetID"] && is_array($filter["timeSheetID"])) {

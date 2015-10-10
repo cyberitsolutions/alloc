@@ -268,7 +268,7 @@ class project extends db_entity {
     }
   }
 
-  function get_project_type_query($type="mine",$personID=false,$projectStatus=false) {
+  public static function get_project_type_query($type="mine",$personID=false,$projectStatus=false) {
     $current_user = &singleton("current_user");
     $type or $type = "mine";
     $personID or $personID = $current_user->get_id();
@@ -378,7 +378,7 @@ class project extends db_entity {
     return $this->has_project_permission($person,array("isManager"));
   }
 
-  function get_list_filter($filter=array()) {
+  public static function get_list_filter($filter=array()) {
     $current_user = &singleton("current_user");
 
     // If they want starred, load up the projectID filter element
@@ -624,7 +624,7 @@ class project extends db_entity {
     return $str;
   }
 
-  function get_projectID_sql($filter, $table="project") {
+  public static function get_projectID_sql($filter, $table="project") {
     
     if (!$filter["projectID"] && $filter["projectType"] && $filter["projectType"] != "all") {
       $db = new db_alloc();
@@ -741,7 +741,7 @@ class project extends db_entity {
     return (array)$interestedPartyOptions;
   }
 
-  function get_priority_label($p="") {
+  public static function get_priority_label($p="") {
     $projectPriorities = config::get_config_item("projectPriorities") or $projectPriorities = array();
     $pp = array();
     foreach($projectPriorities as $key => $arr) {

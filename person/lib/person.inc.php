@@ -184,7 +184,7 @@ class person extends db_entity {
     return $rtn;
   }
 
-  function get_username_list($push_personID="") {
+  public static function get_username_list($push_personID="") {
     static $rows;
 
     // Cache rows

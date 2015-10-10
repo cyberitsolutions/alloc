@@ -213,14 +213,14 @@ class expenseForm extends db_entity {
     return $row["amount"];
   } 
 
-  function get_list_filter($filter=array()) {
+  public static function get_list_filter($filter=array()) {
     $filter["projectID"] and $sql[] = prepare("transaction.projectID = %d",$filter["projectID"]);
     $filter["status"]    and $sql[] = prepare("transaction.status = '%s'",$filter["status"]);
     isset($filter["finalised"]) and $sql[] = prepare("expenseForm.expenseFormFinalised = %d",$filter["finalised"]);
     return $sql;
   }
 
-  function get_list($_FORM=array()) {
+  public static function get_list($_FORM=array()) {
     global $TPL;
     $filter = expenseForm::get_list_filter($_FORM);
     if (is_array($filter) && count($filter)) {

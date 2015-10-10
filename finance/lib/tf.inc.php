@@ -146,7 +146,7 @@ class tf extends db_entity {
     return (array)$rtn;
   }
 
-  function get_permitted_tfs($requested_tfs=array()) {
+  public static function get_permitted_tfs($requested_tfs=array()) {
     $current_user = &singleton("current_user");
     // If admin, just use the requested tfs
     if ($current_user->have_role('admin')) {
@@ -169,7 +169,7 @@ class tf extends db_entity {
     return (array)array_unique((array)$r);
   }
 
-  function get_list_filter($_FORM=array()) {
+  public static function get_list_filter($_FORM=array()) {
     $current_user = &singleton("current_user");
 
     if (!$_FORM["tfIDs"] && !$current_user->have_role('admin')) {

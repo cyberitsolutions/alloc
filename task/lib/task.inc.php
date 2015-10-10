@@ -560,7 +560,7 @@ class task extends db_entity {
     $TPL["task_taskStatusLabel"] = $this->get_task_status("label");
     $TPL["task_taskStatusColour"] = $this->get_task_status("colour");
     $TPL["task_taskStatusValue"] = $this->get_value("taskStatus");
-    $TPL["task_taskStatusOptions"] = page::select_options($this->get_task_statii_array(true),$this->get_value("taskStatus"));
+    $TPL["task_taskStatusOptions"] = page::select_options(task::get_task_statii_array(true),$this->get_value("taskStatus"));
 
     // Project label
     if (has("project")) {
@@ -662,7 +662,7 @@ class task extends db_entity {
     return $url;
   }
 
-  function get_task_statii_array($flat=false) {
+  public static function get_task_statii_array($flat=false) {
     // This gets an array that is useful for building the two types of dropdown lists that taskStatus uses
     $taskStatii = task::get_task_statii();
     if ($flat) {
@@ -704,7 +704,7 @@ class task extends db_entity {
     return task::get_task_status_thing($thing,$this->get_value("taskStatus"));
   }
 
-  function get_task_status_thing($thing="",$status="") {
+  public static function get_task_status_thing($thing="",$status="") {
     list($taskStatus,$taskSubStatus) = explode("_",$status);
     $arr = task::get_task_statii();
     if ($thing && $arr[$taskStatus][$taskSubStatus][$thing]) {
@@ -712,7 +712,7 @@ class task extends db_entity {
     }
   }
 
-  function get_task_status_in_set_sql() {
+  public static function get_task_status_in_set_sql() {
     $m = new meta("taskStatus");
     $arr = $m->get_assoc_array();
     foreach ($arr as $taskStatusID => $r) {
@@ -731,7 +731,7 @@ class task extends db_entity {
     return array($sql_open,$sql_pend,$sql_clos);
   }
 
-  function get_taskStatus_sql($status) {
+  public static function get_taskStatus_sql($status) {
     if (!is_array($status)) {
       $status = array($status);
     }
@@ -741,7 +741,7 @@ class task extends db_entity {
     return sprintf_implode("SUBSTRING(task.taskStatus,1,%d) = '%s'",$lengths,$status);
   }
 
-  function get_list_filter($filter=array()) {
+  public static function get_list_filter($filter=array()) {
     $current_user = &singleton("current_user");
 
     // If they want starred, load up the taskID filter element
@@ -1229,7 +1229,7 @@ class task extends db_entity {
                 );
   }
 
-  function load_form_data($defaults=array()) {
+  public static function load_form_data($defaults=array()) {
     $current_user = &singleton("current_user");
   
     $page_vars = array_keys(task::get_list_vars());
