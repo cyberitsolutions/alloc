@@ -1,5 +1,6 @@
+[![Code Climate](https://codeclimate.com/github/alexlance/alloc/badges/gpa.svg)](https://codeclimate.com/github/alexlance/alloc) [![Issue Count](https://codeclimate.com/github/alexlance/alloc/badges/issue_count.svg)](https://codeclimate.com/github/alexlance/alloc)
+
 ##allocPSA
-----------
 
 allocPSA is the web-app that takes care of your projects, employees, time
 sheets, invoicing and customers.
@@ -30,7 +31,6 @@ test allocPSA. I'll update the document in the future with help in that regard.
 If you have ideas, feel free to create an issue here on GitHub with suggestions.
 
 ##Installation
---------------
 
 Please note: If you are upgrading, please read the _Upgrading_ section below.
 
@@ -54,14 +54,12 @@ To install allocPSA:
 
 
 ##Upgrading
------------
 
 To determine which version you are currently running, look at the fine print at
 the bottom of the login screen for allocPSA, or alternatively view the file:
 `http://YOUR_ALLOC_INSTALLATION/util/alloc_version`
 
 ###Generic Upgrade Instructions
--------------------------------
 
 1.  Backup your allocPSA database. _DO IT NOW_.
 
@@ -77,7 +75,6 @@ the bottom of the login screen for allocPSA, or alternatively view the file:
     down. If you get errors stop the process and use the support forums.
 
 ###To upgrade from 1.2.256 to 1.3.508 - The Safe Way
-----------------------------------------------------
 
 1.  Completely replace the old allocPSA source code in the webserver
     document root, with the new source code.
@@ -134,7 +131,6 @@ the bottom of the login screen for allocPSA, or alternatively view the file:
 
 
 ###To upgrade from 1.2.256 to 1.3.508 - The Quick Way (need root shell access)
-------------------------------------------------------------------------------
 
 1.  As the root user, run these commands:
 
