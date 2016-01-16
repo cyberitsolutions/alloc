@@ -1,25 +1,63 @@
+allocPSA
+========
 
-Copyright (C) 2006-2011 Alex Lance, Clancy Malcolm, Cyber IT Solutions
-Pty. Ltd.
+allocPSA is the web-app that takes care of your projects, employees, time
+sheets, invoicing and customers.
 
-This file is part of the allocPSA application <info@cyber.com.au>.
+Support
+=======
 
-allocPSA is free software: you can redistribute it and/or modify it
-under the terms of the GNU Affero General Public License as published by
-the Free Software Foundation, either version 3 of the License, or (at
-your option) any later version.
+Please feel free to contact us at Cyber IT Solutions <info@cyber.com.au> or use
+the forums at http://sourceforge.net/projects/allocpsa/ if you have any
+questions.
 
-allocPSA is distributed in the hope that it will be useful, but WITHOUT
-ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public
-License for more details.
+Contact
+=======
 
-You should have received a copy of the GNU Affero General Public License
-along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
+Email support@allocpsa.com for commercial and hosting enquiries.
+
+License
+=======
+
+allocPSA is under the GNU Affero General Public License. Please see the LICENSE
+file for more details.
+
+Developers!
+===========
+
+We need help! This project receives very little development these days (early
+2016), so all help is much appreciated. :)
+
+I (cjbayliss) am working on a way to make it simple for devs to deploy and
+test allocPSA. I'll update the document in the future with help in that regard.
+If you have ideas, feel free to create an issue here on GitHub with suggestions.
+
+Installation
+============
+
+Please note: If you are upgrading, please read the UPGRADING section below.
+
+allocPSA is generally intended to run with PHP>=5 and MySQL>=4 on a Linux
+server. It may also run on a Windows box, but possibly not with the full
+functionality.
+
+To install allocPSA:
+
+1) Put the allocPSA source code in a directory called e.g. "alloc" in your
+   httpd servers document root. E.g.: /var/www/html/alloc/
+
+2) Make the patches and css, e.g.:
+
+    $ make patches; make css
+
+3) In a web browser, go to your servers hostname + directory where you put the
+   alloc source code, such as: http://localhost/alloc/
+
+4) Follow the instructions in the web browser to complete the installation.
 
 
-allocPSA Upgrading
-==================
+Upgrading
+=========
 
 To determine which version you are currently running, look at the fine print at
 the bottom of the login screen for allocPSA, or alternatively view the file
@@ -119,9 +157,3 @@ To upgrade from 1.2.256 to 1.3.508 - The Quick Way (need root shell access)
    There should be a list of 40 patch files.
 
 4. Lastly, don't forget to manually update the cronjobs as specified in step 4 above.
-
-
-
-
-
-
