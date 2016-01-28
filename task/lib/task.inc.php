@@ -319,10 +319,10 @@ class task extends db_entity
     if ($this->get_id()) {
         // Check for existing task
       has('project') and $p = $this->get_foreign_object('project');
-    } elseif (has('project') && $_POST['projectID']) {
+    } elseif (has('project') && filter_input(INPUT_POST, 'projectID')) {
         // Or maybe they are creating a new task
       $p = new project();
-        $p->set_id($_POST['projectID']);
+        $p->set_id(filter_input(INPUT_POST, 'projectID'));
     }
 
     // if this task doesn't exist (no ID)
@@ -379,8 +379,8 @@ class task extends db_entity
             $parentTaskID = $this->get_value('parentTaskID');
         }
 
-        $projectID or $projectID = $_GET['projectID'];
-        $parentTaskID or $parentTaskID = $_GET['parentTaskID'];
+        $projectID or $projectID = filter_input(INPUT_GET, 'projectID');
+        $parentTaskID or $parentTaskID = filter_input(INPUT_GET, 'parentTaskID');
 
         $db = new db_alloc();
         if ($projectID) {
@@ -407,8 +407,8 @@ class task extends db_entity
 
     // Else get default IPs from project and config
     } else {
-        if ($_GET['projectID']) {
-            $projectID = $_GET['projectID'];
+        if (filter_input(INPUT_GET, 'projectID')) {
+            $projectID = filter_input(INPUT_GET, 'projectID');
         }
         if ($projectID) {
             $project = new project($projectID);
@@ -437,8 +437,8 @@ class task extends db_entity
     {
         $db = new db_alloc();
         $interestedPartyOptions = array();
-        if ($_GET['projectID']) {
-            $projectID = $_GET['projectID'];
+        if (filter_input(INPUT_GET, 'projectID')) {
+            $projectID = (filter_input(INPUT_GET, 'projectID');
         } elseif (!$projectID) {
             $projectID = $this->get_value('projectID');
         }
@@ -544,7 +544,7 @@ class task extends db_entity
 
     public function get_project_options($projectID = '')
     {
-        $projectID or $projectID = $_GET['projectID'];
+        $projectID or $projectID = filter_input(INPUT_GET, 'projectID');
     // Project Options - Select all projects
     $db = new db_alloc();
         $query = prepare("SELECT projectID AS value, projectName AS label
@@ -563,7 +563,7 @@ class task extends db_entity
         $current_user = &singleton('current_user');
         global $isMessage;
         $db = new db_alloc();
-        $projectID = $_GET['projectID'] or $projectID = $this->get_value('projectID');
+        $projectID = filter_input(INPUT_GET, 'projectID') or $projectID = $this->get_value('projectID');
         $TPL['personOptions'] = '<select name="personID"><option value="">'.$this->get_personList_dropdown($projectID, 'personID').'</select>';
         $TPL['managerPersonOptions'] = '<select name="managerID"><option value="">'.$this->get_personList_dropdown($projectID, 'managerID').'</select>';
         $TPL['estimatorPersonOptions'] = '<select name="estimatorID"><option value="">'.$this->get_personList_dropdown($projectID, 'estimatorID').'</select>';
@@ -626,7 +626,7 @@ class task extends db_entity
         $TPL['priorityLabel'] .= ']</div>';
 
     // If we're viewing the printer friendly view
-    if ($_GET['media'] == 'print') {
+    if (filter_input(INPUT_GET, 'media') == 'print') {
         // Parent Task label
       $t = new self();
         $t->set_id($this->get_value('parentTaskID'));
