@@ -1,0 +1,30 @@
+engines:
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - ruby
+      - javascript
+      - python
+      - php
+  fixme:
+    enabled: true
+  phpmd:
+    enabled: true
+    checks:
+      Design/ExitExpression:
+        enabled: false
+      Naming/LongVariable:
+        enabled: false
+ratings:
+  paths:
+  - "**.inc"
+  - "**.js"
+  - "**.jsx"
+  - "**.module"
+  - "**.php"
+  - "**.py"
+  - "**.rb"
+exclude_paths:
+  - zend/**/*
+  - shared/lib/**/*
