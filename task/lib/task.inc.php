@@ -438,7 +438,7 @@ class task extends db_entity
         $db = new db_alloc();
         $interestedPartyOptions = array();
         if (filter_input(INPUT_GET, 'projectID')) {
-            $projectID = (filter_input(INPUT_GET, 'projectID');
+            $projectID = filter_input(INPUT_GET, 'projectID');
         } elseif (!$projectID) {
             $projectID = $this->get_value('projectID');
         }
