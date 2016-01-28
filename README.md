@@ -59,34 +59,26 @@ the bottom of the login screen for allocPSA, or alternatively view the file:
 - Backup your allocPSA database. _DO IT NOW_.
 - Unpack the new allocPSA source code alongside your current installation.
 - Copy the `alloc_config.php` file from your current installation of
-
   allocPSA into the directory that contains the new installation of allocPSA.
 
 - Finally, update your allocPSA database by going to this address in your web
-
   browser: `http://YOUR_NEW_ALLOC_INSTALLATION/installation/patch.php`
 
   Apply each patch separately, starting from the top and working your way
-
   down. If you get errors stop the process and use the support forums.
 
 ## To upgrade from 1.2.256 to 1.3.508 - The Safe Way
 - Completely replace the old allocPSA source code in the webserver
-
   document root, with the new source code.
 
 - Visit an address in your webbrowser for the first part of the upgrade:
-
   `http://YOUR_ALLOC_INSTALLATION/installation/patch_1_2_256_to_1_3_497.php`
 
   Follow the instructions carefully. Refresh the page every time you make a
-
   change, the todo list should get shorter everytime you've made a change and
-
   then refreshed the page.
 
 - After you follow all the instructions there, you will be given a link to go
-
   to complete the database upgrade. Something like:
 
   `http://YOUR_ALLOC_INSTALLATION/installation/patch.php`
