@@ -16,6 +16,8 @@ engines:
         enabled: false
       Naming/LongVariable:
         enabled: false
+      Controversial/CamelCasePropertyName:
+        enabled: false
 ratings:
   paths:
   - "**.inc"
