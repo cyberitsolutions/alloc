@@ -27,7 +27,6 @@ help:
 	@echo "  doc_clean - makes pdf alloc help"
 	@echo "  dist      - makes doc_html, doc_clean, and makes an alloc tarball"
 	@echo "  cache     - copies/concatenates all the javascript and css files to a cache directory"
-	@echo "  test      - final tests that must pass before a tarball can be built"
 	@echo "  patches   - combines all DB schema patches into installation file"
 
 doc_html:
@@ -56,7 +55,7 @@ doc_pdf:
 doc_clean:
 	rm -rf ./help/src/help.aux ./help/src/help.log ./help/src/help.out ./help/src/help.tex ./help/src/images ./help/src/help.gif.txt ./help/src/help.toc ./help/src/missfont.log
 
-dist: test
+dist:
 	if [ -d ./src ]; then rm -rf ./src; fi;
 	git clone . ./src/
 	rm -rf ./src/.git
@@ -77,15 +76,6 @@ clean: ;
 none: ;
 all: ;
 install: ;
-
-# Currently only tests Python.  Requires pyflakes and pylint.
-test:
-	pyflakes bin/alloc
-	find -iname '*.py' -exec pyflakes {} +
-	PYTHONPATH=$$PYTHONPATH:./bin/alloccli                  \
-	# E501 is line lenth, this is best to ignore because 79 chars long is too short.#
-	# E241 is whitespace after a ',' or ':'
-	find -iname '*.py' -exec flake8 --ignore=E501,E241 --count --benchmark {} +
 
 cache:
 	rm -rf cache_`cat util/alloc_version`
@@ -108,4 +98,4 @@ patches:
 
 
 
-.PHONY: css help doc services test cache patches
+.PHONY: css help doc services cache patches
