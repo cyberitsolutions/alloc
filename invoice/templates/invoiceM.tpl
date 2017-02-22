@@ -45,7 +45,7 @@ $(document).ready(function() {
     </td>
     <td>
         <span class="calendar_container nobr">
-        <img src="{$url_alloc_images}cal{echo date("Y")}.png" title="Date Selector" alt="Date Selector" id="frequency_button">
+        <img src="{$url_alloc_images}cal.png" title="Date Selector" alt="Date Selector" id="frequency_button">
         </span>
 
         <script>

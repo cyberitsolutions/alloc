@@ -243,7 +243,7 @@ class page {
     $images = $TPL["url_alloc_images"];
     $year = date("Y");
     $str = <<<EOD
-      <span class="calendar_container nobr"><input name="${name}" type="text" value="${default_value}" id="" class="datefield"><img src="${images}cal${year}.png" title="Date Selector" alt="Date Selector" id=""></span>
+      <span class="calendar_container nobr"><input name="${name}" type="text" value="${default_value}" id="" class="datefield"><img src="${images}cal.png" title="Date Selector" alt="Date Selector" id=""></span>
 EOD;
     return $str;
   }
