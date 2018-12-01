@@ -3,19 +3,19 @@
 /*
  * Copyright (C) 2006-2011 Alex Lance, Clancy Malcolm, Cyber IT Solutions
  * Pty. Ltd.
- * 
+ *
  * This file is part of the allocPSA application <info@cyber.com.au>.
- * 
+ *
  * allocPSA is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or (at
  * your option) any later version.
- * 
+ *
  * allocPSA is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public
  * License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
@@ -52,7 +52,7 @@ if ($sess->Started()) {
                  ,date("Y-m-d H:i:s"),$row["personID"]);
     $db = new db_alloc();
     $db->query($q);
-                   
+
 
     if ($sess->TestCookie()) {
       $sess->UseCookie();
@@ -119,7 +119,7 @@ if (isset($_GET["forward"])) {
   $TPL["forward_url"] = strip_tags($_GET["forward"]);
 }
 
-$TPL["status_line"] = APPLICATION_NAME." ".get_alloc_version()." &copy; ".date("Y")." <a href=\"http://www.cyber.com.au\">Cyber IT Solutions</a>"; 
+$TPL["status_line"] = APPLICATION_NAME." ".get_alloc_version()." &copy; ".date("Y")." <a href=\"http://www.cyber.com.au\">Cyber IT Solutions</a>";
 
 
 if (!is_dir(ATTACHMENTS_DIR."whatsnew".DIRECTORY_SEPARATOR."0")) {
@@ -133,7 +133,7 @@ if (is_array($files) && count($files)) {
     // Only show entries that are newer that 4 weeks old
     if (format_date("U",basename($f["path"])) > mktime() - (60*60*24*28)) {
       $x++;
-      if($x>3) break; 
+      if($x>3) break;
       $str.= $br."<b>".$f["restore_name"]."</b>";
       $str.= "<br><ul>".trim(file_get_contents($f["path"]))."</ul>";
       $br = "<br><br>";
