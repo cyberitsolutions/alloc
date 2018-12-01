@@ -17,7 +17,7 @@ hosting enquiries.
 ## License
 allocPSA is under the GNU Affero General Public License. For more info please
 see the LICENSE file or visit the [GNU Affero General Public
-License](http://www.gnu.org/licenses/agpl-3.0.en.html) webpage.  
+License](http://www.gnu.org/licenses/agpl-3.0.en.html) webpage.
 
 ## Developers!
 We need help! This project receives very little development these days (early
@@ -33,6 +33,22 @@ Please note: If you are upgrading, please read the _Upgrading_ section below.
 allocPSA is generally intended to run with PHP>=5 and MySQL>=4 on a Linux
 server. It may also run on a Windows box, but possibly not with the full
 functionality.
+
+You will need to install php, mysql, and php-mbstring. The php-gd package is
+also recommended. On debian you will need to change the mysql (maridb) config
+from:
+
+```
+character-set-server  = utf8mb4
+collation-server      = utf8mb4_general_ci
+```
+
+to:
+
+```
+character-set-server  = utf8
+#collation-server      = utf8mb4_general_ci
+```
 
 To install allocPSA:
 
