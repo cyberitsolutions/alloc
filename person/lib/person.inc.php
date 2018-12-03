@@ -3,19 +3,19 @@
 /*
  * Copyright (C) 2006-2011 Alex Lance, Clancy Malcolm, Cyber IT Solutions
  * Pty. Ltd.
- * 
+ *
  * This file is part of the allocPSA application <info@cyber.com.au>.
- * 
+ *
  * allocPSA is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or (at
  * your option) any later version.
- * 
+ *
  * allocPSA is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public
  * License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
@@ -52,7 +52,7 @@ class person extends db_entity {
                              ,"defaultTimeSheetRate"  => array("type"=>"money","write_perm_name"=>PERM_PERSON_WRITE_MANAGEMENT)
                              ,"defaultTimeSheetRateUnitID" => array("write_perm_name"=>PERM_PERSON_WRITE_MANAGEMENT)
                              );
-  
+
   public $prefs = array();
   public $permissions = array(PERM_PERSON_READ_DETAILS => "read details"
                              ,PERM_PERSON_READ_MANAGEMENT => "read management fields"
@@ -85,7 +85,7 @@ class person extends db_entity {
     if ($summary) {
       $topThree = "\n\nTop Three Tasks";
       $topThree.= $summary;
-    } 
+    }
 
     unset($summary,$s);
     unset($options["limit"]);
@@ -105,7 +105,7 @@ class person extends db_entity {
     if ($summary) {
       $dueToday = "\n\nTasks Due Today";
       $dueToday.= $summary;
-    } 
+    }
 
     unset($summary,$s);
     unset($options["limit"]);
@@ -125,7 +125,7 @@ class person extends db_entity {
     if ($summary) {
       $newTasks = "\n\nNew Tasks";
       $newTasks.= $summary;
-    } 
+    }
 
     return $topThree.$dueToday.$newTasks;
   }
@@ -198,7 +198,7 @@ class person extends db_entity {
         } else {
           $name = $db->f("username");
         }
-      
+
         $rows[$db->f("personID")] = array("active"=>$db->f("personActive"), "name"=>$name);
 
       }
@@ -218,7 +218,7 @@ class person extends db_entity {
     // Get vars for the emails below
     $people_cache =& get_cached_table("person");
     return $people_cache[$personID]["name"];
-  } 
+  }
 
   function get_name($_FORM=array()) {
     $firstName = $this->get_value("firstName");
@@ -257,7 +257,7 @@ class person extends db_entity {
     $db->query($q);
     $row = $db->row();
 
-    if (check_password($password, $row["password"])) {
+    if (password_verify($password, $row["password"])) {
       return $row;
     }
   }
@@ -299,7 +299,7 @@ class person extends db_entity {
     $p->set_id($this->get_id());
     $p->select();
     $p->load_prefs();
-  
+
     $old_prefs = $p->prefs or $old_prefs = array();
     foreach ($old_prefs as $k => $v) {
       if ($this->prefs[$k] != $v) {
@@ -323,11 +323,11 @@ class person extends db_entity {
 
   function has_messages() {
     if (is_object($this)) {
-      
+
       list($ts_open,$ts_pending,$ts_closed) = task::get_task_status_in_set_sql();
       $db = new db_alloc();
-      $query = prepare("SELECT * 
-                          FROM task 
+      $query = prepare("SELECT *
+                          FROM task
                          WHERE taskTypeID = 'Message'
                            AND personID = %d
                            AND taskStatus NOT IN (".$ts_closed.")"
@@ -335,10 +335,10 @@ class person extends db_entity {
       $db->query($query);
       if ($db->next_record()) {
         return true;
-      } 
-    } 
+      }
+    }
     return false;
-  } 
+  }
 
   function find_by_name($name=false,$certainty=90) {
 
@@ -400,7 +400,7 @@ class person extends db_entity {
         $skill = new skill();
         $skill->read_db_record($db);
         $sql2[] = prepare("(skillID=%d)", $skill->get_id());
-      } 
+      }
     }
 
     $filter["expertise"]    and $sql[] = sprintf_implode("skillProficiency='%s'", $filter["expertise"]);
@@ -463,7 +463,7 @@ class person extends db_entity {
       $row["name"] = $p->get_name();
       $row["name_link"] = $p->get_link($_FORM);
       $row["personActive_label"] = $p->get_value("personActive") == 1 ? "Y":"";
-      
+
       if ($_FORM["showSkills"]) {
         $senior_skills = $p->get_skills('Senior');
         $advanced_skills = $p->get_skills('Advanced');
@@ -479,7 +479,7 @@ class person extends db_entity {
         $novice_skills       and $skills[] = "<img src=\"../images/skill_novice.png\" alt=\"Novice\"> ".page::htmlentities($novice_skills);
         $row["skills_list"] = implode("<br>",$skills);
       }
-  
+
       if ($_FORM["showLinks"]) {
         $row["navLinks"] = '<a href="'.$TPL["url_alloc_taskList"].'personID='.$row["personID"].'&taskView=byProject&applyFilter=1';
         $row["navLinks"].= '&dontSave=1&taskStatus=open&projectType=Current">Tasks</a>&nbsp;&nbsp;';
@@ -604,10 +604,10 @@ class person extends db_entity {
     $rtn["skill_classes"] = page::select_options($skill_classes, $_FORM["skill_class"]);
 
     $skills = skill::get_skills();
-    // if a skill class is selected and a skill that is not in that class is also selected, 
+    // if a skill class is selected and a skill that is not in that class is also selected,
     // clear the skill as this is what the filter options will do
-    if ($skill_class && !in_array($skills[$_FORM["skill"]], $skills)) { 
-      $_FORM["skill"] = ""; 
+    if ($skill_class && !in_array($skills[$_FORM["skill"]], $skills)) {
+      $_FORM["skill"] = "";
     }
     $rtn["skills"] = page::select_options($skills, $_FORM["skill"]);
 

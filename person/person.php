@@ -3,19 +3,19 @@
 /*
  * Copyright (C) 2006-2011 Alex Lance, Clancy Malcolm, Cyber IT Solutions
  * Pty. Ltd.
- * 
+ *
  * This file is part of the allocPSA application <info@cyber.com.au>.
- * 
+ *
  * allocPSA is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or (at
  * your option) any later version.
- * 
+ *
  * allocPSA is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public
  * License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
@@ -62,7 +62,7 @@ require_once("../alloc.php");
     global $TPL;
     if ($person->have_perm(PERM_DELETE)) {
       echo '<button type="submit" name="delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button> ';
-    } 
+    }
     echo '<button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button> ';
   }
 
@@ -174,7 +174,7 @@ if ($personID) {
   $person->set_id($personID);
   $person->select();
 }
-    
+
 
 if ($_POST["personExpertiseItem_add"] || $_POST["personExpertiseItem_save"] || $_POST["personExpertiseItem_delete"]) {
   $proficiency = new proficiency();
@@ -217,7 +217,7 @@ if ($_POST["save"]) {
   }
 
   if ($_POST["password1"] && $_POST["password1"] == $_POST["password2"]) {
-    $person->set_value('password', encrypt_password($_POST["password1"]));
+    $person->set_value('password', password_hash($_POST["password1"], PASSWORD_BCRYPT));
 
   } else if (!$_POST["password1"] && $personID) {
     // nothing required here, just don't update the password field
@@ -272,10 +272,10 @@ if ($_POST["save"]) {
 $person->set_values("person_");
 
 if ($person->get_id()) {
-  $q = prepare("SELECT tfPerson.tfID AS value, tf.tfName AS label 
-                  FROM tf, tfPerson 
-  				       WHERE tf.tfID = tfPerson.tfID 
-                   AND tfPerson.personID = %d 
+  $q = prepare("SELECT tfPerson.tfID AS value, tf.tfName AS label
+                  FROM tf, tfPerson
+  				       WHERE tf.tfID = tfPerson.tfID
+                   AND tfPerson.personID = %d
                    AND (tf.tfActive = 1 OR tf.tfID = %d)"
                 ,$person->get_id(),$person->get_value("preferred_tfID"));
   $TPL["preferred_tfID_options"] = page::select_options($q, $person->get_value("preferred_tfID"));

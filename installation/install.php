@@ -3,19 +3,19 @@
 /*
  * Copyright (C) 2006-2011 Alex Lance, Clancy Malcolm, Cyber IT Solutions
  * Pty. Ltd.
- * 
+ *
  * This file is part of the allocPSA application <info@cyber.com.au>.
- * 
+ *
  * allocPSA is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or (at
  * your option) any later version.
- * 
+ *
  * allocPSA is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public
  * License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
@@ -150,7 +150,7 @@ if ($_POST["submit_stage_2"]) {
     $query[] = sprintf("DELETE FROM exchangeRate;");
     $query[] = sprintf("INSERT INTO exchangeRate (exchangeRateCreatedDate,exchangeRateCreatedTime,fromCurrency,toCurrency,exchangeRate) VALUES ('%s','%s','%s','%s',%d);",date("Y-m-d"),date("Y-m-d H:i:s"),$_FORM["currency"],$_FORM["currency"],1);
     $query[] = sprintf("UPDATE config SET value = '%s' WHERE name = 'allocURL';",$_FORM["allocURL"]);
-    $query[] = sprintf("UPDATE person SET password = '%s' WHERE personID = 1;",encrypt_password("alloc"));
+    $query[] = sprintf("UPDATE person SET password = '%s' WHERE personID = 1;",password_hash("alloc", PASSWORD_BCRYPT));
     $query[] = sprintf("UPDATE config SET value = '%s' WHERE name = 'allocTimezone';",$timeZone);
 
     file_put_contents($_FORM["ATTACHMENTS_DIR"]."db_config.sql",implode("\n",$query));
@@ -229,7 +229,7 @@ if ($_POST["test_db"]) {
       $num_tables = $db->num_rows();
     }
   }
-  
+
   if (!$failed) {
     $query = "SELECT * FROM config WHERE name='install_data'";
     $db->query($query);
@@ -240,7 +240,7 @@ if ($_POST["test_db"]) {
       $failed = 1;
     }
   }
-    
+
   if (!$failed) {
     if ($install_data["num_tables"] == $num_tables) {
       $text_tab_3b[] = "Checked db_structure.sql (".$num_tables." out of ".$install_data["num_tables"]." tables).";

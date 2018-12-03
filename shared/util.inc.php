@@ -3,19 +3,19 @@
 /*
  * Copyright (C) 2006-2011 Alex Lance, Clancy Malcolm, Cyber IT Solutions
  * Pty. Ltd.
- * 
+ *
  * This file is part of the allocPSA application <info@cyber.com.au>.
- * 
+ *
  * allocPSA is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or (at
  * your option) any later version.
- * 
+ *
  * allocPSA is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public
  * License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
@@ -46,7 +46,7 @@ function format_offset($secs) {
   $sign = $secs < 0 ? '' : '+';
   $h = $secs / 3600;
   $m = $secs % 3600 / 60;
-  
+
   return sprintf('%s%2d:%02d', $sign,$h,$m);
 }
 
@@ -122,7 +122,7 @@ function get_alloc_version() {
   if (file_exists(ALLOC_MOD_DIR."util/alloc_version") && is_readable(ALLOC_MOD_DIR."util/alloc_version")) {
     $v = file(ALLOC_MOD_DIR."util/alloc_version");
     $version = trim($v[0]);
-  } 
+  }
   return $version;
 }
 function seconds_to_display_format($seconds) {
@@ -134,25 +134,25 @@ function seconds_to_display_format($seconds) {
     return sprintf("%0.2f hrs",$hours);
   }
   return;
-  
+
   if ($seconds < $day_in_seconds) {
     return sprintf("%0.2f hrs",$hours);
   } else {
     $days = $seconds / $day_in_seconds;
     #return sprintf("%0.1f days", $days);
     return sprintf("%0.2f hrs (%0.1f days)",$hours, $days);
-     
+
   }
-  
+
 }
 function get_all_form_data($array=array(),$defaults=array()) {
   // Load up $_FORM with $_GET and $_POST
   $_FORM = array();
   foreach ($array as $name) {
     $_FORM[$name] = $_POST[$name] or $_FORM[$name] = $_GET[$name] or $_FORM[$name] = $defaults[$name];
-  } 
+  }
   return $_FORM;
-} 
+}
 function timetook($start, $friendly_output=true) {
   $end = microtime();
   list($start_micro,$start_epoch,$end_micro,$end_epoch) = explode(" ",$start." ".$end);
@@ -174,7 +174,7 @@ function sort_by_name($a, $b) {
 }
 function rebuild_cache($table) {
   $cache =& singleton("cache");
-  
+
   if (meta::$tables[$table]) {
     $m = new meta($table);
     $cache[$table] = $m->get_list();
@@ -216,11 +216,11 @@ function &get_cached_table($table,$anew=false) {
     rebuild_cache($table);
   }
   return $cache[$table];
-} 
+}
 function get_mimetype($filename="") {
   // We define our own mime_content_type() function (if the inbuilt one is
   // not available) at the end of this file.
-  return mime_content_type($filename); 
+  return mime_content_type($filename);
 }
 function sort_by_mtime($a, $b) {
   return $a["mtime"] >= $b["mtime"];
@@ -274,13 +274,13 @@ function get_file_type_image($file) {
     $t = $type.".gif";
   } else if (file_exists($icon_dir.$type.".png")) {
     $t = $type.".png";
-  } else {  
+  } else {
     $t = "unknown.gif";
   }
   return "<img border=\"0\" alt=\"icon\" src=\"".$TPL["url_alloc_images"]."/fileicons/".$t."\">";
 }
 function get_attachments($entity, $id, $ops=array()) {
-  
+
   global $TPL;
   $rows = array();
   $dir = ATTACHMENTS_DIR.$entity.DIRECTORY_SEPARATOR.$id;
@@ -319,7 +319,7 @@ function get_attachments($entity, $id, $ops=array()) {
           $row["mtime"] = date("Y-m-d H:i:s",filemtime($dir.DIRECTORY_SEPARATOR.$file));
           $row["restore_name"] = $file;
 
-          $rows[] = $row;    
+          $rows[] = $row;
         }
       }
       closedir($handle);
@@ -352,7 +352,7 @@ function rejig_files_array($f) {
                           );
       }
     }
-  } 
+  }
   return (array)$files;
 }
 function move_attachment($entity, $id=false) {
@@ -378,10 +378,10 @@ function move_attachment($entity, $id=false) {
         } else {
           chmod($dir.DIRECTORY_SEPARATOR.$newname, 0777);
         }
-  
+
       } else {
         switch($file['error']){
-          case 0: 
+          case 0:
             alloc_error("There was a problem with your upload.");
             break;
           case 1: // upload_max_filesize in php.ini
@@ -390,16 +390,16 @@ function move_attachment($entity, $id=false) {
           case 2: // MAX_FILE_SIZE
             alloc_error("The file you are trying to upload is too big(2).");
             break;
-          case 3: 
+          case 3:
             alloc_error("The file you are trying upload was only partially uploaded.");
             break;
-          case 4: 
+          case 4:
             alloc_error("You must select a file for upload.");
             break;
-          default: 
+          default:
             alloc_error("There was a problem with your upload.");
             break;
-        } 
+        }
       }
     }
   }
@@ -409,7 +409,7 @@ function db_esc($str = "") {
   return $db->esc($str);
 }
 function parse_sql_file($file) {
-  
+
   // Filename must be readable and end in .sql
   if (!is_readable($file) || substr($file,-4) != strtolower(".sql")) {
     return;
@@ -442,7 +442,7 @@ function parse_sql_file($file) {
     }
   }
   return array($sql,$comments);
-} 
+}
 function parse_php_file($file) {
   // Filename must be readable and end in .php
   if (!is_readable($file) || substr($file,-4) != strtolower(".php")) {
@@ -482,14 +482,6 @@ function execute_php_file($file_to_execute) {
    ob_start();
    include($file_to_execute);
    return ob_get_contents();
-}
-function encrypt_password($password) {
-  $t_hasher = new PasswordHash(8, FALSE);
-  return $t_hasher->HashPassword($password);
-}
-function check_password($password, $hash) {
-  $t_hasher = new PasswordHash(8, FALSE);
-  return $t_hasher->CheckPassword($password, $hash);
 }
 function bad_filename($filename) {
   return preg_match("@[/\\\]@", $filename);
@@ -647,7 +639,7 @@ if (!function_exists('mime_content_type')) {
 
     // Or if no suffix at all, return text/plain
     } else if (!$ext) {
-      $mt = 'text/plain'; 
+      $mt = 'text/plain';
 
     // Else unrecognised suffix, force browser to offer download dialog
     } else {
@@ -677,7 +669,7 @@ function image_create_from_file($path) {
     IMAGETYPE_WBMP => 'imagecreatefromwbmp',
     IMAGETYPE_XBM => 'imagecreatefromwxbm',
   );
-  
+
   if(!$functions[$info[2]]) {
     echo "no function to handle $info[2]";
     return false;
@@ -836,8 +828,8 @@ function alloc_error($str="",$force=null) {
   if ($errors_format == "html") {
     global $TPL;
     $TPL["message"][] = $str;
-  } 
-  
+  }
+
   // Output a plain-text error suitable for logfiles and CLI
   if ($errors_format == "text" && ini_get('display_errors')) {
     echo(strip_tags($str));
