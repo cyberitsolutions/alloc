@@ -257,7 +257,7 @@ class person extends db_entity {
     $db->query($q);
     $row = $db->row();
 
-    if (check_password($password, $row["password"])) {
+    if (password_verify($password, $row["password"])) {
       return $row;
     }
   }

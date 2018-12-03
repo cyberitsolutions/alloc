@@ -150,7 +150,7 @@ if ($_POST["submit_stage_2"]) {
     $query[] = sprintf("DELETE FROM exchangeRate;");
     $query[] = sprintf("INSERT INTO exchangeRate (exchangeRateCreatedDate,exchangeRateCreatedTime,fromCurrency,toCurrency,exchangeRate) VALUES ('%s','%s','%s','%s',%d);",date("Y-m-d"),date("Y-m-d H:i:s"),$_FORM["currency"],$_FORM["currency"],1);
     $query[] = sprintf("UPDATE config SET value = '%s' WHERE name = 'allocURL';",$_FORM["allocURL"]);
-    $query[] = sprintf("UPDATE person SET password = '%s' WHERE personID = 1;",encrypt_password("alloc"));
+    $query[] = sprintf("UPDATE person SET password = '%s' WHERE personID = 1;",password_hash("alloc", PASSWORD_DEFAULT));
     $query[] = sprintf("UPDATE config SET value = '%s' WHERE name = 'allocTimezone';",$timeZone);
 
     file_put_contents($_FORM["ATTACHMENTS_DIR"]."db_config.sql",implode("\n",$query));

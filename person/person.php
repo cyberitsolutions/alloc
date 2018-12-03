@@ -217,7 +217,7 @@ if ($_POST["save"]) {
   }
 
   if ($_POST["password1"] && $_POST["password1"] == $_POST["password2"]) {
-    $person->set_value('password', encrypt_password($_POST["password1"]));
+    $person->set_value('password', password_hash($_POST["password1"], PASSWORD_DEFAULT));
 
   } else if (!$_POST["password1"] && $personID) {
     // nothing required here, just don't update the password field

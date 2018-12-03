@@ -483,14 +483,6 @@ function execute_php_file($file_to_execute) {
    include($file_to_execute);
    return ob_get_contents();
 }
-function encrypt_password($password) {
-  $t_hasher = new PasswordHash(8, FALSE);
-  return $t_hasher->HashPassword($password);
-}
-function check_password($password, $hash) {
-  $t_hasher = new PasswordHash(8, FALSE);
-  return $t_hasher->CheckPassword($password, $hash);
-}
 function bad_filename($filename) {
   return preg_match("@[/\\\]@", $filename);
 }
