@@ -81,7 +81,7 @@ if ($sess->Started()) {
     }
 
     $q = prepare("UPDATE person SET password = '%s' WHERE emailAddress = '%s'
-                 ",password_hash($password, PASSWORD_DEFAULT), $_POST["email"]);
+                 ",password_hash($password, PASSWORD_BCRYPT), $_POST["email"]);
     $db2 = new db_alloc();
     $db2->query($q);
 

@@ -47,7 +47,7 @@ if (($handle = fopen("../../David_People.csv", "r")) !== FALSE) {
       $person->set_value("username",$data[0]);
       $person->set_value("firstName",$data[1]);
       $person->set_value("surname",$data[2]);
-      $person->set_value("password",password_hash($data[3], PASSWORD_DEFAULT));
+      $person->set_value("password",password_hash($data[3], PASSWORD_BCRYPT));
       $person->set_value("emailAddress",$data[4]);
       $person->set_value("phoneNo1",$data[5]);
       $person->set_value("comments",$data[6]);
