@@ -7,3 +7,4 @@ alloc_config.php
 *.pyc
 cache*
 _darcs
+.php_cs.cache
