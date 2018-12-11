@@ -1,32 +1,15 @@
-engines:
-  duplication:
-    enabled: true
-    config:
-      languages:
-      - ruby
-      - javascript
-      - python
-      - php
-  fixme:
-    enabled: true
-  phpmd:
-    enabled: true
-    checks:
-      Design/ExitExpression:
-        enabled: false
-      Naming/LongVariable:
-        enabled: false
-      Controversial/CamelCasePropertyName:
-        enabled: false
-ratings:
-  paths:
-  - "**.inc"
-  - "**.js"
-  - "**.jsx"
-  - "**.module"
-  - "**.php"
-  - "**.py"
-  - "**.rb"
-exclude_paths:
-  - zend/**/*
-  - shared/lib/**/*
+version: "2"
+checks:
+  file-lines:
+    enabled: false
+exclude_patterns:
+- "**/*.css"
+- "**/*.ini"
+- "**/*.tpl"
+- "**/*.py"
+- "**/*.js"
+- "zend/"
+- "shared/lib/"
+- "email/lib/Mail_RFC822.inc.php"
+- "email/lib/Mail_mimeDecode.inc.php"
+- "wiki/lib/markdown.inc.php"
