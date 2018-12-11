@@ -20,7 +20,6 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 class announcement_module extends module
 {
     public $module = "announcement";

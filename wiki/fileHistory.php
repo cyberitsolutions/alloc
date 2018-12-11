@@ -31,7 +31,6 @@ if (path_under_path(dirname($pathfile), wiki_module::get_wiki_path())) {
 
     // Check if we're using a VCS
     $vcs = vcs::get();
-    #$vcs->debug = true;
     if (is_object($vcs)) {
         $logs = $vcs->log($pathfile);
         $logs = $vcs->format_log($logs);

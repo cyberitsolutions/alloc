@@ -23,10 +23,10 @@
 require_once("../alloc.php");
 
 $defaults = array("showHeader"=>true
-                 ,"showProject"=>true
-                 ,"padding"=>1
-                 ,"url_form_action"=>$TPL["url_alloc_projectGraph"]
-                 ,"form_name"=>"projectSummary_filter");
+                  ,"showProject"=>true
+                  ,"padding"=>1
+                  ,"url_form_action"=>$TPL["url_alloc_projectGraph"]
+                  ,"form_name"=>"projectSummary_filter");
 
 function show_filter()
 {

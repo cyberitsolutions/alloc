@@ -149,12 +149,12 @@ function get_pending_admin_timesheet_db()
 
     if (in_array($current_user->get_id(), $timeSheetAdminPersonIDs)) {
         $query = "SELECT timeSheet.*, sum(timeSheetItem.timeSheetItemDuration * timeSheetItem.rate) as total_dollars, COALESCE(projectShortName, projectName) as projectName
-                FROM timeSheet
-           LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID
-           LEFT JOIN project on project.projectID = timeSheet.projectID
-               WHERE timeSheet.status='admin'
-            GROUP BY timeSheet.timeSheetID
-            ORDER BY timeSheet.dateSubmittedToAdmin";
+                    FROM timeSheet
+               LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID
+               LEFT JOIN project on project.projectID = timeSheet.projectID
+                   WHERE timeSheet.status='admin'
+                GROUP BY timeSheet.timeSheetID
+                ORDER BY timeSheet.dateSubmittedToAdmin";
     }
     $db->query($query);
     return $db;

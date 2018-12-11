@@ -30,9 +30,11 @@ class db_field
 
     public $audit = false;
 
-    // Name of a permission a user must have to write to this field, if any.  E.g. "admin"
+    // Name of a permission a user must have to write to this field, if any.
+    // E.g. "admin"
     public $write_perm_name = 0;
-    // Name of the permission a user must have to read this field, if any.  E.g. "read details"
+    // Name of the permission a user must have to read this field, if any.
+    // E.g. "read details"
     public $read_perm_name = 0;
 
     public function __construct($name = "", $options = array())
@@ -42,7 +44,6 @@ class db_field
 
         if (!is_array($options)) {
             $options = array();
-            #echo "<br>".$this->name;
         }
         reset($options);
         foreach ($options as $option_name => $option_value) {

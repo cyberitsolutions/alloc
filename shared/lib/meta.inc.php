@@ -26,27 +26,27 @@ class meta extends db_entity
 
     // This variable contains the definitive list of all the referential
     // integrity tables that the user is allowed to edit.
-    public static $tables = array("absenceType"     => "Absence Types"
-                       ,"clientStatus"              => "Client Statuses"
-                       #,"configType"                => "Config Types"
-                       #,"invoiceStatus"             => "Invoice Statuses"
-                       ,"itemType"                  => "Item Types"
-                       ,"projectType"               => "Project Types"
-                       ,"currencyType"              => "Currency Types"
-                       ,"projectStatus"             => "Project Statuses"
-                       ,"taskStatus"                => "Task Statuses"
-                       #,"roleLevel"                 => "Role Levels"
-                       #,"reminderRecuringInterval"  => "Reminder Intervals"
-                       #,"reminderAdvNoticeInterval" => "Advanced Notice Int"
-                       #,"sentEmailType"             => "Sent Email Types"
-                       ,"skillProficiency"          => "Skill Proficiencies"
-                       #,"changeType"                => "Change Types"
-                       #,"timeSheetStatus"           => "Time Sheet Statuses"
-                       #,"transactionStatus"         => "Transaction Statuses"
-                       ,"transactionType"           => "Transaction Types"
-                       ,"timeSheetItemMultiplier"   => "Time Sheet Multipliers"
-                       #,"productSaleStatus"         => "Product Sale Statuses"
-                       ,"taskType"                  => "Task Types");
+    public static $tables = array("absenceType"                => "Absence Types"
+                                  ,"clientStatus"              => "Client Statuses"
+                                  #,"configType"                => "Config Types"
+                                  #,"invoiceStatus"             => "Invoice Statuses"
+                                  ,"itemType"                  => "Item Types"
+                                  ,"projectType"               => "Project Types"
+                                  ,"currencyType"              => "Currency Types"
+                                  ,"projectStatus"             => "Project Statuses"
+                                  ,"taskStatus"                => "Task Statuses"
+                                  #,"roleLevel"                 => "Role Levels"
+                                  #,"reminderRecuringInterval"  => "Reminder Intervals"
+                                  #,"reminderAdvNoticeInterval" => "Advanced Notice Int"
+                                  #,"sentEmailType"             => "Sent Email Types"
+                                  ,"skillProficiency"          => "Skill Proficiencies"
+                                  #,"changeType"                => "Change Types"
+                                  #,"timeSheetStatus"           => "Time Sheet Statuses"
+                                  #,"transactionStatus"         => "Transaction Statuses"
+                                  ,"transactionType"           => "Transaction Types"
+                                  ,"timeSheetItemMultiplier"   => "Time Sheet Multipliers"
+                                  #,"productSaleStatus"         => "Product Sale Statuses"
+                                  ,"taskType"                  => "Task Types");
 
     public function __construct($table = "")
     {
@@ -63,7 +63,8 @@ class meta extends db_entity
             $this->data_fields[] = "currencyTypeName";
             $this->data_fields[] = "numberToBasic";
         }
-        $this->t = $table; // for internal use
+        // for internal use
+        $this->t = $table;
         return parent::__construct();
     }
 
@@ -75,7 +76,8 @@ class meta extends db_entity
     public function get_list($include_inactive = false)
     {
         if ($this->data_table) {
-            $include_inactive and $where[$this->data_table."Active"] = "all"; // active and inactive
+            // active and inactive
+            $include_inactive and $where[$this->data_table."Active"] = "all";
             return $this->get_assoc_array(false, false, false, $where);
         }
     }

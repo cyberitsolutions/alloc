@@ -46,7 +46,6 @@ class timeSheetStatusHomeItem extends home_item
         // Get averages for hours worked over the past fortnight and year
         $t = new timeSheetItem();
         $day = 60*60*24;
-        //mktime(0,0,0,date("m"),date("d")-1, date("Y"))
         $today = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d")-1, date("Y")));
         $yestA = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d")-2, date("Y")));
         $yestB = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d")-1, date("Y")));

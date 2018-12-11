@@ -29,6 +29,7 @@ define("ALLOC_FONT_SIZE", "8");
 // Set the enviroment variable for GD
 putenv('GDFONTPATH=' . realpath('../util'));
 
+// FIXME:: This is ugly. -- cjbayliss, 2018-12
 function echo_debug($s)
 {
     #echo $s;
@@ -124,10 +125,10 @@ class task_graph
         $this->image = imageCreate($this->width, $this->height);
 
         // 'Constant' colours for task types
-        $this->task_colors = array('Task'   => array("actual"=>imageColorAllocate($this->image, 133, 164, 241)
-                                                    ,"target"=>imageColorAllocate($this->image, 190, 219, 255))
-                                  ,'Parent' => array("actual"=>imageColorAllocate($this->image, 153, 153, 153)
-                                                    ,"target"=>imageColorAllocate($this->image, 204, 204, 204)));
+        $this->task_colors = array('Task'    => array("actual"=>imageColorAllocate($this->image, 133, 164, 241)
+                                                      ,"target"=>imageColorAllocate($this->image, 190, 219, 255))
+                                   ,'Parent' => array("actual"=>imageColorAllocate($this->image, 153, 153, 153)
+                                                      ,"target"=>imageColorAllocate($this->image, 204, 204, 204)));
 
         // allocate all required colors
         $this->color_background = imageColorAllocate($this->image, 255, 255, 255);
@@ -158,7 +159,8 @@ class task_graph
 
     public function draw_task($t)
     {
-        $y = $this->y;              // Store y in local variable for quick access
+        // Store y in local variable for quick access
+        $y = $this->y;
         $y += $this->task_padding;
 
         $indent = $t["padding"];
@@ -189,12 +191,15 @@ class task_graph
 
         // actual bar
         if ($date_actual_completion == "" && $date_actual_start != "") {
-            // Task isn't complete but we can forecast comlpetion using percent complete and start date - show forecast
+            // Task isn't complete but we can forecast comlpetion using
+            // percent complete and start date - show forecast
             $forecast = $task->get_forecast_completion();
             $forecast and $date_forecast_completion = date("Y-m-d", $forecast);
             $color = $this->task_colors[$t["taskTypeID"]]["actual"];
-            $forecast and $this->draw_dates($date_actual_start, $date_forecast_completion, $y, $color, false);      // Forecast bar
-            $this->draw_dates($date_actual_start, date("Y-m-d"), $y, $color, true);   // Solid bar for already completed portion
+            // Forecast bar
+            $forecast and $this->draw_dates($date_actual_start, $date_forecast_completion, $y, $color, false);
+            // Solid bar for already completed portion
+            $this->draw_dates($date_actual_start, date("Y-m-d"), $y, $color, true);
         } else {
             // Just show dates as usual
             $color = $this->task_colors[$t["taskTypeID"]]["actual"];
@@ -206,7 +211,8 @@ class task_graph
         // Grid line below current task
         imageLine($this->image, 0, $y, $this->width, $y, $this->color_grid);
 
-        $this->y = $y;              // Store Y back in class variable for another time
+        // Store Y back in class variable for another time
+        $this->y = $y;
 
         // Register milestones
         if ($t["taskTypeID"] == 'Milestone' && ($date_target_completion || $date_actual_completion)) {
@@ -236,7 +242,6 @@ class task_graph
 
     public function draw_today()
     {
-        #$x = $this->date_stamp_to_x(mktime());
         $x = $this->date_to_x(date("Y-m-d"));
         imageDashedLine($this->image, $x, $this->top_margin, $x, $this->height - $this->bottom_margin, $this->color_today);
         imageDashedLine($this->image, $x + 1, $this->top_margin, $x + 1, $this->height - $this->bottom_margin, $this->color_today);
@@ -245,7 +250,6 @@ class task_graph
     public function draw_dates($date_start, $date_completion, $y, $color, $filled)
     {
         echo_debug("Drawing '$date_start' to '$date_completion'<br>");
-        #echo("Drawing '$date_start' to '$date_completion'<br>");
         if ($date_start && $date_completion) {
             // Task is complete - show full bar
             echo_debug("Drawing date range<br>");
@@ -338,7 +342,8 @@ class task_graph
 
     public function draw_legend()
     {
-        $y = $this->y;              // Store y in local variable for quick access
+        // Store y in local variable for quick access
+        $y = $this->y;
         $left_x = 3;
         $center_x = $this->width / 2;
 
@@ -420,7 +425,6 @@ function get_date_range($tasks = array())
     while (list(, $task) = each($tasks)) {
         if ($task->get_value("dateTargetStart") != "" && $task->get_value("dateTargetStart") != "0000-00-00" && $task->get_value("dateTargetStart") < $graph_start_date) {
             $graph_start_date = $task->get_value("dateTargetStart");
-            #echo "A: $graph_start_date<br>";
         }
 
         if ($task->get_value("dateTargetCompletion") > $graph_completion_date) {
@@ -429,7 +433,6 @@ function get_date_range($tasks = array())
 
         if ($task->get_value("dateActualStart") != "" && $task->get_value("dateActualStart") != "0000-00-00" && $task->get_value("dateActualStart") < $graph_start_date) {
             $graph_start_date = $task->get_value("dateActualStart");
-            #echo "B: $graph_start_date<br>";
         }
 
         if ($task->get_value("dateActualCompletion") > $graph_completion_date) {

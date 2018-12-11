@@ -24,18 +24,16 @@ class history extends db_entity
 {
     public $data_table = "history";
 
-    # Display the x most recent, but keep the 2x most recent
-    # once we hit 3x, delete back down to 2x
+    // Display the x most recent, but keep the 2x most recent once we hit 3x,
+    // delete back down to 2x
     public $max_to_display = 40;
 
     public $key_field = historyID;
     public $data_fields = array("the_time"
-                             ,"the_place"
-                             ,"the_args"
-                             ,"the_label"
-                             ,"personID"
-                             );
-
+                                ,"the_place"
+                                ,"the_args"
+                                ,"the_label"
+                                ,"personID");
 
     public function get_history_query($order = "")
     {
@@ -52,9 +50,8 @@ class history extends db_entity
         return $query;
     }
 
-    // Returns an array of files which
-    // will be used to determine whether
-    // or not to save a history entry.
+    // Returns an array of files which will be used to determine whether or
+    // not to save a history entry.
 
     public function get_ignored_files()
     {
@@ -96,11 +93,12 @@ class history extends db_entity
         $CLASS_NAME = str_replace(".php", "", $file);
         // Directory that file is in
         $dir = $script_name_array[sizeof($script_name_array) - 2];
-        // Nuke the leading question mark of the query string attached to end of url eg: ?tfID=23&anal=true
+        // Nuke the leading question mark of the query string attached to end
+        // of url eg: ?tfID=23&anal=true
         $qs = preg_replace("[^\?]", "", $qs);
 
-        // We can only get a descriptive history entry if there is a xxxID
-        // on the url, that way we can get the specific records label.
+        // We can only get a descriptive history entry if there is a xxxID on
+        // the url, that way we can get the specific records label.
         if ($qs) {
             $qs_array = explode("&", $qs);
 
@@ -108,8 +106,8 @@ class history extends db_entity
                 // Break up url query string into key/value pairs.
 
                 if (preg_match("/$CLASS_NAME/", $query_pair)) {
-                    // Look for a key like eg: transactionID so in that case it'd
-                    // use the class transaction.
+                    // Look for a key like eg: transactionID so in that case
+                    // it'd use the class transaction.
 
                     $key_and_value = explode("=", $query_pair);
                     // Break key/value up into $KEY_FIELD and $ID
@@ -121,27 +119,32 @@ class history extends db_entity
                         $display_field = $newClass->display_field_name;
 
                         if (is_object($newClass->key_field) && $newClass->key_field->get_name() == $KEY_FIELD) {
-                            // The primary key for this db table is the same as
-                            // our KEY_FIELD var which was extracted from url.
+                            // The primary key for this db table is the same
+                            // as our KEY_FIELD var which was extracted from
+                            // url.
                             $query = prepare("SELECT * FROM %s WHERE %s = %d", $CLASS_NAME, $KEY_FIELD, $ID);
                             $db->query($query);
                             $db->next_record();
-                            // return that particular classes _default_ display field
-                            // eg: for the table project, it would be projectName
+                            // return that particular classes _default_
+                            // display field eg: for the table project, it
+                            // would be projectName
                             $rtn = $db->f($display_field);
 
-                            // But if our search for a descriptive text label failed
-                            // because the above search returned a number try again
-                            // to get a description from the next table
+                            // But if our search for a descriptive text label
+                            // failed because the above search returned a
+                            // number try again to get a description from the
+                            // next table
 
                             // Get a new id and key field name and table name
-                            // Strip the trailing 'ID' from the , to get new class name
+                            // Strip the trailing 'ID' from the , to get new
+                            // class name
                             $next_class_name = preg_replace("/ID$/", "", $display_field);
 
                             if (is_numeric($rtn) && class_exists($next_class_name)) {
                                 $next_class = new $next_class_name;
                                 if ($display_field == $next_class->key_field->get_name()) {
-                                    // If the display field was eg: tfID and that equals the key field of this table
+                                    // If the display field was eg: tfID and
+                                    // that equals the key field of this table
                                     $next_class->set_id($rtn);
                                     $next_class->select();
                                     $rtn = $next_class->get_value($next_class->display_field_name);

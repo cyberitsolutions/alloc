@@ -23,8 +23,6 @@
 define("NO_REDIRECT", 1);
 require_once("../alloc.php");
 
-//usleep(1000);
-
 $t = tsiHint::parse_tsiHint_string($_REQUEST["tsiHint_item"]);
 
 $people = person::get_people_by_username();

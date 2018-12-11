@@ -26,6 +26,7 @@
 // we're relying on braces within css or javascript to always have nice
 // readable white space around them. Where as PHP curly braces usually
 // won't. m = multiline, need it for the ^$ anchor matching.
+
 function fix_curly_braces($matches)
 {
     $str = $matches[0];
@@ -51,8 +52,8 @@ function echo_var($matches)
         $starts_with_equals = true;
     }
 
-    // If it doesn't have periods in it, then explode will
-    // return an array with one element, the entire string
+    // If it doesn't have periods in it, then explode will return an array
+    // with one element, the entire string
     $bits = explode(".", $str);
 
     // Build up something like $var["little"][$colour]["riding"]["hood"]

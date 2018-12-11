@@ -54,7 +54,6 @@ if ($_REQUEST["id"] && $_REQUEST["hash"] && !inbox::verify_hash($_REQUEST["id"],
     alloc_redirect($TPL["url_alloc_inbox"]);
 }
 
-
 $TPL["rows"] = inbox::get_list();
 
 include_template("templates/inboxM.tpl");

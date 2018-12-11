@@ -26,15 +26,15 @@ class token extends db_entity
     public $data_table = "token";
     public $key_field = "tokenID";
     public $data_fields = array("tokenHash"
-                            ,"tokenEntity"
-                            ,"tokenEntityID"
-                            ,"tokenActionID"
-                            ,"tokenExpirationDate"
-                            ,"tokenUsed"
-                            ,"tokenMaxUsed"
-                            ,"tokenActive"
-                            ,"tokenCreatedBy"
-                            ,"tokenCreatedDate");
+                                ,"tokenEntity"
+                                ,"tokenEntityID"
+                                ,"tokenActionID"
+                                ,"tokenExpirationDate"
+                                ,"tokenUsed"
+                                ,"tokenMaxUsed"
+                                ,"tokenActive"
+                                ,"tokenCreatedBy"
+                                ,"tokenCreatedDate");
 
     public function set_hash($hash, $validate = true)
     {
@@ -43,10 +43,9 @@ class token extends db_entity
         $validate and $extra.= prepare(" AND (tokenExpirationDate > '%s' OR tokenExpirationDate IS NULL)", date("Y-m-d H:i:s"));
 
         $q = prepare("SELECT * FROM token
-                   WHERE tokenHash = '%s'
-                  $extra
-                 ", $hash);
-        #echo "<br><br>".$q;
+                       WHERE tokenHash = '%s'
+                      $extra
+                     ", $hash);
         $db = new db_alloc();
         $db->query($q);
         if ($db->next_record()) {
@@ -121,12 +120,12 @@ class token extends db_entity
     public function select_token_by_entity_and_action($entity, $entityID, $action)
     {
         $q = prepare("SELECT token.*, tokenAction.*
-                    FROM token
-               LEFT JOIN tokenAction ON token.tokenActionID = tokenAction.tokenActionID
-                   WHERE tokenEntity = '%s'
-                     AND tokenEntityID = %d
-                     AND tokenAction.tokenActionMethod = '%s'
-                ", $entity, $entityID, $action);
+                        FROM token
+                   LEFT JOIN tokenAction ON token.tokenActionID = tokenAction.tokenActionID
+                       WHERE tokenEntity = '%s'
+                         AND tokenEntityID = %d
+                         AND tokenAction.tokenActionMethod = '%s'
+                     ", $entity, $entityID, $action);
         $db = new db_alloc();
         $db->query($q);
         if ($db->next_record()) {

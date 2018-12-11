@@ -83,7 +83,7 @@ class timeSheetPrint
 
             unset($str);
             $d = $timeSheetItem->get_value('taskID', DST_HTML_DISPLAY) . ": " . $timeSheetItem->get_value('description', DST_HTML_DISPLAY);
-            $d && !$rows[$taskID]["desc"] and $str[] = "<b>".$d."</b>"; //inline because the PDF needs it that way
+            $d && !$rows[$taskID]["desc"] and $str[] = "<b>".$d."</b>"; // inline because the PDF needs it that way
 
             // Get task description
             if ($taskID && $TPL["printDesc"]) {
@@ -141,10 +141,10 @@ class timeSheetPrint
             $timeSheetItem->read_db_record($db);
 
             $taskID = sprintf("%d", $timeSheetItem->get_value("taskID"));
-            $taskID or $taskID = "hey"; // Catch entries without task selected. ie timesheetitem.comment entries.
+            // Catch entries without task selected. ie timesheetitem.comment entries.
+            $taskID or $taskID = "hey";
 
             $num = sprintf("%0.2f", $timeSheetItem->get_value("timeSheetItemDuration"));
-            #$info["total"] += $num;
 
             $unit = $unit_array[$timeSheetItem->get_value("timeSheetItemDurationUnitID")];
             $units[$taskID][$unit] += $num;

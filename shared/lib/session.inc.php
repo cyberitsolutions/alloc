@@ -22,11 +22,11 @@
 
 class session
 {
-    public $key;          # the unique key for the session
-    public $db;           # database object
-    public $session_data; # assoc array which holds all session data
-    public $session_life; # number of seconds the session is alive for
-    public $mode;         # whether to use get or cookies
+    public $key;          // the unique key for the session
+    public $db;           // database object
+    public $session_data; // assoc array which holds all session data
+    public $session_life; // number of seconds the session is alive for
+    public $mode;         // whether to use get or cookies
 
     // * * * * * * * * * * * * * * * * *//
     //                                  //
@@ -38,21 +38,19 @@ class session
     public function __construct($key = "")
     {
         global $TPL;
-        $this->key           = $key or $this->key = $_COOKIE["alloc_cookie"] or $this->key = $_GET["sess"] or $this->key = $_REQUEST["sessID"];
-        $TPL["sessID"]       = $_GET["sess"];
-        $this->db            = new db_alloc();
-        #$this->session_life  = (5);
-        $this->session_life  = (config::get_config_item("allocSessionMinutes")*60);
+        $this->key = $key or $this->key = $_COOKIE["alloc_cookie"] or $this->key = $_GET["sess"] or $this->key = $_REQUEST["sessID"];
+        $TPL["sessID"] = $_GET["sess"];
+        $this->db = new db_alloc();
+        $this->session_life = (config::get_config_item("allocSessionMinutes")*60);
         $this->session_life < 1 and $this->session_life = 10000; // just in case.
-        $this->session_data  = $this->UnEncode($this->GetSessionData());
-        $this->mode          = $this->Get("session_mode");
+        $this->session_data = $this->UnEncode($this->GetSessionData());
+        $this->mode = $this->Get("session_mode");
 
         if ($this->Expired()) {
             $this->Destroy();
         }
         return $this;
     }
-
 
     // Call this in a login page to start session
     public function Start($row, $nuke_prev_sessions = true)
@@ -112,9 +110,6 @@ class session
 
     public function MakeCookie()
     {
-        // Attempt to unset the test cookie
-        #SetCookie("alloc_test_cookie",FALSE,0,"/","");
-
         // Set the session cookie
         $rtn = SetCookie("alloc_cookie", $this->key, 0, "/", "");
         if (!$rtn) {

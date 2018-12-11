@@ -25,13 +25,12 @@ class audit extends db_entity
     public $data_table = "audit";
     public $key_field = "auditID";
     public $data_fields = array("auditID"
-                             ,"taskID"
-                             ,"projectID"
-                             ,"personID"
-                             ,"dateChanged"
-                             ,"field"
-                             ,"value"
-                             );
+                                ,"taskID"
+                                ,"projectID"
+                                ,"personID"
+                                ,"dateChanged"
+                                ,"field"
+                                ,"value");
 
     public static function get_list($_FORM)
     {
@@ -84,8 +83,7 @@ class audit extends db_entity
 
     public function get_list_vars()
     {
-        return array("taskID"           => "The task id to find audit records for"
-                ,"projectID"        => "The project id to find audit records for"
-                );
+        return array("taskID"     => "The task id to find audit records for"
+                     ,"projectID" => "The project id to find audit records for");
     }
 }

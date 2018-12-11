@@ -25,7 +25,8 @@ require_once("../alloc.php");
 function format_display_fields($str = "")
 {
     if ($str) {
-        $lines = explode("|+|=|", $str); // arbitrary line delimiter, can't use newlines as data will contain newlines.
+        // arbitrary line delimiter, can't use newlines as data will contain newlines.
+        $lines = explode("|+|=|", $str);
         $t = "<table class='list'>";
         foreach ($lines as $line) {
             $t.= "<tr>";
@@ -101,8 +102,6 @@ if ($search && $needle && $category == "search_projects") {
             $row["idx"] = $hit->id;
             $row["score"] = sprintf('%d%%', $hit->score*100);
             $row["title"] = $d->getFieldValue('id')." ".sprintf("<a href='%sclientID=%d'>%s</a>", $TPL["url_alloc_client"], $d->getFieldValue('id'), page::htmlentities($d->getFieldValue('name')));
-            //$row["related"] = sprintf("<a href='%sprojectID=%d'>%s</a>"
-            //                ,$TPL["url_alloc_project"], $d->getFieldValue('pid'), $d->getFieldValue('project'));
 
             unset($num_contact);
             if ($d->getFieldValue('contact')) {
@@ -253,7 +252,6 @@ if ($search && $needle && $category == "search_projects") {
             $row["score"] = sprintf('%d%%', $hit->score*100);
             $c = (array)explode(" ", $d->getFieldValue('creator'));
             $creator = implode(" ", (array)array_slice($c, 2));
-            //$creator = implode(" ",array_shift(array_shift(explode(" ",$d->getFieldValue('creator')))));
             $row["title"] = $d->getFieldValue('id')." ".sprintf("<a href='%stimeSheetID=%d'>%s</a>", $TPL["url_alloc_timeSheet"], $d->getFieldValue('id'), "Time Sheet for ".page::htmlentities($d->getFieldValue('project'))." by ".page::htmlentities($creator));
             $row["related"] = sprintf("<a href='%sprojectID=%d'>%s</a>", $TPL["url_alloc_project"], $d->getFieldValue('pid'), page::htmlentities($d->getFieldValue('project')));
 

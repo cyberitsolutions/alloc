@@ -144,7 +144,6 @@ function seconds_to_display_format($seconds)
         return sprintf("%0.2f hrs", $hours);
     } else {
         $days = $seconds / $day_in_seconds;
-        #return sprintf("%0.1f days", $days);
         return sprintf("%0.2f hrs (%0.1f days)", $hours, $days);
     }
 }
@@ -276,7 +275,6 @@ function get_file_type_image($file)
     $types[".gz"] = "zip.gif";
     $types["doc"] = "doc.gif";
     $types["sxw"] = "doc.gif";
-    #$types["odf"] = "doc.gif";
 
     $type = strtolower(substr($file, -3));
     $icon_dir = ALLOC_MOD_DIR."images".DIRECTORY_SEPARATOR."fileicons".DIRECTORY_SEPARATOR;
@@ -298,10 +296,6 @@ function get_attachments($entity, $id, $ops = array())
     $dir = ATTACHMENTS_DIR.$entity.DIRECTORY_SEPARATOR.$id;
 
     if (isset($id)) {
-        #if (!is_dir($dir)) {
-        #mkdir($dir, 0777);
-        #}
-
         if (is_dir($dir)) {
             $handle = opendir($dir);
 
@@ -316,7 +310,6 @@ function get_attachments($entity, $id, $ops = array())
                     $row["path"] = $dir.DIRECTORY_SEPARATOR.$file;
                     $row["file"] = "<a href=\"".$TPL["url_alloc_getDoc"]."id=".$id."&entity=".$entity."&file=".urlencode($file)."\">".$image.$ops["sep"].page::htmlentities($file)."</a>";
                     $row["text"] = page::htmlentities($file);
-                    #$row["delete"] = "<a href=\"".$TPL["url_alloc_delDoc"]."id=".$id."&entity=".$entity."&file=".urlencode($file)."\">Delete</a>";
                     $row["delete"] = "<form action=\"".$TPL["url_alloc_delDoc"]."\" method=\"post\">
                             <input type=\"hidden\" name=\"id\" value=\"".$id."\">
                             <input type=\"hidden\" name=\"file\" value=\"".$file."\">
@@ -505,7 +498,8 @@ function has_backup_perm()
 }
 function parse_email_address($email = "")
 {
-    // Takes Alex Lance <alla@cyber.com.au> and returns array("alla@cyber.com.au", "Alex Lance");
+    // Takes Alex Lance <alla@cyber.com.au> and returns
+    // array("alla@cyber.com.au", "Alex Lance");
     if ($email) {
         $structure = Mail_RFC822::parseAddressList($email);
         $name = (string)$structure[0]->personal;
@@ -594,47 +588,47 @@ function query_string_to_array($str = "")
 if (!function_exists('mime_content_type')) {
     function mime_content_type($filename = "")
     {
-        $mime_types = array('txt'   => 'text/plain'
-                           ,'mdwn'  => 'text/plain' // markdown text files
-                           ,'htm'   => 'text/html'
-                           ,'html'  => 'text/html'
-                           ,'php'   => 'text/html'
-                           ,'css'   => 'text/css'
-                           ,'js'    => 'application/javascript'
-                           ,'json'  => 'application/json'
-                           ,'xml'   => 'application/xml'
-                           ,'swf'   => 'application/x-shockwave-flash'
-                           ,'flv'   => 'video/x-flv'
-                           ,'png'   => 'image/png'
-                           ,'jpe'   => 'image/jpeg'
-                           ,'jpeg'  => 'image/jpeg'
-                           ,'jpg'   => 'image/jpeg'
-                           ,'gif'   => 'image/gif'
-                           ,'bmp'   => 'image/bmp'
-                           ,'ico'   => 'image/vnd.microsoft.icon'
-                           ,'tiff'  => 'image/tiff'
-                           ,'tif'   => 'image/tiff'
-                           ,'svg'   => 'image/svg+xml'
-                           ,'svgz'  => 'image/svg+xml'
-                           ,'zip'   => 'application/zip'
-                           ,'rar'   => 'application/x-rar-compressed'
-                           ,'exe'   => 'application/x-msdownload'
-                           ,'msi'   => 'application/x-msdownload'
-                           ,'cab'   => 'application/vnd.ms-cab-compressed'
-                           ,'mp3'   => 'audio/mpeg'
-                           ,'qt'    => 'video/quicktime'
-                           ,'mov'   => 'video/quicktime'
-                           ,'pdf'   => 'application/pdf'
-                           ,'psd'   => 'image/vnd.adobe.photoshop'
-                           ,'ai'    => 'application/postscript'
-                           ,'eps'   => 'application/postscript'
-                           ,'ps'    => 'application/postscript'
-                           ,'doc'   => 'application/msword'
-                           ,'rtf'   => 'application/rtf'
-                           ,'xls'   => 'application/vnd.ms-excel'
-                           ,'ppt'   => 'application/vnd.ms-powerpoint'
-                           ,'odt'   => 'application/vnd.oasis.opendocument.text'
-                           ,'ods'   => 'application/vnd.oasis.opendocument.spreadsheet');
+        $mime_types = array('txt'    => 'text/plain'
+                            ,'mdwn'  => 'text/plain' // markdown text files
+                            ,'htm'   => 'text/html'
+                            ,'html'  => 'text/html'
+                            ,'php'   => 'text/html'
+                            ,'css'   => 'text/css'
+                            ,'js'    => 'application/javascript'
+                            ,'json'  => 'application/json'
+                            ,'xml'   => 'application/xml'
+                            ,'swf'   => 'application/x-shockwave-flash'
+                            ,'flv'   => 'video/x-flv'
+                            ,'png'   => 'image/png'
+                            ,'jpe'   => 'image/jpeg'
+                            ,'jpeg'  => 'image/jpeg'
+                            ,'jpg'   => 'image/jpeg'
+                            ,'gif'   => 'image/gif'
+                            ,'bmp'   => 'image/bmp'
+                            ,'ico'   => 'image/vnd.microsoft.icon'
+                            ,'tiff'  => 'image/tiff'
+                            ,'tif'   => 'image/tiff'
+                            ,'svg'   => 'image/svg+xml'
+                            ,'svgz'  => 'image/svg+xml'
+                            ,'zip'   => 'application/zip'
+                            ,'rar'   => 'application/x-rar-compressed'
+                            ,'exe'   => 'application/x-msdownload'
+                            ,'msi'   => 'application/x-msdownload'
+                            ,'cab'   => 'application/vnd.ms-cab-compressed'
+                            ,'mp3'   => 'audio/mpeg'
+                            ,'qt'    => 'video/quicktime'
+                            ,'mov'   => 'video/quicktime'
+                            ,'pdf'   => 'application/pdf'
+                            ,'psd'   => 'image/vnd.adobe.photoshop'
+                            ,'ai'    => 'application/postscript'
+                            ,'eps'   => 'application/postscript'
+                            ,'ps'    => 'application/postscript'
+                            ,'doc'   => 'application/msword'
+                            ,'rtf'   => 'application/rtf'
+                            ,'xls'   => 'application/vnd.ms-excel'
+                            ,'ppt'   => 'application/vnd.ms-powerpoint'
+                            ,'odt'   => 'application/vnd.oasis.opendocument.text'
+                            ,'ods'   => 'application/vnd.oasis.opendocument.spreadsheet');
 
         $bits = explode('.', basename($filename));
         count($bits) > 1 and $ext = strtolower(end($bits));
@@ -643,7 +637,8 @@ if (!function_exists('mime_content_type')) {
         if (array_key_exists($ext, $mime_types)) {
             $mt = $mime_types[$ext];
 
-        // Or if we have the PECL FileInfo stuff available, use that to determine mimetype
+        // Or if we have the PECL FileInfo stuff available, use that to
+        // determine mimetype
         } elseif (file_exists($filename) && function_exists('finfo_open')) {
             $finfo = finfo_open(FILEINFO_MIME);
             $mimetype = finfo_file($finfo, $filename);
@@ -683,13 +678,11 @@ function image_create_from_file($path)
         echo "unable to determine getimagesize($path)";
         return false;
     }
-    $functions = array(
-    IMAGETYPE_GIF => 'imagecreatefromgif',
-    IMAGETYPE_JPEG => 'imagecreatefromjpeg',
-    IMAGETYPE_PNG => 'imagecreatefrompng',
-    IMAGETYPE_WBMP => 'imagecreatefromwbmp',
-    IMAGETYPE_XBM => 'imagecreatefromwxbm',
-    );
+    $functions = array(IMAGETYPE_GIF => 'imagecreatefromgif',
+                       IMAGETYPE_JPEG => 'imagecreatefromjpeg',
+                       IMAGETYPE_PNG => 'imagecreatefrompng',
+                       IMAGETYPE_WBMP => 'imagecreatefromwbmp',
+                       IMAGETYPE_XBM => 'imagecreatefromwxbm',);
 
     if (!$functions[$info[2]]) {
         echo "no function to handle $info[2]";
@@ -846,8 +839,8 @@ function dir_is_empty($dir)
 }
 function tax($amount, $taxPercent = null)
 {
-    // take a tax included amount and return the untaxed amount, and the amount of tax
-    // eg: 500 including 10% tax, returns array(454.54, 45.45)
+    // take a tax included amount and return the untaxed amount, and the
+    // amount of tax eg: 500 including 10% tax, returns array(454.54, 45.45)
     imp($taxPercent) or $taxPercent = config::get_config_item("taxPercent");
     $amount_minus_tax = $amount / (($taxPercent/100) + 1);
     $amount_of_tax    = $amount / ((100/$taxPercent) + 1);

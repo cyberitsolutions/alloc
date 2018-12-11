@@ -234,11 +234,11 @@ if (!$TPL["message"] && $_POST["save"]) {
             // Save
             } else {
                 $a = array("productID"=>$_POST["productID"][$k]
-                  ,"sellPrice"=>$_POST["sellPrice"][$k]
-                  ,"sellPriceCurrencyTypeID"=>$_POST["sellPriceCurrencyTypeID"][$k]
-                  ,"quantity"=>$_POST["quantity"][$k]
-                  ,"description"=>$_POST["description"][$k]
-                  ,"productSaleID"=>$productSaleID);
+                           ,"sellPrice"=>$_POST["sellPrice"][$k]
+                           ,"sellPriceCurrencyTypeID"=>$_POST["sellPriceCurrencyTypeID"][$k]
+                           ,"quantity"=>$_POST["quantity"][$k]
+                           ,"description"=>$_POST["description"][$k]
+                           ,"productSaleID"=>$productSaleID);
 
                 if ($productSaleItemID) {
                     $a["sellPriceIncTax"] = sprintf("%d", in_array($productSaleItemID, $_POST["sellPriceIncTax"]));
@@ -276,19 +276,19 @@ if (!$TPL["message"] && $_POST["save"]) {
             } elseif (imp($_POST["amount"][$k])) {
                 $type = $_POST["transactionType"][$k] or $type = 'sale';
 
-                $a = array("amount"            => $_POST["amount"][$k]
-                          ,"tfID"              => $_POST["tfID"][$k]
-                          ,"fromTfID"          => $_POST["fromTfID"][$k]
-                          ,"product"           => $_POST["product"][$k]
-                          ,"description"       => $_POST["description"][$k]
-                          ,"productSaleID"     => $productSaleID
-                          ,"productSaleItemID" => $_POST["productSaleItemID"]
-                          ,"productCostID"     => $_POST["productCostID"][$k]
-                          ,"transactionType"   => $type
-                          ,"transactionDate"   => date("Y-m-d")
-                          ,"status"            => 'pending'
-                          ,"currencyTypeID"    => $_POST["currencyTypeID"][$k]
-                          ,"transactionID"     => $transactionID);
+                $a = array("amount"             => $_POST["amount"][$k]
+                           ,"tfID"              => $_POST["tfID"][$k]
+                           ,"fromTfID"          => $_POST["fromTfID"][$k]
+                           ,"product"           => $_POST["product"][$k]
+                           ,"description"       => $_POST["description"][$k]
+                           ,"productSaleID"     => $productSaleID
+                           ,"productSaleItemID" => $_POST["productSaleItemID"]
+                           ,"productCostID"     => $_POST["productCostID"][$k]
+                           ,"transactionType"   => $type
+                           ,"transactionDate"   => date("Y-m-d")
+                           ,"status"            => 'pending'
+                           ,"currencyTypeID"    => $_POST["currencyTypeID"][$k]
+                           ,"transactionID"     => $transactionID);
 
                 if (CAN_APPROVE_TRANSACTIONS && $_POST["status"][$k]) {
                     $a["status"] = $_POST["status"][$k];

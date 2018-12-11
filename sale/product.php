@@ -46,7 +46,8 @@ function show_productCost_list($productID, $template, $percent = false)
             $TPL["currencyOptions"] = page::select_options($currency_array, $productCost->get_value("currencyTypeID"));
             $TPL["taxOptions"] = page::select_options(array(""=>"Exempt",1=>"Included",0=>"Excluded"), $productCost->get_value("tax"));
 
-            // Hardcoded AUD because productCost table uses percent and dollars in same field
+            // Hardcoded AUD because productCost table uses percent and
+            // dollars in same field
             $percent and $TPL["amount"] = page::money("AUD", $productCost->get_value("amount"), "%mo");
             include_template($template);
         }
@@ -150,7 +151,8 @@ if ($_POST["save_costs"] || $_POST["save_commissions"]) {
                 ,"productCostActive"=>1
                 );
 
-            // Hardcode AUD for commissions because productCost table uses percent and dollars in same field
+            // Hardcode AUD for commissions because productCost table uses
+            // percent and dollars in same field
             $_POST["save_commissions"] and $a["currencyTypeID"] = "AUD";
 
             $productCost = new productCost();

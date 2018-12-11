@@ -80,8 +80,6 @@ class vcs
             $this->debug and print "<br>vcs->run: ".page::htmlentities($str);
             list($output, $result) = $this->exec($str);
             if ($result != 0) {
-                //$error = $str."<br>".implode("<br>", $output)."<br>".$result;
-                //$this->error("vcs::run:error ".$error);
                 $output and $this->error("vcs::run:error: ".implode("<br>", $output));
                 return $output;
             }

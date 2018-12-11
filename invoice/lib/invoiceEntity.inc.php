@@ -27,10 +27,10 @@ class invoiceEntity extends db_entity
     public $data_table = "invoiceEntity";
     public $key_field = "invoiceEntityID";
     public $data_fields = array("invoiceID"
-                             ,"timeSheetID"
-                             ,"expenseFormID"
-                             ,"productSaleID"
-                             ,"useItems");
+                                ,"timeSheetID"
+                                ,"expenseFormID"
+                                ,"productSaleID"
+                                ,"useItems");
 
     public function create($invoiceID, $entity, $entityID, $useItems = 0)
     {
@@ -165,14 +165,14 @@ class invoiceEntity extends db_entity
 
             // Look for an existing invoiceItem
             $q = prepare("SELECT invoiceItem.invoiceItemID
-                      FROM invoiceItem
-                 LEFT JOIN invoice ON invoiceItem.invoiceID = invoice.invoiceID
-                     WHERE invoiceItem.timeSheetID = %d
-                       AND invoiceItem.timeSheetItemID = %d
-                       AND invoiceItem.invoiceID = %d
-                       AND invoice.invoiceStatus != 'finished'
-                  ORDER BY iiDate DESC LIMIT 1
-                   ", $timeSheet->get_id(), $row["timeSheetItemID"], $invoiceID);
+                            FROM invoiceItem
+                       LEFT JOIN invoice ON invoiceItem.invoiceID = invoice.invoiceID
+                           WHERE invoiceItem.timeSheetID = %d
+                             AND invoiceItem.timeSheetItemID = %d
+                             AND invoiceItem.invoiceID = %d
+                             AND invoice.invoiceStatus != 'finished'
+                        ORDER BY iiDate DESC LIMIT 1
+                         ", $timeSheet->get_id(), $row["timeSheetItemID"], $invoiceID);
             $q2 = $db->query($q);
             $r2 = $db->row($q2);
 
@@ -201,8 +201,8 @@ class invoiceEntity extends db_entity
         $expenseForm->select();
         $db = new db_alloc();
         $db->query("SELECT max(transactionDate) as maxDate
-                  FROM transaction
-                 WHERE expenseFormID = %d", $expenseFormID);
+                      FROM transaction
+                     WHERE expenseFormID = %d", $expenseFormID);
         $row = $db->row();
         $amount = $expenseForm->get_abs_sum_transactions();
 

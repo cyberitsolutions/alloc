@@ -24,11 +24,11 @@ define("NO_REDIRECT", 1);
 require_once("../alloc.php");
 
 $defaults = array("showHeader"=>true
-                 ,"showTaskID"=>true
-                 ,"taskView" => "prioritised"
-                 ,"showStatus" => "true"
-                 ,"url_form_action"=>$TPL["url_alloc_settings"]
-                 ,"form_name"=>"taskListHome_filter");
+                  ,"showTaskID"=>true
+                  ,"taskView" => "prioritised"
+                  ,"showStatus" => "true"
+                  ,"url_form_action"=>$TPL["url_alloc_settings"]
+                  ,"form_name"=>"taskListHome_filter");
 
 $_FORM = task::load_form_data($defaults);
 $arr = task::load_task_filter($_FORM);

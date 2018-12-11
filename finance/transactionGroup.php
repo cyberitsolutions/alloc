@@ -33,7 +33,7 @@ function show_transaction_list($template)
                LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
                    WHERE transactionGroupID = %d
                 ORDER BY transactionID
-               ", $transactionGroupID);
+                 ", $transactionGroupID);
     $db = new db_alloc();
     $db->query($q);
 
@@ -92,7 +92,6 @@ if (!$transactionGroupID) {
 }
 $TPL["transactionGroupID"] = $transactionGroupID;
 
-
 if ($_POST["save_transactions"]) {
     is_array($_POST["deleteTransaction"]) or $_POST["deleteTransaction"] = array();
 
@@ -109,16 +108,16 @@ if ($_POST["save_transactions"]) {
 
             // Save
             } elseif ($_POST["amount"][$k]) {
-                $a = array("amount"             => $_POST["amount"][$k]
-                  ,"tfID"               => $_POST["tfID"][$k]
-                  ,"fromTfID"           => $_POST["fromTfID"][$k]
-                  ,"product"            => $_POST["product"][$k]
-                  ,"description"        => $_POST["description"][$k]
-                  ,"transactionType"    => $_POST["transactionType"][$k]
-                  ,"transactionDate"    => $_POST["transactionDate"][$k]
-                  ,"status"             => $_POST["status"][$k]
-                  ,"transactionGroupID" => $transactionGroupID
-                  ,"transactionID"      => $_POST["transactionID"][$k]);
+                $a = array("amount"              => $_POST["amount"][$k]
+                           ,"tfID"               => $_POST["tfID"][$k]
+                           ,"fromTfID"           => $_POST["fromTfID"][$k]
+                           ,"product"            => $_POST["product"][$k]
+                           ,"description"        => $_POST["description"][$k]
+                           ,"transactionType"    => $_POST["transactionType"][$k]
+                           ,"transactionDate"    => $_POST["transactionDate"][$k]
+                           ,"status"             => $_POST["status"][$k]
+                           ,"transactionGroupID" => $transactionGroupID
+                           ,"transactionID"      => $_POST["transactionID"][$k]);
 
                 $transaction = new transaction();
                 if ($_POST["transactionID"][$k]) {

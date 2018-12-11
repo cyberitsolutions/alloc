@@ -30,21 +30,21 @@ class reminder extends db_entity
     public $display_field_name = "reminderSubject";
     public $key_field = "reminderID";
     public $data_fields = array("reminderType"
-                             ,"reminderLinkID"
-                             ,"reminderTime"
-                             ,"reminderHash"
-                             ,"reminderRecuringInterval"
-                             ,"reminderRecuringValue"
-                             ,"reminderAdvNoticeSent"
-                             ,"reminderAdvNoticeInterval"
-                             ,"reminderAdvNoticeValue"
-                             ,"reminderSubject"
-                             ,"reminderContent"
-                             ,"reminderCreatedTime"
-                             ,"reminderCreatedUser"
-                             ,"reminderModifiedTime"
-                             ,"reminderModifiedUser"
-                             ,"reminderActive" => array("empty_to_null"=>true));
+                                ,"reminderLinkID"
+                                ,"reminderTime"
+                                ,"reminderHash"
+                                ,"reminderRecuringInterval"
+                                ,"reminderRecuringValue"
+                                ,"reminderAdvNoticeSent"
+                                ,"reminderAdvNoticeInterval"
+                                ,"reminderAdvNoticeValue"
+                                ,"reminderSubject"
+                                ,"reminderContent"
+                                ,"reminderCreatedTime"
+                                ,"reminderCreatedUser"
+                                ,"reminderModifiedTime"
+                                ,"reminderModifiedUser"
+                                ,"reminderActive" => array("empty_to_null"=>true));
 
     // set the modified time to now
     public function set_modified_time()
@@ -130,7 +130,8 @@ class reminder extends db_entity
 
     public function get_hour_options()
     {
-        $hours = array("1"=>"1", "2"=>"2", "3"=>"3", "4"=>"4", "5"=>"5", "6"=>"6", "7"=>"7", "8"=>"8", "9"=>"9", "10"=>"10", "11"=>"11", "12"=>"12");
+        $hours = array("1"=>"1", "2"=>"2", "3"=>"3", "4"=>"4", "5"=>"5", "6"=>"6",
+                       "7"=>"7", "8"=>"8", "9"=>"9", "10"=>"10", "11"=>"11", "12"=>"12");
         if ($this->get_value('reminderTime') != "") {
             $date = strtotime($this->get_value('reminderTime'));
             $hour = date("h", $date);
@@ -215,18 +216,19 @@ class reminder extends db_entity
         return $this->save();
     }
 
-    // mail out reminder and update to next date if repeating or remove if onceoff
-    // checks to make sure that it is the right time to send reminder should be
-    // dome before calling this function
+    // mail out reminder and update to next date if repeating or remove if
+    // onceoff checks to make sure that it is the right time to send reminder
+    // should be dome before calling this function
     public function mail_reminder()
     {
-        // check for a reminder.reminderHash that links off to a token.tokenHash
-        // this lets us trigger reminders on complex actions, for example create
-        // a reminder that sends when a task status changes from pending to open
+        // check for a reminder.reminderHash that links off to a
+        // token.tokenHash this lets us trigger reminders on complex actions,
+        // for example create a reminder that sends when a task status changes
+        // from pending to open
 
-        // Note this->reminderTime is going to always be null for the token that
-        // link to task->moved_from_pending_to_open().
-        // Whereas the task->reopen_pending_task() will have a reminderTime set.
+        // Note this->reminderTime is going to always be null for the token
+        // that link to task->moved_from_pending_to_open().  Whereas the
+        // task->reopen_pending_task() will have a reminderTime set.
 
         $ok = true;
         if ($this->get_value("reminderHash")) {
@@ -391,8 +393,8 @@ class reminder extends db_entity
         }
     }
 
-    // gets a human-friendly description of the recipient, either the recipient
-    // name or in the form Task Manager (Bob)
+    // gets a human-friendly description of the recipient, either the
+    // recipient name or in the form Task Manager (Bob)
     public function get_recipient_description()
     {
         $people =& get_cached_table("person");
@@ -404,8 +406,8 @@ class reminder extends db_entity
         }
     }
 
-    // gets the human-friendly name of the meta person (e.g. R_MP_TASK_ASSIGNEE
-    // to "Task assignee")
+    // gets the human-friendly name of the meta person
+    // (e.g. R_MP_TASK_ASSIGNEE to "Task assignee")
     public function get_metaperson_name($metaperson)
     {
         switch ($metaperson) {

@@ -26,11 +26,11 @@ class permission extends db_entity
     public $display_field_name = "tableName";
     public $key_field = "permissionID";
     public $data_fields = array("tableName"
-                               ,"entityID"
-                               ,"roleName"=>array("empty_to_null"=>false)
-                               ,"actions"
-                               ,"sortKey"
-                               ,"comment");
+                                ,"entityID"
+                                ,"roleName"=>array("empty_to_null"=>false)
+                                ,"actions"
+                                ,"sortKey"
+                                ,"comment");
 
     public function describe_actions()
     {
@@ -47,7 +47,7 @@ class permission extends db_entity
             $permissions = $entity->permissions;
         }
 
-        foreach ((array)$permissions as $a=>$d) {
+        foreach ((array)$permissions as $a => $d) {
             if ((($actions & $a) == $a) && $d != "") {
                 if ($description) {
                     $description.= ",";
@@ -62,9 +62,9 @@ class permission extends db_entity
     public function get_roles()
     {
         return array("god"=>"Super User"
-                ,"admin"=>"Finance Admin"
-                ,"manage"=>"Project Manager"
-                ,"employee"=>"Employee"
-                ,"client"=>"Client");
+                     ,"admin"=>"Finance Admin"
+                     ,"manage"=>"Project Manager"
+                     ,"employee"=>"Employee"
+                     ,"client"=>"Client");
     }
 }

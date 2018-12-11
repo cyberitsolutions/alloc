@@ -26,7 +26,6 @@
 class email_send
 {
     // If URL has any of these strings in it then the email won't be sent.
-    #var $no_email_urls = array("alloc_dev");
     public $no_email_urls = array();
 
     // If alloc is running on any of these boxes then no emails will be sent!
@@ -55,7 +54,6 @@ class email_send
     public function set_to_address($to = false)
     {
         $to or $to = $this->to_address;
-        #$to or $to = ALLOC_DEFAULT_TO_ADDRESS; // no
         $this->to_address = $to;
         $this->del_header("to");
     }
@@ -137,11 +135,6 @@ class email_send
             $this->headers = trim($this->headers)."\n".trim($this->default_headers);
             $this->headers = str_replace("\r\n", "\n", $this->headers);
             $this->headers = str_replace("\n", PHP_EOL, $this->headers); // according to php.net/mail
-
-            # echo "<pre><br>HEADERS:\n".page::htmlentities($this->headers)."</pre>";
-            # echo "<pre><br>TO:\n".page::htmlentities($this->to_address)."</pre>";
-            # echo "<pre><br>SUBJECT:\n".page::htmlentities($this->subject)."</pre>";
-            # echo "<pre><br>BODY:\n".page::htmlentities($this->body)."</pre>";
 
             if (defined("ALLOC_DEFAULT_RETURN_PATH_ADDRESS") && ALLOC_DEFAULT_RETURN_PATH_ADDRESS) {
                 $return_path = "-f".ALLOC_DEFAULT_RETURN_PATH_ADDRESS;

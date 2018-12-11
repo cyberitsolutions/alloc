@@ -25,15 +25,15 @@ require_once("../alloc.php");
 $current_user->check_employee();
 
 $defaults = array("showHeader"=>true
-                 ,"showInvoiceNumber"=>true
-                 ,"showInvoiceClient"=>true
-                 ,"showInvoiceName"=>true
-                 ,"showInvoiceAmount"=>true
-                 ,"showInvoiceAmountPaid"=>true
-                 ,"showInvoiceDate"=>true
-                 ,"showInvoiceStatus"=>true
-                 ,"url_form_action"=>$TPL["url_alloc_invoiceList"]
-                 ,"form_name"=>"invoiceList_filter");
+                  ,"showInvoiceNumber"=>true
+                  ,"showInvoiceClient"=>true
+                  ,"showInvoiceName"=>true
+                  ,"showInvoiceAmount"=>true
+                  ,"showInvoiceAmountPaid"=>true
+                  ,"showInvoiceDate"=>true
+                  ,"showInvoiceStatus"=>true
+                  ,"url_form_action"=>$TPL["url_alloc_invoiceList"]
+                  ,"form_name"=>"invoiceList_filter");
 
 function show_filter()
 {

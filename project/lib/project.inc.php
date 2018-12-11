@@ -30,36 +30,36 @@ class project extends db_entity
     public $display_field_name = "projectName";
     public $key_field = "projectID";
     public $data_fields = array("projectName"
-                               ,"projectShortName"
-                               ,"projectComments"
-                               ,"clientID"
-                               ,"projectType"
-                               ,"projectClientName"
-                               ,"projectClientPhone"
-                               ,"projectClientMobile"
-                               ,"projectClientEMail"
-                               ,"projectClientAddress"
-                               ,"dateTargetStart"
-                               ,"dateTargetCompletion"
-                               ,"dateActualStart"
-                               ,"dateActualCompletion"
-                               ,"projectBudget" => array("type"=>"money")
-                               ,"currencyTypeID"
-                               ,"projectPriority"
-                               ,"projectStatus"
-                               ,"cost_centre_tfID"
-                               ,"customerBilledDollars" => array("type"=>"money")
-                               ,"clientContactID"
-                               ,"projectCreatedTime"
-                               ,"projectCreatedUser"
-                               ,"projectModifiedTime"
-                               ,"projectModifiedUser"
-                               ,"defaultTaskLimit"
-                               ,"defaultTimeSheetRate" => array("type"=>"money")
-                               ,"defaultTimeSheetRateUnitID");
+                                ,"projectShortName"
+                                ,"projectComments"
+                                ,"clientID"
+                                ,"projectType"
+                                ,"projectClientName"
+                                ,"projectClientPhone"
+                                ,"projectClientMobile"
+                                ,"projectClientEMail"
+                                ,"projectClientAddress"
+                                ,"dateTargetStart"
+                                ,"dateTargetCompletion"
+                                ,"dateActualStart"
+                                ,"dateActualCompletion"
+                                ,"projectBudget" => array("type"=>"money")
+                                ,"currencyTypeID"
+                                ,"projectPriority"
+                                ,"projectStatus"
+                                ,"cost_centre_tfID"
+                                ,"customerBilledDollars" => array("type"=>"money")
+                                ,"clientContactID"
+                                ,"projectCreatedTime"
+                                ,"projectCreatedUser"
+                                ,"projectModifiedTime"
+                                ,"projectModifiedUser"
+                                ,"defaultTaskLimit"
+                                ,"defaultTimeSheetRate" => array("type"=>"money")
+                                ,"defaultTimeSheetRateUnitID");
 
     public $permissions = array(PERM_PROJECT_VIEW_TASK_ALLOCS => "view task allocations"
-                               ,PERM_PROJECT_ADD_TASKS => "add tasks");
+                                ,PERM_PROJECT_ADD_TASKS => "add tasks");
 
     public function save()
     {
@@ -174,7 +174,6 @@ class project extends db_entity
                           FROM projectPerson pp
                      LEFT JOIN role ppr ON ppr.roleID = pp.roleID
                          WHERE projectID = '%d' and personID = '%d' ".$p, $this->get_id(), $person->get_id());
-            #echo "<br><br>".$query;
 
             $db = new db_alloc();
             $db->query($query);
@@ -373,7 +372,6 @@ class project extends db_entity
             $o = project::get_list_by_client(null, $onlymine);
             is_object($this) and $this->get_id() and $o[$this->get_id()] = $this->get_value("projectName");
             $ops.= page::select_options($o, $this->get_id())."</select>";
-            #$ops.= project::get_list_dropdown_options("curr",$this->get_id(),100)."</select>";
         }
         return $ops;
     }
@@ -477,18 +475,18 @@ class project extends db_entity
 
     public function get_list_vars()
     {
-        return array("projectID"          => "The Project ID"
-                    ,"projectStatus"      => "Status of the project eg: Current | Potential | Archived"
-                    ,"clientID"           => "Show projects that are owned by this Client"
-                    ,"projectType"        => "Type of project eg: Contract | Job | Project | Prepaid"
-                    ,"personID"           => "Projects that have this person on them."
-                    ,"projectName"        => "Project name like *something*"
-                    ,"limit"              => "Limit the number of records returned"
-                    ,"url_form_action"    => "The submit action for the filter form"
-                    ,"form_name"          => "The name of this form, i.e. a handle for referring to this saved form"
-                    ,"dontSave"           => "A flag that allows the user to specify that the filter preferences should not be saved this time"
-                    ,"applyFilter"        => "Saves this filter as the persons preference"
-                    ,"showProjectType"    => "Show the project type");
+        return array("projectID"        => "The Project ID"
+                     ,"projectStatus"   => "Status of the project eg: Current | Potential | Archived"
+                     ,"clientID"        => "Show projects that are owned by this Client"
+                     ,"projectType"     => "Type of project eg: Contract | Job | Project | Prepaid"
+                     ,"personID"        => "Projects that have this person on them."
+                     ,"projectName"     => "Project name like *something*"
+                     ,"limit"           => "Limit the number of records returned"
+                     ,"url_form_action" => "The submit action for the filter form"
+                     ,"form_name"       => "The name of this form, i.e. a handle for referring to this saved form"
+                     ,"dontSave"        => "A flag that allows the user to specify that the filter preferences should not be saved this time"
+                     ,"applyFilter"     => "Saves this filter as the persons preference"
+                     ,"showProjectType" => "Show the project type");
     }
 
     public function load_form_data($defaults = array())
@@ -774,7 +772,8 @@ class project extends db_entity
 
     public function get_changes_list()
     {
-        // This function returns HTML rows for the changes that have been made to this project
+        // This function returns HTML rows for the changes that have been made
+        // to this project
         $rows = array();
         $people_cache =& get_cached_table("person");
         $timeUnit = new timeUnit();

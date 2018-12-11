@@ -26,16 +26,13 @@ if (!config::get_config_item("outTfID")) {
     alloc_error("Please select a default Outgoing TF from the Setup -> Finance menu.");
 }
 
-#$field_map = array("transactionDate"=>0, "employeeNum"=>1, "name"=>2, ""=>3, ""=>4, ""=>5, ""=>6, ""=>7, ""=>8, ""=>9, "amount"=>10, ""=>11, ""=>12);
-
-$field_map = array(""                =>0
-                  ,"transactionDate" =>1
-                  ,"name"            =>2
-                  ,"memo"            =>3
-                  ,"account"         =>4
-                  ,"amount"          =>5
-                  ,"employeeNum"     =>7
-                  );
+$field_map = array(""                 =>0
+                   ,"transactionDate" =>1
+                   ,"name"            =>2
+                   ,"memo"            =>3
+                   ,"account"         =>4
+                   ,"amount"          =>5
+                   ,"employeeNum"     =>7);
 
 if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
     $db = new db_alloc();
@@ -65,23 +62,10 @@ if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
         // If there's a memo field then append it to account
         $memo and $account.= " - ".$memo;
 
-
-        #echo "<br>";
-        #echo "<br>date: ".$transactionDate;
-        #echo "<br>memo: ".$memo;
-        #echo "<br>account: ".$account;
-        #echo "<br>amount: ".$amount;
-        #echo "<br>employeeNum: ".$employeeNum;
-
         // Ignore heading row, dividing lines and total rows
         if ($transactionDate == "Date" || !$transactionDate || strpos("_____", $transactionDate) !== false || strpos("���", $transactionDate) !== false || stripos("total", $transactionDate) !== false) {
             continue;
         }
-        // If the employeeNum field is blank use the previous employeeNum
-        #if (!$employeeNum) {
-        # $employeeNum = $prev_employeeNum;
-        #}
-        #$prev_employeeNum = $employeeNum;
 
         // Find the TF for the wage
         $query = prepare("SELECT * FROM tf WHERE qpEmployeeNum=%d", $employeeNum);
@@ -99,7 +83,6 @@ if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
         }
         $transactionDate = sprintf("%04d-%02d-%02d", $matches[3], $matches[2], $matches[1]);
 
-
         // Strip $ and , from amount
         $amount = str_replace(array('$',','), array(), $amount);
         if (!preg_match("/^[-]?[0-9]+(\\.[0-9]+)?$/", $amount)) {
@@ -110,10 +93,11 @@ if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
         // Negate the amount - Wages are a debit from TF's
         $amount = -$amount;
 
-        // Check for an existing transaction for this wage - note we have to use a range or amount because it is floating point
+        // Check for an existing transaction for this wage - note we have to
+        // use a range or amount because it is floating point
         $query = prepare("SELECT transactionID
-                        FROM transaction
-                        WHERE fromTfID=%d AND transactionDate='%s' AND amount=%d", $fromTfID, $transactionDate, page::money(config::get_config_item("currency"), $amount, "%mi"));
+                            FROM transaction
+                           WHERE fromTfID=%d AND transactionDate='%s' AND amount=%d", $fromTfID, $transactionDate, page::money(config::get_config_item("currency"), $amount, "%mi"));
         $db->query($query);
         if ($db->next_record()) {
             $msg.= "Warning: Salary for employee #$employeeNum $name on $transactionDate already exists as transaction #".$db->f("transactionID")."<br>";

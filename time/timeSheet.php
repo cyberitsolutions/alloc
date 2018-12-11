@@ -87,11 +87,11 @@ function show_transaction_listR($template_name)
 
     if ($db->next_record() || $timeSheet->get_value("status") == "invoiced" || $timeSheet->get_value("status") == "finished") {
         $db->query("SELECT *
-                    FROM tf
-                   WHERE tfActive = 1
-                      OR tfID = %d
-                      OR tfID = %d
-                ORDER BY tfName", $db->f("tfID"), $db->f("fromTfID"));
+                      FROM tf
+                     WHERE tfActive = 1
+                        OR tfID = %d
+                        OR tfID = %d
+                  ORDER BY tfName", $db->f("tfID"), $db->f("fromTfID"));
 
         while ($db->row()) {
             $tf_array[$db->f("tfID")] = $db->f("tfName");
@@ -133,9 +133,9 @@ function show_transaction_listR($template_name)
             // transactions which you have permissions to see.
 
             $query = prepare("SELECT *
-                            FROM transaction
-                           WHERE timeSheetID = %d
-                        ORDER BY transactionID", $timeSheet->get_id());
+                                FROM transaction
+                               WHERE timeSheetID = %d
+                            ORDER BY transactionID", $timeSheet->get_id());
 
             $db->query($query);
 
@@ -631,8 +631,6 @@ if ($timeSheet->get_value("approvedByAdminPersonID")) {
 // display the project name.
 if (($timeSheet->get_value("status") == 'edit' || $timeSheet->get_value("status") == 'rejected') && !$timeSheet->get_value("projectID")) {
     $query = prepare("SELECT * FROM project WHERE projectStatus = 'Current' ORDER by projectName");
-    #.prepare("  LEFT JOIN projectPerson on projectPerson.projectID = project.projectID ")
-    #.prepare("WHERE projectPerson.personID = '%d' ORDER BY projectName", $current_user->get_id());
 } else {
     $query = prepare("SELECT * FROM project ORDER by projectName");
 }
@@ -728,10 +726,6 @@ if (is_object($timeSheet) && $timeSheet->get_id() && $timeSheet->have_perm(PERM_
     $db->query($q);
     $row = $db->row();
     $sel_invoice = $row["invoiceID"];
-    #$TPL["attach_to_invoice_button"] = "<select name=\"attach_to_invoiceID\">";
-    #$TPL["attach_to_invoice_button"].= "<option value=\"create_new\">Create New Invoice</option>";
-    #$TPL["attach_to_invoice_button"].= page::select_options($invoice_list,$sel_invoice)."</select>";
-    #$TPL["attach_to_invoice_button"].= "<input type=\"submit\" name=\"attach_transactions_to_invoice\" value=\"Add to Invoice\"> ";
 }
 
 // msg passed in url and print it out pretty..

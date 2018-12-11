@@ -23,14 +23,11 @@
 require_once("../alloc.php");
 
 $dirName = str_replace("..", "", $_POST["dirName"]);
-#$dirName = preg_replace("/^[\/\\\]*/","",$dirName);
 
 // Check if we're using a VCS
 $vcs = vcs::get();
 
 if ($_POST["save"]) {
-    // path_under_path(wiki_module::get_wiki_path().$dirName, wiki_module::get_wiki_path(),$dont_check_filesystem=false) or $errors[] = "Bad directory name: ";
-    //is_writeable(wiki_module::get_wiki_path().dirname($editName)) or $errors[] = "Path is not writeable.";
     strlen($dirName) or $errors[] = "Directory name empty.";
     $dirName and is_dir(wiki_module::get_wiki_path().$dirName) and $errors[] = "Directory already exists.";
 

@@ -40,16 +40,17 @@ if (!$commentID) {
 
 // add additional interested parties
 if ($_REQUEST["eo_email"]) {
-    $other_parties[$_REQUEST["eo_email"]] = array("name"       => $_REQUEST["eo_name"]
-                                               ,"addIP"      => $_REQUEST["eo_add_interested_party"]
-                                               ,"addContact" => $_REQUEST["eo_add_client_contact"]
-                                               ,"clientID"   => $_REQUEST["eo_client_id"]);
+    $other_parties[$_REQUEST["eo_email"]] = array("name"        => $_REQUEST["eo_name"]
+                                                  ,"addIP"      => $_REQUEST["eo_add_interested_party"]
+                                                  ,"addContact" => $_REQUEST["eo_add_client_contact"]
+                                                  ,"clientID"   => $_REQUEST["eo_client_id"]);
 }
 
 // add all interested parties
 $emailRecipients = comment::add_interested_parties($commentID, $_REQUEST["commentEmailRecipients"], $other_parties);
 
-// We're going to store all the attachments and generated pdf files in this array
+// We're going to store all the attachments and generated pdf files in this
+// array
 $files = array();
 
 // If someone uploads attachments
@@ -82,7 +83,8 @@ if (!is_dir($dir)) {
     mkdir($dir, 0777);
 }
 
-// Write out all of the attachments and generated files to the local filesystem
+// Write out all of the attachments and generated files to the local
+// filesystem
 foreach ((array)$files as $k => $f) {
     $fullpath = $dir.DIRECTORY_SEPARATOR.$f["name"];
     if ($f["blob"]) {

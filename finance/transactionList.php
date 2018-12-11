@@ -44,13 +44,12 @@ if (!$startDate && !$endDate && !$monthDate && !$applyFilter) {
 }
 
 $defaults = array("url_form_action"=>$TPL["url_alloc_transactionList"]
-                 ,"form_name"=>"transactionList_filter"
-                 ,"applyFilter"=>$applyFilter
-                 ,"tfID"=>$tfID
-                 ,"startDate"=>$startDate
-                 ,"endDate"=>$endDate
-                 ,"monthDate"=>$monthDate
-                 );
+                  ,"form_name"=>"transactionList_filter"
+                  ,"applyFilter"=>$applyFilter
+                  ,"tfID"=>$tfID
+                  ,"startDate"=>$startDate
+                  ,"endDate"=>$endDate
+                  ,"monthDate"=>$monthDate);
 
 if ($download) {
     $_FORM = transaction::load_form_data($defaults);

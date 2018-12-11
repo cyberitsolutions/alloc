@@ -24,6 +24,7 @@ class stats
 {
     public $classname = "stats";
 
+    // FIXME:: this... -- cjb, 2018-12
     public $projects = array("all"=>array("total"=>array( /* <date>=> <number> */ )
                                        // <uid>=> array( <date>=> <number>, .. ),
                         ), "new"=>array("total"=>array( /* <date>=> <number> */ )
@@ -120,10 +121,10 @@ class stats
         list($ts_open, $ts_pending, $ts_closed) = task::get_task_status_in_set_sql();
         // Get total amount of current tasks for every person
         $q = "SELECT person.personID, person.username, count(taskID) as tally
-            FROM task
-       LEFT JOIN person ON task.personID = person.personID
-           WHERE task.taskStatus NOT IN (".$ts_closed.")
-        GROUP BY person.personID";
+                FROM task
+           LEFT JOIN person ON task.personID = person.personID
+               WHERE task.taskStatus NOT IN (".$ts_closed.")
+            GROUP BY person.personID";
 
         $db->query($q);
         while ($db->next_record()) {
@@ -133,10 +134,10 @@ class stats
 
         // Get total amount of completed tasks for every person
         $q = "SELECT person.personID, person.username, count(taskID) as tally
-            FROM task
-       LEFT JOIN person ON task.personID = person.personID
-           WHERE task.taskStatus NOT IN (".$ts_closed.")
-        GROUP BY person.personID";
+                FROM task
+           LEFT JOIN person ON task.personID = person.personID
+               WHERE task.taskStatus NOT IN (".$ts_closed.")
+            GROUP BY person.personID";
 
         $db->query($q);
         while ($db->next_record()) {
@@ -146,9 +147,9 @@ class stats
 
         // Get total amount of all tasks for every person
         $q = "SELECT person.personID, person.username, count(taskID) as tally
-            FROM task
-       LEFT JOIN person ON task.personID = person.personID
-        GROUP BY person.personID";
+                FROM task
+           LEFT JOIN person ON task.personID = person.personID
+            GROUP BY person.personID";
 
         $db->query($q);
         while ($db->next_record()) {
@@ -162,10 +163,10 @@ class stats
         $date = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - $days, date("Y")));
         // Get total amount of completed tasks for every person
         $q = prepare("SELECT person.personID, person.username, count(taskID) as tally, task.dateCreated
-            FROM task
-       LEFT JOIN person ON task.personID = person.personID
-           WHERE ('%s' <= task.dateCreated)
-        GROUP BY person.personID", $date);
+                        FROM task
+                   LEFT JOIN person ON task.personID = person.personID
+                       WHERE ('%s' <= task.dateCreated)
+                    GROUP BY person.personID", $date);
 
         $db->query($q);
         while ($db->next_record()) {
@@ -219,9 +220,11 @@ class stats
     public function compare($a, $b)
     {
         if ($a["count_back"] == $b["count_back"]) {
-            // if last added item was added on the same day then look at how many were added on that day
+            // if last added item was added on the same day then look at how
+            // many were added on that day
             if ($a["value"] == $b["value"]) {
-                // if the same number of items added on same day then sort alphabetically
+                // if the same number of items added on same day then sort
+                // alphabetically
                 return strcmp($a["username"], $b["username"]);
             } else {
                 return ($a["value"] < $b["value"]) ? 1 : -1;
@@ -233,7 +236,8 @@ class stats
 
     public function order_by_most_frequent_use()
     {
-        $max_search_back = 90;      // maximum number of days to go back when sorting
+        // maximum number of days to go back when sorting
+        $max_search_back = 90;
 
         $query = "SELECT * FROM person ORDER BY username";
         $db = new db_alloc();
@@ -245,8 +249,6 @@ class stats
             for ($value = 0, $i = 0; $value == 0 && $i < $max_search_back; $i++) {
                 $date = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - $i, date("Y")));
                 $value = $this->tasks["all"][$person->get_id()][$date];
-                // + $this->projects["all"][$person->get_id()][$date]
-                // + $this->comments["all"][$person->get_id()][$date];
                 if ($value > 0) {
                     array_push($this->persons, array("id"=>$person->get_id(), "username"=>$person->get_value('username'), "count_back"=>$i, "value"=>$value));
                 }

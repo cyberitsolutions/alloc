@@ -63,7 +63,7 @@ if ($num_new_emails >0) {
                     alloc_error("Could not create a task from this email. Email was not sent by a staff member. Email resides in INBOX.");
                 }
 
-                // Else if we have a key, append to comment
+            // Else if we have a key, append to comment
             } else {
                 // Skip over emails that are from alloc. These emails are kept only for
                 // posterity and should not be parsed and downloaded and re-emailed etc.
@@ -82,7 +82,7 @@ if ($num_new_emails >0) {
             try {
                 $email_receive->forward(config::get_config_item("allocEmailAdmin"), "Email command failed", "\n".$e->getMessage()."\n\n".$e->getTraceAsString());
 
-                // If that fails, try last-ditch email send
+            // If that fails, try last-ditch email send
             } catch (Exception $e) {
                 mail(config::get_config_item("allocEmailAdmin"), "Email command failed(2)", "\n".$e->getMessage()."\n\n".$e->getTraceAsString());
             }

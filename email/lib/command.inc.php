@@ -37,58 +37,58 @@ class command
 
     public function get_fields($type = "all")
     {
-        $comment = array("key"   => array("","The comment thread key.")
-                        ,"ip"    => array("","Add to a comment's interested parties. Eg: jon,jane@j.com,Hal Comp <hc@hc.com> ... can also remove eg: -jon")
-                        ,"quiet" => array("","Don't resend the email back out to anyone."));
+        $comment = array("key"    => array("","The comment thread key.")
+                         ,"ip"    => array("","Add to a comment's interested parties. Eg: jon,jane@j.com,Hal Comp <hc@hc.com> ... can also remove eg: -jon")
+                         ,"quiet" => array("","Don't resend the email back out to anyone."));
 
-        $item = array("tsid"     => array("timeSheetID",           "time sheet that this item belongs to")
-                    ,"date"      => array("dateTimeSheetItem",     "time sheet item's date")
-                    ,"duration"  => array("timeSheetItemDuration", "time sheet item's duration")
-                    ,"unit"      => array("timeSheetItemDurationUnitID", "time sheet item's unit of duration eg: 1=hours 2=days 3=week 4=month 5=fixed")
-                    ,"task"      => array("taskID",                "ID of the time sheet item's task")
-                    ,"rate"      => array("rate",                  "\$rate of the time sheet item's")
-                    ,"private"   => array("commentPrivate",        "privacy setting of the time sheet item's comment eg: 1=private 0=normal")
-                    ,"comment"   => array("comment",               "time sheet item comment")
-                    ,"multiplier"=> array("multiplier",            "time sheet item multiplier eg: 1=standard 1.5=time-and-a-half 2=double-time 3=triple-time 0=no-charge")
-                    ,"delete"    => array("",                      "set this to 1 to delete the time sheet item")
-                    ,"time"      => array("",                      "Add some time to a time sheet. Auto-creates time sheet if none exist."));
+        $item = array("tsid"       => array("timeSheetID",           "time sheet that this item belongs to")
+                      ,"date"      => array("dateTimeSheetItem",     "time sheet item's date")
+                      ,"duration"  => array("timeSheetItemDuration", "time sheet item's duration")
+                      ,"unit"      => array("timeSheetItemDurationUnitID", "time sheet item's unit of duration eg: 1=hours 2=days 3=week 4=month 5=fixed")
+                      ,"task"      => array("taskID",                "ID of the time sheet item's task")
+                      ,"rate"      => array("rate",                  "\$rate of the time sheet item's")
+                      ,"private"   => array("commentPrivate",        "privacy setting of the time sheet item's comment eg: 1=private 0=normal")
+                      ,"comment"   => array("comment",               "time sheet item comment")
+                      ,"multiplier"=> array("multiplier",            "time sheet item multiplier eg: 1=standard 1.5=time-and-a-half 2=double-time 3=triple-time 0=no-charge")
+                      ,"delete"    => array("",                      "set this to 1 to delete the time sheet item")
+                      ,"time"      => array("",                      "Add some time to a time sheet. Auto-creates time sheet if none exist."));
 
-        $task = array("status"    => array("taskStatus",      "inprogress, notstarted, info, client, manager, invalid, duplicate, incomplete, complete; or: open, pending, closed")
-                    ,"name"      => array("taskName",        "task's title")
-                    ,"assign"    => array("personID",        "username of the person that the task is assigned to")
-                    ,"manage"    => array("managerID",       "username of the person that the task is managed by")
-                    ,"desc"      => array("taskDescription", "task's long description")
-                    ,"priority"  => array("priority",        "1, 2, 3, 4 or 5; or one of Wishlist, Minor, Normal, Important or Critical")
-                    ,"limit"     => array("timeLimit",       "limit in hours for effort spend on this task")
-                    ,"best"      => array("timeBest",        "shortest estimate of how many hours of effort this task will take")
-                    ,"likely"    => array("timeExpected",    "most likely amount of hours of effort this task will take")
-                    ,"worst"     => array("timeWorst",       "longest estimate of how many hours of effort this task will take")
-                    ,"estimator" => array("estimatorID",     "the person who created the estimates on this task")
-                    ,"targetstart" => array("dateTargetStart","estimated date for work to start on this task")
-                    ,"targetcompletion" => array("dateTargetCompletion","estimated date for when this task should be finished")
-                    ,"project"   => array("projectID",       "task's project ID")
-                    ,"type"      => array("taskTypeID",      "Task, Fault, Message, Milestone or Parent")
-                    ,"dupe"      => array("duplicateTaskID", "If the task status is duplicate, then this should be set to the task ID of the related dupe")
-                    ,"pend"      => array("",                "The task ID(s), commar separated, that block this task")
-                    ,"reopen"    => array("",                "Reopen the task on this date. To be used with --status=pending.")
-                    ,"task"      => array("",                "A task ID, or the word 'new' to create a new task.")
-                    ,"dip"       => array("",                "Add some default interested parties.")
-                    ,"tags"      => array("",                "Add some tags, comma separated tags"));
+        $task = array("status"     => array("taskStatus",      "inprogress, notstarted, info, client, manager, invalid, duplicate, incomplete, complete; or: open, pending, closed")
+                      ,"name"      => array("taskName",        "task's title")
+                      ,"assign"    => array("personID",        "username of the person that the task is assigned to")
+                      ,"manage"    => array("managerID",       "username of the person that the task is managed by")
+                      ,"desc"      => array("taskDescription", "task's long description")
+                      ,"priority"  => array("priority",        "1, 2, 3, 4 or 5; or one of Wishlist, Minor, Normal, Important or Critical")
+                      ,"limit"     => array("timeLimit",       "limit in hours for effort spend on this task")
+                      ,"best"      => array("timeBest",        "shortest estimate of how many hours of effort this task will take")
+                      ,"likely"    => array("timeExpected",    "most likely amount of hours of effort this task will take")
+                      ,"worst"     => array("timeWorst",       "longest estimate of how many hours of effort this task will take")
+                      ,"estimator" => array("estimatorID",     "the person who created the estimates on this task")
+                      ,"targetstart" => array("dateTargetStart","estimated date for work to start on this task")
+                      ,"targetcompletion" => array("dateTargetCompletion","estimated date for when this task should be finished")
+                      ,"project"   => array("projectID",       "task's project ID")
+                      ,"type"      => array("taskTypeID",      "Task, Fault, Message, Milestone or Parent")
+                      ,"dupe"      => array("duplicateTaskID", "If the task status is duplicate, then this should be set to the task ID of the related dupe")
+                      ,"pend"      => array("",                "The task ID(s), commar separated, that block this task")
+                      ,"reopen"    => array("",                "Reopen the task on this date. To be used with --status=pending.")
+                      ,"task"      => array("",                "A task ID, or the word 'new' to create a new task.")
+                      ,"dip"       => array("",                "Add some default interested parties.")
+                      ,"tags"      => array("",                "Add some tags, comma separated tags"));
 
         $reminder = array("date"            => array("reminderTime",             "")
-                        ,"subject"         => array("reminderSubject",          "")
-                        ,"body"            => array("reminderContent",          "")
-                        ,"frequency"       => array("reminderRecuringValue",    "")
-                        ,"frequency_units" => array("reminderRecuringInterval", "")
-                        ,"active"          => array("reminderActive",           "")
-                        ,"notice"          => array("reminderAdvNoticeValue",   "")
-                        ,"notice_units"    => array("reminderAdvNoticeInterval",""));
+                          ,"subject"         => array("reminderSubject",          "")
+                          ,"body"            => array("reminderContent",          "")
+                          ,"frequency"       => array("reminderRecuringValue",    "")
+                          ,"frequency_units" => array("reminderRecuringInterval", "")
+                          ,"active"          => array("reminderActive",           "")
+                          ,"notice"          => array("reminderAdvNoticeValue",   "")
+                          ,"notice_units"    => array("reminderAdvNoticeInterval",""));
 
         $types = array("all"=>array_merge($comment, $item, $task, $reminder)
-                        ,"comment"=>$comment
-                        ,"item"=>$item
-                        ,"task"=>$task
-                        ,"reminder"=>$reminder);
+                       ,"comment"=>$comment
+                       ,"item"=>$item
+                       ,"task"=>$task
+                       ,"reminder"=>$reminder);
         return $types[$type];
     }
 
@@ -255,7 +255,7 @@ class command
                     $message[] = "Task ".$task->get_id()." updated.";
                 }
 
-                // Problems
+            // Problems
             } else {
                 alloc_error("Problem updating task: ".implode("\n", (array)$err));
             }
@@ -281,7 +281,7 @@ class command
             $timeSheetItem->set_value("rate", $timeSheetItem->get_value("rate", DST_HTML_DISPLAY));
 
             foreach ($commands as $k => $v) {
-            // Validate/coerce the fields
+                // Validate/coerce the fields
                 if ($k == "unit") {
                     $changes[$k] = "timeSheetItemDurationUnitID";
                     in_array($v, array(1,2,3,4,5)) or $err[] = "Invalid unit. Try a number from 1-5.";
@@ -328,7 +328,7 @@ class command
                     $message[] = "Time sheet item ".$timeSheetItem->get_id()." updated.";
                 }
 
-                // Problems
+            // Problems
             } elseif ($err && $commands["item"]) {
                 alloc_error("Problem updating time sheet item: ".implode("\n", (array)$err));
             }
@@ -468,7 +468,7 @@ class command
                     }
                 }
             }
-            // Bad or missing key, then error
+        // Bad or missing key, then error
         } elseif ($email_receive) {
             alloc_error("Bad or missing key. Unable to process email.");
         }

@@ -22,7 +22,6 @@
 
 require_once("../alloc.php");
 
-
 function show_all_exp($template)
 {
     global $TPL;
@@ -57,7 +56,7 @@ function show_all_exp($template)
             $tf->set_id($transaction->get_value("tfID"));
             $tf->select();
             $TPL["tfIDLink"] = $tf->get_link();
-  
+
             $projectID = $transaction->get_value("projectID");
             if ($projectID) {
                 $project = new project();
@@ -219,10 +218,10 @@ if (is_object($expenseForm) && $expenseForm->get_value("clientID")) {
     $clientID_sql = prepare(" AND clientID = %d", $expenseForm->get_value("clientID"));
 }
 
-$q = "SELECT projectID AS value, projectName AS label 
-        FROM project 
-       WHERE projectStatus = 'Current' 
-             ".$clientID_sql." 
+$q = "SELECT projectID AS value, projectName AS label
+        FROM project
+       WHERE projectStatus = 'Current'
+             ".$clientID_sql."
     ORDER BY projectName";
 $TPL["projectOptions"] = page::select_options($q, $selectedProjectID);
 
@@ -305,7 +304,6 @@ if ($_POST["cancel"]) {
     $expenseForm->save_to_invoice($_POST["attach_to_invoiceID"]);
 }
 
-
 if (is_object($expenseForm) && $expenseForm->get_value("expenseFormFinalised") && $current_user->get_id() == $expenseForm->get_value("expenseFormCreatedUser")) {
     $TPL["message_help"][] = "Step 4/4: Print out the Expense Form using the Printer Friendly Version link, attach receipts and hand in to office admin.";
 } elseif (check_optional_has_line_items() && !$expenseForm->get_value("expenseFormFinalised")) {
@@ -331,7 +329,6 @@ foreach ($rr_options as $value => $label) {
     $reimbursementRequiredRadios.= $br."<input type=\"radio\" name=\"reimbursementRequired\" value=\"".$value."\"".$rr_checked[$value].">".$label.$extra;
     $br = "<br>";
 }
-
 
 $TPL["paymentMethodOptions"] = $expenseForm->get_value("paymentMethod");
 $TPL["reimbursementRequiredOption"] = $rr_label;
@@ -376,7 +373,6 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
   <select name="changeTransactionStatus"><option value="">Transaction Status<option value="approved">Approve<option value="rejected">Reject<option value="pending">Pending</select>
   ';
 
-
     $TPL["field_clientID"] = $clientName;
     $TPL["field_expenseFormComment"] = page::textarea("expenseFormComment", $expenseForm->get_value("expenseFormComment", DST_HTML_DISPLAY));
 } elseif (is_object($expenseForm) && !$expenseForm->get_value("expenseFormFinalised")) {
@@ -394,13 +390,13 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
 
 if (is_object($expenseForm) && $expenseForm->get_id()) {
     $db = new db_alloc();
-    $db->query(prepare("SELECT SUM(amount * pow(10,-currencyType.numberToBasic)) AS amount, 
-                             transaction.currencyTypeID as currency
-                        FROM transaction
-                   LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
-                       WHERE expenseFormID = %d
-                    GROUP BY transaction.currencyTypeID
-                  ", $expenseForm->get_id()));
+    $db->query(prepare("SELECT SUM(amount * pow(10,-currencyType.numberToBasic)) AS amount,
+                               transaction.currencyTypeID as currency
+                          FROM transaction
+                     LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
+                         WHERE expenseFormID = %d
+                      GROUP BY transaction.currencyTypeID
+                       ", $expenseForm->get_id()));
     while ($row = $db->row()) {
         $rows[] = $row;
     }

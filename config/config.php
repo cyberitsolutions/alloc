@@ -43,7 +43,6 @@ if ($_POST["test_email_gateway"]) {
     }
 }
 
-
 $db = new db_alloc();
 $db->query("SELECT name,value,type FROM config");
 while ($db->next_record()) {
@@ -56,9 +55,6 @@ while ($db->next_record()) {
         $TPL[$db->f("name")] = unserialize($db->f("value"));
     }
 }
-
-
-#echo "<pre>".print_r($_POST,1)."</pre>";
 
 if ($_POST["update_currencyless_transactions"] && $_POST["currency"]) {
     $db = new db_alloc();
@@ -89,9 +85,6 @@ if ($_POST["fetch_exchange_rates"]) {
     $rtn = exchangeRate::download();
     $rtn and $TPL["message_good"] = $rtn;
 }
-
-
-
 
 if ($_POST["save"]) {
     if ($_POST["hoursInDay"]) {
@@ -151,7 +144,6 @@ if ($_POST["save"]) {
 
     // Handle the only checkbox specially. If more checkboxes are added this
     // should be rewritten.
-    #echo var_dump($_POST);
     if ($_POST['sbs_link'] == "rss" && !$_POST['rssShowProject']) {
         $c = new config();
         $c->set_id(config::get_config_item_id('rssShowProject'));
@@ -174,13 +166,13 @@ if ($_POST["save"]) {
     }
 }
 
-
 get_cached_table("config", true); // flush cache
 
 if (has("finance")) {
     $tf = new tf();
     $options = $tf->get_assoc_array("tfID", "tfName");
 }
+
 $TPL["mainTfOptions"] = page::select_options($options, config::get_config_item("mainTfID"));
 $TPL["outTfOptions"] = page::select_options($options, config::get_config_item("outTfID"));
 $TPL["inTfOptions"] = page::select_options($options, config::get_config_item("inTfID"));
@@ -188,17 +180,17 @@ $TPL["taxTfOptions"] = page::select_options($options, config::get_config_item("t
 $TPL["expenseFormTfOptions"] = page::select_options($options, config::get_config_item("expenseFormTfID"));
 
 $tabops = array("home"=>"Home"
-               ,"client"=>"Clients"
-               ,"project"=>"Projects"
-               ,"task"=>"Tasks"
-               ,"time"=>"Time"
-               ,"invoice"=>"Invoices"
-               ,"sale"=>"Sales"
-               ,"person"=>"People"
-               ,"wiki"=>"Wiki"
-               ,"inbox"=>"Inbox"
-               ,"tools"=>"Tools"
-                );
+                ,"client"=>"Clients"
+                ,"project"=>"Projects"
+                ,"task"=>"Tasks"
+                ,"time"=>"Time"
+                ,"invoice"=>"Invoices"
+                ,"sale"=>"Sales"
+                ,"person"=>"People"
+                ,"wiki"=>"Wiki"
+                ,"inbox"=>"Inbox"
+                ,"tools"=>"Tools");
+
 $selected_tabops = config::get_config_item("allocTabs") or $selected_tabops = array_keys($tabops);
 $TPL["allocTabsOptions"] = page::select_options($tabops, $selected_tabops);
 
@@ -208,7 +200,6 @@ $TPL["currencyOptions"] = page::select_options($currencyOptions, config::get_con
 
 $db = new db_alloc();
 $display = array("", "username", ", ", "emailAddress");
-
 
 $person = new person();
 $people =& get_cached_table("person");

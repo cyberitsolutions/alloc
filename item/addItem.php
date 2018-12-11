@@ -73,7 +73,7 @@ if ($_POST["remove_items"]) {
     }
 }
 
-//so that the user can edit the item later
+// so that the user can edit the item later
 $TPL["personID"] = $current_user->get_id();
 
 // item types

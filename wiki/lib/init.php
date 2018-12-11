@@ -106,7 +106,6 @@ class wiki_module extends module
             $disk_file = file_get_contents($f) or $disk_file = "";
 
             $vcs = vcs::get();
-            //$vcs->debug = true;
 
             // Get a particular revision
             if ($vcs) {

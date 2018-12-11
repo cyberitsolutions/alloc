@@ -27,12 +27,12 @@ class item extends db_entity
     public $display_field_name = "itemName";
     public $key_field = "itemID";
     public $data_fields = array("itemModifiedUser"
-                               ,"itemName"
-                               ,"itemAuthor"
-                               ,"itemNotes"
-                               ,"itemModifiedTime"
-                               ,"itemType"
-                               ,"personID");
+                                ,"itemName"
+                                ,"itemAuthor"
+                                ,"itemNotes"
+                                ,"itemModifiedTime"
+                                ,"itemType"
+                                ,"personID");
 
     public function update_search_index_doc(&$index)
     {

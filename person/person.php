@@ -97,7 +97,6 @@ function show_person_areasOfExpertise($template)
 
     // step through the list of skills ordered by skillclass
     $db = new db_alloc();
-    // $query = "SELECT * FROM skill ORDER BY skillClass,skillName";
     $query = "SELECT * FROM skill LEFT JOIN proficiency ON skill.skillID=proficiency.skillID";
     $query.= prepare(" WHERE proficiency.personID=%d", $personID);
     $query.= " ORDER BY skillClass,skillName";
@@ -266,9 +265,6 @@ if ($_POST["save"]) {
     alloc_redirect($TPL["url_alloc_personList"]);
 }
 
-#$person = new person();
-#$person->set_id($personID);
-#$person->select();
 $person->set_values("person_");
 
 if ($person->get_id()) {

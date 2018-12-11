@@ -25,7 +25,7 @@ require_once("../alloc.php");
 function show_commentTemplate($template_name)
 {
     global $TPL;
-  
+
     // Run query and loop through the records
     $db = new db_alloc();
     $query = "SELECT * FROM commentTemplate ORDER BY commentTemplateType, commentTemplateName";

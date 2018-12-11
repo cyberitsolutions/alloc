@@ -1,4 +1,8 @@
 <?php
+
+// FIXME:: where did this file come from? was it written by alla or jeremyc?
+// and what licence is it under? -- cjbayliss, 2018-12
+
 class pdf_reader
 {
     /**
@@ -37,7 +41,8 @@ class pdf_reader
 
         // decode the chunks
         foreach ($a_chunks as $chunk) {
-            // Look at each chunk decide if we can decode it by looking at the contents of the filter
+            // Look at each chunk decide if we can decode it by looking at the
+            // contents of the filter
             if (isset($chunk["data"])) {
                 // look at the filter to find out which encoding has been used
                 if (strpos($chunk["filter"], "FlateDecode") !== false) {

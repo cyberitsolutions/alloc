@@ -39,15 +39,14 @@ if ($_POST["save"]) {
 
         // Save
         } else {
-            $a = array($table."ID"     => $tableID
-                ,$table."Seq"    => $_POST[$table."Seq"][$k]
-                ,$table."Label"  => $_POST[$table."Label"][$k]
-                ,$table."Name"   => $_POST[$table."Name"][$k]
-                ,$table."Colour" => $_POST[$table."Colour"][$k]
-                ,$table."Seq"    => $_POST[$table."Seq"][$k]
-                ,"numberToBasic" => $_POST["numberToBasic"][$k] // currencyType field
-                ,$table."Active" => in_array($tableID, $_POST[$table."Active"])
-                );
+            $a = array($table."ID"      => $tableID
+                       ,$table."Seq"    => $_POST[$table."Seq"][$k]
+                       ,$table."Label"  => $_POST[$table."Label"][$k]
+                       ,$table."Name"   => $_POST[$table."Name"][$k]
+                       ,$table."Colour" => $_POST[$table."Colour"][$k]
+                       ,$table."Seq"    => $_POST[$table."Seq"][$k]
+                       ,"numberToBasic" => $_POST["numberToBasic"][$k] // currencyType field
+                       ,$table."Active" => in_array($tableID, $_POST[$table."Active"]));
 
             $orig_tableID = $_POST[$table."IDOrig"][$k];
             $t = new meta($table);

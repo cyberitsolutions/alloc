@@ -26,9 +26,9 @@ class commentTemplate extends db_entity
     public $display_field_name = "commentTemplateName";
     public $key_field = "commentTemplateID";
     public $data_fields = array("commentTemplateName"
-                             ,"commentTemplateText"
-                             ,"commentTemplateType"
-                             ,"commentTemplateModifiedTime");
+                                ,"commentTemplateText"
+                                ,"commentTemplateType"
+                                ,"commentTemplateModifiedTime");
 
     public function get_populated_template($entity, $entityID = false)
     {
@@ -113,7 +113,8 @@ class commentTemplate extends db_entity
             $swap["teb"] = $task->get_value("timeBest");
             $swap["tem"] = $task->get_value("timeExpected");
             $swap["tew"] = $task->get_value("timeWorst");
-            $swap["tep"] = person::get_fullname($task->get_value("estimatorID")); //time estimate person, when it's implemented
+            //time estimate person, when it's implemented
+            $swap["tep"] = person::get_fullname($task->get_value("estimatorID"));
 
             $projectID = $task->get_value("projectID");
         }

@@ -54,7 +54,6 @@ class vcs_darcs extends vcs
                 foreach ($xml->patch as $attr) {
                     $id = "hash ".(string)$attr["hash"];
                     $rtn[$id]["author"] = (string)$attr["author"];
-                    //$rtn[$id]["date"] = date("Y-m-d H:i:s",(string)$attr["date"]);
                     preg_match("/(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/", (string)$attr["date"], $m);
                     $rtn[$id]["date"] = $m[1]."-".$m[2]."-".$m[3]." ".$m[4].":".$m[5].":".$m[6];
                     $rtn[$id]["msg"] = (string)$attr->name;

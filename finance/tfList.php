@@ -38,5 +38,4 @@ $TPL["main_alloc_title"] = "TF List - ".APPLICATION_NAME;
 
 $TPL["tfListRows"] = tf::get_list($_REQUEST);
 
-
 include_template("templates/tfListM.tpl");

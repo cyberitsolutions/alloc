@@ -49,8 +49,6 @@ function get_patch_file_list()
             closedir($dh);
         }
 
-        #// Sort files in natural counting order file8 fil9 fil10
-        #natsort($files);
         // filenames no longer require natsort
         sort($files);
         // Order the indexes too

@@ -86,36 +86,46 @@ define("DST_HTML_DISPLAY", 4);
 
 // The list of all the modules that are enabled for this install of alloc
 $m = array("shared"
-          ,"home"
-          ,"project"
-          ,"task"
-          ,"time"
-          ,"finance"
-          ,"invoice"
-          ,"client"
-          ,"comment"
-          ,"item"
-          ,"person"
-          ,"announcement"
-          ,"reminder"
-          ,"security"
-          ,"config"
-          ,"search"
-          ,"tools"
-          ,"report"
-          ,"login"
-          ,"services"
-          ,"installation"
-          ,"help"
-          ,"email"
-          ,"sale"
-          ,"wiki"
-          ,"audit"
-          ,"calendar");
+           ,"home"
+           ,"project"
+           ,"task"
+           ,"time"
+           ,"finance"
+           ,"invoice"
+           ,"client"
+           ,"comment"
+           ,"item"
+           ,"person"
+           ,"announcement"
+           ,"reminder"
+           ,"security"
+           ,"config"
+           ,"search"
+           ,"tools"
+           ,"report"
+           ,"login"
+           ,"services"
+           ,"installation"
+           ,"help"
+           ,"email"
+           ,"sale"
+           ,"wiki"
+           ,"audit"
+           ,"calendar");
 
 // Sub-dirs under ATTACHMENTS_DIR where upload, email and backup data can be
 // stored
-$external_storage_directories = array("task","client","project","invoice","comment","backups","whatsnew","wiki","logos","search","tmp");
+$external_storage_directories = array("task"
+                                      ,"client"
+                                      ,"project"
+                                      ,"invoice"
+                                      ,"comment"
+                                      ,"backups"
+                                      ,"whatsnew"
+                                      ,"wiki"
+                                      ,"logos"
+                                      ,"search"
+                                      ,"tmp");
 
 // Helper functions
 require_once(ALLOC_MOD_DIR."shared".DIRECTORY_SEPARATOR."util.inc.php");
@@ -141,18 +151,18 @@ define("SCRIPT_PATH", $path);
 
 unset($m);
 
-$TPL = array("url_alloc_index"        => SCRIPT_PATH."index.php"
-            ,"url_alloc_login"        => SCRIPT_PATH."login/login.php"
-            ,"url_alloc_installation" => SCRIPT_PATH."installation/install.php"
-            ,"url_alloc_styles"       => ALLOC_MOD_DIR."css/src/"
-            ,"url_alloc_stylesheets"  => SCRIPT_PATH."css/"
-            ,"url_alloc_javascript"   => SCRIPT_PATH."javascript/"
-            ,"url_alloc_images"       => SCRIPT_PATH."images/"
-            ,"url_alloc_cache"        => SCRIPT_PATH."cache_".get_alloc_version()."/"
-            ,"url_alloc_help"         => ALLOC_MOD_DIR."help".DIRECTORY_SEPARATOR
-            ,"alloc_help_link_name"   => end(array_slice(explode("/", $_SERVER["PHP_SELF"]), -2, 1))
-            ,"script_path"            => SCRIPT_PATH
-            ,"main_alloc_title"       => end(explode("/", $_SERVER["SCRIPT_NAME"])));
+$TPL = array("url_alloc_index"         => SCRIPT_PATH."index.php"
+             ,"url_alloc_login"        => SCRIPT_PATH."login/login.php"
+             ,"url_alloc_installation" => SCRIPT_PATH."installation/install.php"
+             ,"url_alloc_styles"       => ALLOC_MOD_DIR."css/src/"
+             ,"url_alloc_stylesheets"  => SCRIPT_PATH."css/"
+             ,"url_alloc_javascript"   => SCRIPT_PATH."javascript/"
+             ,"url_alloc_images"       => SCRIPT_PATH."images/"
+             ,"url_alloc_cache"        => SCRIPT_PATH."cache_".get_alloc_version()."/"
+             ,"url_alloc_help"         => ALLOC_MOD_DIR."help".DIRECTORY_SEPARATOR
+             ,"alloc_help_link_name"   => end(array_slice(explode("/", $_SERVER["PHP_SELF"]), -2, 1))
+             ,"script_path"            => SCRIPT_PATH
+             ,"main_alloc_title"       => end(explode("/", $_SERVER["SCRIPT_NAME"])));
 
 if (file_exists(ALLOC_MOD_DIR."alloc_config.php")) {
     require_once(ALLOC_MOD_DIR."alloc_config.php");

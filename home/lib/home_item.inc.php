@@ -57,7 +57,6 @@ class home_item
     {
         global $TPL;
         if ($this->template) {
-            //$TPL["this"] = $this;
             $TPL[$this->module] = $this;
             include_template($this->get_template_dir().$this->template);
         }

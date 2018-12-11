@@ -56,6 +56,5 @@ if (path_under_path($PATH, wiki_module::get_wiki_path()) && is_dir($PATH)) {
     }
     $str.= "\n</ul>";
 
-    #echo "<pre>".page::htmlentities($str)."</pre>";
     echo $str;
 }

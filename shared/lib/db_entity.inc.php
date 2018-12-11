@@ -221,13 +221,14 @@ class db_entity
             $this->set_value($this->data_table."CreatedTime", date("Y-m-d H:i:s"));
         }
         if (isset($this->data_fields[$this->data_table."ModifiedUser"])) {
-            #$this->set_value($this->data_table."ModifiedUser", $current_user_id);
+            // $this->set_value($this->data_table."ModifiedUser", $current_user_id);
         }
         if (isset($this->data_fields[$this->data_table."ModifiedTime"])) {
-            #$this->set_value($this->data_table."ModifiedTime", date("Y-m-d H:i:s"));
+            // $this->set_value($this->data_table."ModifiedTime", date("Y-m-d H:i:s"));
         }
 
-        // Even if we're doing an insert, if a primary key is set, then insert the row with that PK.
+        // Even if we're doing an insert, if a primary key is set, then insert
+        // the row with that PK.
         if ($this->get_id()) {
             $this->data_fields[] = $this->key_field;
         }
@@ -309,8 +310,8 @@ class db_entity
         } elseif ($this->key_field->has_value() && $this->key_field->get_name() && $this->key_field->get_value()) {
             $db = $this->get_db();
             $row = $db->qr("SELECT ".db_esc($this->key_field->get_name())."
-                        FROM ".db_esc($this->data_table)."
-                       WHERE ".db_esc($this->key_field->get_name())." = '".db_esc($this->key_field->get_value())."'");
+                              FROM ".db_esc($this->data_table)."
+                             WHERE ".db_esc($this->key_field->get_name())." = '".db_esc($this->key_field->get_value())."'");
             return !$row;
         }
     }
@@ -336,7 +337,8 @@ class db_entity
 
         // Update the search index for this entity, if any
         if ($rtn && $this->get_id() && $this->classname && is_dir(ATTACHMENTS_DIR.'search/'.$this->classname)) {
-            // Update the index asynchronously (later from a job running search/updateIndex.php)
+            // Update the index asynchronously (later from a job running
+            // search/updateIndex.php)
             if ($this->updateSearchIndexLater) {
                 $db = $this->get_db();
                 $db->query("call update_search_index('%s',%d)", $this->classname, $this->get_id());
@@ -611,10 +613,9 @@ class db_entity
         $this->fields_loaded = false;
     }
 
-    /**************************************************************************
-    'Private' utilitity functions These functions probably won't be useful to
-    users of this class but are used by the other functions in the class
-    ***************************************************************************/
+    // 'Private' utilitity functions These functions probably won't be useful
+    // to users of this class but are used by the other functions in the class
+
     public function get_db()
     {
         if (!is_object($this->db)) {
@@ -673,8 +674,8 @@ class db_entity
             $extra = $pkey_sql.db_esc($sel);
         }
 
-        // If they haven't specifically asked for inactive or all
-        // records, we default to giving them only active records.
+        // If they haven't specifically asked for inactive or all records, we
+        // default to giving them only active records.
         if (is_object($this->data_fields[$this->data_table."Active"]) && !isset($where[$this->data_table."Active"])) {
             $where[$this->data_table."Active"] = 1;
 

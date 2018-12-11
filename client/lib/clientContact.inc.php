@@ -27,20 +27,19 @@ class clientContact extends db_entity
     public $display_field_name = "clientContactName";
     public $key_field = "clientContactID";
     public $data_fields = array("clientID"
-                             ,"clientContactName"
-                             ,"clientContactStreetAddress"
-                             ,"clientContactSuburb"
-                             ,"clientContactState"
-                             ,"clientContactPostcode"
-                             ,"clientContactCountry"
-                             ,"clientContactPhone"
-                             ,"clientContactMobile"
-                             ,"clientContactFax"
-                             ,"clientContactEmail"
-                             ,"clientContactOther"
-                             ,"primaryContact"
-                             ,"clientContactActive"
-                             );
+                                ,"clientContactName"
+                                ,"clientContactStreetAddress"
+                                ,"clientContactSuburb"
+                                ,"clientContactState"
+                                ,"clientContactPostcode"
+                                ,"clientContactCountry"
+                                ,"clientContactPhone"
+                                ,"clientContactMobile"
+                                ,"clientContactFax"
+                                ,"clientContactEmail"
+                                ,"clientContactOther"
+                                ,"primaryContact"
+                                ,"clientContactActive");
 
     public function save()
     {
@@ -103,9 +102,9 @@ class clientContact extends db_entity
         }
 
         $q = prepare("SELECT clientContactID, clientContactName
-                    FROM clientContact
-                   WHERE 1=1
-                     AND clientContactName like '%s%%'"
+                        FROM clientContact
+                       WHERE 1=1
+                         AND clientContactName like '%s%%'"
                          .$extra, $name);
         $db->query($q);
         while ($row = $db->row()) {
@@ -130,10 +129,10 @@ class clientContact extends db_entity
     public function find_by_nick($name = false, $clientID = false)
     {
         $q = prepare("SELECT clientContactID
-                    FROM clientContact
-                   WHERE SUBSTRING(clientContactEmail,1,LOCATE('@',clientContactEmail)-1) = '%s'
-                     AND clientID = %d LIMIT 1
-                  ", $name, $clientID);
+                        FROM clientContact
+                       WHERE SUBSTRING(clientContactEmail,1,LOCATE('@',clientContactEmail)-1) = '%s'
+                         AND clientID = %d LIMIT 1
+                     ", $name, $clientID);
         $db = new db_alloc();
         $db->query($q);
         $row = $db->row();
@@ -145,9 +144,9 @@ class clientContact extends db_entity
         $email = str_replace(array("<",">"), "", $email);
         if ($email) {
             $q = prepare("SELECT clientContactID
-                      FROM clientContact
-                     WHERE replace(replace(clientContactEmail,'<',''),'>','') = '%s'
-                   ", $email);
+                            FROM clientContact
+                           WHERE replace(replace(clientContactEmail,'<',''),'>','') = '%s'
+                         ", $email);
             $db = new db_alloc();
             $db->query($q);
             $row = $db->row();
@@ -269,11 +268,11 @@ class clientContact extends db_entity
         }
 
         $q = "SELECT clientContact.*, client.*
-            FROM clientContact
-       LEFT JOIN client ON client.clientID = clientContact.clientID
-                 ".$filter."
-        GROUP BY clientContact.clientContactID
-        ORDER BY clientContactName,clientContact.primaryContact asc";
+                FROM clientContact
+           LEFT JOIN client ON client.clientID = clientContact.clientID
+             ".$filter."
+            GROUP BY clientContact.clientContactID
+            ORDER BY clientContactName,clientContact.primaryContact asc";
         $db = new db_alloc();
         $db->query($q);
         while ($row = $db->next_record()) {

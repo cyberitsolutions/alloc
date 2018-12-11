@@ -27,13 +27,13 @@ class productCost extends db_entity
     public $data_table = "productCost";
     public $key_field = "productCostID";
     public $data_fields = array("tfID"
-                               ,"productID"
-                               ,"amount" => array("type"=>"money")
-                               ,"isPercentage"=> array("empty_to_null"=>false)
-                               ,"description"
-                               ,"currencyTypeID"
-                               ,"tax"
-                               ,"productCostActive");
+                                ,"productID"
+                                ,"amount" => array("type"=>"money")
+                                ,"isPercentage"=> array("empty_to_null"=>false)
+                                ,"description"
+                                ,"currencyTypeID"
+                                ,"tax"
+                                ,"productCostActive");
 
     public function validate()
     {

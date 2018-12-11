@@ -27,13 +27,11 @@ class timeSheetGraph
     }
     public function get_list_vars()
     {
-        return array(
-                //"projectIDs" => "An array of projectIDs"
-                 "dateFrom"    => "From Date"
-                ,"dateTo"      => "To Date"
-                ,"personID"    => "The person assigned to the task"
-                ,"groupBy"     => "Group the results by day or month"
-                ,"applyFilter" => "Store the filter settings");
+        return array("dateFrom"     => "From Date"
+                     ,"dateTo"      => "To Date"
+                     ,"personID"    => "The person assigned to the task"
+                     ,"groupBy"     => "Group the results by day or month"
+                     ,"applyFilter" => "Store the filter settings");
     }
 
     public function load_filter($defaults)

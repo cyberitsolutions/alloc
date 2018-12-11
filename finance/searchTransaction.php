@@ -26,9 +26,8 @@ $download = $_GET["download"] or $download = $_POST["download"];
 $applyFilter = $_GET["applyFilter"] or $applyFilter = $_POST["applyFilter"];
 
 $defaults = array("url_form_action"=>$TPL["url_alloc_searchTransaction"]
-                 ,"form_name"=>"searchTransaction_filter"
-                 ,"applyFilter"=>$applyFilter
-                 );
+                  ,"form_name"=>"searchTransaction_filter"
+                  ,"applyFilter"=>$applyFilter);
 
 function show_filter()
 {

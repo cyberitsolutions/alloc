@@ -30,8 +30,6 @@ $entity = $_GET["entity"] or $entity = $_POST["entity"];
 
 $id = sprintf("%d", $id);
 
-
-
 if ($id && $file
 && !preg_match("/\.\./", $file) && !preg_match("/\//", $file)
 && !preg_match("/\.\./", $entity) && !preg_match("/\//", $entity)) {

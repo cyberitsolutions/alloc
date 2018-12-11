@@ -23,9 +23,8 @@
 require_once("../alloc.php");
 
 $defaults = array("showProjectType"=>true
-                 ,"url_form_action"=>$TPL["url_alloc_projectList"]
-                 ,"form_name"=>"projectList_filter"
-                 );
+                  ,"url_form_action"=>$TPL["url_alloc_projectList"]
+                  ,"form_name"=>"projectList_filter");
 
 function show_filter()
 {

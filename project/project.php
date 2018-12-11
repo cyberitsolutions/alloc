@@ -301,7 +301,8 @@ function show_tasks()
     $options["showDates"] = true;
     #$options["showTimes"] = true; // performance hit
     $options["return"] = "html";
-    // $TPL["taskListRows"] is used for the budget estimatation outside of this function
+    // $TPL["taskListRows"] is used for the budget estimatation outside of
+    // this function
     $options = ace_augment("project_page_task_list_options", $options);
     $TPL["taskListRows"] = task::get_list($options);
     $TPL["_FORM"] = $options;
@@ -436,7 +437,6 @@ if ($projectID) {
             $pp = new projectPerson();
             $pp->read_db_record($db);
             $delete[] = $pp->get_id();
-            #$pp->delete(); // need to delete them after, cause we'll accidently wipe out the current user
         }
 
         if (is_array($_POST["person_personID"])) {
@@ -600,7 +600,8 @@ function get_projectPerson_hourly_rate($personID, $projectID)
 }
 
 if (is_object($project) && $project->get_id()) {
-    if (is_array($TPL["taskListRows"])) { // $tasks is a global defined in show_tasks() for performance reasons
+    // $tasks is a global defined in show_tasks() for performance reasons
+    if (is_array($TPL["taskListRows"])) {
         foreach ($TPL["taskListRows"] as $tid => $t) {
             $hourly_rate = get_projectPerson_hourly_rate($t["personID"], $t["projectID"]);
             $time_remaining = $t["timeLimit"] - (task::get_time_billed($t["taskID"])/60/60);
@@ -608,7 +609,6 @@ if (is_object($project) && $project->get_id()) {
             $cost_remaining = $hourly_rate * $time_remaining;
 
             if ($cost_remaining > 0) {
-                #echo "<br>Tally: ".$TPL["cost_remaining"] += $cost_remaining;
                 $TPL["cost_remaining"] += $cost_remaining;
                 $TPL["time_remaining"] += $time_remaining;
             }
@@ -648,7 +648,6 @@ if ($TPL["project_cost_centre_tfID"]) {
 
 $query = prepare("SELECT roleName,roleID FROM role WHERE roleLevel = 'project' ORDER BY roleSequence");
 $db->query($query);
-#$project_person_role_array[] = "";
 while ($db->next_record()) {
     $project_person_role_array[$db->f("roleID")] = $db->f("roleName");
 }
@@ -746,7 +745,7 @@ $q = prepare("SELECT SUM((amount * pow(10,-currencyType.numberToBasic)))
                WHERE timeSheet.projectID = %d
                  AND transaction.status = 'pending'
             GROUP BY transaction.currencyTypeID
-              ", $project->get_id());
+             ", $project->get_id());
 $db->query($q);
 unset($rows);
 while ($row = $db->row()) {
@@ -761,7 +760,7 @@ $q = prepare("SELECT SUM(customerBilledDollars * timeSheetItemDuration * multipl
            LEFT JOIN currencyType on currencyType.currencyTypeID = timeSheet.currencyTypeID
                WHERE timeSheet.projectID = %d
             GROUP BY timeSheetItemID
-                ", $project->get_id());
+             ", $project->get_id());
 $db->query($q);
 unset($rows);
 while ($row = $db->row()) {
@@ -777,7 +776,7 @@ $q = prepare("SELECT SUM((amount * pow(10,-currencyType.numberToBasic)))
                WHERE timeSheet.projectID = %d
                  AND transaction.status = 'approved'
             GROUP BY transaction.currencyTypeID
-              ", $project->get_id());
+             ", $project->get_id());
 $db->query($q);
 unset($rows);
 while ($row = $db->row()) {
@@ -794,7 +793,7 @@ $q = prepare("SELECT SUM((amount * pow(10,-currencyType.numberToBasic)))
                WHERE invoice.projectID = %d
                  AND transaction.status = 'pending'
             GROUP BY transaction.currencyTypeID
-              ", $project->get_id());
+             ", $project->get_id());
 $db->query($q);
 unset($rows);
 while ($row = $db->row()) {
@@ -811,7 +810,7 @@ $q = prepare("SELECT SUM((amount * pow(10,-currencyType.numberToBasic)))
                WHERE invoice.projectID = %d
                  AND transaction.status = 'approved'
             GROUP BY transaction.currencyTypeID
-              ", $project->get_id());
+             ", $project->get_id());
 $db->query($q);
 unset($rows);
 while ($row = $db->row()) {
@@ -826,7 +825,7 @@ $q = prepare("SELECT SUM((amount * pow(10,-currencyType.numberToBasic)))
                WHERE transaction.projectID = %d
                  AND transaction.status = 'approved'
             GROUP BY transaction.currencyTypeID
-              ", $project->get_id());
+             ", $project->get_id());
 $db->query($q);
 unset($rows);
 while ($row = $db->row()) {

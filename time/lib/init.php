@@ -24,5 +24,10 @@ class time_module extends module
 {
     public $module = "time";
     public $db_entities = array("timeSheet", "timeSheetItem","timeUnit");
-    public $home_items = array("timeSheetHomeItem","tsiHintHomeItem","timeSheetListHomeItem","pendingApprovalTimeSheetListHomeItem","timeSheetStatusHomeItem","pendingAdminApprovalTimeSheetListHomeItem");
+    public $home_items = array("timeSheetHomeItem"
+                               ,"tsiHintHomeItem"
+                               ,"timeSheetListHomeItem"
+                               ,"pendingApprovalTimeSheetListHomeItem"
+                               ,"timeSheetStatusHomeItem"
+                               ,"pendingAdminApprovalTimeSheetListHomeItem");
 }

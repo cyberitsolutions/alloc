@@ -79,11 +79,6 @@ if ($timeSheet->get_id()) {
 $transaction->set_values();
 
 if ($_POST["save"] || $_POST["saveAndNew"] || $_POST["saveGoTf"]) {
-    /*
-      if ($transaction->get_value("status") != "pending") {
-        alloc_error("This transaction is no longer editable.");
-      }
-    */
     $transaction->read_globals();
 
     // Tweaked validation to allow reporting of multiple errors

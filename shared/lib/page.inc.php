@@ -153,11 +153,11 @@ class page
         $search  = array("&lt;br&gt;","&lt;br /&gt;","&lt;b&gt;","&lt;/b&gt;","&lt;u&gt;","&lt;/u&gt;",'\\');
         $replace = array("<br>"      ,"<br />"      ,"<b>"      ,"</b>"      ,"<u>"      ,"</u>"      ,'');
 
-        $types = array("message"             => "bad"
-                      ,"message_good"        => "good"
-                      ,"message_help"        => "help"
-                      ,"message_good_no_esc" => "good"
-                      ,"message_help_no_esc" => "help");
+        $types = array("message"              => "bad"
+                       ,"message_good"        => "good"
+                       ,"message_help"        => "help"
+                       ,"message_good_no_esc" => "good"
+                       ,"message_help_no_esc" => "help");
 
         foreach ($types as $type => $class) {
             $str = "";
@@ -434,7 +434,8 @@ EOD;
         $currencies =& get_cached_table("currencyType");
         $n = $currencies[$c]["numberToBasic"];
         $num = sprintf("%0.".$n."f", $amount);
-        $num == sprintf("%0.".$n."f", -0) and $num = sprintf("%0.".$n."f", 0); // *sigh* to prevent -0.00
+        // *sigh* to prevent -0.00
+        $num == sprintf("%0.".$n."f", -0) and $num = sprintf("%0.".$n."f", 0);
         return $num;
     }
     public static function money_out($c, $amount = null)
@@ -446,10 +447,10 @@ EOD;
             $currencies =& get_cached_table("currencyType");
             $n = $currencies[$c]["numberToBasic"];
 
-            // We can use foo * 10^-n to move the decimal point left
-            // Eg: sprintf(%0.2f, $amount * 10^-2) => 15000 becomes 150.00
-            // We use the numberToBasic number (eg 2) to a) move the decimal
-            // point, and b) dictate the sprintf string
+            // We can use foo * 10^-n to move the decimal point left Eg:
+            // sprintf(%0.2f, $amount * 10^-2) => 15000 becomes 150.00 We use
+            // the numberToBasic number (eg 2) to a) move the decimal point,
+            // and b) dictate the sprintf string
             return page::money_fmt($c, ($amount * pow(10, -$n)));
         }
     }
@@ -509,7 +510,8 @@ EOD;
             return page::money($k, $sums[$k], "%s%m %c");
         }
 
-        // Else if there's more than one currency, we'll provide a tooltip of the aggregation.
+        // Else if there's more than one currency, we'll provide a tooltip of
+        // the aggregation.
         foreach ((array)$sums as $currency => $amount) {
             $str.= $sep.page::money($currency, $amount, "%s%m %c");
             $sep = " + ";

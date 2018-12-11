@@ -76,7 +76,7 @@ switch ($step) {
                                LEFT JOIN projectPerson ON project.projectID=projectPerson.projectID
                                    WHERE personID='%d'
                                      AND projectStatus != 'Archived'
-                               ORDER BY projectName", $personID);
+                                ORDER BY projectName", $personID);
             }
             $db->query($query);
             while ($db->next_record()) {
@@ -265,14 +265,14 @@ EOD2;
             $reminder->delete();
         }
 
-        $headers = array("client"   => $TPL["url_alloc_client"]."clientID=".$parentID."&sbs_link=reminders"
-                        ,"project"  => $TPL["url_alloc_project"]."projectID=".$parentID."&sbs_link=reminders"
-                        ,"task"     => $TPL["url_alloc_task"]."taskID=".$parentID."&sbs_link=reminders"
-                        ,"home"     => $TPL["url_alloc_home"]
-                        ,"calendar" => $TPL["url_alloc_taskCalendar"]."personID=".$_POST["personID"]
-                        ,"list"     => $TPL["url_alloc_reminderList"]
-                        ,"reminder" => $TPL["url_alloc_reminder"]."reminderID=".$reminderID."&step=3"
-                        ,""         => $TPL["url_alloc_reminderList"]);
+        $headers = array("client"    => $TPL["url_alloc_client"]."clientID=".$parentID."&sbs_link=reminders"
+                         ,"project"  => $TPL["url_alloc_project"]."projectID=".$parentID."&sbs_link=reminders"
+                         ,"task"     => $TPL["url_alloc_task"]."taskID=".$parentID."&sbs_link=reminders"
+                         ,"home"     => $TPL["url_alloc_home"]
+                         ,"calendar" => $TPL["url_alloc_taskCalendar"]."personID=".$_POST["personID"]
+                         ,"list"     => $TPL["url_alloc_reminderList"]
+                         ,"reminder" => $TPL["url_alloc_reminder"]."reminderID=".$reminderID."&step=3"
+                         ,""         => $TPL["url_alloc_reminderList"]);
 
         alloc_redirect($headers[$returnToParent]);
 

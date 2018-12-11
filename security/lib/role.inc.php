@@ -25,9 +25,9 @@ class role extends db_entity
     public $data_table = "role";
     public $key_field = "roleID";
     public $data_fields = array("roleHandle"
-                               ,"roleName"
-                               ,"roleLevel"
-                               ,"roleSequence");
+                                ,"roleName"
+                                ,"roleLevel"
+                                ,"roleSequence");
 
     public function get_roles_array($level = "person")
     {

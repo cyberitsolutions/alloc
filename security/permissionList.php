@@ -29,7 +29,8 @@ function show_permission_list($template_name)
     $roles = permission::get_roles();
 
     if ($_REQUEST["submit"] || $_REQUEST["filter"] != "") {
-        $where = " where tableName like '%".db_esc($_REQUEST["filter"])."%' ";   // TODO: Add filtering to permission list
+        // TODO: Add filtering to permission list
+        $where = " where tableName like '%".db_esc($_REQUEST["filter"])."%' ";
     }
     $db = new db_alloc();
     $db->query("SELECT * FROM permission $where ORDER BY tableName, sortKey");

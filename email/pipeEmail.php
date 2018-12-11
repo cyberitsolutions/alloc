@@ -39,7 +39,6 @@
 */
 
 define("NO_AUTH", 1);
-//require_once(dirname(__FILE__)."/../alloc.php");
 require_once(dirname($_SERVER["SUDO_COMMAND"])."/../alloc.php");
 singleton("errors_fatal", true);
 singleton("errors_format", "text");
@@ -89,7 +88,7 @@ try {
             $email_receive->archive();
         }
 
-        // Else if we have a key, append to comment
+    // Else if we have a key, append to comment
     } else {
         // Skip over emails that are from alloc. These emails are kept only for
         // posterity and should not be parsed and downloaded and re-emailed etc.
@@ -108,7 +107,7 @@ try {
     try {
         $email_receive->forward(config::get_config_item("allocEmailAdmin"), "Email command failed", "\n".$e->getMessage()."\n\n".$e->getTraceAsString());
 
-        // If that fails, try last-ditch email send
+    // If that fails, try last-ditch email send
     } catch (Exception $e) {
         mail(config::get_config_item("allocEmailAdmin"), "Email command failed(2)", "\n".$e->getMessage()."\n\n".$e->getTraceAsString());
     }
@@ -116,6 +115,5 @@ try {
 
 // Commit the db, and move the email into its storage location eg: INBOX.task1234
 $db->commit();
-//$email_receive->archive();
 $email_receive->expunge();
 $email_receive->close();

@@ -123,7 +123,7 @@ class backups
 
         $archive = new PclZip($file);
 
-        # Clear out the folder list
+        // Clear out the folder list
         foreach ($this->folders as $folder) {
             $this->empty_dir(ATTACHMENTS_DIR . $folder);
         }

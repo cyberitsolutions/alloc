@@ -28,13 +28,12 @@ class product extends db_entity
     public $display_field_name = "productName";
     public $key_field = "productID";
     public $data_fields = array("productName"
-                             ,"sellPrice" => array("type"=>"money","currency"=>"sellPriceCurrencyTypeID")
-                             ,"sellPriceCurrencyTypeID"
-                             ,"sellPriceIncTax" => array("empty_to_null"=>false)
-                             ,"description"
-                             ,"comment"
-                             ,"productActive"
-                             );
+                                ,"sellPrice" => array("type"=>"money","currency"=>"sellPriceCurrencyTypeID")
+                                ,"sellPriceCurrencyTypeID"
+                                ,"sellPriceIncTax" => array("empty_to_null"=>false)
+                                ,"description"
+                                ,"comment"
+                                ,"productActive");
 
     public function delete()
     {
@@ -103,7 +102,7 @@ class product extends db_entity
                        WHERE isPercentage != 1
                          AND productID = %d
                          AND productCostActive = true
-                         ", $id);
+                     ", $id);
         $db->query($q);
         while ($row = $db->row()) {
             if ($row["tax"]) {

@@ -26,10 +26,10 @@ class loan extends db_entity
     public $display_field_name = "itemID";
     public $key_field = "loanID";
     public $data_fields = array("itemID"
-                               ,"personID"
-                               ,"loanModifiedUser"
-                               ,"loanModifiedTime"
-                               ,"dateBorrowed"
-                               ,"dateToBeReturned"
-                               ,"dateReturned");
+                                ,"personID"
+                                ,"loanModifiedUser"
+                                ,"loanModifiedTime"
+                                ,"dateBorrowed"
+                                ,"dateToBeReturned"
+                                ,"dateReturned");
 }

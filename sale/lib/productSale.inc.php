@@ -27,17 +27,17 @@ class productSale extends db_entity
     public $data_table = "productSale";
     public $key_field = "productSaleID";
     public $data_fields = array("clientID"
-                               ,"projectID"
-                               ,"personID"
-                               ,"tfID"
-                               ,"status"
-                               ,"productSaleCreatedTime"
-                               ,"productSaleCreatedUser"
-                               ,"productSaleModifiedTime"
-                               ,"productSaleModifiedUser"
-                               ,"productSaleDate"
-                               ,"extRef"
-                               ,"extRefDate");
+                                ,"projectID"
+                                ,"personID"
+                                ,"tfID"
+                                ,"status"
+                                ,"productSaleCreatedTime"
+                                ,"productSaleCreatedUser"
+                                ,"productSaleModifiedTime"
+                                ,"productSaleModifiedUser"
+                                ,"productSaleDate"
+                                ,"extRef"
+                                ,"extRefDate");
     public $permissions = array(PERM_APPROVE_PRODUCT_TRANSACTIONS => "approve product transactions");
 
     public function validate()
@@ -144,9 +144,6 @@ class productSale extends db_entity
         foreach ($rows as $row) {
             $productSaleItem = new productSaleItem();
             $productSaleItem->read_row_record($row);
-            //$rtn["total_spent"] += $productSaleItem->get_amount_spent();
-            //$rtn["total_earnt"] += $productSaleItem->get_amount_earnt();
-            //$rtn["total_other"] += $productSaleItem->get_amount_other();
             list($sp, $spcur) = array($productSaleItem->get_value("sellPrice"),$productSaleItem->get_value("sellPriceCurrencyTypeID"));
 
             $sellPriceCurr[$spcur] += page::money($spcur, $sp, "%m");
@@ -546,17 +543,17 @@ class productSale extends db_entity
 
     public function get_list_vars()
     {
-        return array("return"                         => "[MANDATORY] eg: array | html"
-                    ,"productSaleID"                  => "Sale that has this ID"
-                    ,"starred"                        => "Sale that have been starred"
-                    ,"clientID"                       => "Sales that belong to this Client"
-                    ,"projectID"                      => "Sales that belong to this Project"
-                    ,"personID"                       => "Sales for this person"
-                    ,"status"                         => "Sale status eg: edit | allocate | admin | finished"
-                    ,"url_form_action"                => "The submit action for the filter form"
-                    ,"form_name"                      => "The name of this form, i.e. a handle for referring to this saved form"
-                    ,"dontSave"                       => "Specify that the filter preferences should not be saved this time"
-                    ,"applyFilter"                    => "Saves this filter as the persons preference");
+        return array("return"           => "[MANDATORY] eg: array | html"
+                     ,"productSaleID"   => "Sale that has this ID"
+                     ,"starred"         => "Sale that have been starred"
+                     ,"clientID"        => "Sales that belong to this Client"
+                     ,"projectID"       => "Sales that belong to this Project"
+                     ,"personID"        => "Sales for this person"
+                     ,"status"          => "Sale status eg: edit | allocate | admin | finished"
+                     ,"url_form_action" => "The submit action for the filter form"
+                     ,"form_name"       => "The name of this form, i.e. a handle for referring to this saved form"
+                     ,"dontSave"        => "Specify that the filter preferences should not be saved this time"
+                     ,"applyFilter"     => "Saves this filter as the persons preference");
     }
 
     public function load_form_data($defaults = array())

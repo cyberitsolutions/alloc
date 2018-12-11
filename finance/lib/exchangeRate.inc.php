@@ -26,10 +26,10 @@ class exchangeRate extends db_entity
     public $display_field_name = "exchangeRate";
     public $key_field = "exchangeRateID";
     public $data_fields = array("exchangeRateCreatedDate"
-                            ,"exchangeRateCreatedTime"
-                            ,"fromCurrency"
-                            ,"toCurrency"
-                            ,"exchangeRate");
+                                ,"exchangeRateCreatedTime"
+                                ,"fromCurrency"
+                                ,"toCurrency"
+                                ,"exchangeRate");
 
     public static function get_er($from, $to, $date = "")
     {

@@ -26,10 +26,10 @@ class sentEmailLog extends db_entity
     public $data_table = "sentEmailLog";
     public $key_field = "sentEmailLogID";
     public $data_fields = array("sentEmailTo"
-                            ,"sentEmailSubject"
-                            ,"sentEmailBody"
-                            ,"sentEmailHeader"
-                            ,"sentEmailType"
-                            ,"sentEmailLogCreatedTime"
-                            ,"sentEmailLogCreatedUser");
+                                ,"sentEmailSubject"
+                                ,"sentEmailBody"
+                                ,"sentEmailHeader"
+                                ,"sentEmailType"
+                                ,"sentEmailLogCreatedTime"
+                                ,"sentEmailLogCreatedUser");
 }

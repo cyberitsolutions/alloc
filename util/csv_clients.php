@@ -38,8 +38,7 @@ require_once("../alloc.php");
 */
 
 $row = 1;
-// NOTE:: what? you don't do name a file this way for a project. 😞 --
-// cjbayliss, 2018-11
+// NOTE:: you don't name a file this way... 😞 -- cjb, 2018-12
 if (($handle = fopen("../../David_Clients.csv", "r")) !== false) {
     while (($data = fgetcsv($handle, 1000, ",")) !== false) {
         foreach ($data as $key => $val) {

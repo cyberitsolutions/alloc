@@ -25,15 +25,14 @@ require_once("../alloc.php");
 $TPL["main_alloc_title"] = "Task List - ".APPLICATION_NAME;
 
 $defaults = array("showHeader"=>true
-                 ,"showTaskID"=>true
-                 ,"showEdit"=>true
-                 ,"taskView" => "byProject"
-                 ,"showStatus" => "true"
-                 ,"showTotals" => "true"
-                 ,"padding"=>1
-                 ,"url_form_action"=>$TPL["url_alloc_taskList"]
-                 ,"form_name"=>"taskList_filter"
-                 );
+                  ,"showTaskID"=>true
+                  ,"showEdit"=>true
+                  ,"taskView" => "byProject"
+                  ,"showStatus" => "true"
+                  ,"showTotals" => "true"
+                  ,"padding"=>1
+                  ,"url_form_action"=>$TPL["url_alloc_taskList"]
+                  ,"form_name"=>"taskList_filter");
 
 // Load task list
 $_FORM = task::load_form_data($defaults);
@@ -47,8 +46,19 @@ is_array($arr) and $TPL = array_merge($TPL, $arr);
 // Check for updates
 if ($_POST["mass_update"]) {
     if ($_POST["select"]) {
-        $allowed_auto_fields = array("dateTargetStart","dateTargetCompletion","dateActualStart","dateActualCompletion","managerID"
-                                ,"timeLimit","timeBest","timeWorst","timeExpected","priority","taskTypeID","taskStatus","personID");
+        $allowed_auto_fields = array("dateTargetStart"
+                                     ,"dateTargetCompletion"
+                                     ,"dateActualStart"
+                                     ,"dateActualCompletion"
+                                     ,"managerID"
+                                     ,"timeLimit"
+                                     ,"timeBest"
+                                     ,"timeWorst"
+                                     ,"timeExpected"
+                                     ,"priority"
+                                     ,"taskTypeID"
+                                     ,"taskStatus"
+                                     ,"personID");
 
         foreach ($_POST["select"] as $taskID => $selected) {
             $task = new task();

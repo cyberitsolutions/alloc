@@ -25,16 +25,16 @@ class expenseForm extends db_entity
     public $data_table = "expenseForm";
     public $key_field = "expenseFormID";
     public $data_fields = array("expenseFormModifiedUser"
-                            ,"expenseFormModifiedTime"
-                            ,"paymentMethod"
-                            ,"reimbursementRequired"=>array("empty_to_null"=>false)
-                            ,"seekClientReimbursement"=>array("empty_to_null"=>false)
-                            ,"transactionRepeatID"
-                            ,"clientID"
-                            ,"expenseFormCreatedUser"
-                            ,"expenseFormCreatedTime"
-                            ,"expenseFormFinalised"=>array("empty_to_null"=>false)
-                            ,"expenseFormComment");
+                                ,"expenseFormModifiedTime"
+                                ,"paymentMethod"
+                                ,"reimbursementRequired"=>array("empty_to_null"=>false)
+                                ,"seekClientReimbursement"=>array("empty_to_null"=>false)
+                                ,"transactionRepeatID"
+                                ,"clientID"
+                                ,"expenseFormCreatedUser"
+                                ,"expenseFormCreatedTime"
+                                ,"expenseFormFinalised"=>array("empty_to_null"=>false)
+                                ,"expenseFormComment");
 
     public function is_owner($person = "")
     {
@@ -60,7 +60,7 @@ class expenseForm extends db_entity
                 }
             }
 
-            // If no expenseForm ID, then it hasn't been created yet...
+        // If no expenseForm ID, then it hasn't been created yet...
         } else {
             return true;
         }
@@ -82,9 +82,9 @@ class expenseForm extends db_entity
 
     public function set_status($status)
     {
-        // This sets the status of the expense form. Actually, the expense form
-        // doesn't have its own status - this sets the status of the transactions on the
-        // expense form
+        // This sets the status of the expense form. Actually, the expense
+        // form doesn't have its own status - this sets the status of the
+        // transactions on the expense form
         $current_user = &singleton("current_user");
         $transactions = $this->get_foreign_objects("transaction");
         while (list(, $transaction) = each($transactions)) {
@@ -247,14 +247,14 @@ class expenseForm extends db_entity
         $rr_options = expenseForm::get_reimbursementRequired_array();
 
         $q = prepare("SELECT expenseForm.*
-                        ,SUM(transaction.amount * pow(10,-currencyType.numberToBasic)) as formTotal
-                        ,transaction.currencyTypeID
-                       FROM expenseForm, transaction
-                  LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
-                      WHERE expenseForm.expenseFormID = transaction.expenseFormID
-                         ".$f."
-                   GROUP BY expenseForm.expenseFormID, transaction.currencyTypeID
-                   ORDER BY expenseFormID");
+                            ,SUM(transaction.amount * pow(10,-currencyType.numberToBasic)) as formTotal
+                            ,transaction.currencyTypeID
+                        FROM expenseForm, transaction
+                   LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
+                       WHERE expenseForm.expenseFormID = transaction.expenseFormID
+                     ".$f."
+                    GROUP BY expenseForm.expenseFormID, transaction.currencyTypeID
+                    ORDER BY expenseFormID");
 
         $db->query($q);
 

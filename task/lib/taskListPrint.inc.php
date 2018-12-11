@@ -52,11 +52,11 @@ class taskListPrint
 
         // Add requested fields to pdf
         $_FORM["showEdit"] = false;
-        $fields["taskID"]               = "ID";
-        $fields["taskName"]             = "Task";
+        $fields["taskID"] = "ID";
+        $fields["taskName"] = "Task";
         $_FORM["showProject"]     and $fields["projectName"]          = "Project";
         $_FORM["showPriority"] || $_FORM["showPriorityFactor"]
-                              and $fields["priorityFactor"]       = "Pri";
+                                  and $fields["priorityFactor"]       = "Pri";
         $_FORM["showPriority"]    and $fields["taskPriority"]         = "Task Pri";
         $_FORM["showPriority"]    and $fields["projectPriority"]      = "Proj Pri";
         $_FORM["showCreator"]     and $fields["creator_name"]         = "Creator";
@@ -92,9 +92,9 @@ class taskListPrint
             $font2 = ALLOC_MOD_DIR."util/fonts/Helvetica-Oblique.afm";
 
             $pdf_table_options = array("showLines"=>0,"shaded"=>0,"showHeadings"=>0,"xPos"=>"left"
-                                ,"xOrientation"=>"right","fontSize"=>10,"rowGap"=>0,"fontSize"=>10);
+                                       ,"xOrientation"=>"right","fontSize"=>10,"rowGap"=>0,"fontSize"=>10);
             $pdf_table_options3 = array("showLines"=>2,"shaded"=>0,"width"=>750, "xPos"=>"center","fontSize"=>10
-                                 ,"lineCol"=>array(0.8, 0.8, 0.8),"splitRows"=>1,"protectRows"=>0);
+                                        ,"lineCol"=>array(0.8, 0.8, 0.8),"splitRows"=>1,"protectRows"=>0);
 
             $pdf = new Cezpdf(null, 'landscape');
             $pdf->ezSetMargins(40, 40, 40, 40);

@@ -32,7 +32,6 @@ if ($_POST['import']) {
     exit;
 }
 
-//$_GET["filename"] = "/var/local/alloc/tmp/test.csv";
 $basepath = ATTACHMENTS_DIR.'tmp'.DIRECTORY_SEPARATOR;
 $rp = realpath($basepath.$_GET['filename']);
 if ($rp === false || strpos($rp, $basepath) !== 0) {
@@ -65,17 +64,17 @@ if (in_array("name", $header)) {
 }
 
 $options = array('ignore' => 'Ignore',
-  'name' => 'Task name',
-  'description' => 'Task description',
-  'manager' => 'Task manager',
-  'assignee' => 'Task assignee',
-  'limit' => 'Time limit (hours)',
-  'timeBest' => 'Best-case estimate (hours)',
-  'timeExpected' => 'Expected estimate (hours)',
-  'timeWorst' => 'Worst-case estimate (hours)',
-  'startDate' => 'Estimated start date',
-  'completionDate' => 'Estimated completion date',
-  'interestedParties' => 'Interested parties');
+                 'name' => 'Task name',
+                 'description' => 'Task description',
+                 'manager' => 'Task manager',
+                 'assignee' => 'Task assignee',
+                 'limit' => 'Time limit (hours)',
+                 'timeBest' => 'Best-case estimate (hours)',
+                 'timeExpected' => 'Expected estimate (hours)',
+                 'timeWorst' => 'Worst-case estimate (hours)',
+                 'startDate' => 'Estimated start date',
+                 'completionDate' => 'Estimated completion date',
+                 'interestedParties' => 'Interested parties');
 
 // there are 10 available fields, so max at 11 available rows
 // Each row is <dropdown> <data> <data> <data>

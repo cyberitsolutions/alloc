@@ -24,5 +24,5 @@ class finance_module extends module
 {
     public $module = "finance";
     public $db_entities = array("tf", "transaction", "expenseForm", "tfPerson", "transactionRepeat");
-    public $home_items = array("tfList_home_item","pendingAdminExpenseForm");
+    public $home_items = array("tfList_home_item", "pendingAdminExpenseForm");
 }

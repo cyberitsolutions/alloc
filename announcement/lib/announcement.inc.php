@@ -26,11 +26,10 @@ class announcement extends db_entity
     public $display_field_name = "heading";
     public $key_field = "announcementID";
     public $data_fields = array("heading"
-                             ,"body"
-                             ,"personID"
-                             ,"displayFromDate"
-                             ,"displayToDate"
-                             );
+                                ,"body"
+                                ,"personID"
+                                ,"displayFromDate"
+                                ,"displayToDate");
 
     public function has_announcements()
     {

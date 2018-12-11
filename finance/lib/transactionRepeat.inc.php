@@ -26,27 +26,25 @@ class transactionRepeat extends db_entity
     public $display_field_name = "product";
     public $key_field = "transactionRepeatID";
     public $data_fields = array("companyDetails" => array("empty_to_null"=>false)
-                             ,"payToName" => array("empty_to_null"=>false)
-                             ,"payToAccount" => array("empty_to_null"=>false)
-                             ,"tfID"
-                             ,"fromTfID"
-                             ,"emailOne"
-                             ,"emailTwo"
-                             ,"transactionStartDate"
-                             ,"transactionFinishDate"
-                             ,"transactionRepeatModifiedUser"
-                             ,"reimbursementRequired" => array("empty_to_null"=>false)
-                             ,"transactionRepeatModifiedTime"
-                             ,"transactionRepeatCreatedTime"
-                             ,"transactionRepeatCreatedUser"
-                             ,"paymentBasis"
-                             ,"amount" => array("type"=>"money")
-                             ,"currencyTypeID"
-                             ,"product"
-                             ,"status"
-                             ,"transactionType"
-                             );
-
+                                ,"payToName" => array("empty_to_null"=>false)
+                                ,"payToAccount" => array("empty_to_null"=>false)
+                                ,"tfID"
+                                ,"fromTfID"
+                                ,"emailOne"
+                                ,"emailTwo"
+                                ,"transactionStartDate"
+                                ,"transactionFinishDate"
+                                ,"transactionRepeatModifiedUser"
+                                ,"reimbursementRequired" => array("empty_to_null"=>false)
+                                ,"transactionRepeatModifiedTime"
+                                ,"transactionRepeatCreatedTime"
+                                ,"transactionRepeatCreatedUser"
+                                ,"paymentBasis"
+                                ,"amount" => array("type"=>"money")
+                                ,"currencyTypeID"
+                                ,"product"
+                                ,"status"
+                                ,"transactionType");
 
     public function is_owner()
     {

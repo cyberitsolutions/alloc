@@ -27,9 +27,9 @@ class invoiceRepeat extends db_entity
     public $display_field_name = "invoiceRepeatID";
     public $key_field = "invoiceRepeatID";
     public $data_fields = array("invoiceID"
-                               ,"personID"
-                               ,"message"
-                               ,"active");
+                                ,"personID"
+                                ,"message"
+                                ,"active");
     public function save($dates = "")
     {
         $rtn = parent::save();

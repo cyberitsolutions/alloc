@@ -27,8 +27,8 @@ class skill extends db_entity
     public $key_field = "skillID";
     public $data_fields = array("skillName", "skillDescription", "skillClass");
 
-    // return true if a skill with same name and class already exists
-    // and update fields of current if it does exist
+    // return true if a skill with same name and class already exists and
+    // update fields of current if it does exist
     public function skill_exists()
     {
         $query = "SELECT * FROM skill";

@@ -40,8 +40,8 @@ function show_overdue($template_name)
     $q = prepare("SELECT itemName,itemType,item.itemID,dateBorrowed,dateToBeReturned,loan.personID
                     FROM loan,item
                    WHERE dateToBeReturned < '%s'
-					 AND dateReturned = '0000-00-00'
-					 AND item.itemID = loan.itemID", $today);
+                     AND dateReturned = '0000-00-00'
+                     AND item.itemID = loan.itemID", $today);
 
     if (!have_entity_perm("loan", PERM_READ, $current_user, false)) {
         $q .= prepare("AND loan.personID = %d", $current_user->get_id());

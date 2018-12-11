@@ -230,7 +230,7 @@ class db
         }
     }
 
-    // DEPRECATED
+    // FIXME:: DEPRECATED
     public function next_record()
     {
         return $this->row();

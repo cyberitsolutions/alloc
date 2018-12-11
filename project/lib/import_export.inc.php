@@ -28,8 +28,8 @@ define('CSV_EXPIRY', 60*30);
 function store_csv($file)
 {
     // Before storing it, go through the tmp directory and clean up any old
-    // files. This is the only point where the number of files should increase,
-    // so this is a good time to limit the expansion.
+    // files. This is the only point where the number of files should
+    // increase, so this is a good time to limit the expansion.
     $dir = ATTACHMENTS_DIR . 'tmp' . DIRECTORY_SEPARATOR;
     $files = glob($dir . "csv_*");
 
@@ -97,7 +97,7 @@ function import_csv($infile, $mapping, $header = true)
     $rp = realpath(ATTACHMENTS_DIR.'tmp'.DIRECTORY_SEPARATOR.$infile);
     if ($rp === false || strpos($rp, ATTACHMENTS_DIR.'tmp'.DIRECTORY_SEPARATOR) !== 0) {
         alloc_error("Illegal file path.", true);
-    } //should occur through user dodginess
+    } // should occur through user dodginess
 
     // import_find_username needs it
     $db = new db_alloc();
@@ -144,7 +144,8 @@ function import_csv($infile, $mapping, $header = true)
                         if ($assignee) {
                             $task->set_value('personID', $assignee->get_id());
                         } else {
-                            // We don't know who the manager is, so assign it to the project manager
+                            // We don't know who the manager is, so assign it
+                            // to the project manager
                             $task->set_value('personID', $projectManager);
                             $task_result []= sprintf('Warning: Unable to find a username corresponding to "%s", assigning task to project manager.', $row[$i]);
                         }
@@ -154,7 +155,8 @@ function import_csv($infile, $mapping, $header = true)
                         if ($manager) {
                             $task->set_value('managerID', $manager->get_id());
                         } else {
-                            // We don't know who the manager is, so assign it to the project manager
+                            // We don't know who the manager is, so assign it
+                            // to the project manager
                             $task->set_value('managerID', $projectManager);
                             $task_result []= sprintf('Warning: Unable to find a username corresponding to "%s", setting task manager to project manager.', $row[$i]);
                         }

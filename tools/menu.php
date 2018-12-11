@@ -38,14 +38,11 @@ $misc_options = array(array("url"=>"reminderList"            ,"text"=>"Reminders
                      ,array("url"=>"inbox"                   ,"text"=>"Manage Inbox"          ,"entity"=>"config"             ,"action"=>PERM_UPDATE)
                      );
 
-  //,array("url"=>"stats"                   ,"text"=>"allocPSA Statistics"   ,"entity"=>"config"             ,"action"=>PERM_UPDATE)
-
 function user_is_admin()
 {
     $current_user = &singleton("current_user");
     return $current_user->have_role("admin");
 }
-
 
 $finance_options = array(array("url"=>"tf"                   ,"text"=>"New Tagged Fund"           ,"entity"=>"tf"          ,"action"=>PERM_CREATE)
                         ,array("url"=>"tfList"               ,"text"=>"List of Tagged Funds"      ,"entity"=>"tf"          ,"action"=>PERM_READ, "br"=>true)
@@ -59,9 +56,6 @@ $finance_options = array(array("url"=>"tf"                   ,"text"=>"New Tagge
                         ,array("url"=>"transactionRepeatList","text"=>"Repeating Expense List"    ,"entity"=>"transaction" ,"action"=>PERM_READ)
                         ,array("url"=>"checkRepeat"          ,"text"=>"Execute Repeating Expenses","entity"=>""            ,"function"=>"user_is_admin")
                         );
-
-
-                        #,array("url"=>"reconciliationReport", "params"=>"", "text"=>"Reconciliation Report", "entity"=>"transaction", "action"=>true, "function"=>"user_is_admin")
 
 function has_whatsnew_files()
 {

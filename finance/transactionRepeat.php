@@ -110,7 +110,8 @@ if (have_entity_perm("tf", PERM_READ, $current_user, false)) {
     alloc_error("No permissions to generate TF list");
 }
 
-//special case for disabled TF. Include it in the list, but also add a warning message.
+// special case for disabled TF. Include it in the list, but also add a
+// warning message.
 $tf = new tf();
 $tf->set_id($transactionRepeat->get_value("tfID"));
 if ($tf->select() && !$tf->get_value("tfActive")) {
@@ -128,11 +129,11 @@ $TPL["currencyTypeOptions"] = page::select_options($currencyOps, $transactionRep
 
 $TPL["tfOptions"] = page::select_options($q, $transactionRepeat->get_value("tfID"));
 $TPL["fromTfOptions"] = page::select_options($q, $transactionRepeat->get_value("fromTfID"));
-$TPL["basisOptions"] = page::select_options(array("weekly"     =>"weekly"
-                                                 ,"fortnightly"=>"fortnightly"
-                                                 ,"monthly"    =>"monthly"
-                                                 ,"quarterly"  =>"quarterly"
-                                                 ,"yearly"     =>"yearly"), $transactionRepeat->get_value("paymentBasis"));
+$TPL["basisOptions"] = page::select_options(array("weekly"       =>"weekly"
+                                                  ,"fortnightly" =>"fortnightly"
+                                                  ,"monthly"     =>"monthly"
+                                                  ,"quarterly"   =>"quarterly"
+                                                  ,"yearly"      =>"yearly"), $transactionRepeat->get_value("paymentBasis"));
 
 $TPL["transactionTypeOptions"] = page::select_options(transaction::get_transactionTypes(), $transactionRepeat->get_value("transactionType"));
 

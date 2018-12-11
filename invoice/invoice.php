@@ -66,7 +66,7 @@ function show_new_invoiceItem($template)
                 $TPL["sbs_link"] = "productSale_ii";
             }
 
-            // Else default values for creating a new invoiceItem
+        // Else default values for creating a new invoiceItem
         } else {
             $invoiceItem = new invoiceItem();
             $invoiceItem->set_values("invoiceItem_");
@@ -92,7 +92,7 @@ function show_new_invoiceItem($template)
                                  AND timeSheet.status != 'finished'
                             GROUP BY timeSheet.timeSheetID
                             ORDER BY timeSheetID
-                            ", $projectIDs);
+                             ", $projectIDs);
                 $db->query($q);
 
                 $timeSheetStatii = timeSheet::get_timeSheet_statii();
@@ -292,11 +292,6 @@ function show_invoiceItem_list()
             }
             $selected_tfID or $selected_tfID = config::get_config_item("mainTfID");
 
-            #$tf_options = page::select_options($tf_array, $selected_tfID);
-            #$tf_options = "<select name=\"invoiceItemAmountPaidTfID[".$invoiceItem->get_id()."]\">".$tf_options."</select>";
-            #$TPL["invoiceItem_buttons"] = "<input size=\"8\" type=\"text\" id=\"ap_".$invoiceItem->get_id()."\" name=\"invoiceItemAmountPaid[".$invoiceItem->get_id()."]\" value=\"".$amount."\">";
-            #$TPL["invoiceItem_buttons"].= $tf_options;
-
             unset($radio_buttons);
             if ($current_user->have_role('admin')) {
                 $radio_buttons = "<label class='radio corner' for=\"invoiceItemStatus_rejected_".$invoiceItem->get_id()."\">Not Going To Be Paid";
@@ -423,7 +418,6 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
     $invoice->set_value("currencyTypeID", $currency);
 
     if (!$invoice->get_value("invoiceNum") || !is_numeric($invoice->get_value("invoiceNum"))) {
-        #alloc_error("Please enter a unique Invoice Number.");
         $invoice->set_value("invoiceNum", invoice::get_next_invoiceNum());
     } else {
         $invoiceID and $invoiceID_sql = prepare(" AND invoiceID != %d", $invoiceID);
@@ -497,11 +491,8 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
     $invoiceItem = new invoiceItem();
     $invoiceItem->currency = $invoice->get_value("currencyTypeID");
     $invoiceItem->set_id($invoiceItemID);
-    #echo $invoiceItem->get_id();
     $invoice->set_id($invoiceID);
     $invoice->select();
-
-    #echo "<pre>".print_r($_POST,1)."</pre>";
 
     $_POST["iiTax"] or $_POST["iiTax"] = '';
 
@@ -594,18 +585,6 @@ foreach ($statii as $s => $label) {
     $TPL["invoice_status_label"].= $sep.$pre.$label.$suf;
     $sep = "&nbsp;&nbsp;|&nbsp;&nbsp;";
 }
-
-# if ($invoice->get_id() && is_dir(ATTACHMENTS_DIR."invoice".DIRECTORY_SEPARATOR.$invoice->get_id())) {
-#   $rows = get_attachments("invoice",$invoice->get_id());
-#   foreach ($rows as $arr) {
-#     if ($invoice->has_attachment_permission($current_user)) {
-#       $TPL["invoice_download"] .= $commar.$arr["file"]."&nbsp;&nbsp;".$arr["mtime"];
-#     } else {
-#       $TPL["invoice_download"] .= $commar.$arr["text"];
-#     }
-#     $commar = "<br>";
-#   }
-# }
 
 $TPL["field_invoiceNum"] = '<input type="text" name="invoiceNum" value="'.$TPL["invoiceNum"].'">';
 $TPL["field_invoiceName"] = '<input type="text" name="invoiceName" value="'.$TPL["invoiceName"].'">';

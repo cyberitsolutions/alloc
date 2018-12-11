@@ -43,7 +43,8 @@ function errors_off()
 }
 
 errors_on();
-// The user hasn't set their timezone, so pull up the default and suppress the warning
+// The user hasn't set their timezone, so pull up the default and suppress the
+// warning
 $timeZone = @date_default_timezone_get();
 date_default_timezone_set($timeZone);
 
@@ -88,8 +89,7 @@ $config_vars = array("ALLOC_DB_NAME"     => array("default"=>"alloc",           
                     ,"ALLOC_DB_HOST"     => array("default"=>"localhost",          "info"=>"Database hostname")
                     ,"ATTACHMENTS_DIR"   => array("default"=>"/var/local/alloc/",  "info"=>"Enter a folder that can be used for file upload storage (outside webroot)")
                     ,"allocURL"          => array("default"=>$default_allocURL,    "info"=>"The URL for allocPSA, eg: http://example.com/alloc/")
-                    ,"currency"          => array("default"=>"USD",                "info"=>"The default currency")
-                    );
+                    ,"currency"          => array("default"=>"USD",                "info"=>"The default currency"));
 
 foreach ($config_vars as $name => $arr) {
     $val = $_POST[$name] or $val = $_GET[$name];

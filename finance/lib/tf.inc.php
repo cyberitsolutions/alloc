@@ -26,12 +26,12 @@ class tf extends db_entity
     public $display_field_name = "tfName";
     public $key_field = "tfID";
     public $data_fields = array("tfName"
-                            ,"tfComments"
-                            ,"tfModifiedUser"
-                            ,"tfModifiedTime"
-                            ,"qpEmployeeNum"
-                            ,"quickenAccount"
-                            ,"tfActive");
+                                ,"tfComments"
+                                ,"tfModifiedUser"
+                                ,"tfModifiedTime"
+                                ,"qpEmployeeNum"
+                                ,"quickenAccount"
+                                ,"tfActive");
 
     public function get_balance($where = array(), $debug = "")
     {
@@ -61,7 +61,6 @@ class tf extends db_entity
             $query.= " AND ".$column_name.$op." '".db_esc($value)."'";
         }
 
-        #echo "<br>".$debug." q: ".$query;
         $db->query($query);
         $db->next_record() || alloc_error("TF $tfID not found in tf::get_balance");
         return $db->f("balance");
@@ -158,7 +157,8 @@ class tf extends db_entity
         if ($current_user->have_role('admin')) {
             $rtn = $requested_tfs;
 
-        // If not admin, then remove the items from $requested_tfs that the user can't access
+        // If not admin, then remove the items from $requested_tfs that the
+        // user can't access
         } else {
             $allowed_tfs = (array)tf::get_tfs_for_person($current_user->get_id());
             foreach ((array)$requested_tfs as $tf) {
@@ -208,7 +208,7 @@ class tf extends db_entity
 
         $db = new db_alloc();
         $q = prepare("SELECT transaction.tfID as id, tf.tfName, transactionID, transaction.status,
-                    sum(amount * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance
+                             sum(amount * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance
                         FROM transaction
                    LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
                    LEFT JOIN tf on transaction.tfID = tf.tfID
@@ -224,7 +224,7 @@ class tf extends db_entity
         }
 
         $q = prepare("SELECT transaction.fromTfID as id, tf.tfName, transactionID, transaction.status,
-                         sum(amount * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance
+                             sum(amount * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance
                         FROM transaction
                    LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
                    LEFT JOIN tf on transaction.fromTfID = tf.tfID

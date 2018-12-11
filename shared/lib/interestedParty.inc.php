@@ -25,15 +25,15 @@ class interestedParty extends db_entity
     public $data_table = "interestedParty";
     public $key_field = "interestedPartyID";
     public $data_fields = array("entityID"
-                               ,"entity"
-                               ,"fullName"
-                               ,"emailAddress"
-                               ,"personID"
-                               ,"clientContactID"
-                               ,"external"
-                               ,"interestedPartyCreatedUser"
-                               ,"interestedPartyCreatedTime"
-                               ,"interestedPartyActive");
+                                ,"entity"
+                                ,"fullName"
+                                ,"emailAddress"
+                                ,"personID"
+                                ,"clientContactID"
+                                ,"external"
+                                ,"interestedPartyCreatedUser"
+                                ,"interestedPartyCreatedTime"
+                                ,"interestedPartyActive");
 
     public function delete()
     {
@@ -276,7 +276,8 @@ class interestedParty extends db_entity
         list($emailAddress, $fullName) = parse_email_address($email_receive->mail_headers["from"]);
         list($personID, $clientContactID, $fullName) = comment::get_person_and_client($emailAddress, $fullName, $e->get_project_id());
 
-        // Load up the parent object that this comment refers to, be it task or timeSheet etc
+        // Load up the parent object that this comment refers to, be it task
+        // or timeSheet etc
         if ($entity == "comment" && $entityID) {
             $c = new comment();
             $c->set_id($entityID);
@@ -288,16 +289,18 @@ class interestedParty extends db_entity
             $object->select();
         }
 
-        // If we're doing subject line magic, then we're only going to do it with
-        // subject lines that have a {Key:fdsFFeSD} in them.
+        // If we're doing subject line magic, then we're only going to do it
+        // with subject lines that have a {Key:fdsFFeSD} in them.
         preg_match("/\{Key:[A-Za-z0-9]{8}\}(.*)\s*$/i", $subject, $m);
         $commands = explode(" ", trim($m[1]));
 
         foreach ((array)$commands as $command) {
             $command = strtolower($command);
-            list($command, $command2) = explode(":", $command); // for eg: duplicate:1234
+            // for eg: duplicate:1234
+            list($command, $command2) = explode(":", $command);
 
-            // If "quiet" in the subject line, then the email/comment won't be re-emailed out again
+            // If "quiet" in the subject line, then the email/comment won't be
+            // re-emailed out again
             if ($command == "quiet") {
                 $quiet = true;
 
@@ -363,14 +366,14 @@ class interestedParty extends db_entity
     public function get_list_filter($filter = array())
     {
         $filter["emailAddress"] = str_replace(array("<",">"), "", $filter["emailAddress"]);
-        $filter["emailAddress"]    and $sql[] = prepare("(interestedParty.emailAddress LIKE '%%%s%%')", $filter["emailAddress"]);
-        $filter["fullName"]        and $sql[] = prepare("(interestedParty.fullName LIKE '%%%s%%')", $filter["fullName"]);
-        $filter["personID"]        and $sql[] = prepare("(interestedParty.personID = %d)", $filter["personID"]);
+        $filter["emailAddress"] and $sql[] = prepare("(interestedParty.emailAddress LIKE '%%%s%%')", $filter["emailAddress"]);
+        $filter["fullName"] and $sql[] = prepare("(interestedParty.fullName LIKE '%%%s%%')", $filter["fullName"]);
+        $filter["personID"] and $sql[] = prepare("(interestedParty.personID = %d)", $filter["personID"]);
         $filter["clientContactID"] and $sql[] = prepare("(interestedParty.clientContactID = %d)", $filter["clientContactID"]);
-        $filter["entity"]          and $sql[] = prepare("(interestedParty.entity = '%s')", $filter["entity"]);
-        $filter["entityID"]        and $sql[] = prepare("(interestedParty.entityID = %d)", $filter["entityID"]);
-        $filter["active"]          and $sql[] = prepare("(interestedParty.interestedPartyActive = %d)", $filter["active"]);
-        $filter["taskID"]          and $sql[] = prepare("(comment.commentMaster='task' AND comment.commentMasterID=%d)", $filter["taskID"]);
+        $filter["entity"] and $sql[] = prepare("(interestedParty.entity = '%s')", $filter["entity"]);
+        $filter["entityID"] and $sql[] = prepare("(interestedParty.entityID = %d)", $filter["entityID"]);
+        $filter["active"] and $sql[] = prepare("(interestedParty.interestedPartyActive = %d)", $filter["active"]);
+        $filter["taskID"] and $sql[] = prepare("(comment.commentMaster='task' AND comment.commentMasterID=%d)", $filter["taskID"]);
         return $sql;
     }
 
@@ -467,11 +470,11 @@ class interestedParty extends db_entity
                 if (!$email || strpos($email, "@") === false) {
                     alloc_error("Unable to add interested party: ".$party);
                 } else {
-                    interestedParty::add_interested_party(array("entity"      => $entity
-                                                               ,"entityID"    => $entityID
-                                                               ,"fullName"    => $name
-                                                               ,"emailAddress"=> $email
-                                                               ,"personID"    => $personID));
+                    interestedParty::add_interested_party(array("entity"       => $entity
+                                                                ,"entityID"    => $entityID
+                                                                ,"fullName"    => $name
+                                                                ,"emailAddress"=> $email
+                                                                ,"personID"    => $personID));
                 }
             }
         }

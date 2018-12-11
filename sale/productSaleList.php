@@ -33,8 +33,8 @@ function show_filter()
 }
 
 $defaults = array("url_form_action"=>$TPL["url_alloc_productSaleList"]
-                 ,"form_name"=>"productSaleList_filter"
-                 ,"return" => "array");
+                  ,"form_name"=>"productSaleList_filter"
+                  ,"return" => "array");
 
 $_FORM = productSale::load_form_data($defaults);
 $TPL["productSaleListRows"] = productSale::get_list($_FORM);

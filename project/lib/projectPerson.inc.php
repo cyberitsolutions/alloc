@@ -28,13 +28,13 @@ class projectPerson extends db_entity
     public $display_field_name = "projectID";
     public $key_field = "projectPersonID";
     public $data_fields = array("personID"
-                               ,"projectID"
-                               ,"emailType"
-                               ,"emailDateRegex"
-                               ,"rate" => array("type"=>"money")
-                               ,"rateUnitID"
-                               ,"projectPersonModifiedUser"
-                               ,"roleID");
+                                ,"projectID"
+                                ,"emailType"
+                                ,"emailDateRegex"
+                                ,"rate" => array("type"=>"money")
+                                ,"rateUnitID"
+                                ,"projectPersonModifiedUser"
+                                ,"roleID");
 
     public function date_regex_matches()
     {
@@ -53,8 +53,9 @@ class projectPerson extends db_entity
         }
     }
 
-    // This is a wrapper to simplify inserts into the projectPerson table using
-    // the new Role methodology.. role handle is canEditTasks, or isManager atm
+    // This is a wrapper to simplify inserts into the projectPerson table
+    // using the new Role methodology.. role handle is canEditTasks, or
+    // isManager atm
     public function set_value_role($roleHandle)
     {
         $db = new db_alloc();
@@ -63,7 +64,7 @@ class projectPerson extends db_entity
         $this->set_value("roleID", $db->f("roleID"));
     }
 
-    //deprecated in favour of get_rate
+    // deprecated in favour of get_rate
     public function get_projectPerson_row($projectID, $personID)
     {
         $q = prepare("SELECT *

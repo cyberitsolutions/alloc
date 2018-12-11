@@ -1,5 +1,7 @@
 <?php
 
+// FIXME:: need a license section. -- cjbayliss, 2018-12
+
 include_once('../alloc.php');
 
 $max_events = config::get_config_item('rssEntries');
@@ -28,7 +30,6 @@ function escape_xml($string)
 {
     return str_replace('&', '&amp;', $string);
 }
-
 
 $people =& get_cached_table('person');
 

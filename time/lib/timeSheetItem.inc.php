@@ -146,7 +146,8 @@ class timeSheetItem extends db_entity
             if ($ii->get_value("timeSheetItemID") == $this->get_id()) {
                 $ii->delete();
             } elseif (!$ii->get_value("timeSheetItemID")) {
-                invoiceEntity::save_invoice_timeSheet($row["invoiceID"], $timeSheetID);  // will update the existing invoice item
+                // will update the existing invoice item
+                invoiceEntity::save_invoice_timeSheet($row["invoiceID"], $timeSheetID);
             }
         }
         return parent::delete();
@@ -154,8 +155,7 @@ class timeSheetItem extends db_entity
 
     public function get_fortnightly_average($personID = false)
     {
-
-    // Need an array of the past years fortnights
+        // Need an array of the past years fortnights
         $x = 0;
         while ($x < 365) {
             if ($x % 14 == 0) {
@@ -169,11 +169,11 @@ class timeSheetItem extends db_entity
         $personID and $personID_sql = prepare(" AND personID = %d", $personID);
 
         $q = prepare("SELECT DISTINCT dateTimeSheetItem, personID
-                    FROM timeSheetItem
-                   WHERE dateTimeSheetItem > '%s'
-                      ".$personID_sql."
-                GROUP BY dateTimeSheetItem,personID
-                 ", $dateTimeSheetItem);
+                        FROM timeSheetItem
+                       WHERE dateTimeSheetItem > '%s'
+                             ".$personID_sql."
+                    GROUP BY dateTimeSheetItem,personID
+                     ", $dateTimeSheetItem);
 
         $db = new db_alloc();
         $db->query($q);
@@ -188,7 +188,6 @@ class timeSheetItem extends db_entity
         list($rows, $rows_dollars) = $this->get_averages($dateTimeSheetItem, $personID);
         foreach ($rows as $id => $avg) {
             $rtn[$id] = $avg / $how_many_fortnights[$id];
-            #echo "<br>".$id." ".$how_many_fortnights[$id];
         }
 
         // Convert all the monies into native currency
@@ -281,9 +280,9 @@ class timeSheetItem extends db_entity
         }
 
         $q = "SELECT * FROM timeSheetItem
-       LEFT JOIN timeSheet ON timeSheet.timeSheetID = timeSheetItem.timeSheetID
-                 ".$filter."
-        ORDER BY timeSheet.timeSheetID,dateTimeSheetItem asc";
+           LEFT JOIN timeSheet ON timeSheet.timeSheetID = timeSheetItem.timeSheetID
+                     ".$filter."
+            ORDER BY timeSheet.timeSheetID,dateTimeSheetItem asc";
         $debug and print "Query: ".$q;
         $db = new db_alloc();
         $db->query($q);
@@ -296,7 +295,8 @@ class timeSheetItem extends db_entity
             $tsi->read_db_record($db);
             $tsi->currency = $t->get_value("currencyTypeID");
 
-            $row["secondsBilled"] = $row["hoursBilled"] = $row["timeLimit"] = $row["limitWarning"] = ""; # set these for the CLI
+            // set these for the CLI
+            $row["secondsBilled"] = $row["hoursBilled"] = $row["timeLimit"] = $row["limitWarning"] = "";
             if ($tsi->get_value("taskID")) {
                 $task = $tsi->get_foreign_object('task');
                 $row["secondsBilled"] = $task->get_time_billed();
@@ -317,7 +317,7 @@ class timeSheetItem extends db_entity
 
     public function get_list_vars()
     {
-        return array("return"                   => "[MANDATORY] eg: array | html | dropdown_options"
+        return array("return"                    => "[MANDATORY] eg: array | html | dropdown_options"
                      ,"timeSheetID"              => "Show items for a particular time sheet"
                      ,"projectID"                => "Show items for a particular project"
                      ,"taskID"                   => "Show items for a particular task"
@@ -326,31 +326,20 @@ class timeSheetItem extends db_entity
                      ,"comment"                  => "Show items that have a comment like eg: *uick brown fox jump*");
     }
 
-    #function get_averages_past_fortnight($personID=false) {
-    # $dateTimeSheetItem = date("Y-m-d",mktime(0,0,0,date("m"),date("d")-14, date("Y")));
-    // DON'T ERASE THIS!! This way will divide by the number of individual days worked
-    #$rows = $this->get_averages($dateTimeSheetItem, $personID, "/ COUNT(DISTINCT dateTimeSheetItem)");
-
-    // This will just get the sum of hours worked for the last two weeks
-    #$rows = $this->get_averages($dateTimeSheetItem, $personID);
-
-    #return $rows;
-    #}
-
     public function get_averages($dateTimeSheetItem, $personID = false, $divisor = "", $endDate = null)
     {
         $personID and $personID_sql = prepare(" AND timeSheetItem.personID = %d", $personID);
         $endDate and $endDate_sql = prepare(" AND timeSheetItem.dateTimeSheetItem <= '%s'", $endDate);
 
         $q = prepare("SELECT personID
-                       , SUM(timeSheetItemDuration*timeUnitSeconds) ".$divisor." AS avg
-                    FROM timeSheetItem
-               LEFT JOIN timeUnit ON timeUnitID = timeSheetItemDurationUnitID
-                   WHERE dateTimeSheetItem > '%s'
-                      ".$personID_sql."
-                      ".$endDate_sql."
-                GROUP BY personID
-                 ", $dateTimeSheetItem);
+                           , SUM(timeSheetItemDuration*timeUnitSeconds) ".$divisor." AS avg
+                        FROM timeSheetItem
+                   LEFT JOIN timeUnit ON timeUnitID = timeSheetItemDurationUnitID
+                       WHERE dateTimeSheetItem > '%s'
+                             ".$personID_sql."
+                             ".$endDate_sql."
+                    GROUP BY personID
+                     ", $dateTimeSheetItem);
 
         $db = new db_alloc();
         $db->query($q);
@@ -361,14 +350,14 @@ class timeSheetItem extends db_entity
 
         // Calculate the dollar values
         $q = prepare("SELECT (rate * POW(10, -currencyType.numberToBasic) * timeSheetItemDuration * multiplier) as amount
-                       , timeSheet.currencyTypeID as currency
-                       , timeSheetItem.*
-                    FROM timeSheetItem
-               LEFT JOIN timeSheet on timeSheetItem.timeSheetID = timeSheet.timeSheetID
-               LEFT JOIN currencyType ON timeSheet.currencyTypeID = currencyType.currencyTypeID
-                WHERE dateTimeSheetItem > '%s'
-                      ".$personID_sql."
-                      ".$endDate_sql, $dateTimeSheetItem);
+                           , timeSheet.currencyTypeID as currency
+                           , timeSheetItem.*
+                        FROM timeSheetItem
+                   LEFT JOIN timeSheet on timeSheetItem.timeSheetID = timeSheet.timeSheetID
+                   LEFT JOIN currencyType ON timeSheet.currencyTypeID = currencyType.currencyTypeID
+                       WHERE dateTimeSheetItem > '%s'
+                     ".$personID_sql."
+                     ".$endDate_sql, $dateTimeSheetItem);
         $db->query($q);
         $rows_dollars = array();
         while ($row = $db->row()) {
@@ -399,19 +388,18 @@ class timeSheetItem extends db_entity
 
         // Get list of comments from timeSheetItem table
         $query = prepare("SELECT timeSheetID
-                           , timeSheetItemID
-                           , dateTimeSheetItem AS date
-                           , comment
-                           , personID
-                           , taskID
-                           , timeSheetItemDuration as duration
-                           , timeSheetItemCreatedTime
-                        FROM timeSheetItem
-                       WHERE ".$where." AND (commentPrivate != 1 OR commentPrivate IS NULL)
-                         AND emailUID is NULL
-                         AND emailMessageID is NULL
-                    ORDER BY dateTimeSheetItem,timeSheetItemID
-                     ");
+                               , timeSheetItemID
+                               , dateTimeSheetItem AS date
+                               , comment
+                               , personID
+                               , taskID
+                               , timeSheetItemDuration as duration
+                               , timeSheetItemCreatedTime
+                            FROM timeSheetItem
+                           WHERE ".$where." AND (commentPrivate != 1 OR commentPrivate IS NULL)
+                             AND emailUID is NULL
+                             AND emailMessageID is NULL
+                        ORDER BY dateTimeSheetItem,timeSheetItemID");
 
         $db = new db_alloc();
         $db->query($query);
@@ -432,12 +420,12 @@ class timeSheetItem extends db_entity
         $end      or $end      = date("Y-m-d");
 
         $q = prepare("SELECT dateTimeSheetItem, sum(timeSheetItemDuration*timeUnitSeconds) / 3600 AS hours
-                    FROM timeSheetItem
-               LEFT JOIN timeUnit ON timeUnitID = timeSheetItemDurationUnitID
-                   WHERE personID = %d
-                     AND dateTimeSheetItem >= '%s'
-                     AND dateTimeSheetItem <= '%s'
-                GROUP BY dateTimeSheetItem", $personID, $start, $end);
+                        FROM timeSheetItem
+                   LEFT JOIN timeUnit ON timeUnitID = timeSheetItemDurationUnitID
+                       WHERE personID = %d
+                         AND dateTimeSheetItem >= '%s'
+                         AND dateTimeSheetItem <= '%s'
+                    GROUP BY dateTimeSheetItem", $personID, $start, $end);
         $db = new db_alloc();
         $db->query($q);
         while ($row = $db->row()) {
@@ -477,7 +465,8 @@ class timeSheetItem extends db_entity
         $db->query($q);
         while ($row = $db->row()) {
             $f = explode("-", $row["dateTimeSheetItem"]);
-            $info[sprintf("%4d-%02d", $f[0], $f[1])] = $row; // the %02d is just to make sure the months are consistently zero padded
+            // the %02d is just to make sure the months are consistently zero padded
+            $info[sprintf("%4d-%02d", $f[0], $f[1])] = $row;
         }
 
         $s = format_date("U", $start);

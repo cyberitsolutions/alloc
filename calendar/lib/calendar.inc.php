@@ -20,7 +20,6 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 class calendar
 {
     public $person;
@@ -33,8 +32,7 @@ class calendar
     public $db;
     public $first_day_of_week;
 
-
-    public function __construct($week_start=1, $weeks_to_display=4)
+    public function __construct($week_start = 1, $weeks_to_display = 4)
     {
         $this->db = new db_alloc();
         $this->first_day_of_week = config::get_config_item("calendarFirstDay");
@@ -59,22 +57,21 @@ class calendar
             $i++;
         }
         $fd = mktime(date("H"), date("i"), date("s"), date("m"), date("d")-($this->week_start*7)+($i-7), date("Y"));
-    
-        /// Set the first and last date on the page
+
+        // Set the first and last date on the page
         $this->first_date = date("Y-m-d", $fd);
         $this->last_date = date("Y-m-d", mktime(date("H", $fd), date("i", $fd), date("s", $fd), date("m", $fd), date("d", $fd)+(($this->weeks_to_display*7)-1), date("Y", $fd)));
     }
 
     public function get_cal_reminders()
     {
-
-    // Get persons reminders
-        $query = prepare("SELECT * 
-                        FROM reminder
-                        JOIN reminderRecipient ON reminderRecipient.reminderID = reminder.reminderID
-                       WHERE personID = %d
-                         AND (reminderRecuringInterval = 'No' OR (reminderRecuringInterval != 'No' AND reminderActive))
-                       GROUP BY reminder.reminderID", $this->person->get_id());
+        // Get persons reminders
+        $query = prepare("SELECT *
+                            FROM reminder
+                            JOIN reminderRecipient ON reminderRecipient.reminderID = reminder.reminderID
+                           WHERE personID = %d
+                             AND (reminderRecuringInterval = 'No' OR (reminderRecuringInterval != 'No' AND reminderActive))
+                        GROUP BY reminder.reminderID", $this->person->get_id());
         $this->db->query($query);
         $reminders = array();
         while ($row = $this->db->row()) {
@@ -95,7 +92,7 @@ class calendar
                         $reminderTime = $reminder->get_next_reminder_time($reminderTime, $interval, $intervalUnit);
                     }
 
-                    // Else if once off reminder
+                // Else if once off reminder
                 } else {
                     $row["reminderTime"] = $reminderTime;
                     $reminders[date("Y-m-d", $reminderTime)][] = $row;
@@ -110,12 +107,12 @@ class calendar
     {
         list($ts_open, $ts_pending, $ts_closed) = task::get_task_status_in_set_sql();
         // Select all tasks which are targetted to start
-        $query = prepare("SELECT * 
-                        FROM task 
-                       WHERE personID = %d 
-                         AND dateTargetStart >= '%s' 
-                         AND dateTargetStart < '%s'
-                         AND taskStatus NOT IN (".$ts_closed.")", $this->person->get_id(), $this->first_date, $this->last_date);
+        $query = prepare("SELECT *
+                            FROM task
+                           WHERE personID = %d
+                             AND dateTargetStart >= '%s'
+                             AND dateTargetStart < '%s'
+                             AND taskStatus NOT IN (".$ts_closed.")", $this->person->get_id(), $this->first_date, $this->last_date);
 
         $this->db->query($query);
         $tasks_to_start = array();
@@ -129,12 +126,12 @@ class calendar
     {
         list($ts_open, $ts_pending, $ts_closed) = task::get_task_status_in_set_sql();
         // Select all tasks which are targetted for completion
-        $query = prepare("SELECT * 
-                        FROM task 
-                       WHERE personID = %d 
-                         AND dateTargetCompletion >= '%s' 
-                         AND dateTargetCompletion < '%s'
-                         AND taskStatus NOT IN (".$ts_closed.")", $this->person->get_id(), $this->first_date, $this->last_date);
+        $query = prepare("SELECT *
+                            FROM task
+                           WHERE personID = %d
+                             AND dateTargetCompletion >= '%s'
+                             AND dateTargetCompletion < '%s'
+                             AND taskStatus NOT IN (".$ts_closed.")", $this->person->get_id(), $this->first_date, $this->last_date);
 
         $this->db->query($query);
         $tasks_to_complete = array();
@@ -146,9 +143,9 @@ class calendar
 
     public function get_cal_absences()
     {
-        $query = prepare("SELECT * 
-                        FROM absence
-                       WHERE (dateFrom >= '%s' OR dateTo <= '%s')", $this->first_date, $this->last_date);
+        $query = prepare("SELECT *
+                            FROM absence
+                           WHERE (dateFrom >= '%s' OR dateTo <= '%s')", $this->first_date, $this->last_date);
 
         $current_user = &singleton("current_user");
         $current_user->have_role("admin") || $current_user->have_role("manage") or $query.= prepare(" AND personID = %d", $current_user->get_id());
@@ -161,8 +158,9 @@ class calendar
             while ($start_time < $end_time) {
                 if (date("Y-m-d", $start_time) == $prev_date) {
                     // Can't use timezone friendly date magic before 5.3.
-                    // If the date didn't increment by a day, as is want to happen on DST days, then
-                    // we manually roll it forward by one hour. Thus hopefully knocking it into the next day.
+                    // If the date didn't increment by a day, as is want to
+                    // happen on DST days, then we manually roll it forward by
+                    // one hour. Thus hopefully knocking it into the next day.
                     $start_time+=3600;
                 }
 
@@ -177,8 +175,10 @@ class calendar
 
     public function get_days_of_week_array($first_day)
     {
-        // Generate a list of days, being mindful that a user may not want Sunday to be the first day of the week
-        $days = array("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat");
+        // Generate a list of days, being mindful that a user may not want
+        // Sunday to be the first day of the week
+        $days = array("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat",
+                      "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat");
         foreach ($days as $day) {
             if (($day == $first_day || $go) && count($days_of_week) < 7) {
                 $days_of_week[] = $day;
@@ -203,7 +203,7 @@ class calendar
         $this->draw_body();
 
         $i = -7;
- 
+
 
         while (date("D", mktime(0, 0, 0, date("m"), date("d") + $i, date("Y"))) != $this->first_day_of_week) {
             $i++;
@@ -231,9 +231,9 @@ class calendar
             }
 
 
-            foreach ($dates_of_week as $day=>$date) {
+            foreach ($dates_of_week as $day => $date) {
                 $d = new calendar_day();
-                #$d->set_date(date("Y-m-d", mktime(0, 0, 0, $sunday_month, $sunday_day + (7 * $i + $k), $sunday_year));
+
                 $d->set_date($date);
                 $d->set_links($this->get_link_new_task($date).$this->get_link_new_reminder($date).$this->get_link_new_absence($date));
 
@@ -257,8 +257,7 @@ class calendar
                 // Reminders
                 $reminders[$date] or $reminders[$date] = array();
                 foreach ($reminders[$date] as $r) {
-                    #if (date("Y-m-d",$r["reminderTime"]) == $date) {
-                    unset($wrap_start,$wrap_end);
+                    unset($wrap_start, $wrap_end);
                     if (!$r["reminderActive"]) {
                         $wrap_start = "<strike>";
                         $wrap_end = "</strike>";
@@ -267,7 +266,6 @@ class calendar
                     $text = page::htmlentities($r["reminderSubject"]);
                     $r["reminderTime"] and $text = date("g:ia", $r["reminderTime"])." ".$text;
                     $d->reminders[] = '<a href="'.$TPL["url_alloc_reminder"].'&step=3&reminderID='.$r["reminderID"].'&returnToParent='.$this->rtp.'&personID='.$r["personID"].'">'.$wrap_start.$text.$wrap_end.'</a>';
-                    #}
                 }
 
                 // Absences
@@ -297,10 +295,10 @@ class calendar
     }
     public function draw_body()
     {
-        # Unfortunately browser support for this seems to be quite bad. Eventually
-        # this should cause the table to have headers draw at the start of
-        # each page where the table is broken, but for now it doesn't seem to
-        # work.
+        // Unfortunately browser support for this seems to be quite
+        // bad. Eventually this should cause the table to have headers draw at
+        // the start of each page where the table is broken, but for now it
+        // doesn't seem to work.
         echo "<tbody>";
     }
     public function draw_body_end()

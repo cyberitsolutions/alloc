@@ -25,7 +25,5 @@ class tfPerson extends db_entity
     public $data_table = "tfPerson";
     public $display_field_name = "personID";
     public $key_field = "tfPersonID";
-    public $data_fields = array("tfID"
-                             ,"personID"
-                             );
+    public $data_fields = array("tfID", "personID");
 }

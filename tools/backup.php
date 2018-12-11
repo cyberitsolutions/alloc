@@ -24,7 +24,7 @@ require_once("../alloc.php");
 
 $db = new db_alloc();
 
-# End of functions
+// End of functions
 
 if (!$current_user->have_role("god")) {
     alloc_error("Insufficient permissions. Backups may only be performed by super-users.", true);

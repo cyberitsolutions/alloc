@@ -27,25 +27,24 @@ class client extends db_entity
     public $display_field_name = "clientName";
     public $key_field = "clientID";
     public $data_fields = array("clientName"
-                             ,"clientStreetAddressOne"
-                             ,"clientStreetAddressTwo"
-                             ,"clientSuburbOne"
-                             ,"clientSuburbTwo"
-                             ,"clientStateOne"
-                             ,"clientStateTwo"
-                             ,"clientPostcodeOne"
-                             ,"clientPostcodeTwo"
-                             ,"clientPhoneOne"
-                             ,"clientFaxOne"
-                             ,"clientCountryOne"
-                             ,"clientCountryTwo"
-                             ,"clientCreatedTime"
-                             ,"clientModifiedTime"
-                             ,"clientModifiedUser"
-                             ,"clientStatus"
-                             ,"clientCategory"
-                             ,"clientURL"
-                             );
+                                ,"clientStreetAddressOne"
+                                ,"clientStreetAddressTwo"
+                                ,"clientSuburbOne"
+                                ,"clientSuburbTwo"
+                                ,"clientStateOne"
+                                ,"clientStateTwo"
+                                ,"clientPostcodeOne"
+                                ,"clientPostcodeTwo"
+                                ,"clientPhoneOne"
+                                ,"clientFaxOne"
+                                ,"clientCountryOne"
+                                ,"clientCountryTwo"
+                                ,"clientCreatedTime"
+                                ,"clientModifiedTime"
+                                ,"clientModifiedUser"
+                                ,"clientStatus"
+                                ,"clientCategory"
+                                ,"clientURL");
 
     public function delete()
     {
@@ -92,10 +91,10 @@ class client extends db_entity
         $db = new db_alloc();
         if ($clientStatus) {
             $q = prepare("SELECT clientID as value, clientName as label
-                      FROM client
-                     WHERE clientStatus = '%s'
-                        OR clientID = %d
-                  ORDER BY clientName", $clientStatus, $clientID);
+                            FROM client
+                           WHERE clientStatus = '%s'
+                              OR clientID = %d
+                        ORDER BY clientName", $clientStatus, $clientID);
         }
         $options.= page::select_options($q, $clientID, 100);
         $str = "<select id=\"clientID\" name=\"clientID\" style=\"width:100%;\">";
@@ -165,8 +164,8 @@ class client extends db_entity
 
     public static function get_list($_FORM)
     {
-        // This is the definitive method of getting a list of clients that need
-        // a sophisticated level of filtering
+        // This is the definitive method of getting a list of clients that
+        // need a sophisticated level of filtering
 
         global $TPL;
         $filter = client::get_list_filter($_FORM);
@@ -187,11 +186,11 @@ class client extends db_entity
         }
 
         $q = "SELECT client.*,clientContactName, clientContactEmail, clientContactPhone, clientContactMobile
-            FROM client
-       LEFT JOIN clientContact ON client.clientID = clientContact.clientID AND clientContact.clientContactActive = 1
-                 ".$filter."
-        GROUP BY client.clientID
-        ORDER BY clientName,clientContact.primaryContact asc";
+               FROM client
+          LEFT JOIN clientContact ON client.clientID = clientContact.clientID AND clientContact.clientContactActive = 1
+             ".$filter."
+           GROUP BY client.clientID
+           ORDER BY clientName,clientContact.primaryContact asc";
         $debug and print "Query: ".$q;
         $db = new db_alloc();
         $db2 = new db_alloc();
@@ -211,16 +210,15 @@ class client extends db_entity
 
     public function get_list_vars()
     {
-        return array("clientStatus"             => "Client status eg: Current | Potential | Archived"
-                ,"clientCategory"           => "Client category eg: 1-7"
-                ,"clientName"               => "Client name like *something*"
-                ,"contactName"              => "Client Contact name like *something*"
-                ,"clientLetter"             => "Client name starts with this letter"
-                ,"url_form_action"          => "The submit action for the filter form"
-                ,"form_name"                => "The name of this form, i.e. a handle for referring to this saved form"
-                ,"dontSave"                 => "Specify that the filter preferences should not be saved this time"
-                ,"applyFilter"              => "Saves this filter as the persons preference"
-                );
+        return array("clientStatus"     => "Client status eg: Current | Potential | Archived"
+                     ,"clientCategory"  => "Client category eg: 1-7"
+                     ,"clientName"      => "Client name like *something*"
+                     ,"contactName"     => "Client Contact name like *something*"
+                     ,"clientLetter"    => "Client name starts with this letter"
+                     ,"url_form_action" => "The submit action for the filter form"
+                     ,"form_name"       => "The name of this form, i.e. a handle for referring to this saved form"
+                     ,"dontSave"        => "Specify that the filter preferences should not be saved this time"
+                     ,"applyFilter"     => "Saves this filter as the persons preference");
     }
 
     public function load_form_data($defaults = array())
@@ -261,7 +259,9 @@ class client extends db_entity
         $rtn["clientStatusOptions"] = page::select_options($clientStatus_array, $_FORM["clientStatus"]);
         $rtn["clientName"] = $_FORM["clientName"];
         $rtn["contactName"] = $_FORM["contactName"];
-        $letters = array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "ALL");
+        $letters = array("A", "B", "C", "D", "E", "F", "G", "H", "I",
+                         "J", "K", "L", "M", "N", "O", "P", "Q", "R",
+                         "S", "T", "U", "V", "W", "X", "Y", "Z", "ALL");
         foreach ($letters as $letter) {
             if ($_FORM["clientLetter"] == $letter) {
                 $rtn["alphabet_filter"].= "&nbsp;&nbsp;".$letter;
