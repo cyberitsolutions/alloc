@@ -4,7 +4,7 @@
 allocPSA is the web-app that takes care of your projects, employees,
 time sheets, invoicing and customers.
 
-<img src="https://i.imgur.com/4zgCU8S.png" alt="alloc screenshot">
+<img src="/images/alloc-screenshot.png?raw=true" alt="alloc screenshot">
 
 ## Installation
 
@@ -64,8 +64,8 @@ the bottom of the login screen for allocPSA, or alternatively view the file:
 
 ## Developers!
 
-We need help! If you want to make a change, please send a pull
-request!
+We'd love your help, make an issue, write a pull request, start a
+discussion.
 
 Also see DEVELOPERS.md for an example development setup. 🙂
 
