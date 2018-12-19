@@ -21,11 +21,8 @@ needed:
 # apt-get install apache2 php php-mysql php-mbstring php-gd mariadb-server make python
 ```
 
-You will need to change the mysql (maridb) config from utf8mb4 to utf8:
-
-```
-# sed -i -e 's/character-set-server  = utf8mb4/character-set-server  = utf8/' -e 's/collation-server/#collation-server/' /etc/mysql/mariadb.conf.d/50-server.cnf
-```
+Ensure mariadb is running in utf8 mode and not utf8mb4, see the config
+files for mariadb in /etc/.
 
 To install allocPSA:
 

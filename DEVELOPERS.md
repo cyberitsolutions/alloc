@@ -114,13 +114,8 @@ mariadb (mysql), make, python, and git:
 # apt-get install apache2 php php-mysql php-mbstring php-gd mariadb-server make python git
 ```
 
-Then make sure mariadb is using the original mysql utf8 implementation
-(FIXME: this is bad, alloc should work with a better utf8
-implementation.):
-
-```
-# sed -i -e 's/character-set-server  = utf8mb4/character-set-server  = utf8/' -e 's/collation-server/#collation-server/' /etc/mysql/mariadb.conf.d/50-server.cnf
-```
+Ensure mariadb is running in utf8 mode and not utf8mb4, see the config
+files for mariadb in /etc/.
 
 Now restart apache and mariadb:
 
