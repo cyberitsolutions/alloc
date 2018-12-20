@@ -20,13 +20,14 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class meta extends db_entity {
+class meta extends db_entity
+{
 
-  private $t;
+    private $t;
 
   // This variable contains the definitive list of all the referential
   // integrity tables that the user is allowed to edit.
-  public static $tables = array("absenceType"     => "Absence Types"
+    public static $tables = array("absenceType"     => "Absence Types"
                      ,"clientStatus"              => "Client Statuses"
                      #,"configType"                => "Config Types"
                      #,"invoiceStatus"             => "Invoice Statuses"
@@ -49,51 +50,51 @@ class meta extends db_entity {
                      ,"taskType"                 => "Task Types"
                      );
 
-  function __construct($table="") {
-    $this->classname = $table;
-    $this->data_table = $table;
-    $this->display_field_name = $table."ID";
-    $this->key_field = $table."ID";
-    $this->data_fields = array($table."Seq"
+    function __construct($table = "")
+    {
+        $this->classname = $table;
+        $this->data_table = $table;
+        $this->display_field_name = $table."ID";
+        $this->key_field = $table."ID";
+        $this->data_fields = array($table."Seq"
                               ,$table."Active"
                               );
-    if ($table == "taskStatus") {
-      $this->data_fields[] = "taskStatusLabel";
-      $this->data_fields[] = "taskStatusColour";
-    } else if ($table == "currencyType") {
-      $this->data_fields[] = "currencyTypeLabel";
-      $this->data_fields[] = "currencyTypeName";
-      $this->data_fields[] = "numberToBasic";
+        if ($table == "taskStatus") {
+            $this->data_fields[] = "taskStatusLabel";
+            $this->data_fields[] = "taskStatusColour";
+        } else if ($table == "currencyType") {
+            $this->data_fields[] = "currencyTypeLabel";
+            $this->data_fields[] = "currencyTypeName";
+            $this->data_fields[] = "numberToBasic";
+        }
+        $this->t = $table; // for internal use
+        return parent::__construct();
     }
-    $this->t = $table; // for internal use
-    return parent::__construct();
-  }
 
-  function get_tables() {
-    return self::$tables;
-  }
-
-  function get_list($include_inactive=false) {
-    if ($this->data_table) {
-      $include_inactive and $where[$this->data_table."Active"] = "all"; // active and inactive
-      return $this->get_assoc_array(false,false,false,$where);
+    function get_tables()
+    {
+        return self::$tables;
     }
-  }
 
-  function get_label() {
-    if ($this->data_table) {
-      return self::$tables[$this->data_table];
+    function get_list($include_inactive = false)
+    {
+        if ($this->data_table) {
+            $include_inactive and $where[$this->data_table."Active"] = "all"; // active and inactive
+            return $this->get_assoc_array(false, false, false, $where);
+        }
     }
-  }
 
-  function validate() {
-    $this->get_id() or $err[] = "Please enter a Value/ID for the ".$this->get_label();
-    $this->get_value($this->t."Seq") or $err[] = "Please enter a Sequence Number for the ".$this->get_label();
-    return parent::validate($err);
-  }
+    function get_label()
+    {
+        if ($this->data_table) {
+            return self::$tables[$this->data_table];
+        }
+    }
 
+    function validate()
+    {
+        $this->get_id() or $err[] = "Please enter a Value/ID for the ".$this->get_label();
+        $this->get_value($this->t."Seq") or $err[] = "Please enter a Sequence Number for the ".$this->get_label();
+        return parent::validate($err);
+    }
 }
-
-
-
-?>

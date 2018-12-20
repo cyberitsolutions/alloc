@@ -3,43 +3,47 @@
 /*
  * Copyright (C) 2006-2011 Alex Lance, Clancy Malcolm, Cyber IT Solutions
  * Pty. Ltd.
- * 
+ *
  * This file is part of the allocPSA application <info@cyber.com.au>.
- * 
+ *
  * allocPSA is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or (at
  * your option) any later version.
- * 
+ *
  * allocPSA is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public
  * License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-class whatsnew {
+class whatsnew
+{
 
-  var $folders = array();
+    var $folders = array();
 
-  function __construct() {
-  }
+    function __construct()
+    {
+    }
 
-  function set_id() { // dummy so can re-use the get_attachment.php script
-    return true;
-  }
+    function set_id()
+    {
+ // dummy so can re-use the get_attachment.php script
+        return true;
+    }
 
-  function select() { // dummy so can re-use the get_attachment.php script
-    return true;
-  }
+    function select()
+    {
+ // dummy so can re-use the get_attachment.php script
+        return true;
+    }
 
-  function has_attachment_permission($person) {
-    return true;
-  }
+    function has_attachment_permission($person)
+    {
+        return true;
+    }
 }
-
-
-?>

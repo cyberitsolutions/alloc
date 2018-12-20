@@ -33,7 +33,7 @@ class pdf_reader
             }
         }
  
-        $result_data = NULL;
+        $result_data = null;
  
         // decode the chunks
         foreach ($a_chunks as $chunk) {
@@ -59,7 +59,7 @@ class pdf_reader
  
         // Return the data extracted from the document.
         if ($result_data == "") {
-            return NULL;
+            return null;
         } else {
             return $result_data;
         }
@@ -77,7 +77,7 @@ class pdf_reader
         if (ord($ps_data[0]) < 10) {
             return $ps_data;
         }
-        if (substr($ps_data, 0, 8 ) == '/CIDInit') {
+        if (substr($ps_data, 0, 8) == '/CIDInit') {
             return '';
         }
  
@@ -139,4 +139,3 @@ class pdf_reader
         return $a_result;
     }
 }
-?>
