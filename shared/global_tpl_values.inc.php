@@ -3,19 +3,19 @@
 /*
  * Copyright (C) 2006-2011 Alex Lance, Clancy Malcolm, Cyber IT Solutions
  * Pty. Ltd.
- * 
+ *
  * This file is part of the allocPSA application <info@cyber.com.au>.
- * 
+ *
  * allocPSA is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or (at
  * your option) any later version.
- * 
+ *
  * allocPSA is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public
  * License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
@@ -23,8 +23,9 @@
 
 
 // This file basically provides static template values that are used throughout the application and is included by alloc.php
-function get_alloc_urls($TPL,$sess=false) {
-$alloc_urls = array(
+function get_alloc_urls($TPL, $sess = false)
+{
+    $alloc_urls = array(
              "url_alloc_logout"                         => "login/logout.php"
             ,"url_alloc_home"                           => "home/home.php"
             ,"url_alloc_history"                        => "home/history.php"
@@ -71,7 +72,7 @@ $alloc_urls = array(
             ,"url_alloc_updatePersonList"               => "task/updatePersonList.php"
             ,"url_alloc_updateManagerPersonList"        => "task/updateManagerPersonList.php"
             ,"url_alloc_updateEstimatorPersonList"      => "task/updateEstimatorPersonList.php"
- 	          ,"url_alloc_updateTaskDupes"                => "task/updateTaskDupes.php"
+              ,"url_alloc_updateTaskDupes"                => "task/updateTaskDupes.php"
 
             ,"url_alloc_comment"                        => "comment/comment.php"
             ,"url_alloc_commentSummary"                 => "comment/summary.php"
@@ -79,7 +80,7 @@ $alloc_urls = array(
             ,"url_alloc_downloadComments"               => "email/downloadComments.php"
             ,"url_alloc_client"                         => "client/client.php"
             ,"url_alloc_clientList"                     => "client/clientList.php"
- 	          ,"url_alloc_updateClientDupes"              => "client/updateClientDupes.php"
+              ,"url_alloc_updateClientDupes"              => "client/updateClientDupes.php"
             ,"url_alloc_personList"                     => "person/personList.php"
             ,"url_alloc_personSkillAdd"                 => "person/personSkillAdd.php"
             ,"url_alloc_person"                         => "person/person.php"
@@ -158,16 +159,14 @@ $alloc_urls = array(
             ,"url_alloc_fileDownload"                   => "wiki/fileDownload.php"
             ,"url_alloc_directory"                      => "wiki/directory.php"
 
-);
+    );
 
-  foreach ($alloc_urls as $k=>$v) {
-    if (is_object($sess)) {
-      $TPL[$k] = $sess->url(SCRIPT_PATH.$v);
-    } else {
-      $TPL[$k] = SCRIPT_PATH.$v;
+    foreach ($alloc_urls as $k => $v) {
+        if (is_object($sess)) {
+            $TPL[$k] = $sess->url(SCRIPT_PATH.$v);
+        } else {
+            $TPL[$k] = SCRIPT_PATH.$v;
+        }
     }
-  }
-  return $TPL;
+    return $TPL;
 }
-
-?>

@@ -20,29 +20,31 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class wiki {
+class wiki
+{
 
-  public static function get_list($_FORM) {
-    global $TPL;
-    $current_user = &singleton("current_user");
+    public static function get_list($_FORM)
+    {
+        global $TPL;
+        $current_user = &singleton("current_user");
 
-    $wiki_path = wiki_module::get_wiki_path();
-    $files = search::get_recursive_dir_list($wiki_path);
+        $wiki_path = wiki_module::get_wiki_path();
+        $files = search::get_recursive_dir_list($wiki_path);
 
-    foreach ($files as $row) {
-      $file = str_replace($wiki_path,"",$row);
-      if ($_FORM["starred"] && $current_user->prefs["stars"]["wiki"][base64_encode($file)]) {
-        $rows[] = array("filename"=>$file);
-      }
+        foreach ($files as $row) {
+            $file = str_replace($wiki_path, "", $row);
+            if ($_FORM["starred"] && $current_user->prefs["stars"]["wiki"][base64_encode($file)]) {
+                $rows[] = array("filename"=>$file);
+            }
+        }
+        return (array)$rows;
     }
-    return (array)$rows;
-  }
 
-  function get_list_html($rows=array(),$ops=array()) {
-    global $TPL;
-    $TPL["wikiListRows"] = $rows;
-    $TPL["_FORM"] = $ops;
-    include_template(dirname(__FILE__)."/../templates/wikiListS.tpl");
-  }
+    function get_list_html($rows = array(), $ops = array())
+    {
+        global $TPL;
+        $TPL["wikiListRows"] = $rows;
+        $TPL["_FORM"] = $ops;
+        include_template(dirname(__FILE__)."/../templates/wikiListS.tpl");
+    }
 }
-?>

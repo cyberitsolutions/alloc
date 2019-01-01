@@ -176,3 +176,13 @@ Be sure to `git rebase` your changes once done, and 'squish' changes
 into a single commit, then force push to your "fork". If you have
 write access to the main alloc repo, **NEVER** rebase and force push
 to the main alloc repo! This will mess up other peoples clones.
+
+## Alloc coding standards
+
+We follow the [PSR-2](https://www.php-fig.org/psr/psr-2/) coding
+standard with the exception of `else if`. Please use `else if` instead
+of `elseif`.
+
+Because the alloc code base did not use PSR-2 until late 2018, many
+class/method names do not match the PSR-2 recommendations, this is an
+ongoing effort.
