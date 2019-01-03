@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
@@ -29,7 +29,7 @@ function show_new_invoiceItem($template)
     global $invoiceID;
     $current_user = &singleton("current_user");
 
-  // Don't show entry form if no ID
+    // Don't show entry form if no ID
     if (!$invoiceID) {
         return;
     }
@@ -41,7 +41,7 @@ function show_new_invoiceItem($template)
 
 
     if (is_object($invoice) && $invoice->get_value("invoiceStatus") == 'edit' && $current_user->have_role('admin')) {
-      // If we are editing an existing invoiceItem
+        // If we are editing an existing invoiceItem
         if (is_array($_POST["invoiceItem_edit"])) {
             $invoiceItemID = key($_POST["invoiceItem_edit"]);
             $invoiceItem = new invoiceItem();
@@ -53,7 +53,7 @@ function show_new_invoiceItem($template)
         <button type="submit" name="invoiceItem_delete['.$invoiceItemID.']" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
         <button type="submit" name="invoiceItem_save['.$invoiceItemID.']" value="1" class="save_button">Save Item<i class="icon-edit"></i></button>
       ';
-      
+
             if ($invoiceItem->get_value("timeSheetID")) {
                 unset($TPL["div2"]);
                 $TPL["div1"] = " class=\"hidden\"";
@@ -77,7 +77,7 @@ function show_new_invoiceItem($template)
       ';
         }
 
-      // Build dropdown lists for timeSheet and expenseForm options.
+        // Build dropdown lists for timeSheet and expenseForm options.
         if ($invoice->get_value("clientID")) {
           // Time Sheet dropdown
             $db = new db_alloc();
@@ -88,16 +88,16 @@ function show_new_invoiceItem($template)
                 $projectIDs[] = $row["projectID"];
             }
             if ($projectIDs) {
-                $q = prepare("SELECT timeSheet.*, project.projectName 
-                        FROM timeSheet
-                   LEFT JOIN project ON project.projectID = timeSheet.projectID 
-                       WHERE timeSheet.projectID IN (%s) 
-                         AND timeSheet.status != 'finished'
-                    GROUP BY timeSheet.timeSheetID
-                    ORDER BY timeSheetID
-                     ", $projectIDs);
+                $q = prepare("SELECT timeSheet.*, project.projectName
+                                FROM timeSheet
+                           LEFT JOIN project ON project.projectID = timeSheet.projectID
+                               WHERE timeSheet.projectID IN (%s)
+                                 AND timeSheet.status != 'finished'
+                            GROUP BY timeSheet.timeSheetID
+                            ORDER BY timeSheetID
+                             ", $projectIDs);
                 $db->query($q);
-    
+
                 $timeSheetStatii = timeSheet::get_timeSheet_statii();
 
                 while ($row = $db->row()) {
@@ -111,14 +111,14 @@ function show_new_invoiceItem($template)
                 $TPL["timeSheetOptions"] = page::select_options($timeSheetOptions, $invoiceItem->get_value("timeSheetID"), 150);
             }
 
-          // Expense Form dropdown
+            // Expense Form dropdown
             $db = new db_alloc();
             $q = prepare("SELECT expenseFormID, expenseFormCreatedUser
-                      FROM expenseForm 
-                     WHERE expenseFormFinalised = 1 
-                       AND seekClientReimbursement = 1
-                       AND clientID = %d
-                  ORDER BY expenseForm.expenseFormCreatedTime", $invoice->get_value("clientID"));
+                            FROM expenseForm
+                           WHERE expenseFormFinalised = 1
+                             AND seekClientReimbursement = 1
+                             AND clientID = %d
+                        ORDER BY expenseForm.expenseFormCreatedTime", $invoice->get_value("clientID"));
             $db->query($q);
             while ($row = $db->row()) {
                   $expenseFormOptions[$row["expenseFormID"]] = "Expense Form #".$row["expenseFormID"]." ".page::money(config::get_config_item("currency"), expenseForm::get_abs_sum_transactions($row["expenseFormID"]), "%s%m %c")." ".person::get_fullname($row["expenseFormCreatedUser"]);
@@ -131,10 +131,10 @@ function show_new_invoiceItem($template)
 
 
             $q = prepare("SELECT *
-                      FROM productSale
-                     WHERE clientID = %d
-                       AND status = 'admin'
-                   ", $invoice->get_value("clientID"));
+                            FROM productSale
+                           WHERE clientID = %d
+                             AND status = 'admin'
+                         ", $invoice->get_value("clientID"));
             $invoice->get_value("projectID") and $q.= prepare(" AND projectID = %d", $invoice->get_value("projectID"));
             $db->query($q);
             while ($row = $db->row()) {
@@ -170,16 +170,16 @@ function show_invoiceItem_list()
     $db2 = new db_alloc();
     $q = prepare(
         "SELECT *
-                  FROM invoiceItem 
-                 WHERE invoiceItem.invoiceID = %d 
-              ORDER BY iiDate,invoiceItem.invoiceItemID",
+           FROM invoiceItem
+          WHERE invoiceItem.invoiceID = %d
+       ORDER BY iiDate,invoiceItem.invoiceItemID",
         $invoiceID
     );
     $db->query($q);
     while ($db->next_record()) {
         $invoiceItem = new invoiceItem();
         $invoiceItem->currency = $invoice->get_value("currencyTypeID");
-  
+
         if (!$invoiceItem->read_db_record($db)) {
             continue;
         }
@@ -196,20 +196,20 @@ function show_invoiceItem_list()
         unset($amount);
         unset($TPL["invoiceItem_buttons_top"], $TPL["invoiceItem_buttons"], $TPL["transaction_info"], $TPL["status_label"]);
 
-      // If editing a invoiceItem then don't display it in the list
+        // If editing a invoiceItem then don't display it in the list
         if (is_array($_POST["invoiceItem_edit"]) && key($_POST["invoiceItem_edit"]) == $invoiceItem->get_id()) {
             continue;
         }
-    
+
         $q = prepare("SELECT *
-                       , transaction.amount * pow(10,-currencyType.numberToBasic) AS transaction_amount
-                       , transaction.tfID AS transaction_tfID
-                       , transaction.fromTfID AS transaction_fromTfID
-                       , transaction.status AS transaction_status  
-                       , transaction.currencyTypeID
-                    FROM transaction 
-               LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
-                   WHERE transaction.invoiceItemID = %d", $invoiceItem->get_id());
+                           , transaction.amount * pow(10,-currencyType.numberToBasic) AS transaction_amount
+                           , transaction.tfID AS transaction_tfID
+                           , transaction.fromTfID AS transaction_fromTfID
+                           , transaction.status AS transaction_status
+                           , transaction.currencyTypeID
+                        FROM transaction
+                   LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
+                       WHERE transaction.invoiceItemID = %d", $invoiceItem->get_id());
         $db2->query($q);
         while ($db2->next_record()) {
             $transaction = new transaction();
@@ -245,8 +245,8 @@ function show_invoiceItem_list()
         $TPL["transaction_info"] = $transaction_info;
         $TPL["transaction_info"].= $other_peoples_transactions;
 
-    
-      // Sets the background colour of the invoice item boxes based on transaction.status
+
+        // Sets the background colour of the invoice item boxes based on transaction.status
         if (!$one_rejected && !$one_pending && $one_approved) {
             $TPL["box_class"] = " approved";
             $transaction_status = "approved";
@@ -291,7 +291,7 @@ function show_invoiceItem_list()
             } else {
                 $amount = page::money($invoice->get_value("currencyTypeID"), $amounts[$invoiceItem->get_id()], "%m");
             }
-      
+
             $selected_tfID = $db2->f("transaction_tfID");
             if (!$selected_tfID && $invoiceItem->get_value("timeSheetID")) {
                 $timeSheet = $invoiceItem->get_foreign_object("timeSheet");
@@ -306,10 +306,10 @@ function show_invoiceItem_list()
             $selected_tfID or $selected_tfID = config::get_config_item("mainTfID");
 
 
-          #$tf_options = page::select_options($tf_array, $selected_tfID);
-          #$tf_options = "<select name=\"invoiceItemAmountPaidTfID[".$invoiceItem->get_id()."]\">".$tf_options."</select>";
-          #$TPL["invoiceItem_buttons"] = "<input size=\"8\" type=\"text\" id=\"ap_".$invoiceItem->get_id()."\" name=\"invoiceItemAmountPaid[".$invoiceItem->get_id()."]\" value=\"".$amount."\">";
-          #$TPL["invoiceItem_buttons"].= $tf_options;
+            #$tf_options = page::select_options($tf_array, $selected_tfID);
+            #$tf_options = "<select name=\"invoiceItemAmountPaidTfID[".$invoiceItem->get_id()."]\">".$tf_options."</select>";
+            #$TPL["invoiceItem_buttons"] = "<input size=\"8\" type=\"text\" id=\"ap_".$invoiceItem->get_id()."\" name=\"invoiceItemAmountPaid[".$invoiceItem->get_id()."]\" value=\"".$amount."\">";
+            #$TPL["invoiceItem_buttons"].= $tf_options;
 
 
             unset($radio_buttons);
@@ -381,7 +381,7 @@ function show_comments()
     if ($invoiceID) {
         $TPL["commentsR"] = comment::util_get_comments("invoice", $invoiceID);
         $TPL["class_new_comment"] = "hidden";
-  
+
         if ($invoice->get_value("projectID")) {
             $project = $invoice->get_foreign_object("project");
             $interestedPartyOptions = $project->get_all_parties($invoice->get_value("projectID"));
@@ -432,7 +432,7 @@ if ($invoiceID) {
 if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBack"]) {
     $invoice->read_globals();
 
-  // Validation
+    // Validation
     if ($invoice->get_value("projectID")) {
         $project = $invoice->get_foreign_object("project");
         $currency = $project->get_value("currencyTypeID");
@@ -448,7 +448,7 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
 
 
     if (!$invoice->get_value("invoiceNum") || !is_numeric($invoice->get_value("invoiceNum"))) {
-      #alloc_error("Please enter a unique Invoice Number.");
+        #alloc_error("Please enter a unique Invoice Number.");
         $invoice->set_value("invoiceNum", invoice::get_next_invoiceNum());
     } else {
         $invoiceID and $invoiceID_sql = prepare(" AND invoiceID != %d", $invoiceID);
@@ -475,7 +475,7 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
         if (!$invoice->get_value("invoiceStatus")) {
             $invoice->set_value("invoiceStatus", "edit");
         }
-      // Save invoice Item approved/rejected info
+        // Save invoice Item approved/rejected info
         $invoiceItemIDs = $invoice->get_invoiceItems();
         foreach ($invoiceItemIDs as $iiID) {
             $status = $_POST["invoiceItemStatus"][$iiID];
@@ -509,7 +509,7 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
         $db->query($q);
     }
 
-  // should probablg delete/unlink the pdf docs
+    // should probablg delete/unlink the pdf docs
 
     $invoice->delete();
     $TPL["message_good"][] = "Invoice deleted.";
@@ -524,11 +524,11 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
     $invoiceItem = new invoiceItem();
     $invoiceItem->currency = $invoice->get_value("currencyTypeID");
     $invoiceItem->set_id($invoiceItemID);
-  #echo $invoiceItem->get_id();
+    #echo $invoiceItem->get_id();
     $invoice->set_id($invoiceID);
     $invoice->select();
 
-  #echo "<pre>".print_r($_POST,1)."</pre>";
+    #echo "<pre>".print_r($_POST,1)."</pre>";
 
     $_POST["iiTax"] or $_POST["iiTax"] = '';
 
@@ -561,14 +561,14 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
         $TPL["message_good"][] = "Invoice Item saved.";
         alloc_redirect($TPL["url_alloc_invoice"]."invoiceID=".$invoiceItem->get_value("invoiceID"));
     } else if ($_POST["invoiceItem_edit"]) {
-      // Hmph. Nothing needs to go here?
+        // Hmph. Nothing needs to go here?
     } else if ($_POST["invoiceItem_delete"]) {
         $invoiceItem->select();
         $invoiceItem->delete();
         $TPL["message_good"][] = "Invoice Item deleted.";
         alloc_redirect($TPL["url_alloc_invoice"]."invoiceID=".$invoiceID);
     }
-  // Displaying a record
+    // Displaying a record
     $invoice->set_id($invoiceID);
     $invoice->select();
 
@@ -587,22 +587,22 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
 if ($invoiceID && $invoiceItemIDs) {
     $currency = $invoice->get_value("currencyTypeID");
     $q = prepare("SELECT SUM(IF((iiTax IS NULL OR iiTax = 0) AND value,
-                          (value/100+1) * iiAmount * pow(10,-currencyType.numberToBasic),
-                          iiAmount * pow(10,-currencyType.numberToBasic)
-                      )) as sum_iiAmount
-                  FROM invoiceItem 
-             LEFT JOIN invoice on invoiceItem.invoiceID = invoice.invoiceID
-             LEFT JOIN currencyType on invoice.currencyTypeID = currencyType.currencyTypeID
-             LEFT JOIN config ON config.name = 'taxPercent'
-                 WHERE invoiceItem.invoiceID = %d", $invoiceID);
+                            (value/100+1) * iiAmount * pow(10,-currencyType.numberToBasic),
+                            iiAmount * pow(10,-currencyType.numberToBasic)
+                        )) as sum_iiAmount
+                    FROM invoiceItem
+               LEFT JOIN invoice on invoiceItem.invoiceID = invoice.invoiceID
+               LEFT JOIN currencyType on invoice.currencyTypeID = currencyType.currencyTypeID
+               LEFT JOIN config ON config.name = 'taxPercent'
+                   WHERE invoiceItem.invoiceID = %d", $invoiceID);
     $db->query($q);
     $db->next_record() and $TPL["invoiceTotal"] = page::money($currency, $db->f("sum_iiAmount"), "%S%m %c");
 
     $q = prepare("SELECT sum(amount * pow(10,-currencyType.numberToBasic)) as sum_transaction_amount
-                  FROM transaction 
-             LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
-                 WHERE status = 'approved' 
-                   AND invoiceItemID in (%s)", $invoiceItemIDs);
+                    FROM transaction
+               LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
+                   WHERE status = 'approved'
+                     AND invoiceItemID in (%s)", $invoiceItemIDs);
     $db->query($q);
     $db->next_record() and $TPL["invoiceTotalPaid"] = page::money($currency, $db->f("sum_transaction_amount"), "%S%m %c");
 }

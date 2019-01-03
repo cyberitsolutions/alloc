@@ -18,14 +18,12 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 class invoiceRepeatDate extends db_entity
 {
     public $classname = "invoiceRepeatDate";
     public $data_table = "invoiceRepeatDate";
     public $key_field = "invoiceRepeatDateID";
-    public $data_fields = array("invoiceRepeatID"
-                             ,"invoiceDate"
-                             );
+    public $data_fields = array("invoiceRepeatID", "invoiceDate");
 }

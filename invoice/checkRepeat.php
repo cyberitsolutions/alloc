@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 define("NO_AUTH", true);
 require_once("../alloc.php");
@@ -54,7 +54,7 @@ while ($row = $db->row($id)) {
         singleton("current_user", $current_user);
     }
 
-  #echo "<br>Checking row: ".print_r($row,1);
+    #echo "<br>Checking row: ".print_r($row,1);
 
     $invoice = new invoice();
     $invoice->set_id($row["templateInvoiceID"]);
@@ -73,7 +73,7 @@ while ($row = $db->row($id)) {
     $i->set_value("maxAmount", $invoice->get_value("maxAmount"));
     $i->save();
 
-  #echo "<br>Created invoice: ".$i->get_id();
+    #echo "<br>Created invoice: ".$i->get_id();
 
     $q = prepare("SELECT * FROM invoiceItem WHERE invoiceID = %d", $invoice->get_id());
     $id2 = $db->query($q);
@@ -86,7 +86,7 @@ while ($row = $db->row($id)) {
         $ii->set_value("iiAmount", page::money($ii->currency, $item["iiAmount"], "%mo"));
         $ii->set_value("iiQuantity", $item["iiQuantity"]);
         $ii->save();
-      #echo "<br>Created invoice item: ".$ii->get_id();
+        #echo "<br>Created invoice item: ".$ii->get_id();
     }
 
 
@@ -104,14 +104,14 @@ while ($row = $db->row($id)) {
             $emailRecipients = comment::add_interested_parties($commentID, null, $recipients);
             comment::attach_invoice($commentID, $i->get_id(), $verbose = true);
 
-          // Re-email the comment out, including any attachments
+            // Re-email the comment out, including any attachments
             if (!comment::send_comment($commentID, $emailRecipients)) {
                 alloc_error("Failed to email invoice: ".$i->get_id());
             }
         }
     }
 
-  // Put current_user back to normal
+    // Put current_user back to normal
     $current_user = &$orig_current_user;
     singleton("current_user", $current_user);
 }

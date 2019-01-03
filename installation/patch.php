@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 define("NO_AUTH", 1);
 define("IS_GOD", true);
@@ -28,8 +28,8 @@ function apply_patch($f)
 {
     global $TPL;
     static $files;
-  // Should never attempt to apply the same patch twice.. in case
-  // there are function declarations in the .php patches.
+    // Should never attempt to apply the same patch twice.. in case
+    // there are function declarations in the .php patches.
     if ($files[$f]) {
         return;
     }
@@ -40,8 +40,8 @@ function apply_patch($f)
     $comments = array();
 
 
-  // This is an important patch that converts money from 120.34 to 12034.
-  // We MUST ensure that the user has a currency set before applying this patch.
+    // This is an important patch that converts money from 120.34 to 12034.
+    // We MUST ensure that the user has a currency set before applying this patch.
     if ($file == "patch-00188-alla.sql") {
         if (!config::get_config_item('currency')) {
             alloc_error("No default currency is set! Login to alloc (ignore any errors, you may need to manually change the url to config/config.php after logging in) go to Setup -> Finance and select a Main Currency. And then click the 'Update Transactions That Have No Currency' button. Then return here and apply this patch (patch-188). IT IS REALLY IMPORTANT THAT YOU FOLLOW THESE INSTRUCTIONS as the storage format for monetary amounts has changed.", true);
@@ -49,7 +49,7 @@ function apply_patch($f)
     }
 
 
-  // Try for sql file
+    // Try for sql file
     if (strtolower(substr($file, -4)) == ".sql") {
         list($sql,$comments) = parse_sql_file($f);
         foreach ($sql as $query) {
@@ -67,7 +67,7 @@ function apply_patch($f)
     } else if (strtolower(substr($file, -4)) == ".php") {
         $str = execute_php_file("../patches/".$file);
         if ($str && !defined("FORCE_PATCH_SUCCEED_".$file)) {
-          #$TPL["message"][] = "<b style=\"color:red\">Error:</b> ".$f."<br>".$str;
+            #$TPL["message"][] = "<b style=\"color:red\">Error:</b> ".$f."<br>".$str;
             $failed = true;
             ob_end_clean();
             alloc_error("<b style=\"color:red\">Error:</b> ".$f."<br>".$str);
@@ -76,7 +76,7 @@ function apply_patch($f)
         }
     }
     if (!$failed) {
-        $q = prepare("INSERT INTO patchLog (patchName, patchDesc, patchDate) 
+        $q = prepare("INSERT INTO patchLog (patchName, patchDesc, patchDate)
                   VALUES ('%s','%s','%s')", $file, implode(" ", $comments), date("Y-m-d H:i:s"));
         $db->query($q);
     }
@@ -112,7 +112,7 @@ if ($_REQUEST["apply_patches"]) {
     }
 } else if ($_REQUEST["remove_patch"] && $_REQUEST["patch_file"]) {
     $abc123_f = ALLOC_MOD_DIR."patches/".$_REQUEST["patch_file"];
-    $q = prepare("INSERT INTO patchLog (patchName, patchDesc, patchDate) 
+    $q = prepare("INSERT INTO patchLog (patchName, patchDesc, patchDate)
                 VALUES ('%s','%s','%s')", $_REQUEST["patch_file"], "Patch not applied.", date("Y-m-d H:i:s"));
     $db = new db_alloc();
     $db->query($q);

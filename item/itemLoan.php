@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
@@ -41,12 +41,12 @@ function show_overdue($template_name)
     $temp = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
     $today = date("Y", $temp)."-".date("m", $temp)."-".date("d", $temp);
 
-    $q = prepare("SELECT itemName,itemType,item.itemID,dateBorrowed,dateToBeReturned,loan.personID 
-                  FROM loan,item 
-                 WHERE dateToBeReturned < '%s' 
-					         AND dateReturned = '0000-00-00' 
-					         AND item.itemID = loan.itemID
-               ", $today);
+    $q = prepare("SELECT itemName,itemType,item.itemID,dateBorrowed,dateToBeReturned,loan.personID
+                    FROM loan,item
+                   WHERE dateToBeReturned < '%s'
+                     AND dateReturned = '0000-00-00'
+                     AND item.itemID = loan.itemID
+                 ", $today);
 
     if (!have_entity_perm("loan", PERM_READ, $current_user, false)) {
         $q .= prepare("AND loan.personID = %d", $current_user->get_id());

@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 class invoiceRepeat extends db_entity
 {
@@ -26,11 +26,10 @@ class invoiceRepeat extends db_entity
     public $data_table = "invoiceRepeat";
     public $display_field_name = "invoiceRepeatID";
     public $key_field = "invoiceRepeatID";
-    public $data_fields = array("invoiceID"
-                             ,"personID"
-                             ,"message"
-                             ,"active"
-                             );
+    public $data_fields = array("invoiceID",
+                                "personID",
+                                "message",
+                                "active");
     function save($dates = "")
     {
         $rtn = parent::save();

@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
@@ -77,7 +77,7 @@ if ($_POST["borrowItem"]) {
         $loan->read_globals();
         $loan->set_value("dateToBeReturned", $whenToReturn);
 
-      // if admin/manager then check to see if an alternate user was selected
+        // if admin/manager then check to see if an alternate user was selected
         if ($_POST["userID"] && ($current_user->have_role("admin") || $current_user->have_role("manage"))) {
             if ($_POST["userID"] != $current_user->get_id()) {
                 $person = new person();
@@ -111,7 +111,7 @@ if ($_POST["returnItem"]) {
         $loan->set_value("dateReturned", $today);
         $loan->set_value("itemID", $itemID);
 
-      // check to see if admin/manager returning someone elses item, and sent email
+        // check to see if admin/manager returning someone elses item, and sent email
         if ($loan->get_value("personID") != $current_user->get_id()) {
             if ($current_user->have_role("admin") || $current_user->have_role("manage")) {
                 $person = new person();

@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 define("DEFAULT_SEP", "\n");
 class invoiceEntity extends db_entity
@@ -26,12 +26,11 @@ class invoiceEntity extends db_entity
     public $classname = "invoiceEntity";
     public $data_table = "invoiceEntity";
     public $key_field = "invoiceEntityID";
-    public $data_fields = array("invoiceID"
-                             ,"timeSheetID"
-                             ,"expenseFormID"
-                             ,"productSaleID"
-                             ,"useItems"
-                             );
+    public $data_fields = array("invoiceID",
+                                "timeSheetID",
+                                "expenseFormID",
+                                "productSaleID",
+                                "useItems");
 
     function create($invoiceID, $entity, $entityID, $useItems = 0)
     {
@@ -52,10 +51,10 @@ class invoiceEntity extends db_entity
     function get($entity, $entityID)
     {
         $q = prepare("SELECT invoiceEntity.*,invoice.invoiceNum
-                    FROM invoiceEntity
-               LEFT JOIN invoice ON invoiceEntity.invoiceID = invoice.invoiceID
-                   WHERE invoiceEntity.%sID = %d
-                ", $entity, $entityID);
+                        FROM invoiceEntity
+                   LEFT JOIN invoice ON invoiceEntity.invoiceID = invoice.invoiceID
+                       WHERE invoiceEntity.%sID = %d
+                     ", $entity, $entityID);
         $db = new db_alloc();
         $db->query($q);
         while ($row = $db->row()) {
@@ -72,7 +71,7 @@ class invoiceEntity extends db_entity
                 $timeSheet = new timeSheet($row["timeSheetID"]);
                 $timeSheet_links[] = $timeSheet->get_link();
             }
-      
+
             if ($row["expenseFormID"]) {
                 $expenseForm = new expenseForm($row["expenseFormID"]);
                 $expenseForm_links[] = $expenseForm->get_link();
@@ -102,8 +101,8 @@ class invoiceEntity extends db_entity
             $project = $timeSheet->get_foreign_object("project");
             $date = $timeSheet->get_value("dateFrom") or $date = date("Y-m-d");
 
-          // customerBilledDollars will not be set if the actual field is blank,
-          // and thus there won't be a usable total_customerBilledDollars.
+            // customerBilledDollars will not be set if the actual field is blank,
+            // and thus there won't be a usable total_customerBilledDollars.
             if (isset($timeSheet->pay_info["customerBilledDollars"])) {
                 $amount = $timeSheet->pay_info["total_customerBilledDollars"];
                 $iiUnitPrice = $timeSheet->pay_info["customerBilledDollars"];
@@ -113,7 +112,7 @@ class invoiceEntity extends db_entity
                 $iiUnitPrice = $amount;
                 $iiQuantity = 1;
             }
-      
+
             $q = prepare("SELECT * FROM invoiceItem WHERE invoiceID = %d AND timeSheetID = %d AND timeSheetItemID IS NULL
                    ", $invoiceID, $timeSheetID);
             $db = new db_alloc();
@@ -164,16 +163,16 @@ class invoiceEntity extends db_entity
                 $str = $row["comment"];
             }
 
-          // Look for an existing invoiceItem
+            // Look for an existing invoiceItem
             $q = prepare("SELECT invoiceItem.invoiceItemID
-                      FROM invoiceItem
-                 LEFT JOIN invoice ON invoiceItem.invoiceID = invoice.invoiceID
-                     WHERE invoiceItem.timeSheetID = %d
-                       AND invoiceItem.timeSheetItemID = %d
-                       AND invoiceItem.invoiceID = %d
-                       AND invoice.invoiceStatus != 'finished'
-                  ORDER BY iiDate DESC LIMIT 1
-                   ", $timeSheet->get_id(), $row["timeSheetItemID"], $invoiceID);
+                            FROM invoiceItem
+                       LEFT JOIN invoice ON invoiceItem.invoiceID = invoice.invoiceID
+                           WHERE invoiceItem.timeSheetID = %d
+                             AND invoiceItem.timeSheetItemID = %d
+                             AND invoiceItem.invoiceID = %d
+                             AND invoice.invoiceStatus != 'finished'
+                        ORDER BY iiDate DESC LIMIT 1
+                         ", $timeSheet->get_id(), $row["timeSheetItemID"], $invoiceID);
             $q2 = $db->query($q);
             $r2 = $db->row($q2);
 
@@ -202,8 +201,8 @@ class invoiceEntity extends db_entity
         $expenseForm->select();
         $db = new db_alloc();
         $db->query("SELECT max(transactionDate) as maxDate
-                  FROM transaction
-                 WHERE expenseFormID = %d", $expenseFormID);
+                      FROM transaction
+                     WHERE expenseFormID = %d", $expenseFormID);
         $row = $db->row();
         $amount = $expenseForm->get_abs_sum_transactions();
 
@@ -265,8 +264,8 @@ class invoiceEntity extends db_entity
         $productSale->select();
         $db = new db_alloc();
         $db->query("SELECT max(transactionDate) as maxDate
-                  FROM transaction
-                 WHERE productSaleID = %d", $productSaleID);
+                      FROM transaction
+                     WHERE productSaleID = %d", $productSaleID);
         $row = $db->row();
         $amounts = $productSale->get_amounts();
 
@@ -285,7 +284,7 @@ class invoiceEntity extends db_entity
         $ii->set_value("iiUnitPrice", $amounts["total_sellPrice_value"]);
         $ii->set_value("iiAmount", $amounts["total_sellPrice_value"]);
         $ii->set_value("iiDate", $row["maxDate"]);
-      //$ii->set_value("iiTax",config::get_config_item("taxPercent"));
+        //$ii->set_value("iiTax",config::get_config_item("taxPercent"));
         $ii->save();
     }
 
@@ -317,7 +316,7 @@ class invoiceEntity extends db_entity
             $ii->set_value("iiAmount", $row["sellPrice"]*$row["quantity"]);
             $d = $productSale->get_value("productSaleDate") or $d = $productSale->get_value("productSaleModifiedTime") or $d = $productSale->get_value("productSaleCreatedTime");
             $ii->set_value("iiDate", $d);
-          //$ii->set_value("iiTax",config::get_config_item("taxPercent")); // product sale items are always excl GST
+            //$ii->set_value("iiTax",config::get_config_item("taxPercent")); // product sale items are always excl GST
             $ii->save();
         }
     }
