@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 define("PERM_TIME_APPROVE_TIMESHEETS", 256);
 define("PERM_TIME_INVOICE_TIMESHEETS", 512);
@@ -29,23 +29,23 @@ class timeSheet extends db_entity
     public $data_table = "timeSheet";
     public $display_field_name = "projectID";
     public $key_field = "timeSheetID";
-    public $data_fields = array("projectID"
-                             ,"dateFrom"
-                             ,"dateTo"
-                             ,"status"
-                             ,"personID"
-                             ,"approvedByManagerPersonID"
-                             ,"approvedByAdminPersonID"
-                             ,"dateSubmittedToManager"
-                             ,"dateSubmittedToAdmin"
-                             ,"dateRejected" => array("empty_to_null"=>true)
-                             ,"billingNote"
-                             ,"recipient_tfID"
-                             ,"customerBilledDollars" => array("type"=>"money")
-                             ,"currencyTypeID"
-                             );
-    public $permissions = array(PERM_TIME_APPROVE_TIMESHEETS => "approve"
-                             ,PERM_TIME_INVOICE_TIMESHEETS => "invoice");
+    public $data_fields = array("projectID",
+                                "dateFrom",
+                                "dateTo",
+                                "status",
+                                "personID",
+                                "approvedByManagerPersonID",
+                                "approvedByAdminPersonID",
+                                "dateSubmittedToManager",
+                                "dateSubmittedToAdmin",
+                                "dateRejected" => array("empty_to_null"=>true),
+                                "billingNote",
+                                "recipient_tfID",
+                                "customerBilledDollars" => array("type"=>"money"),
+                                "currencyTypeID");
+
+    public $permissions = array(PERM_TIME_APPROVE_TIMESHEETS => "approve",
+                                PERM_TIME_INVOICE_TIMESHEETS => "invoice");
 
     function is_owner()
     {
@@ -69,8 +69,8 @@ class timeSheet extends db_entity
             return true;
         }
 
-      // This allows people with transactions on this time sheet who may not
-      // actually be this time sheets owner to view this time sheet.
+        // This allows people with transactions on this time sheet who may not
+        // actually be this time sheets owner to view this time sheet.
         if ($this->get_value("status") != "edit") {
             $current_user_tfIDs = $current_user->get_tfIDs();
             $q = prepare("SELECT * FROM transaction WHERE timeSheetID = %d", $this->get_id());
@@ -106,13 +106,12 @@ class timeSheet extends db_entity
 
     public static function get_timeSheet_statii()
     {
-        return array("edit"      => "Add Time"
-                ,"manager"   => "Manager"
-                ,"admin"     => "Administrator"
-                ,"invoiced"  => "Invoice"
-                ,"finished"  => "Completed"
-                ,"rejected"  => "Rejected"
-                );
+        return array("edit"     => "Add Time",
+                     "manager"  => "Manager",
+                     "admin"    => "Administrator",
+                     "invoiced" => "Invoice",
+                     "finished" => "Completed",
+                     "rejected" => "Rejected");
     }
 
     function get_timeSheet_status()
@@ -124,26 +123,26 @@ class timeSheet extends db_entity
     function load_pay_info()
     {
 
-      /***************************************************************************
-       *                                                                         *
-       * load_pay_info() loads these vars:                                       *
-       * $this->pay_info["project_rate"];     according to projectPerson table   *
-       * $this->pay_info["project_rate_orig"];before the currency transform      *
-       * $this->pay_info["timeSheetItem_rate"];according to timeSheetItem table  *
-       * $this->pay_info["customerBilledDollars"];                               *
-       * $this->pay_info["project_rateUnitID"];   according to projectPerson table *
-       * $this->pay_info["duration"][time sheet ITEM ID];                        *
-       * $this->pay_info["total_duration"]; of a timesheet                       *
-       * $this->pay_info["total_dollars"];  of a timesheet                       *
-       * $this->pay_info["total_customerBilledDollars"]                          *
-       * $this->pay_info["total_dollars_minus_gst"]                              *
-       * $this->pay_info["total_customerBilledDollars_minus_gst"]                *
-       * $this->pay_info["unit"]                                                 *
-       * $this->pay_info["summary_unit_totals"]                                  *
-       * $this->pay_info["total_dollars_not_null"] tot_custbilled/tot_dollars    *
-       * $this->pay_info["currency"]; according to timeSheet table               *
-       *                                                                         *
-       ***************************************************************************/
+        /***************************************************************************
+         *                                                                         *
+         * load_pay_info() loads these vars:                                       *
+         * $this->pay_info["project_rate"];     according to projectPerson table   *
+         * $this->pay_info["project_rate_orig"];before the currency transform      *
+         * $this->pay_info["timeSheetItem_rate"];according to timeSheetItem table  *
+         * $this->pay_info["customerBilledDollars"];                               *
+         * $this->pay_info["project_rateUnitID"];   according to projectPerson table *
+         * $this->pay_info["duration"][time sheet ITEM ID];                        *
+         * $this->pay_info["total_duration"]; of a timesheet                       *
+         * $this->pay_info["total_dollars"];  of a timesheet                       *
+         * $this->pay_info["total_customerBilledDollars"]                          *
+         * $this->pay_info["total_dollars_minus_gst"]                              *
+         * $this->pay_info["total_customerBilledDollars_minus_gst"]                *
+         * $this->pay_info["unit"]                                                 *
+         * $this->pay_info["summary_unit_totals"]                                  *
+         * $this->pay_info["total_dollars_not_null"] tot_custbilled/tot_dollars    *
+         * $this->pay_info["currency"]; according to timeSheet table               *
+         *                                                                         *
+         ***************************************************************************/
 
         static $rates;
         unset($this->pay_info);
@@ -153,21 +152,21 @@ class timeSheet extends db_entity
             return false;
         }
         $currency = $this->get_value("currencyTypeID");
-    
-      // The unit labels
+
+        // The unit labels
         $timeUnit = new timeUnit();
         $units = array_reverse($timeUnit->get_assoc_array("timeUnitID", "timeUnitLabelA"), true);
 
         if ($rates[$this->get_value("projectID")][$this->get_value("personID")]) {
             list($this->pay_info["project_rate"],$this->pay_info["project_rateUnitID"]) = $rates[$this->get_value("projectID")][$this->get_value("personID")];
         } else {
-          // Get rate for person for this particular project
+            // Get rate for person for this particular project
             $db->query(
                 "SELECT rate, rateUnitID, project.currencyTypeID
-                    FROM projectPerson
-               LEFT JOIN project on projectPerson.projectID = project.projectID
-                   WHERE projectPerson.projectID = %d
-                     AND projectPerson.personID = %d",
+                   FROM projectPerson
+              LEFT JOIN project on projectPerson.projectID = project.projectID
+                  WHERE projectPerson.projectID = %d
+                    AND projectPerson.personID = %d",
                 $this->get_value("projectID"),
                 $this->get_value("personID")
             );
@@ -178,7 +177,7 @@ class timeSheet extends db_entity
             $rates[$this->get_value("projectID")][$this->get_value("personID")] = array($this->pay_info["project_rate"],$this->pay_info["project_rateUnitID"]);
         }
 
-      // Get external rate, only load up customerBilledDollars if the field is actually set
+        // Get external rate, only load up customerBilledDollars if the field is actually set
         if (imp($this->get_value("customerBilledDollars"))) {
             $this->pay_info["customerBilledDollars"] = page::money($currency, $this->get_value("customerBilledDollars"), "%mo");
         }
@@ -194,18 +193,18 @@ class timeSheet extends db_entity
 
         $extra_sql and $sql = ",".implode("\n,", $extra_sql);
 
-      // Get duration for this timesheet/timeSheetItems
+        // Get duration for this timesheet/timeSheetItems
         $db->query(prepare(
-            "SELECT SUM(timeSheetItemDuration) AS total_duration, 
-                               SUM((timeSheetItemDuration * timeUnit.timeUnitSeconds) / 3600) AS total_duration_hours,
-                               SUM((rate * pow(10,-currencyType.numberToBasic)) * timeSheetItemDuration * multiplier) AS total_dollars,
-                               SUM((IFNULL(timeSheet.customerBilledDollars,0) * pow(10,-currencyType.numberToBasic)) * timeSheetItemDuration * multiplier) AS total_customerBilledDollars
-                               ".$sql."
-                          FROM timeSheetItem
-                     LEFT JOIN timeUnit ON timeUnit.timeUnitID = timeSheetItem.timeSheetItemDurationUnitID
-                     LEFT JOIN timeSheet on timeSheet.timeSheetID = timeSheetItem.timeSheetID
-                     LEFT JOIN currencyType on currencyType.currencyTypeID = timeSheet.currencyTypeID
-                         WHERE timeSheetItem.timeSheetID = %d",
+            "SELECT SUM(timeSheetItemDuration) AS total_duration,
+                    SUM((timeSheetItemDuration * timeUnit.timeUnitSeconds) / 3600) AS total_duration_hours,
+                    SUM((rate * pow(10,-currencyType.numberToBasic)) * timeSheetItemDuration * multiplier) AS total_dollars,
+                    SUM((IFNULL(timeSheet.customerBilledDollars,0) * pow(10,-currencyType.numberToBasic)) * timeSheetItemDuration * multiplier) AS total_customerBilledDollars
+                    ".$sql."
+               FROM timeSheetItem
+          LEFT JOIN timeUnit ON timeUnit.timeUnitID = timeSheetItem.timeSheetItemDurationUnitID
+          LEFT JOIN timeSheet on timeSheet.timeSheetID = timeSheetItem.timeSheetID
+          LEFT JOIN currencyType on currencyType.currencyTypeID = timeSheet.currencyTypeID
+              WHERE timeSheetItem.timeSheetID = %d",
             $this->get_id()
         ));
 
@@ -250,9 +249,9 @@ class timeSheet extends db_entity
     function createTransactions($status = "pending")
     {
 
-      // So this will only create transaction if:
-      // - The timesheet status is admin
-      // - There is a recipient_tfID - that is the money is going to a TF
+        // So this will only create transaction if:
+        // - The timesheet status is admin
+        // - There is a recipient_tfID - that is the money is going to a TF
         $db = new db_alloc();
         $project = $this->get_foreign_object("project");
         $projectName = $project->get_value("projectName");
@@ -279,41 +278,41 @@ class timeSheet extends db_entity
         $taxPercentDivisor = ($taxPercent/100) + 1;
         $recipient_tfID = $this->get_value("recipient_tfID");
         $timeSheetRecipients = $project->get_timeSheetRecipients();
-    
+
         $rtn = array();
 
-      // This is just for internal transactions
+        // This is just for internal transactions
         if ($_POST["create_transactions_default"] && $this->pay_info["total_customerBilledDollars"] == 0) {
             $this->pay_info["total_customerBilledDollars_minus_gst"] = $this->pay_info["total_dollars"];
 
-          // 1. Credit Employee TF
+            // 1. Credit Employee TF
             $product = "Timesheet #".$this->get_id()." for ".$projectName." (".$this->pay_info["summary_unit_totals"].")";
             $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars"], $recipient_tfID, "timesheet", $status);
 
-          // 2. Payment Insurance
-          // removed
+            // 2. Payment Insurance
+            // removed
         } else if ($_POST["create_transactions_default"]) {
-          /*  This was previously named "Simple" transactions. Ho ho.
-            On the Project page we care about these following variables:
-             - Client Billed At $amount eg: $121
-             - The projectPersons rate for this project eg: $50;
+            /*  This was previously named "Simple" transactions. Ho ho.
+                On the Project page we care about these following variables:
+                - Client Billed At $amount eg: $121
+                - The projectPersons rate for this project eg: $50;
 
-            $121 after gst == $110
-            cyber get 28.5% of $110
-            djk get $50
-            commissions
-            whatever is left of the $110 goes to the 0% commissions
-          */
-      
-          // 1. Credit TAX/GST Cost Centre
+                $121 after gst == $110
+                cyber get 28.5% of $110
+                djk get $50
+                commissions
+                whatever is left of the $110 goes to the 0% commissions
+            */
+
+            // 1. Credit TAX/GST Cost Centre
             $product = $taxName." ".$taxPercent."% for timesheet #".$this->get_id();
             $rtn[$product] = $this->createTransaction($product, ($this->pay_info["total_customerBilledDollars"]-$this->pay_info["total_customerBilledDollars_minus_gst"]), $taxTfID, "tax", $status);
 
-          // 3. Credit Employee TF
+            // 3. Credit Employee TF
             $product = "Timesheet #".$this->get_id()." for ".$projectName." (".$this->pay_info["summary_unit_totals"].")";
             $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars"], $recipient_tfID, "timesheet", $status);
 
-          // 4. Credit Project Commissions
+            // 4. Credit Project Commissions
             $db->query(
                 "SELECT * FROM projectCommissionPerson where projectID = %d ORDER BY commissionPercent DESC",
                 $this->get_value("projectID")
@@ -326,17 +325,17 @@ class timeSheet extends db_entity
                     $amount = $this->pay_info["total_customerBilledDollars_minus_gst"]*($db->f("commissionPercent")/100);
                     $rtn[$product] = $this->createTransaction($product, $amount, $db->f("tfID"), "commission", $status);
 
-                // Suck up the rest of funds if it is a special zero % commission
+                    // Suck up the rest of funds if it is a special zero % commission
                 } else if ($db->f("commissionPercent") == 0) {
                     $amount = $this->pay_info["total_customerBilledDollars_minus_gst"] - $this->get_amount_so_far();
                     $amount < 0 and $amount = 0;
 
-                  // If the 0% commission is for the company tf, dump it in the company tf
+                    // If the 0% commission is for the company tf, dump it in the company tf
                     if ($db->f("tfID") == $company_tfID) {
                         $product = "Commission Remaining from timesheet #".$this->get_id().".  Project: ".$projectName;
                         $rtn[$product] = $this->createTransaction($product, $amount, $db->f("tfID"), "commission");
                     } else {
-                    // If it's cyber do a 50/50 split with the commission tf and the company
+                        // If it's cyber do a 50/50 split with the commission tf and the company
                         if (config::for_cyber()) {
                             $amount = $amount/2;
                             $product = "Commission Remaining from timesheet #".$this->get_id().".  Project: ".$projectName;
@@ -364,10 +363,10 @@ class timeSheet extends db_entity
     function get_amount_so_far($include_tax = false)
     {
         $q = prepare("SELECT SUM(amount * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance
-                    FROM transaction 
-               LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
-                   WHERE timeSheetID = %d AND transactionType != 'invoice'
-                 ", $this->get_id());
+                        FROM transaction
+                   LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
+                       WHERE timeSheetID = %d AND transactionType != 'invoice'
+                     ", $this->get_id());
         $include_tax or $q.= "AND transactionType != 'tax'";
         $db = new db_alloc();
         $r = $db->qr($q);
@@ -404,18 +403,18 @@ class timeSheet extends db_entity
 
     function shootEmail($email)
     {
-    
+
         $addr = $email["to"];
         $msg = $email["body"];
         $sub = $email["subject"];
         $type = $email["type"];
         $dummy = $_POST["dont_send_email"];
-    
-      // New email object wrapper takes care of logging etc.
+
+        // New email object wrapper takes care of logging etc.
         $email = new email_send($addr, $sub, $msg, $type);
 
-      // REMOVE ME!!
-      #$email->ignore_no_email_urls = true;
+        // REMOVE ME!!
+        #$email->ignore_no_email_urls = true;
 
 
         if ($dummy) {
@@ -470,7 +469,7 @@ class timeSheet extends db_entity
     {
         $current_user = &singleton("current_user");
 
-      // If they want starred, load up the timeSheetID filter element
+        // If they want starred, load up the timeSheetID filter element
         if ($filter["starred"]) {
             foreach ((array)$current_user->prefs["stars"]["timeSheet"] as $k => $v) {
                 $filter["timeSheetID"][] = $k;
@@ -478,10 +477,10 @@ class timeSheet extends db_entity
             is_array($filter["timeSheetID"]) or $filter["timeSheetID"][] = -1;
         }
 
-      // Filter timeSheetID
+        // Filter timeSheetID
         $filter["timeSheetID"] and $sql[] = sprintf_implode("timeSheet.timeSheetID = %d", $filter["timeSheetID"]);
 
-      // No point continuing if primary key specified, so return
+        // No point continuing if primary key specified, so return
         if ($filter["timeSheetID"] || $filter["starred"]) {
             return $sql;
         }
@@ -505,17 +504,17 @@ class timeSheet extends db_entity
 
     public static function get_list($_FORM)
     {
-      /*
-       * This is the definitive method of getting a list of timeSheets that need a sophisticated level of filtering
-       *
-       */
-  
+        /*
+         * This is the definitive method of getting a list of timeSheets that need a sophisticated level of filtering
+         *
+         */
+
         global $TPL;
         $current_user = &singleton("current_user");
         $_FORM["showShortProjectLink"] and $_FORM["showProjectLink"] = true;
         $filter = timeSheet::get_list_filter($_FORM);
 
-      // Used in timeSheetListS.tpl
+        // Used in timeSheetListS.tpl
         $extra["showFinances"] = $_FORM["showFinances"];
 
         $debug = $_FORM["debug"];
@@ -529,13 +528,13 @@ class timeSheet extends db_entity
         }
 
         $q = "SELECT timeSheet.*, person.personID, projectName, projectShortName
-            FROM timeSheet 
-       LEFT JOIN person ON timeSheet.personID = person.personID
-       LEFT JOIN project ON timeSheet.projectID = project.projectID
-       LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID 
-                 ".$filter."
-        GROUP BY timeSheet.timeSheetID
-        ORDER BY dateFrom,projectName,timeSheet.status,surname";
+                FROM timeSheet
+           LEFT JOIN person ON timeSheet.personID = person.personID
+           LEFT JOIN project ON timeSheet.projectID = project.projectID
+           LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID
+                     ".$filter."
+            GROUP BY timeSheet.timeSheetID
+            ORDER BY dateFrom,projectName,timeSheet.status,surname";
 
         $debug and print "Query: ".$q;
         $db = new db_alloc();
@@ -564,11 +563,11 @@ class timeSheet extends db_entity
             $row["duration"] = $t->pay_info["summary_unit_totals"];
 
             if ($t->get_value("status") == "edit" && imp($current_user->prefs["timeSheetHoursWarn"])
-            && $t->pay_info["total_duration_hours"] >= $current_user->prefs["timeSheetHoursWarn"]) {
+                && $t->pay_info["total_duration_hours"] >= $current_user->prefs["timeSheetHoursWarn"]) {
                 $row["hoursWarn"] = page::help("This time sheet has gone over ".$current_user->prefs["timeSheetHoursWarn"]." hours.", page::warn());
             }
             if ($t->get_value("status") == "edit" && imp($current_user->prefs["timeSheetDaysWarn"])
-            && (mktime()-format_date("U", $t->get_value("dateFrom")))/60/60/24 >= $current_user->prefs["timeSheetDaysWarn"]) {
+                && (mktime()-format_date("U", $t->get_value("dateFrom")))/60/60/24 >= $current_user->prefs["timeSheetDaysWarn"]) {
                 $row["daysWarn"] = page::help("This time sheet is over ".$current_user->prefs["timeSheetDaysWarn"]." days old.", page::warn());
             }
 
@@ -618,15 +617,15 @@ class timeSheet extends db_entity
 
     function get_transaction_totals()
     {
-  
+
         $db = new db_alloc();
         $q = prepare("SELECT amount * pow(10,-currencyType.numberToBasic) AS amount,
-                         transaction.currencyTypeID as currency
-                    FROM transaction 
-               LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
-                   WHERE status = 'approved' 
-                     AND timeSheetID = %d
-                 ", $this->get_id());
+                             transaction.currencyTypeID as currency
+                        FROM transaction
+                   LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
+                       WHERE status = 'approved'
+                         AND timeSheetID = %d
+                     ", $this->get_id());
         $db->query($q);
         while ($row = $db->row()) {
             if ($row["amount"] > 0) {
@@ -649,7 +648,7 @@ class timeSheet extends db_entity
         if ($sess->Started()) {
             $url = $sess->url(SCRIPT_PATH.$url);
 
-        // This for urls that are emailed
+            // This for urls that are emailed
         } else {
             static $prefix;
             $prefix or $prefix = config::get_config_item("allocURL");
@@ -666,27 +665,26 @@ class timeSheet extends db_entity
 
     function get_list_vars()
     {
-        return array("return"                         => "[MANDATORY] eg: array | html"
-                ,"timeSheetID"                    => "Time Sheet that has this ID"
-                ,"starred"                        => "Time Sheet that have been starred"
-                ,"projectID"                      => "Time Sheets that belong to this Project"
-                ,"taskID"                         => "Time Sheets that use this task"
-                ,"personID"                       => "Time Sheets for this person"
-                ,"status"                         => "Time Sheet status eg: edit | manager | admin | invoiced | finished"
-                ,"dateFrom"                       => "Time Sheets from a particular date"
-                ,"dateFromComparator"             => "The comparison operator: >, >=, <, <=, =, !="
-                ,"dateTo"                         => "Time Sheets to a particular date"
-                ,"dateToComparator"               => "The comparison operator: >, >=, <, <=, =, !="
-                ,"timeSheetItemHours"             => "Time Sheets that have a certain amount of hours billed eg: '>7 AND <10 OR =4 AND !=8'"
-                ,"url_form_action"                => "The submit action for the filter form"
-                ,"form_name"                      => "The name of this form, i.e. a handle for referring to this saved form"
-                ,"dontSave"                       => "Specify that the filter preferences should not be saved this time"
-                ,"applyFilter"                    => "Saves this filter as the persons preference"
-                ,"showShortProjectLink"           => "Show short Project link"
-                ,"showFinances"                   => "Shortcut for displaying the transactions and the totals"
-                ,"tfID"                           => "Time sheets that belong to this TF"
-                ,"showAllProjects"                => "Show archived and potential projects"
-                );
+        return array("return"               => "[MANDATORY] eg: array | html",
+                     "timeSheetID"          => "Time Sheet that has this ID",
+                     "starred"              => "Time Sheet that have been starred",
+                     "projectID"            => "Time Sheets that belong to this Project",
+                     "taskID"               => "Time Sheets that use this task",
+                     "personID"             => "Time Sheets for this person",
+                     "status"               => "Time Sheet status eg: edit | manager | admin | invoiced | finished",
+                     "dateFrom"             => "Time Sheets from a particular date",
+                     "dateFromComparator"   => "The comparison operator: >, >=, <, <=, =, !=",
+                     "dateTo"               => "Time Sheets to a particular date",
+                     "dateToComparator"     => "The comparison operator: >, >=, <, <=, =, !=",
+                     "timeSheetItemHours"   => "Time Sheets that have a certain amount of hours billed eg: '>7 AND <10 OR =4 AND !=8'",
+                     "url_form_action"      => "The submit action for the filter form",
+                     "form_name"            => "The name of this form, i.e. a handle for referring to this saved form",
+                     "dontSave"             => "Specify that the filter preferences should not be saved this time",
+                     "applyFilter"          => "Saves this filter as the persons preference",
+                     "showShortProjectLink" => "Show short Project link",
+                     "showFinances"         => "Shortcut for displaying the transactions and the totals",
+                     "tfID"                 => "Time sheets that belong to this TF",
+                     "showAllProjects"      => "Show archived and potential projects");
     }
 
     function load_form_data($defaults = array())
@@ -717,7 +715,7 @@ class timeSheet extends db_entity
     {
         $current_user = &singleton("current_user");
 
-      // display the list of project name.
+        // display the list of project name.
         $db = new db_alloc();
         if (!$_FORM['showAllProjects']) {
             $filter = "WHERE projectStatus = 'Current' ";
@@ -725,7 +723,7 @@ class timeSheet extends db_entity
         $query = prepare("SELECT projectID AS value, projectName AS label FROM project $filter ORDER by projectName");
         $rtn["show_project_options"] = page::select_options($query, $_FORM["projectID"], 70);
 
-      // display the list of user name.
+        // display the list of user name.
         if (have_entity_perm("timeSheet", PERM_READ, $current_user, false)) {
             $rtn["show_userID_options"] = page::select_options(person::get_username_list(), $_FORM["personID"]);
         } else {
@@ -736,7 +734,7 @@ class timeSheet extends db_entity
             $rtn["show_userID_options"] = page::select_options($person_array, $_FORM["personID"]);
         }
 
-      // display a list of status
+        // display a list of status
         $status_array = timeSheet::get_timeSheet_statii();
         unset($status_array["create"]);
 
@@ -745,14 +743,14 @@ class timeSheet extends db_entity
         }
         $rtn["show_status_options"] = page::select_options($status_array, $_FORM["status"]);
 
-      // display the date from filter value
+        // display the date from filter value
         $rtn["dateFrom"] = $_FORM["dateFrom"];
         $rtn["dateTo"] = $_FORM["dateTo"];
         $rtn["userID"] = $current_user->get_id();
         $rtn["showFinances"] = $_FORM["showFinances"];
         $rtn["showAllProjects"] = $_FORM["showAllProjects"];
 
-      // Get
+        // Get
         $rtn["FORM"] = "FORM=".urlencode(serialize($_FORM));
 
         return $rtn;
@@ -771,9 +769,9 @@ class timeSheet extends db_entity
 
     function change_status($direction)
     {
-      // access controls are partially disabled for timesheets. Make sure time sheet is really accessible by checking
-      // user ID - it's restricted to being NOT NULL in the DB. Not doing this check allows a user to overwrite
-      // an existing timesheet with a new one assigned to themself.
+        // access controls are partially disabled for timesheets. Make sure time sheet is really accessible by checking
+        // user ID - it's restricted to being NOT NULL in the DB. Not doing this check allows a user to overwrite
+        // an existing timesheet with a new one assigned to themself.
 
         if (!$this->get_value("personID")) {
             alloc_error("You do not have access to this timesheet.");
@@ -801,7 +799,7 @@ class timeSheet extends db_entity
         $newstatus = $steps[$direction][$status];
         if ($newstatus) {
             $m = $this->{"email_move_status_to_".$newstatus}($direction, $info);
-          //$this->save();
+            //$this->save();
             if (is_array($m)) {
                 return implode("<br>", $m);
             }
@@ -810,14 +808,14 @@ class timeSheet extends db_entity
 
     function email_move_status_to_edit($direction, $info)
     {
-      // is possible to move backwards to "edit", from both "manager" and "admin"
-      // requires manager or APPROVE_TIMESHEET permission
+        // is possible to move backwards to "edit", from both "manager" and "admin"
+        // requires manager or APPROVE_TIMESHEET permission
         $current_user = &singleton("current_user");
         $project = $this->get_foreign_object("project");
         $projectManagers = $project->get_timeSheetRecipients();
         if ($direction == "backwards") {
             if (!in_array($current_user->get_id(), $projectManagers) &&
-            !$this->have_perm(PERM_TIME_APPROVE_TIMESHEETS)) {
+                !$this->have_perm(PERM_TIME_APPROVE_TIMESHEETS)) {
                 //error, go away
                 alloc_error("You do not have permission to change this timesheet.");
             }
@@ -833,7 +831,7 @@ Rejected By: {$info["people_cache"][$current_user->get_id()]["name"]}
 
 EOD;
             $this->get_value("billingNote")
-            and $email["body"].= "Billing Note: ".$this->get_value("billingNote");
+                and $email["body"].= "Billing Note: ".$this->get_value("billingNote");
             $msg[] = $this->shootEmail($email);
 
             $this->set_value("dateSubmittedToAdmin", "");
@@ -851,17 +849,17 @@ EOD;
         $current_user = &singleton("current_user");
         $project = $this->get_foreign_object("project");
         $projectManagers = $project->get_timeSheetRecipients();
-      // Can get forwards to "manager" only from "edit" or "rejected"
+        // Can get forwards to "manager" only from "edit" or "rejected"
         if ($direction == "forwards") {
-          //forward to manager requires the timesheet to be owned by the current
-          //user or TIME_INVOICE_TIMESHEETS
-          //project managers may not do this
+            //forward to manager requires the timesheet to be owned by the current
+            //user or TIME_INVOICE_TIMESHEETS
+            //project managers may not do this
             if (!($this->get_value("personID") == $current_user->get_id() || $this->have_perm(PERM_TIME_INVOICE_TIMESHEETS))) {
                 alloc_error("You do not have permission to change this timesheet.");
             }
             $this->set_value("dateSubmittedToManager", date("Y-m-d"));
             $this->set_value("dateRejected", "");
-          // Check for time overrun
+            // Check for time overrun
             $overrun_tasks = array();
             $db = new db_alloc();
             $task_id_query = prepare("SELECT DISTINCT taskID FROM timeSheetItem WHERE timeSheetID=%d ORDER BY dateTimeSheetItem, timeSheetItemID", $this->get_id());
@@ -904,12 +902,12 @@ re-submission.$overrun_notice
 
 EOD;
                 $this->get_value("billingNote") and
-                $email["body"].= "\n\nBilling Note: ".$this->get_value("billingNote");
+                    $email["body"].= "\n\nBilling Note: ".$this->get_value("billingNote");
                 $msg[] = $this->shootEmail($email);
             }
-        // Can get backwards to "manager" only from "admin"
+            // Can get backwards to "manager" only from "admin"
         } else if ($direction == "backwards") {
-          //admin->manager requires APPROVE_TIMESHEETS
+            //admin->manager requires APPROVE_TIMESHEETS
             if (!$this->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
                 //no permission, go away
                 alloc_error("You do not have permission to change this timesheet.");
@@ -927,7 +925,7 @@ Submitted By: {$info["timeSheet_personID_name"]}
 
 EOD;
             $this->get_value("billingNote")
-            and $email["body"].= "Billing Note: ".$this->get_value("billingNote");
+                and $email["body"].= "Billing Note: ".$this->get_value("billingNote");
             $msg[] = $this->shootEmail($email);
             $this->set_value("dateRejected", date("Y-m-d"));
         }
@@ -942,15 +940,15 @@ EOD;
         $current_user = &singleton("current_user");
         $project = $this->get_foreign_object("project");
         $projectManagers = $project->get_timeSheetRecipients();
-      // Can get forwards to "admin" from "edit" and "manager"
+        // Can get forwards to "admin" from "edit" and "manager"
         if ($direction == "forwards") {
-          //3 ways to have permission to do this
-          //project manager for the timesheet
-          //no project manager and owner of the timesheet
-          //the permission flag
+            //3 ways to have permission to do this
+            //project manager for the timesheet
+            //no project manager and owner of the timesheet
+            //the permission flag
             if (!(in_array($current_user->get_id(), $projectManagers) ||
-            (empty($projectManagers) && $this->get_value("personID") == $current_user->get_id()) ||
-            $this->have_perm(PERM_TIME_APPROVE_TIMESHEETS))) {
+                  (empty($projectManagers) && $this->get_value("personID") == $current_user->get_id()) ||
+                  $this->have_perm(PERM_TIME_APPROVE_TIMESHEETS))) {
                 //error, go away
                 alloc_error("You do not have permission to change this timesheet.");
             }
@@ -985,13 +983,13 @@ satisfactory, make it editable again for re-submission.
 
 EOD;
                 $this->get_value("billingNote")
-                and $email["body"].= "Billing Note: ".$this->get_value("billingNote");
+                    and $email["body"].= "Billing Note: ".$this->get_value("billingNote");
                 $msg[] = $this->shootEmail($email);
             }
 
-        // Can get backwards to "admin" from "invoiced"
+            // Can get backwards to "admin" from "invoiced"
         } else {
-          //requires INVOICE_TIMESHEETS
+            //requires INVOICE_TIMESHEETS
             if (!$this->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
                 //no permission, go away
                 alloc_error("You do not have permission to change this timesheet.");
@@ -1006,15 +1004,15 @@ EOD;
     function email_move_status_to_invoiced($direction, $info)
     {
         $current_user = &singleton("current_user");
-      // Can get forwards to "invoiced" from "admin"
-      // requires INVOICE_TIMESHEETS
+        // Can get forwards to "invoiced" from "admin"
+        // requires INVOICE_TIMESHEETS
         if (!$this->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
             //no permission, go away
             alloc_error("You do not have permission to change this timesheet.");
         }
 
         if ($info["projectManagers"]
-        && !$this->get_value("approvedByManagerPersonID")) {
+            && !$this->get_value("approvedByManagerPersonID")) {
             $this->set_value("approvedByManagerPersonID", $current_user->get_id());
         }
         $this->set_value("approvedByAdminPersonID", $current_user->get_id());
@@ -1024,23 +1022,23 @@ EOD;
     function email_move_status_to_finished($direction, $info)
     {
         if ($direction == "forwards") {
-          //requires INVOICE_TIMESHEETS
+            //requires INVOICE_TIMESHEETS
             if (!$this->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
                 //no permission, go away
                 alloc_error("You do not have permission to change this timesheet.");
             }
 
-          //transactions
+            //transactions
             $q = prepare("SELECT DISTINCT transaction.transactionDate, transaction.product, transaction.status
-                      FROM transaction
-                      JOIN tf ON tf.tfID = transaction.tfID OR tf.tfID = transaction.fromTfID
-                RIGHT JOIN tfPerson ON tfPerson.personID = %d AND tfPerson.tfID = tf.tfID
-                     WHERE transaction.timeSheetID = %d
-                   ", $this->get_value('personID'), $this->get_id());
+                            FROM transaction
+                            JOIN tf ON tf.tfID = transaction.tfID OR tf.tfID = transaction.fromTfID
+                      RIGHT JOIN tfPerson ON tfPerson.personID = %d AND tfPerson.tfID = tf.tfID
+                           WHERE transaction.timeSheetID = %d
+                         ", $this->get_value('personID'), $this->get_id());
             $db = new db_alloc();
             $db->query($q);
 
-          //the email itself
+            //the email itself
             $email = array();
             $email["type"] = "timesheet_finished";
             $email["to"] = $info["timeSheet_personID_email"];
@@ -1055,8 +1053,8 @@ Your timesheet has been completed by {$info["current_user_name"]}.
 EOD;
 
             if ($db->num_rows() > 0) {
-                  $email["body"] .= "Transaction summary:\n";
-                  $status_ops = array("pending" => "Pending", "approved" => "Approved", "rejected" => "Rejected");
+                $email["body"] .= "Transaction summary:\n";
+                $status_ops = array("pending" => "Pending", "approved" => "Approved", "rejected" => "Rejected");
                 while ($db->next_record()) {
                     $email["body"] .= $db->f("transactionDate") . " for " . $db->f("product") . ": " . $status_ops[$db->f("status")] . "\n";
                 }
@@ -1070,7 +1068,7 @@ EOD;
     function pending_transactions_to_approved()
     {
         if (!$this->have_perm(PERM_TIME_APPROVE_TIMESHEETS)) {
-          //no permission, die
+            //no permission, die
             alloc_error("You do not have permission to approve transactions for this timesheet.");
         }
 
@@ -1086,7 +1084,7 @@ EOD;
         if ($rtn) {
             return $rtn;
         }
-      // Get vars for the emails below
+        // Get vars for the emails below
         $rtn["people_cache"] = $people_cache =& get_cached_table("person");
         $project = $this->get_foreign_object("project");
         $rtn["projectManagers"] = $project->get_timeSheetRecipients();
@@ -1133,32 +1131,32 @@ EOD;
         if ($row_projectPerson && $projectID) {
             if ($stuff["timeSheetID"]) {
                 $q = prepare("SELECT *
-                        FROM timeSheet
-                       WHERE status = 'edit'
-                         AND personID = %d
-                         AND timeSheetID = %d
-                    ORDER BY dateFrom
-                       LIMIT 1
-                  ", $current_user->get_id(), $stuff["timeSheetID"]);
+                                FROM timeSheet
+                               WHERE status = 'edit'
+                                 AND personID = %d
+                                 AND timeSheetID = %d
+                            ORDER BY dateFrom
+                               LIMIT 1
+                             ", $current_user->get_id(), $stuff["timeSheetID"]);
                 $db = new db_alloc();
                 $db->query($q);
                 $row = $db->row();
                 $row or alloc_error("Couldn't find an editable time sheet with that ID.");
             } else {
                 $q = prepare("SELECT *
-                        FROM timeSheet
-                       WHERE status = 'edit'
-                         AND projectID = %d
-                         AND personID = %d
-                    ORDER BY dateFrom
-                       LIMIT 1
-                  ", $projectID, $current_user->get_id());
+                                FROM timeSheet
+                               WHERE status = 'edit'
+                                 AND projectID = %d
+                                 AND personID = %d
+                            ORDER BY dateFrom
+                               LIMIT 1
+                             ", $projectID, $current_user->get_id());
                 $db = new db_alloc();
                 $db->query($q);
                 $row = $db->row();
             }
 
-          // If no timeSheets add a new one
+            // If no timeSheets add a new one
             if (!$row) {
                 $project = new project();
                 $project->set_id($projectID);
@@ -1174,14 +1172,14 @@ EOD;
                 $timeSheet->save();
                 $timeSheetID = $timeSheet->get_id();
 
-              // Else use the first timesheet we found
+                // Else use the first timesheet we found
             } else {
                 $timeSheetID = $row["timeSheetID"];
             }
 
             $timeSheetID or alloc_error($errstr."Couldn't locate an existing, or create a new Time Sheet.");
 
-          // Add new time sheet item
+            // Add new time sheet item
             if ($timeSheetID) {
                 $timeSheet = new timeSheet();
                 $timeSheet->set_id($timeSheetID);
@@ -1256,38 +1254,38 @@ EOD;
             }
             $this_id = $this->get_id();
         }
-      // return an aggregation of the current task/proj/client parties + the existing interested parties
+        // return an aggregation of the current task/proj/client parties + the existing interested parties
         $interestedPartyOptions = interestedParty::get_interested_parties("timeSheet", $this_id, $interestedPartyOptions);
         return $interestedPartyOptions;
     }
 
     function get_amount_allocated($fmt = "%s%mo")
     {
-      // Return total amount used and total amount allocated
+        // Return total amount used and total amount allocated
         if (is_object($this) && $this->get_id()) {
             $db = new db_alloc();
-          // Get most recent invoiceItem that this time sheet belongs to.
+            // Get most recent invoiceItem that this time sheet belongs to.
             $q = prepare("SELECT invoiceID
-                      FROM invoiceItem
-                     WHERE invoiceItem.timeSheetID = %d
-                  ORDER BY invoiceItem.iiDate DESC
-                     LIMIT 1
-                  ", $this->get_id());
+                            FROM invoiceItem
+                           WHERE invoiceItem.timeSheetID = %d
+                        ORDER BY invoiceItem.iiDate DESC
+                           LIMIT 1
+                         ", $this->get_id());
             $db->query($q);
             $row = $db->row();
             $invoiceID = $row["invoiceID"];
             if ($invoiceID) {
-                  $invoice = new invoice();
-                  $invoice->set_id($invoiceID);
-                  $invoice->select();
-                  $maxAmount = page::money($invoice->get_value("currencyTypeID"), $invoice->get_value("maxAmount"), $fmt);
-    
-                  // Loop through all the other invoice items on that invoice
-                  $q = prepare("SELECT sum(iiAmount) AS totalUsed FROM invoiceItem WHERE invoiceID = %d", $invoiceID);
-                  $db->query($q);
-                  $row2 = $db->row();
+                $invoice = new invoice();
+                $invoice->set_id($invoiceID);
+                $invoice->select();
+                $maxAmount = page::money($invoice->get_value("currencyTypeID"), $invoice->get_value("maxAmount"), $fmt);
 
-                  return array(page::money($invoice->get_value("currencyTypeID"), $row2["totalUsed"], $fmt),$maxAmount);
+                // Loop through all the other invoice items on that invoice
+                $q = prepare("SELECT sum(iiAmount) AS totalUsed FROM invoiceItem WHERE invoiceID = %d", $invoiceID);
+                $db->query($q);
+                $row2 = $db->row();
+
+                return array(page::money($invoice->get_value("currencyTypeID"), $row2["totalUsed"], $fmt),$maxAmount);
             }
         }
     }
@@ -1326,10 +1324,10 @@ EOD;
             $projectShortName && $projectShortName != $projectName and $projectName.= " ".$projectShortName;
         }
 
-        $q = prepare("SELECT dateTimeSheetItem, taskID, description, comment, commentPrivate 
-                    FROM timeSheetItem 
-                   WHERE timeSheetID = %d 
-                ORDER BY dateTimeSheetItem ASC", $this->get_id());
+        $q = prepare("SELECT dateTimeSheetItem, taskID, description, comment, commentPrivate
+                        FROM timeSheetItem
+                       WHERE timeSheetID = %d
+                    ORDER BY dateTimeSheetItem ASC", $this->get_id());
         $db = new db_alloc();
         $db->query($q);
         while ($r = $db->row()) {

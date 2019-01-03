@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 class timeSheetGraph
 {
@@ -29,26 +29,25 @@ class timeSheetGraph
     function get_list_vars()
     {
         return array(
-                //"projectIDs" => "An array of projectIDs"
-                 "dateFrom"    => "From Date"
-                ,"dateTo"      => "To Date"
-                ,"personID"    => "The person assigned to the task"
-                ,"groupBy"     => "Group the results by day or month"
-                ,"applyFilter" => "Store the filter settings"
-                );
+            //"projectIDs" => "An array of projectIDs"
+            "dateFrom"    => "From Date",
+            "dateTo"      => "To Date",
+            "personID"    => "The person assigned to the task",
+            "groupBy"     => "Group the results by day or month",
+            "applyFilter" => "Store the filter settings");
     }
 
     function load_filter($defaults)
     {
         $current_user = &singleton("current_user");
 
-      // display the list of project name.
+        // display the list of project name.
         $db = new db_alloc();
         $page_vars = array_keys(timeSheetGraph::get_list_vars());
         $_FORM = get_all_form_data($page_vars, $defaults);
 
         if ($_FORM["applyFilter"] && is_object($current_user)) {
-          // we have a new filter configuration from the user, and must save it
+            // we have a new filter configuration from the user, and must save it
             if (!$_FORM["dontSave"]) {
                 $url = $_FORM["url_form_action"];
                 unset($_FORM["url_form_action"]);
@@ -56,7 +55,7 @@ class timeSheetGraph
                 $_FORM["url_form_action"] = $url;
             }
         } else {
-          // we haven't been given a filter configuration, so load it from user preferences
+            // we haven't been given a filter configuration, so load it from user preferences
             $_FORM = $current_user->prefs[$_FORM["form_name"]];
         }
 
@@ -66,7 +65,7 @@ class timeSheetGraph
         $rtn["personID"] = $_FORM["personID"];
         $rtn["groupBy"] = $_FORM["groupBy"];
 
-      // GET
+        // GET
         $rtn["FORM"] = "FORM=".urlencode(serialize($_FORM));
         return $rtn;
     }

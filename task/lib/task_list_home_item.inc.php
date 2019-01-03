@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 class task_list_home_item extends home_item
 {
@@ -47,13 +47,12 @@ class task_list_home_item extends home_item
     {
         global $TPL;
 
-        $defaults = array("showHeader"=>true
-                     ,"showTaskID"=>true
-                     ,"taskView" => "prioritised"
-                     ,"showStatus" => "true"
-                     ,"url_form_action"=>$TPL["url_alloc_home"]
-                     ,"form_name"=>"taskListHome_filter"
-                     );
+        $defaults = array("showHeader"      => true,
+                          "showTaskID"      => true,
+                          "taskView"        => "prioritised",
+                          "showStatus"      => "true",
+                          "url_form_action" => $TPL["url_alloc_home"],
+                          "form_name"       => "taskListHome_filter");
 
         $current_user = &singleton("current_user");
         if (!$current_user->prefs["taskListHome_filter"]) {

@@ -18,31 +18,30 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 class timeSheetItem extends db_entity
 {
     public $data_table = "timeSheetItem";
     public $display_field_name = "description";
     public $key_field = "timeSheetItemID";
-    public $data_fields = array("timeSheetID"
-                             ,"dateTimeSheetItem"
-                             ,"timeSheetItemDuration"
-                             ,"timeSheetItemDurationUnitID"
-                             ,"rate" => array("type"=>"money")
-                             ,"personID"
-                             ,"description"
-                             ,"comment"
-                             ,"taskID"
-                             ,"multiplier"
-                             ,"commentPrivate"
-                             ,"emailUID"
-                             ,"emailMessageID"
-                             ,"timeSheetItemCreatedTime"
-                             ,"timeSheetItemCreatedUser"
-                             ,"timeSheetItemModifiedTime"
-                             ,"timeSheetItemModifiedUser"
-                             );
+    public $data_fields = array("timeSheetID",
+                                "dateTimeSheetItem",
+                                "timeSheetItemDuration",
+                                "timeSheetItemDurationUnitID",
+                                "rate" => array("type"=>"money"),
+                                "personID",
+                                "description",
+                                "comment",
+                                "taskID",
+                                "multiplier",
+                                "commentPrivate",
+                                "emailUID",
+                                "emailMessageID",
+                                "timeSheetItemCreatedTime",
+                                "timeSheetItemCreatedUser",
+                                "timeSheetItemModifiedTime",
+                                "timeSheetItemModifiedUser");
 
     function save()
     {
@@ -63,9 +62,9 @@ class timeSheetItem extends db_entity
             alloc_error("Adding this Time Sheet Item would exceed the amount allocated on the Pre-paid invoice. Time Sheet Item not saved.");
         }
 
-      // If unit is changed via CLI
+        // If unit is changed via CLI
         if ($this->get_value("timeSheetItemDurationUnitID") && $timeSheet->pay_info["project_rateUnitID"]
-        && $timeSheet->pay_info["project_rateUnitID"] != $this->get_value("timeSheetItemDurationUnitID") && !$timeSheet->can_edit_rate()) {
+            && $timeSheet->pay_info["project_rateUnitID"] != $this->get_value("timeSheetItemDurationUnitID") && !$timeSheet->can_edit_rate()) {
             alloc_error("Not permitted to edit time sheet item unit.");
         }
 
@@ -73,7 +72,7 @@ class timeSheetItem extends db_entity
             $this->set_value("timeSheetItemDurationUnitID", $timeSheet->pay_info["project_rateUnitID"]);
         }
 
-      // Last ditch perm checking - useful for the CLI
+        // Last ditch perm checking - useful for the CLI
         if (!is_object($timeSheet) || !$timeSheet->get_id()) {
             alloc_error("Unknown time sheet.");
         }
@@ -92,19 +91,19 @@ class timeSheetItem extends db_entity
     function parse_time_string($str)
     {
         preg_match("/^"
-              ."(\d\d\d\d\-\d\d?\-\d\d?\s+)?"   # date
-              ."([\d\.]+)?"          # duration
-              ."\s*"
-              ."(hours|hour|hrs|hr|days|day|weeks|week|months|month|fixed)?" # unit
-              ."\s*"
-              ."(x\s*[\d\.]+)?"     # multiplier eg: x 1.5
-              ."\s*"
-              ."(\d+)?"             # task id
-              ."\s*"
-              ."(.*)"               # comment
-              ."\s*"
-              #."(private)?"        # whether the comment is private
-              ."$/i", $str, $m);
+                   ."(\d\d\d\d\-\d\d?\-\d\d?\s+)?"   # date
+                   ."([\d\.]+)?"          # duration
+                   ."\s*"
+                   ."(hours|hour|hrs|hr|days|day|weeks|week|months|month|fixed)?" # unit
+                   ."\s*"
+                   ."(x\s*[\d\.]+)?"     # multiplier eg: x 1.5
+                   ."\s*"
+                   ."(\d+)?"             # task id
+                   ."\s*"
+                   ."(.*)"               # comment
+                   ."\s*"
+                   #."(private)?"        # whether the comment is private
+                   ."$/i", $str, $m);
 
         $rtn["date"] = trim($m[1]) or $rtn["date"] = date("Y-m-d");
         $rtn["duration"] = $m[2];
@@ -112,13 +111,13 @@ class timeSheetItem extends db_entity
         $rtn["multiplier"] = str_replace(array("x","X"," "), "", $m[4]) or $rtn["multiplier"] = 1;
         $rtn["taskID"] = $m[5];
         $rtn["comment"] = $m[6];
-      //$rtn["private"] = $m[7];
+        //$rtn["private"] = $m[7];
 
-      // use the first letter of the unit for the lookup
+        // use the first letter of the unit for the lookup
         $tu = array("h"=>1,"d"=>2,"w"=>3,"m"=>4,"f"=>5);
         $rtn["unit"] = $tu[$rtn["unit"][0]] or $rtn["unit"] = 1;
 
-      // change 2010/10/27 to 2010-10-27
+        // change 2010/10/27 to 2010-10-27
         $rtn["date"] = str_replace("/", "-", $rtn["date"]);
 
         return $rtn;
@@ -135,10 +134,10 @@ class timeSheetItem extends db_entity
 
         $db = new db_alloc();
         $q = prepare("SELECT invoiceItem.*
-                    FROM invoiceItem
-               LEFT JOIN invoice ON invoiceItem.invoiceID = invoice.invoiceID
-                   WHERE timeSheetID = %d
-                     AND invoiceStatus != 'finished'", $timeSheetID);
+                        FROM invoiceItem
+                   LEFT JOIN invoice ON invoiceItem.invoiceID = invoice.invoiceID
+                       WHERE timeSheetID = %d
+                         AND invoiceStatus != 'finished'", $timeSheetID);
         $db->query($q);
         while ($row = $db->row()) {
             $ii = new invoiceItem();
@@ -156,7 +155,7 @@ class timeSheetItem extends db_entity
     function get_fortnightly_average($personID = false)
     {
 
-      // Need an array of the past years fortnights
+        // Need an array of the past years fortnights
         $x = 0;
         while ($x < 365) {
             if ($x % 14 == 0) {
@@ -170,11 +169,11 @@ class timeSheetItem extends db_entity
         $personID and $personID_sql = prepare(" AND personID = %d", $personID);
 
         $q = prepare("SELECT DISTINCT dateTimeSheetItem, personID
-                    FROM timeSheetItem 
-                   WHERE dateTimeSheetItem > '%s'
-                      ".$personID_sql."
-                GROUP BY dateTimeSheetItem,personID
-                 ", $dateTimeSheetItem);
+                        FROM timeSheetItem
+                       WHERE dateTimeSheetItem > '%s'
+                             ".$personID_sql."
+                    GROUP BY dateTimeSheetItem,personID
+                     ", $dateTimeSheetItem);
 
         $db = new db_alloc();
         $db->query($q);
@@ -189,17 +188,17 @@ class timeSheetItem extends db_entity
         list($rows,$rows_dollars) = $this->get_averages($dateTimeSheetItem, $personID);
         foreach ($rows as $id => $avg) {
             $rtn[$id] = $avg / $how_many_fortnights[$id];
-          #echo "<br>".$id." ".$how_many_fortnights[$id];
+            #echo "<br>".$id." ".$how_many_fortnights[$id];
         }
 
-      // Convert all the monies into native currency
+        // Convert all the monies into native currency
         foreach ($rows_dollars as $id => $arr) {
             foreach ($arr as $r) {
                 $alex[$id] += exchangeRate::convert($r["currency"], $r["amount"]);
             }
         }
 
-      // Get the averages for each
+        // Get the averages for each
         foreach ((array)$alex as $id => $sum) {
             $rtn_dollars[$id] = $sum / $how_many_fortnights[$id];
         }
@@ -216,15 +215,15 @@ class timeSheetItem extends db_entity
             return $timeSheet->is_owner();
         }
     }
-  
+
     public static function get_list_filter($filter = array())
     {
 
-      // If timeSheetID is an array
+        // If timeSheetID is an array
         if ($filter["timeSheetID"] && is_array($filter["timeSheetID"])) {
             $timeSheetIDs = $filter["timeSheetID"];
 
-        // Else
+            // Else
         } else if ($filter["timeSheetID"] && is_numeric($filter["timeSheetID"])) {
             $timeSheetIDs[] = $filter["timeSheetID"];
         }
@@ -267,11 +266,11 @@ class timeSheetItem extends db_entity
 
     public static function get_list($_FORM)
     {
-      /*
-       * This is the definitive method of getting a list of timeSheetItems that need a sophisticated level of filtering
-       *
-       */
-   
+        /*
+         * This is the definitive method of getting a list of timeSheetItems that need a sophisticated level of filtering
+         *
+         */
+
         global $TPL;
         $filter = timeSheetItem::get_list_filter($_FORM);
 
@@ -285,9 +284,9 @@ class timeSheetItem extends db_entity
         }
 
         $q = "SELECT * FROM timeSheetItem
-       LEFT JOIN timeSheet ON timeSheet.timeSheetID = timeSheetItem.timeSheetID
-                 ".$filter."
-        ORDER BY timeSheet.timeSheetID,dateTimeSheetItem asc";
+           LEFT JOIN timeSheet ON timeSheet.timeSheetID = timeSheetItem.timeSheetID
+                     ".$filter."
+            ORDER BY timeSheet.timeSheetID,dateTimeSheetItem asc";
         $debug and print "Query: ".$q;
         $db = new db_alloc();
         $db->query($q);
@@ -295,7 +294,7 @@ class timeSheetItem extends db_entity
             $print = true;
             $t = new timeSheet();
             $t->read_db_record($db);
-      
+
             $tsi = new timeSheetItem();
             $tsi->read_db_record($db);
             $tsi->currency = $t->get_value("currencyTypeID");
@@ -321,18 +320,17 @@ class timeSheetItem extends db_entity
 
     function get_list_vars()
     {
-        return array("return"                   => "[MANDATORY] eg: array | html | dropdown_options"
-                ,"timeSheetID"              => "Show items for a particular time sheet"
-                ,"projectID"                => "Show items for a particular project"
-                ,"taskID"                   => "Show items for a particular task"
-                ,"date"                     => "Show items for a particular date"
-                ,"personID"                 => "Show items for a particular person"
-                ,"comment"                  => "Show items that have a comment like eg: *uick brown fox jump*"
-                );
+        return array("return"      => "[MANDATORY] eg: array | html | dropdown_options",
+                     "timeSheetID" => "Show items for a particular time sheet",
+                     "projectID"   => "Show items for a particular project",
+                     "taskID"      => "Show items for a particular task",
+                     "date"        => "Show items for a particular date",
+                     "personID"    => "Show items for a particular person",
+                     "comment"     => "Show items that have a comment like eg: *uick brown fox jump*");
     }
 
-  #function get_averages_past_fortnight($personID=false) {
-   # $dateTimeSheetItem = date("Y-m-d",mktime(0,0,0,date("m"),date("d")-14, date("Y")));
+    #function get_averages_past_fortnight($personID=false) {
+    # $dateTimeSheetItem = date("Y-m-d",mktime(0,0,0,date("m"),date("d")-14, date("Y")));
     // DON'T ERASE THIS!! This way will divide by the number of individual days worked
     #$rows = $this->get_averages($dateTimeSheetItem, $personID, "/ COUNT(DISTINCT dateTimeSheetItem)");
 
@@ -340,7 +338,7 @@ class timeSheetItem extends db_entity
     #$rows = $this->get_averages($dateTimeSheetItem, $personID);
 
     #return $rows;
-  #}
+    #}
 
 
     function get_averages($dateTimeSheetItem, $personID = false, $divisor = "", $endDate = null)
@@ -350,14 +348,14 @@ class timeSheetItem extends db_entity
         $endDate and $endDate_sql = prepare(" AND timeSheetItem.dateTimeSheetItem <= '%s'", $endDate);
 
         $q = prepare("SELECT personID
-                       , SUM(timeSheetItemDuration*timeUnitSeconds) ".$divisor." AS avg
-                    FROM timeSheetItem 
-               LEFT JOIN timeUnit ON timeUnitID = timeSheetItemDurationUnitID 
-                   WHERE dateTimeSheetItem > '%s'
-                      ".$personID_sql."
-                      ".$endDate_sql."
-                GROUP BY personID
-                 ", $dateTimeSheetItem);
+                           , SUM(timeSheetItemDuration*timeUnitSeconds) ".$divisor." AS avg
+                        FROM timeSheetItem
+                   LEFT JOIN timeUnit ON timeUnitID = timeSheetItemDurationUnitID
+                       WHERE dateTimeSheetItem > '%s'
+                             ".$personID_sql."
+                             ".$endDate_sql."
+                    GROUP BY personID
+                     ", $dateTimeSheetItem);
 
         $db = new db_alloc();
         $db->query($q);
@@ -366,17 +364,17 @@ class timeSheetItem extends db_entity
             $rows[$db->f("personID")] = $db->f("avg")/3600;
         }
 
-      //Calculate the dollar values
+        //Calculate the dollar values
         $q = prepare(
             "SELECT (rate * POW(10, -currencyType.numberToBasic) * timeSheetItemDuration * multiplier) as amount
-                       , timeSheet.currencyTypeID as currency 
-                       , timeSheetItem.*
-                    FROM timeSheetItem 
-               LEFT JOIN timeSheet on timeSheetItem.timeSheetID = timeSheet.timeSheetID
-               LEFT JOIN currencyType ON timeSheet.currencyTypeID = currencyType.currencyTypeID
-                WHERE dateTimeSheetItem > '%s'
-                      ".$personID_sql."
-                      ".$endDate_sql,
+                        , timeSheet.currencyTypeID as currency
+                        , timeSheetItem.*
+                     FROM timeSheetItem
+                LEFT JOIN timeSheet on timeSheetItem.timeSheetID = timeSheet.timeSheetID
+                LEFT JOIN currencyType ON timeSheet.currencyTypeID = currencyType.currencyTypeID
+                    WHERE dateTimeSheetItem > '%s'
+                          ".$personID_sql."
+                          ".$endDate_sql,
             $dateTimeSheetItem
         );
         $db->query($q);
@@ -391,7 +389,7 @@ class timeSheetItem extends db_entity
 
     function get_timeSheetItemComments($taskID = "", $starred = false)
     {
-      // Init
+        // Init
         $rows = array();
 
         if ($taskID) {
@@ -404,24 +402,24 @@ class timeSheetItem extends db_entity
             }
             $where = prepare("(timeSheetItem.timeSheetItemID in (%s))", $timeSheetItemIDs);
         }
-    
+
         $where or $where = " 1 ";
 
-      // Get list of comments from timeSheetItem table
+        // Get list of comments from timeSheetItem table
         $query = prepare("SELECT timeSheetID
-                           , timeSheetItemID
-                           , dateTimeSheetItem AS date
-                           , comment
-                           , personID
-                           , taskID
-                           , timeSheetItemDuration as duration
-                           , timeSheetItemCreatedTime
-                        FROM timeSheetItem
-                       WHERE ".$where." AND (commentPrivate != 1 OR commentPrivate IS NULL)
-                         AND emailUID is NULL
-                         AND emailMessageID is NULL
-                    ORDER BY dateTimeSheetItem,timeSheetItemID
-                     ");
+                               , timeSheetItemID
+                               , dateTimeSheetItem AS date
+                               , comment
+                               , personID
+                               , taskID
+                               , timeSheetItemDuration as duration
+                               , timeSheetItemCreatedTime
+                            FROM timeSheetItem
+                           WHERE ".$where." AND (commentPrivate != 1 OR commentPrivate IS NULL)
+                             AND emailUID is NULL
+                             AND emailMessageID is NULL
+                        ORDER BY dateTimeSheetItem,timeSheetItemID
+                         ");
 
         $db = new db_alloc();
         $db->query($query);
@@ -444,12 +442,12 @@ class timeSheetItem extends db_entity
 
         $q = prepare(
             "SELECT dateTimeSheetItem, sum(timeSheetItemDuration*timeUnitSeconds) / 3600 AS hours
-                    FROM timeSheetItem
-               LEFT JOIN timeUnit ON timeUnitID = timeSheetItemDurationUnitID
-                   WHERE personID = %d
-                     AND dateTimeSheetItem >= '%s'
-                     AND dateTimeSheetItem <= '%s'
-                GROUP BY dateTimeSheetItem",
+               FROM timeSheetItem
+          LEFT JOIN timeUnit ON timeUnitID = timeSheetItemDurationUnitID
+              WHERE personID = %d
+                AND dateTimeSheetItem >= '%s'
+                AND dateTimeSheetItem <= '%s'
+           GROUP BY dateTimeSheetItem",
             $personID,
             $start,
             $end
@@ -483,13 +481,13 @@ class timeSheetItem extends db_entity
 
         $q = prepare(
             "SELECT CONCAT(YEAR(dateTimeSheetItem),'-',MONTH(dateTimeSheetItem)) AS dateTimeSheetItem
-                       , sum(timeSheetItemDuration*timeUnitSeconds) / 3600 AS hours
-                    FROM timeSheetItem
-               LEFT JOIN timeUnit ON timeUnitID = timeSheetItemDurationUnitID
-                   WHERE personID = %d
-                     AND dateTimeSheetItem >= '%s'
-                     AND dateTimeSheetItem <= '%s'
-                GROUP BY YEAR(dateTimeSheetItem), MONTH(dateTimeSheetItem)",
+                  , sum(timeSheetItemDuration*timeUnitSeconds) / 3600 AS hours
+               FROM timeSheetItem
+          LEFT JOIN timeUnit ON timeUnitID = timeSheetItemDurationUnitID
+              WHERE personID = %d
+                AND dateTimeSheetItem >= '%s'
+                AND dateTimeSheetItem <= '%s'
+           GROUP BY YEAR(dateTimeSheetItem), MONTH(dateTimeSheetItem)",
             $personID,
             $start,
             $end
@@ -514,7 +512,7 @@ class timeSheetItem extends db_entity
             $points[] = array($d, sprintf("%d", $info[$d]["hours"]));
             $x++;
         }
-    
+
         return $points;
     }
 }

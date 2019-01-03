@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
@@ -52,9 +52,9 @@ function compare($a, $b)
     for ($i = 0, $a_value = 0, $b_value = 0; $a_value == $b_value && $i < 30; $i++) {
         $date = mktime(0, 0, 0, date("m"), date("d") - $i, date("Y"));
         $a_value = $comments["new"][$a][date("Y-m-d", $date)] + $projects["new"][$a][date("Y-m-d", $date)]
-        + $tasks["new"][$a][date("Y-m-d", $date)];
+            + $tasks["new"][$a][date("Y-m-d", $date)];
         $b_value = $comments["new"][$b][date("Y-m-d", $date)] + $projects["new"][$b][date("Y-m-d", $date)]
-        + $tasks["new"][$b][date("Y-m-d", $date)];
+            + $tasks["new"][$b][date("Y-m-d", $date)];
     }
     if ($a_value == $b_value) {
         return 0;

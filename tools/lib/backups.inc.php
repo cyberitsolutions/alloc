@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 
 class backups
@@ -33,7 +33,7 @@ class backups
         ini_set('max_execution_time', 900); // max time 15 minutes
         ini_set('memory_limit', "256M"); // max memory_limit
 
-      // externally_stored_directories is set in alloc.php
+        // externally_stored_directories is set in alloc.php
         foreach ($external_storage_directories as $folder) {
             $folder != "backups" and $folders[] = $folder;
         }
@@ -42,13 +42,13 @@ class backups
 
     function set_id()
     {
- // dummy so can re-use the get_attachment.php script
+        // dummy so can re-use the get_attachment.php script
         return true;
     }
 
     function select()
     {
- // dummy so can re-use the get_attachment.php script
+        // dummy so can re-use the get_attachment.php script
         return true;
     }
 
@@ -97,15 +97,15 @@ class backups
         if (!file_exists($dumpfile)) {
             alloc_error("Couldn't backup database to ".$dumpfile);
         } else {
-          // database dump
+            // database dump
             $files[] = $dumpfile;
-    
-          // load up all the attachment dirs
+
+            // load up all the attachment dirs
             foreach ($this->folders as $folder) {
                 $files[] = ATTACHMENTS_DIR.$folder;
             }
 
-          // add everything to the archive
+            // add everything to the archive
             $archive->add(
                 $files,
                 PCLZIP_OPT_REMOVE_PATH,
@@ -125,7 +125,7 @@ class backups
 
         $archive = new PclZip($file);
 
-      # Clear out the folder list
+        # Clear out the folder list
         foreach ($this->folders as $folder) {
             $this->empty_dir(ATTACHMENTS_DIR . $folder);
         }

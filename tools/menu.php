@@ -18,27 +18,29 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
-$misc_options = array(array("url"=>"reminderList"            ,"text"=>"Reminders"             ,"entity"=>""                   ,"action"=>true)
-                     ,array("url"=>"announcementList"        ,"text"=>"Announcements"         ,"entity"=>"announcement"       ,"action"=>PERM_READ_WRITE)
-                     ,array("url"=>"commentSummary"          ,"text"=>"Task Comment Summary"  ,"entity"=>""                   ,"action"=>true)
-                     ,array("url"=>"permissionList"          ,"text"=>"Security"              ,"entity"=>"permission"         ,"action"=>PERM_READ_WRITE)
-                     ,array("url"=>"search"                  ,"text"=>"Search"                ,"entity"=>""                   ,"action"=>true)
-                     ,array("url"=>"personSkillMatrix"       ,"text"=>"Company Skill Matrix"  ,"entity"=>"person"             ,"action"=>true)
-                     ,array("url"=>"personSkillAdd"          ,"text"=>"Edit Skill Items"      ,"entity"=>"person"             ,"action"=>PERM_PERSON_READ_MANAGEMENT)
-                     ,array("url"=>"commentTemplateList"     ,"text"=>"Comment Templates"     ,"entity"=>"commentTemplate"    ,"action"=>PERM_READ_WRITE)
-                     ,array("url"=>"loans"                   ,"text"=>"Item Loans"            ,"entity"=>"loan"               ,"action"=>true)
-                     ,array("url"=>"report"                  ,"text"=>"Reports"               ,"entity"=>""                   ,"action"=>true, "function"=>"has_report_perm")
-                     ,array("url"=>"backup"                  ,"text"=>"Database & File Backup","entity"=>""                   ,"function"=>"has_backup_perm")
-                     ,array("url"=>"sourceCodeList"          ,"text"=>"allocPSA Source Code"  ,"entity"=>"")
-                     ,array("url"=>"whatsnew"                ,"text"=>"Deployment Changelog"  ,"entity"=>""                   ,"function"=> "has_whatsnew_files")
-                     ,array("url"=>"inbox"                   ,"text"=>"Manage Inbox"          ,"entity"=>"config"             ,"action"=>PERM_UPDATE)
-                     );
+// NOTE:: While manually indenting, I didn't make the arrays $misc_options and
+// $finance_options follow the *exact* style as the other arrays because it
+// makes it harder to read. -- cjb, 2019-01
+$misc_options = array(array("url"=>"reminderList"        ,"text"=>"Reminders"              ,"entity"=>""                ,"action"=>true),
+                      array("url"=>"announcementList"    ,"text"=>"Announcements"          ,"entity"=>"announcement"    ,"action"=>PERM_READ_WRITE),
+                      array("url"=>"commentSummary"      ,"text"=>"Task Comment Summary"   ,"entity"=>""                ,"action"=>true),
+                      array("url"=>"permissionList"      ,"text"=>"Security"               ,"entity"=>"permission"      ,"action"=>PERM_READ_WRITE),
+                      array("url"=>"search"              ,"text"=>"Search"                 ,"entity"=>""                ,"action"=>true),
+                      array("url"=>"personSkillMatrix"   ,"text"=>"Company Skill Matrix"   ,"entity"=>"person"          ,"action"=>true),
+                      array("url"=>"personSkillAdd"      ,"text"=>"Edit Skill Items"       ,"entity"=>"person"          ,"action"=>PERM_PERSON_READ_MANAGEMENT),
+                      array("url"=>"commentTemplateList" ,"text"=>"Comment Templates"      ,"entity"=>"commentTemplate" ,"action"=>PERM_READ_WRITE),
+                      array("url"=>"loans"               ,"text"=>"Item Loans"             ,"entity"=>"loan"            ,"action"=>true),
+                      array("url"=>"report"              ,"text"=>"Reports"                ,"entity"=>""                ,"action"=>true, "function"=>"has_report_perm"),
+                      array("url"=>"backup"              ,"text"=>"Database & File Backup" ,"entity"=>""                ,"function"=>"has_backup_perm"),
+                      array("url"=>"sourceCodeList"      ,"text"=>"allocPSA Source Code"   ,"entity"=>""),
+                      array("url"=>"whatsnew"            ,"text"=>"Deployment Changelog"   ,"entity"=>""                ,"function"=> "has_whatsnew_files"),
+                      array("url"=>"inbox"               ,"text"=>"Manage Inbox"           ,"entity"=>"config"          ,"action"=>PERM_UPDATE));
 
-  //,array("url"=>"stats"                   ,"text"=>"allocPSA Statistics"   ,"entity"=>"config"             ,"action"=>PERM_UPDATE)
+//,array("url"=>"stats"                   ,"text"=>"allocPSA Statistics"   ,"entity"=>"config"             ,"action"=>PERM_UPDATE)
 
 function user_is_admin()
 {
@@ -47,21 +49,20 @@ function user_is_admin()
 }
 
 
-$finance_options = array(array("url"=>"tf"                   ,"text"=>"New Tagged Fund"           ,"entity"=>"tf"          ,"action"=>PERM_CREATE)
-                        ,array("url"=>"tfList"               ,"text"=>"List of Tagged Funds"      ,"entity"=>"tf"          ,"action"=>PERM_READ, "br"=>true)
-                        ,array("url"=>"transaction"          ,"text"=>"New Transaction"           ,"entity"=>""            ,"function"=>"user_is_admin")
-                        ,array("url"=>"transactionGroup"     ,"text"=>"New Transaction Group"     ,"entity"=>""            ,"function"=>"user_is_admin")
-                        ,array("url"=>"searchTransaction"    ,"text"=>"Search Transactions"       ,"entity"=>"transaction" ,"action"=>PERM_READ, "br"=>true)
-                        ,array("url"=>"expenseForm"          ,"text"=>"New Expense Form"          ,"entity"=>"expenseForm" ,"action"=>PERM_CREATE)
-                        ,array("url"=>"expenseFormList"      ,"text"=>"View Pending Expenses"     ,"entity"=>"expenseForm" ,"action"=>PERM_READ, "br"=>true)
-                        ,array("url"=>"wagesUpload"          ,"text"=>"Upload Wages File"         ,"entity"=>""            ,"function"=>"user_is_admin", "br"=>true)
-                        ,array("url"=>"transactionRepeat"    ,"text"=>"New Repeating Expense"     ,"entity"=>""            ,"function"=>"user_is_admin")
-                        ,array("url"=>"transactionRepeatList","text"=>"Repeating Expense List"    ,"entity"=>"transaction" ,"action"=>PERM_READ)
-                        ,array("url"=>"checkRepeat"          ,"text"=>"Execute Repeating Expenses","entity"=>""            ,"function"=>"user_is_admin")
-                        );
+$finance_options = array(array("url"=>"tf"                    ,"text"=>"New Tagged Fund"            ,"entity"=>"tf"          ,"action"=>PERM_CREATE),
+                         array("url"=>"tfList"                ,"text"=>"List of Tagged Funds"       ,"entity"=>"tf"          ,"action"=>PERM_READ, "br"=>true),
+                         array("url"=>"transaction"           ,"text"=>"New Transaction"            ,"entity"=>""            ,"function"=>"user_is_admin"),
+                         array("url"=>"transactionGroup"      ,"text"=>"New Transaction Group"      ,"entity"=>""            ,"function"=>"user_is_admin"),
+                         array("url"=>"searchTransaction"     ,"text"=>"Search Transactions"        ,"entity"=>"transaction" ,"action"=>PERM_READ, "br"=>true),
+                         array("url"=>"expenseForm"           ,"text"=>"New Expense Form"           ,"entity"=>"expenseForm" ,"action"=>PERM_CREATE),
+                         array("url"=>"expenseFormList"       ,"text"=>"View Pending Expenses"      ,"entity"=>"expenseForm" ,"action"=>PERM_READ, "br"=>true),
+                         array("url"=>"wagesUpload"           ,"text"=>"Upload Wages File"          ,"entity"=>""            ,"function"=>"user_is_admin", "br"=>true),
+                         array("url"=>"transactionRepeat"     ,"text"=>"New Repeating Expense"      ,"entity"=>""            ,"function"=>"user_is_admin"),
+                         array("url"=>"transactionRepeatList" ,"text"=>"Repeating Expense List"     ,"entity"=>"transaction" ,"action"=>PERM_READ),
+                         array("url"=>"checkRepeat"           ,"text"=>"Execute Repeating Expenses" ,"entity"=>""            ,"function"=>"user_is_admin"));
 
 
-                        #,array("url"=>"reconciliationReport", "params"=>"", "text"=>"Reconciliation Report", "entity"=>"transaction", "action"=>true, "function"=>"user_is_admin")
+#,array("url"=>"reconciliationReport", "params"=>"", "text"=>"Reconciliation Report", "entity"=>"transaction", "action"=>true, "function"=>"user_is_admin")
 
 function has_whatsnew_files()
 {

@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
@@ -49,7 +49,7 @@ if ($_POST["restore_backup"]) {
 }
 
 if ($_POST["delete_backup"]) {
-  # Can't go through the normal del_attachments thing because this isn't a real entity
+    # Can't go through the normal del_attachments thing because this isn't a real entity
 
     $file = $_POST["file"];
 

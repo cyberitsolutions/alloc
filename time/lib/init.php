@@ -18,12 +18,17 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 
 class time_module extends module
 {
     var $module = "time";
     var $db_entities = array("timeSheet", "timeSheetItem","timeUnit");
-    var $home_items = array("timeSheetHomeItem","tsiHintHomeItem","timeSheetListHomeItem","pendingApprovalTimeSheetListHomeItem","timeSheetStatusHomeItem","pendingAdminApprovalTimeSheetListHomeItem");
+    var $home_items = array("timeSheetHomeItem",
+                            "tsiHintHomeItem",
+                            "timeSheetListHomeItem",
+                            "pendingApprovalTimeSheetListHomeItem",
+                            "timeSheetStatusHomeItem",
+                            "pendingAdminApprovalTimeSheetListHomeItem");
 }

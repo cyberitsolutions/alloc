@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 
 class whatsnew
@@ -32,13 +32,13 @@ class whatsnew
 
     function set_id()
     {
- // dummy so can re-use the get_attachment.php script
+        // dummy so can re-use the get_attachment.php script
         return true;
     }
 
     function select()
     {
- // dummy so can re-use the get_attachment.php script
+        // dummy so can re-use the get_attachment.php script
         return true;
     }
 

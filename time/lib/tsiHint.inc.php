@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 class tsiHint extends db_entity
 {
@@ -26,16 +26,15 @@ class tsiHint extends db_entity
     public $data_table = "tsiHint";
     public $display_field_name = "projectID";
     public $key_field = "tsiHintID";
-    public $data_fields = array("taskID"
-                             ,"personID"
-                             ,"duration"
-                             ,"date"
-                             ,"comment"
-                             ,"tsiHintCreatedTime"
-                             ,"tsiHintCreatedUser"
-                             ,"tsiHintModifiedTime"
-                             ,"tsiHintModifiedUser"
-                             );
+    public $data_fields = array("taskID",
+                                "personID",
+                                "duration",
+                                "date",
+                                "comment",
+                                "tsiHintCreatedTime",
+                                "tsiHintCreatedUser",
+                                "tsiHintModifiedTime",
+                                "tsiHintModifiedUser");
 
     function add_tsiHint($stuff)
     {
@@ -67,7 +66,7 @@ class tsiHint extends db_entity
         $row_projectPerson or alloc_error($errstr."The person(".$current_user->get_id().") has not been added to the project(".$projectID.").");
 
         if ($row_projectPerson && $projectID) {
-          // Add new time sheet item
+            // Add new time sheet item
             $tsiHint = new tsiHint();
             $d = $date or $d = date("Y-m-d");
             $tsiHint->set_value("date", $d);
@@ -91,16 +90,16 @@ class tsiHint extends db_entity
     function parse_tsiHint_string($str)
     {
         preg_match("/^"
-              ."([a-zA-Z0-9]+)"                      # username
-              ."\s*"
-              ."(\d\d\d\d\-\d\d?\-\d\d?\s+)?"   # date
-              ."([\d\.]+)?"          # duration
-              ."\s*"
-              ."(\d+)?"             # task id
-              ."\s*"
-              ."(.*)"               # comment
-              ."\s*"
-              ."$/i", $str, $m);
+                   ."([a-zA-Z0-9]+)"                      # username
+                   ."\s*"
+                   ."(\d\d\d\d\-\d\d?\-\d\d?\s+)?"   # date
+                   ."([\d\.]+)?"          # duration
+                   ."\s*"
+                   ."(\d+)?"             # task id
+                   ."\s*"
+                   ."(.*)"               # comment
+                   ."\s*"
+                   ."$/i", $str, $m);
 
         $rtn["username"] = $m[1];
         $rtn["date"] = trim($m[2]) or $rtn["date"] = date("Y-m-d");
@@ -108,7 +107,7 @@ class tsiHint extends db_entity
         $rtn["taskID"] = $m[4];
         $rtn["comment"] = $m[5];
 
-      // change 2010/10/27 to 2010-10-27
+        // change 2010/10/27 to 2010-10-27
         $rtn["date"] = str_replace("/", "-", $rtn["date"]);
 
         return $rtn;

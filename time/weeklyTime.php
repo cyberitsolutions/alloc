@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
@@ -40,12 +40,12 @@ function show_timeSheetItems($template_name)
     global $date_to_view;
     $current_user = &singleton("current_user");
     global $TPL;
-    $query = prepare("SELECT * 
-                      FROM timeSheetItem 
-                           LEFT JOIN timeSheet ON timeSheetItem.timeSheetID = timeSheet.timeSheetID
-                           LEFT JOIN project ON timeSheet.projectID = project.projectID
-                      WHERE dateTimeSheetItem='%s'
-                            AND timeSheet.personID=%d", date("Y-m-d", $date_to_view), $current_user->get_id());
+    $query = prepare("SELECT *
+                        FROM timeSheetItem
+                             LEFT JOIN timeSheet ON timeSheetItem.timeSheetID = timeSheet.timeSheetID
+                             LEFT JOIN project ON timeSheet.projectID = project.projectID
+                       WHERE dateTimeSheetItem='%s'
+                         AND timeSheet.personID=%d", date("Y-m-d", $date_to_view), $current_user->get_id());
     $db = new db_alloc();
     $db->query($query);
     while ($db->next_record()) {
