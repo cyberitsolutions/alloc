@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 // Get an exported representation of something (at the moment, only a project)
 // Call as: get_export.php?entity=project&id=1&format=planner

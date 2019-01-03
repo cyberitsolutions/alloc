@@ -1,6 +1,6 @@
 <?php
 
-  /*
+/*
  * Copyright (C) 2006-2011 Alex Lance, Clancy Malcolm, Cyber IT Solutions
  * Pty. Ltd.
  *
@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 
 define("PERM_APPROVE_PRODUCT_TRANSACTIONS", 256);
@@ -27,19 +27,18 @@ class productSale extends db_entity
     public $classname = "productSale";
     public $data_table = "productSale";
     public $key_field = "productSaleID";
-    public $data_fields = array("clientID"
-                             ,"projectID"
-                             ,"personID"
-                             ,"tfID"
-                             ,"status"
-                             ,"productSaleCreatedTime"
-                             ,"productSaleCreatedUser"
-                             ,"productSaleModifiedTime"
-                             ,"productSaleModifiedUser"
-                             ,"productSaleDate"
-                             ,"extRef"
-                             ,"extRefDate"
-                             );
+    public $data_fields = array("clientID",
+                                "projectID",
+                                "personID",
+                                "tfID",
+                                "status",
+                                "productSaleCreatedTime",
+                                "productSaleCreatedUser",
+                                "productSaleModifiedTime",
+                                "productSaleModifiedUser",
+                                "productSaleDate",
+                                "extRef",
+                                "extRefDate");
     public $permissions = array(PERM_APPROVE_PRODUCT_TRANSACTIONS => "approve product transactions");
 
     function validate()
@@ -63,28 +62,28 @@ class productSale extends db_entity
             );
             $db = new db_alloc();
             if ($r = $db->qr($q)) {
-                  $rtn[] = "Unable to save Product Sale, this external reference number is used in Sale ".$r["productSaleID"];
+                $rtn[] = "Unable to save Product Sale, this external reference number is used in Sale ".$r["productSaleID"];
             }
         }
 
         return parent::validate($rtn);
     }
- 
+
     function is_owner()
     {
         $current_user = &singleton("current_user");
         return !$this->get_id()
-           || $this->get_value("productSaleCreatedUser") == $current_user->get_id()
-           || $this->get_value("personID") == $current_user->get_id();
+            || $this->get_value("productSaleCreatedUser") == $current_user->get_id()
+            || $this->get_value("personID") == $current_user->get_id();
     }
 
     function delete()
     {
         $db = new db_alloc();
         $query = prepare(
-            "SELECT * 
-                        FROM productSaleItem 
-                       WHERE productSaleID = %d",
+            "SELECT *
+               FROM productSaleItem
+              WHERE productSaleID = %d",
             $this->get_id()
         );
         $db->query($query);
@@ -99,8 +98,8 @@ class productSale extends db_entity
 
     function translate_meta_tfID($tfID = "")
     {
-      // The special -1 and -2 tfID's represent META TF, i.e. calculated at runtime
-      // -1 == META: Project TF
+        // The special -1 and -2 tfID's represent META TF, i.e. calculated at runtime
+        // -1 == META: Project TF
         if ($tfID == -1) {
             if ($this->get_value("projectID")) {
                 $project = new project();
@@ -112,7 +111,7 @@ class productSale extends db_entity
                 alloc_error("Unable to use META: Project TF. Please ensure the project has a TF set, or adjust the transactions.");
             }
 
-        // -2 == META: Salesperson TF
+            // -2 == META: Salesperson TF
         } else if ($tfID == -2) {
             if ($this->get_value("personID")) {
                 $person = new person();
@@ -131,7 +130,7 @@ class productSale extends db_entity
         }
         return $tfID;
     }
-  
+
     function get_productSaleItems()
     {
         $q = prepare("SELECT * FROM productSaleItem WHERE productSaleID = %d", $this->get_id());
@@ -150,13 +149,13 @@ class productSale extends db_entity
         $rows = $this->get_productSaleItems();
         $rows or $rows = array();
         $rtn = array();
-  
+
         foreach ($rows as $row) {
             $productSaleItem = new productSaleItem();
             $productSaleItem->read_row_record($row);
-          //$rtn["total_spent"] += $productSaleItem->get_amount_spent();
-          //$rtn["total_earnt"] += $productSaleItem->get_amount_earnt();
-          //$rtn["total_other"] += $productSaleItem->get_amount_other();
+            //$rtn["total_spent"] += $productSaleItem->get_amount_spent();
+            //$rtn["total_earnt"] += $productSaleItem->get_amount_earnt();
+            //$rtn["total_other"] += $productSaleItem->get_amount_other();
             list($sp,$spcur) = array($productSaleItem->get_value("sellPrice"),$productSaleItem->get_value("sellPriceCurrencyTypeID"));
 
             $sellPriceCurr[$spcur] += page::money($spcur, $sp, "%m");
@@ -190,7 +189,7 @@ class productSale extends db_entity
     {
         $rows = $this->get_productSaleItems();
         $rows or $rows = array();
-  
+
         foreach ($rows as $row) {
             $productSaleItem = new productSaleItem();
             $productSaleItem->read_row_record($row);
@@ -202,14 +201,14 @@ class productSale extends db_entity
     {
         $rows = $this->get_productSaleItems();
         $rows or $rows = array();
-  
+
         foreach ($rows as $row) {
             $productSaleItem = new productSaleItem();
             $productSaleItem->read_row_record($row);
             $productSaleItem->delete_transactions();
         }
     }
- 
+
     function move_forwards()
     {
         $current_user = &singleton("current_user");
@@ -237,8 +236,8 @@ class productSale extends db_entity
             $p = new product();
             $p->set_id($psi_row["productID"]);
             $taskDesc[] = "  ".page::money($psi_row["sellPriceCurrencyTypeID"], $psi_row["sellPrice"], "%S%mo")
-                    ." for ".$psi_row["quantity"]
-                    ." x ".$p->get_name();
+                ." for ".$psi_row["quantity"]
+                ." x ".$p->get_name();
             $hasItems = true;
         }
 
@@ -258,7 +257,7 @@ class productSale extends db_entity
 
         if ($status == "edit") {
             $this->set_value("status", "allocate");
-      
+
             $items = $this->get_productSaleItems();
             foreach ($items as $r) {
                 $psi = new productSaleItem();
@@ -271,7 +270,7 @@ class productSale extends db_entity
         } else if ($status == "allocate") {
             $this->set_value("status", "admin");
 
-          // 1. from salesperson to admin
+            // 1. from salesperson to admin
             $q = prepare("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'", $cyberadmin, $taskname1);
             if (config::for_cyber() && !$db->qr($q)) {
                 $task = new task();
@@ -321,7 +320,7 @@ class productSale extends db_entity
                 }
             }
 
-          // 2. from admin to salesperson
+            // 2. from admin to salesperson
             $q = prepare("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'", $cyberadmin, $taskname2);
             if (config::for_cyber() && !$db->qr($q)) {
                 $task = new task();
@@ -343,7 +342,7 @@ class productSale extends db_entity
                 );
                 $rai_row = $db->qr($q);
                 if ($rai_row) {
-                      $task->add_pending_tasks($rai_row["taskID"]);
+                    $task->add_pending_tasks($rai_row["taskID"]);
                 }
 
                 $order_the_hardware_taskID = $task->get_id();
@@ -358,7 +357,7 @@ class productSale extends db_entity
                 );
             }
 
-          // 3. from salesperson to admin
+            // 3. from salesperson to admin
             $q = prepare("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'", $cyberadmin, $taskname3);
             if (config::for_cyber() && !$db->qr($q)) {
                 $task = new task();
@@ -385,7 +384,7 @@ class productSale extends db_entity
                 );
             }
 
-          // 4. from admin to salesperson
+            // 4. from admin to salesperson
             $q = prepare("SELECT * FROM task WHERE projectID = %d AND taskName = '%s'", $cyberadmin, $taskname4);
             if (config::for_cyber() && !$db->qr($q)) {
                 $task = new task();
@@ -418,15 +417,15 @@ class productSale extends db_entity
         $rows = array();
         $query = prepare(
             "SELECT transaction.*
-                            ,productCost.productCostID  as pc_productCostID
-                            ,productCost.amount         as pc_amount
-                            ,productCost.isPercentage   as pc_isPercentage
-                            ,productCost.currencyTypeID as pc_currency
-                        FROM transaction 
-                   LEFT JOIN productCost on transaction.productCostID = productCost.productCostID
-                       WHERE productSaleID = %d
-                         AND productSaleItemID = %d
-                    ORDER BY transactionID",
+                   ,productCost.productCostID  as pc_productCostID
+                   ,productCost.amount         as pc_amount
+                   ,productCost.isPercentage   as pc_isPercentage
+                   ,productCost.currencyTypeID as pc_currency
+               FROM transaction
+          LEFT JOIN productCost on transaction.productCostID = productCost.productCostID
+              WHERE productSaleID = %d
+                AND productSaleItemID = %d
+           ORDER BY transactionID",
             $this->get_id(),
             $productSaleItemID
         );
@@ -463,7 +462,7 @@ class productSale extends db_entity
     {
         $current_user = &singleton("current_user");
 
-      // If they want starred, load up the productSaleID filter element
+        // If they want starred, load up the productSaleID filter element
         if ($filter["starred"]) {
             foreach ((array)$current_user->prefs["stars"]["productSale"] as $k => $v) {
                 $filter["productSaleID"][] = $k;
@@ -471,10 +470,10 @@ class productSale extends db_entity
             is_array($filter["productSaleID"]) or $filter["productSaleID"][] = -1;
         }
 
-      // Filter productSaleID
+        // Filter productSaleID
         $filter["productSaleID"] and $sql[] = sprintf_implode("productSale.productSaleID = %d", $filter["productSaleID"]);
 
-      // No point continuing if primary key specified, so return
+        // No point continuing if primary key specified, so return
         if ($filter["productSaleID"] || $filter["starred"]) {
             return $sql;
         }
@@ -485,7 +484,7 @@ class productSale extends db_entity
         }
 
         $filter["status"] and $sql[] = sprintf_implode("productSale.status = '%s'", $filter["status"]);
-    
+
         return $sql;
     }
 
@@ -506,7 +505,7 @@ class productSale extends db_entity
 
         $db = new db_alloc();
         $query = prepare("SELECT productSale.*, project.projectName, client.clientName
-                        FROM productSale 
+                        FROM productSale
                    LEFT JOIN client ON productSale.clientID = client.clientID
                    LEFT JOIN project ON productSale.projectID = project.projectID
                     ".$f);
@@ -577,25 +576,24 @@ class productSale extends db_entity
             }
             $this_id = $this->get_id();
         }
-      // return an aggregation of the current proj/client parties + the existing interested parties
+        // return an aggregation of the current proj/client parties + the existing interested parties
         $interestedPartyOptions = interestedParty::get_interested_parties("productSale", $this_id, $interestedPartyOptions);
         return $interestedPartyOptions;
     }
 
     function get_list_vars()
     {
-        return array("return"                         => "[MANDATORY] eg: array | html"
-                ,"productSaleID"                  => "Sale that has this ID"
-                ,"starred"                        => "Sale that have been starred"
-                ,"clientID"                       => "Sales that belong to this Client"
-                ,"projectID"                      => "Sales that belong to this Project"
-                ,"personID"                       => "Sales for this person"
-                ,"status"                         => "Sale status eg: edit | allocate | admin | finished"
-                ,"url_form_action"                => "The submit action for the filter form"
-                ,"form_name"                      => "The name of this form, i.e. a handle for referring to this saved form"
-                ,"dontSave"                       => "Specify that the filter preferences should not be saved this time"
-                ,"applyFilter"                    => "Saves this filter as the persons preference"
-                );
+        return array("return"          => "[MANDATORY] eg: array | html",
+                     "productSaleID"   => "Sale that has this ID",
+                     "starred"         => "Sale that have been starred",
+                     "clientID"        => "Sales that belong to this Client",
+                     "projectID"       => "Sales that belong to this Project",
+                     "personID"        => "Sales for this person",
+                     "status"          => "Sale status eg: edit | allocate | admin | finished",
+                     "url_form_action" => "The submit action for the filter form",
+                     "form_name"       => "The name of this form, i.e. a handle for referring to this saved form",
+                     "dontSave"        => "Specify that the filter preferences should not be saved this time",
+                     "applyFilter"     => "Saves this filter as the persons preference");
     }
 
     function load_form_data($defaults = array())
@@ -626,7 +624,7 @@ class productSale extends db_entity
     {
         $current_user = &singleton("current_user");
 
-      // display the list of project name.
+        // display the list of project name.
         $db = new db_alloc();
         if (!$_FORM['showAllProjects']) {
             $filter = "WHERE projectStatus = 'Current' ";
@@ -634,7 +632,7 @@ class productSale extends db_entity
         $query = prepare("SELECT projectID AS value, projectName AS label FROM project $filter ORDER by projectName");
         $rtn["show_project_options"] = page::select_options($query, $_FORM["projectID"], 70);
 
-      // display the list of user name.
+        // display the list of user name.
         if (have_entity_perm("productSale", PERM_READ, $current_user, false)) {
             $rtn["show_userID_options"] = page::select_options(person::get_username_list(), $_FORM["personID"]);
         } else {
@@ -645,23 +643,23 @@ class productSale extends db_entity
             $rtn["show_userID_options"] = page::select_options($person_array, $_FORM["personID"]);
         }
 
-      // display a list of status
+        // display a list of status
         $status_array = productSale::get_statii();
         unset($status_array["create"]);
 
         $rtn["show_status_options"] = page::select_options($status_array, $_FORM["status"]);
 
-      // display the date from filter value
+        // display the date from filter value
         $rtn["showAllProjects"] = $_FORM["showAllProjects"];
 
- 
+
         $options["clientStatus"] = array("Current");
         $options["return"] = "dropdown_options";
         $ops = client::get_list($options);
         $ops = array_kv($ops, "clientID", "clientName");
         $rtn["clientOptions"] = page::select_options($ops, $_FORM["clientID"]);
 
-      // Get
+        // Get
         $rtn["FORM"] = "FORM=".urlencode(serialize($_FORM));
 
         return $rtn;

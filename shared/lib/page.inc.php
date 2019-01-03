@@ -23,7 +23,7 @@
 class page
 {
 
-  // Initializer
+    // Initializer
     public function __construct()
     {
     }
@@ -45,7 +45,7 @@ class page
         $current_user = &singleton("current_user");
 
         include_template(ALLOC_MOD_DIR."shared/templates/footerS.tpl");
-      // close page
+        // close page
         $sess = new session();
         $sess->Save();
         if (is_object($current_user) && method_exists($current_user, "get_id") && $current_user->get_id()) {
@@ -154,12 +154,12 @@ class page
         $search  = array("&lt;br&gt;","&lt;br /&gt;","&lt;b&gt;","&lt;/b&gt;","&lt;u&gt;","&lt;/u&gt;",'\\');
         $replace = array("<br>"      ,"<br />"      ,"<b>"      ,"</b>"      ,"<u>"      ,"</u>"      ,'');
 
-        $types = array("message"             => "bad"
-                  ,"message_good"        => "good"
-                  ,"message_help"        => "help"
-                  ,"message_good_no_esc" => "good"
-                  ,"message_help_no_esc" => "help"
-                  );
+        $types = array("message"             => "bad",
+                       "message_good"        => "good",
+                       "message_help"        => "help",
+                       "message_good_no_esc" => "good",
+                       "message_help_no_esc" => "help",
+        );
 
         foreach ($types as $type => $class) {
             $str = "";
@@ -240,7 +240,7 @@ class page
         $attrs["name"] = $name;
         $attrs["wrap"] = "virtual";
         $cols            and $attrs["cols"]     = $cols;
-                         $attrs["style"]    = "height:".$heights[$height]."px";
+        $attrs["style"]    = "height:".$heights[$height]."px";
         $ops["width"]    and $attrs["style"]   .= "; width:".$ops["width"];
         $ops["class"]    and $attrs["class"]    = $ops["class"];
         $ops["tabindex"] and $attrs["tabindex"] = $ops["tabindex"];
@@ -262,16 +262,16 @@ EOD;
     }
     public static function select_options($options, $selected_value = null, $max_length = 45, $escape = true)
     {
-      /**
-       * Builds up options for use in a html select widget (works with multiple selected too)
-       *
-       * @param   $options          mixed   An sql query or an array of options
-       * @param   $selected_value   string  The current selected element
-       * @param   $max_length       int     The maximum string length of the label
-       * @return                    string  The string of options
-       */
+        /**
+         * Builds up options for use in a html select widget (works with multiple selected too)
+         *
+         * @param   $options          mixed   An sql query or an array of options
+         * @param   $selected_value   string  The current selected element
+         * @param   $max_length       int     The maximum string length of the label
+         * @return                    string  The string of options
+         */
 
-      // Build options from an SQL query: "SELECT col_a as value, col_b as label FROM"
+        // Build options from an SQL query: "SELECT col_a as value, col_b as label FROM"
         if (is_string($options)) {
             $db = new db_alloc();
             $db->query($options);
@@ -279,7 +279,7 @@ EOD;
                 $rows[$row["value"]] = $row["label"];
             }
 
-          // Build options from an array: array(value1=>label1, value2=>label2)
+            // Build options from an array: array(value1=>label1, value2=>label2)
         } else if (is_array($options)) {
             foreach ($options as $k => $v) {
                 $rows[$k] = $v;
@@ -287,7 +287,7 @@ EOD;
         }
 
         if (is_array($rows)) {
-          // Coerce selected options into an array
+            // Coerce selected options into an array
             if (is_array($selected_value)) {
                 $selected_values = $selected_value;
             } else if ($selected_value !== null) {
@@ -305,7 +305,7 @@ EOD;
                 if (is_array($selected_values)) {
                     foreach ($selected_values as $selected_value) {
                         if ($selected_value === "" && $value === 0) {
-                              // continue
+                            // continue
                         } else if ($selected_value == $value) {
                             $sel = " selected";
                         }
@@ -316,7 +316,7 @@ EOD;
                 if (strlen((string)$label) > $max_length) {
                     $label = substr($label, 0, $max_length - 3)."...";
                 }
-      
+
                 $escape and $label = page::htmlentities($label);
                 $label = str_replace(" ", "&nbsp;", $label);
 
@@ -410,7 +410,7 @@ EOD;
         $rtn = array();
         if (is_dir($dir)) {
             $handle = opendir($dir);
-          // TODO add icons to files attachaments in general
+            // TODO add icons to files attachaments in general
             while (false !== ($file = readdir($handle))) {
                 if (preg_match("/style_(.*)\.ini$/", $file, $m)) {
                     $rtn[] = ucwords($m[1]);
@@ -441,48 +441,48 @@ EOD;
     }
     public static function money_out($c, $amount = null)
     {
-      // AUD,100        -> 100.00
-      // AUD,0|''|false -> 0.00
+        // AUD,100        -> 100.00
+        // AUD,0|''|false -> 0.00
         if (imp($amount)) {
             $c or alloc_error("page::money(): no currency specified for amount $amount.");
             $currencies =& get_cached_table("currencyType");
             $n = $currencies[$c]["numberToBasic"];
 
-          // We can use foo * 10^-n to move the decimal point left
-          // Eg: sprintf(%0.2f, $amount * 10^-2) => 15000 becomes 150.00
-          // We use the numberToBasic number (eg 2) to a) move the decimal point, and b) dictate the sprintf string
+            // We can use foo * 10^-n to move the decimal point left
+            // Eg: sprintf(%0.2f, $amount * 10^-2) => 15000 becomes 150.00
+            // We use the numberToBasic number (eg 2) to a) move the decimal point, and b) dictate the sprintf string
             return page::money_fmt($c, ($amount * pow(10, -$n)));
         }
     }
     public static function money_in($c, $amount = null)
     {
-      // AUD,100.00 -> 100
-      // AUD,0      -> 0
-      // AUD        ->
+        // AUD,100.00 -> 100
+        // AUD,0      -> 0
+        // AUD        ->
         if (imp($amount)) {
             $c or alloc_error("page::money_in(): no currency specified for amount $amount.");
             $currencies =& get_cached_table("currencyType");
             $n = $currencies[$c]["numberToBasic"];
 
-          // We can use foo * 10^n to move the decimal point right
-          // Eg: $amount * 10^-2 => 150.00 becomes 15000
-          // We use the numberToBasic number (eg 2) to move the decimal point
+            // We can use foo * 10^n to move the decimal point right
+            // Eg: $amount * 10^-2 => 150.00 becomes 15000
+            // We use the numberToBasic number (eg 2) to move the decimal point
             return $amount * pow(10, $n);
         }
     }
     public static function money($c, $amount = null, $fmt = "%s%mo")
     {
-      // Money print
+        // Money print
         $c or $c = config::get_config_item('currency');
         $currencies =& get_cached_table("currencyType");
         $fmt = str_replace("%mo", page::money_out($c, $amount), $fmt);                          //%mo = money_out        eg: 150.21
         $fmt = str_replace("%mi", page::money_in($c, $amount), $fmt);                           //%mi = money_in         eg: 15021
         $fmt = str_replace("%m", page::money_fmt($c, $amount), $fmt);                          // %m = format           eg: 150.2 => 150.20
-                     $fmt = str_replace("%S", $currencies[$c]["currencyTypeLabel"], $fmt); // %S = mandatory symbol eg: $
+        $fmt = str_replace("%S", $currencies[$c]["currencyTypeLabel"], $fmt); // %S = mandatory symbol eg: $
         imp($amount) and $fmt = str_replace("%s", $currencies[$c]["currencyTypeLabel"], $fmt); // %s = optional symbol  eg: $
-                     $fmt = str_replace("%C", $c, $fmt);                                   // %C = mandatory code   eg: AUD
+        $fmt = str_replace("%C", $c, $fmt);                                   // %C = mandatory code   eg: AUD
         imp($amount) and $fmt = str_replace("%c", $c, $fmt);                                   // %c = optional code    eg: AUD
-                     $fmt = str_replace("%N", $currencies[$c]["currencyTypeName"], $fmt);  // %N = mandatory name   eg: Australian dollars
+        $fmt = str_replace("%N", $currencies[$c]["currencyTypeName"], $fmt);  // %N = mandatory name   eg: Australian dollars
         imp($amount) and $fmt = str_replace("%n", $currencies[$c]["currencyTypeName"], $fmt);  // %n = optional name    eg: Australian dollars
         $fmt = str_replace(array("%mo","%mi","%m","%S","%s","%C","%c","%N","%n"), "", $fmt); // strip leftovers away
         return $fmt;
@@ -495,12 +495,12 @@ EOD;
             $k = $row["currency"];
         }
 
-      // If there's only one currency, then just return that figure.
+        // If there's only one currency, then just return that figure.
         if (count($sums) == 1) {
             return page::money($k, $sums[$k], "%s%m %c");
         }
 
-      // Else if there's more than one currency, we'll provide a tooltip of the aggregation.
+        // Else if there's more than one currency, we'll provide a tooltip of the aggregation.
         foreach ((array)$sums as $currency => $amount) {
             $str.= $sep.page::money($currency, $amount, "%s%m %c");
             $sep = " + ";
@@ -532,7 +532,7 @@ EOD;
             $star_text = "<b style='display:none'>.</b>";
         }
         return '<a class="star'.$star_hot.'" href="'.$TPL["url_alloc_star"]
-          .'entity='.$entity.'&entityID='.$entityID.'"><b class="'.$star_icon.'">'.$star_text.'</b></a>';
+            .'entity='.$entity.'&entityID='.$entityID.'"><b class="'.$star_icon.'">'.$star_text.'</b></a>';
     }
     public static function star_sorter($entity, $entityID)
     {

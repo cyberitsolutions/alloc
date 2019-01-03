@@ -18,17 +18,16 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 class role extends db_entity
 {
     public $data_table = "role";
     public $key_field = "roleID";
-    public $data_fields = array("roleHandle"
-                             ,"roleName"
-                             ,"roleLevel"
-                             ,"roleSequence"
-                             );
+    public $data_fields = array("roleHandle",
+                                "roleName",
+                                "roleLevel",
+                                "roleSequence");
 
     function get_roles_array($level = "person")
     {

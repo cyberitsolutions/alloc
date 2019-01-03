@@ -18,11 +18,11 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 
 class security_module extends module
 {
     var $module = "security";
-    var $db_entities = array("permission","role");
+    var $db_entities = array("permission", "role");
 }

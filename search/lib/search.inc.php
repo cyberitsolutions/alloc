@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 define("PERM_PROJECT_READ_TASK_DETAIL", 256);
 
@@ -49,7 +49,7 @@ class search
             $prefix = "...";
             $suffix = "...";
 
-          // Nuke trailing ellipses if the string ends in the match
+            // Nuke trailing ellipses if the string ends in the match
             if (strlen(substr($haystack, $position)) == strlen($needle)) {
                 $suffix = "";
             }
@@ -57,8 +57,8 @@ class search
             $buffer = 30;
             $position = $position - $buffer;
 
-          // Reset position to zero cause negative number will make it wrap around,
-          // and nuke ellipses prefix because the string begins with the match
+            // Reset position to zero cause negative number will make it wrap around,
+            // and nuke ellipses prefix because the string begins with the match
             if ($position < 0) {
                 $position = 0;
                 $prefix = "";

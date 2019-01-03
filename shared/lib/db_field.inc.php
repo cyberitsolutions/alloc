@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 class db_field
 {
@@ -40,7 +40,7 @@ class db_field
 
         if (!is_array($options)) {
             $options = array();
-          #echo "<br>".$this->name;
+            #echo "<br>".$this->name;
         }
         reset($options);
         foreach ($options as $option_name => $option_value) {

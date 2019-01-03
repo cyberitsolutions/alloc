@@ -15,7 +15,7 @@ class pdf_reader
          */
         $a_obj = $this->getDataArray($data, "obj", "endobj");
         $j     = 0;
- 
+
         /**
          * Attempt to extract each part of the PDF document into a "filter"
          * element and a "data" element. This can then be used to decode the
@@ -32,9 +32,9 @@ class pdf_reader
                 $j++;
             }
         }
- 
+
         $result_data = null;
- 
+
         // decode the chunks
         foreach ($a_chunks as $chunk) {
             // Look at each chunk decide if we can decode it by looking at the contents of the filter
@@ -56,7 +56,7 @@ class pdf_reader
          * redundant data.
          */
         $result_data = trim(preg_replace('/([^a-z0-9 ])/i', ' ', $result_data));
- 
+
         // Return the data extracted from the document.
         if ($result_data == "") {
             return null;
@@ -64,7 +64,7 @@ class pdf_reader
             return $result_data;
         }
     }
- 
+
     /**
      * Strip out the text from a small chunk of data.
      *
@@ -80,11 +80,11 @@ class pdf_reader
         if (substr($ps_data, 0, 8) == '/CIDInit') {
             return '';
         }
- 
+
         $result = "";
- 
+
         $a_data = $this->getDataArray($ps_data, "[", "]");
- 
+
         // Extract the data.
         if (is_array($a_data)) {
             foreach ($a_data as $ps_text) {
@@ -96,7 +96,7 @@ class pdf_reader
                 }
             }
         }
- 
+
         // Didn't catch anything, try a different way of extracting the data
         if (trim($result) == "") {
             // the data may just be in raw format (outside of [] tags)
@@ -107,12 +107,12 @@ class pdf_reader
                 }
             }
         }
- 
+
         // Remove any stray characters left over.
         $result = preg_replace('/\b([^a|i])\b/i', ' ', $result);
         return trim($result);
     }
- 
+
     /**
      * Convert a section of data into an array, separated by the start and end words.
      *
@@ -126,7 +126,7 @@ class pdf_reader
         $start    = 0;
         $end      = 0;
         $a_result = array();
- 
+
         while ($start !== false && $end !== false) {
             $start = strpos($data, $start_word, $end);
             $end   = strpos($data, $end_word, $start);
@@ -135,7 +135,7 @@ class pdf_reader
                 $a_result[] = substr($data, $start, $end - $start + strlen($end_word));
             }
         }
- 
+
         return $a_result;
     }
 }

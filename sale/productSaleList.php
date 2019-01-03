@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
@@ -33,10 +33,9 @@ function show_filter()
 }
 
 
-$defaults = array("url_form_action"=>$TPL["url_alloc_productSaleList"]
-                 ,"form_name"=>"productSaleList_filter"
-                 ,"return" => "array"
-                 );
+$defaults = array("url_form_action"=>$TPL["url_alloc_productSaleList"],
+                  "form_name"=>"productSaleList_filter",
+                  "return" => "array");
 
 $_FORM = productSale::load_form_data($defaults);
 $TPL["productSaleListRows"] = productSale::get_list($_FORM);

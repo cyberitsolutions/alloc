@@ -1,6 +1,6 @@
 <?php
 
-  /*
+/*
  * Copyright (C) 2006-2011 Alex Lance, Clancy Malcolm, Cyber IT Solutions
  * Pty. Ltd.
  *
@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
@@ -56,8 +56,8 @@ function show_productSale_list($productSaleID, $template)
     $ops = $product->get_assoc_array("productID", "productName");
     $query = prepare(
         "SELECT *
-                      FROM productSaleItem 
-                     WHERE productSaleID = %d",
+           FROM productSaleItem
+          WHERE productSaleID = %d",
         $productSaleID
     );
     $db = new db_alloc();
@@ -79,7 +79,7 @@ function show_productSale_list($productSaleID, $template)
         $TPL["productList_dropdown"] = page::select_options($ops, $productSaleItem->get_value("productID"));
         $TPL["productLink"] = "<a href=\"".$TPL["url_alloc_product"]."productID=".$productSaleItem->get_value("productID")."\">".page::htmlentities($ops[$productSaleItem->get_value("productID")])."</a>";
         $TPL["transactions"] = $productSale->get_transactions($productSaleItem->get_id());
- 
+
         if ($taxName) {
             $TPL["sellPriceTax_check"] = sprintf(
                 " <input type='checkbox' name='sellPriceIncTax[]' value='%d'%s> inc %s",
@@ -240,20 +240,20 @@ if (!$TPL["message"] && $_POST["save"]) {
         is_array($_POST["sellPriceIncTax"]) or $_POST["sellPriceIncTax"] = array();
 
         foreach ($_POST["productSaleItemID"] as $k => $productSaleItemID) {
-          // Delete
+            // Delete
             if (in_array($productSaleItemID, $_POST["deleteProductSaleItem"])) {
                 $productSaleItem = new productSaleItem();
                 $productSaleItem->set_id($productSaleItemID);
                 $productSaleItem->delete();
 
-              // Save
+                // Save
             } else {
-                $a = array("productID"=>$_POST["productID"][$k]
-                  ,"sellPrice"=>$_POST["sellPrice"][$k]
-                  ,"sellPriceCurrencyTypeID"=>$_POST["sellPriceCurrencyTypeID"][$k]
-                  ,"quantity"=>$_POST["quantity"][$k]
-                  ,"description"=>$_POST["description"][$k]
-                  ,"productSaleID"=>$productSaleID);
+                $a = array("productID"               => $_POST["productID"][$k],
+                           "sellPrice"               => $_POST["sellPrice"][$k],
+                           "sellPriceCurrencyTypeID" => $_POST["sellPriceCurrencyTypeID"][$k],
+                           "quantity"                => $_POST["quantity"][$k],
+                           "description"             => $_POST["description"][$k],
+                           "productSaleID"           => $productSaleID);
 
                 if ($productSaleItemID) {
                     $a["sellPriceIncTax"] = sprintf("%d", in_array($productSaleItemID, $_POST["sellPriceIncTax"]));
@@ -280,31 +280,31 @@ if (!$TPL["message"] && $_POST["save"]) {
 
     if (is_array($_POST["transactionID"]) && count($_POST["transactionID"])) {
         foreach ($_POST["transactionID"] as $k => $transactionID) {
-          // Delete
+            // Delete
             if (in_array($transactionID, $_POST["deleteTransaction"])) {
                 $transaction = new transaction();
                 $transaction->set_id($transactionID);
                 $transaction->select();
                 $transaction->delete();
 
-              // Save
+                // Save
             } else if (imp($_POST["amount"][$k])) {
                 $type = $_POST["transactionType"][$k] or $type = 'sale';
 
-                $a = array("amount"            => $_POST["amount"][$k]
-                  ,"tfID"              => $_POST["tfID"][$k]
-                  ,"fromTfID"          => $_POST["fromTfID"][$k]
-                  ,"product"           => $_POST["product"][$k]
-                  ,"description"       => $_POST["description"][$k]
-                  ,"productSaleID"     => $productSaleID
-                  ,"productSaleItemID" => $_POST["productSaleItemID"]
-                  ,"productCostID"     => $_POST["productCostID"][$k]
-                  ,"transactionType"   => $type
-                  ,"transactionDate"   => date("Y-m-d")
-                  ,"status"            => 'pending'
-                  ,"currencyTypeID"    => $_POST["currencyTypeID"][$k]
-                  ,"transactionID"     => $transactionID);
-  
+                $a = array("amount"            => $_POST["amount"][$k],
+                           "tfID"              => $_POST["tfID"][$k],
+                           "fromTfID"          => $_POST["fromTfID"][$k],
+                           "product"           => $_POST["product"][$k],
+                           "description"       => $_POST["description"][$k],
+                           "productSaleID"     => $productSaleID,
+                           "productSaleItemID" => $_POST["productSaleItemID"],
+                           "productCostID"     => $_POST["productCostID"][$k],
+                           "transactionType"   => $type,
+                           "transactionDate"   => date("Y-m-d"),
+                           "status"            => 'pending',
+                           "currencyTypeID"    => $_POST["currencyTypeID"][$k],
+                           "transactionID"     => $transactionID);
+
                 if (CAN_APPROVE_TRANSACTIONS && $_POST["status"][$k]) {
                     $a["status"] = $_POST["status"][$k];
                 }
@@ -356,7 +356,7 @@ $productSale->set_values();
 
 
 list($client_select, $client_link, $project_select, $project_link)
-  = client::get_client_and_project_dropdowns_and_links($clientID, $projectID);
+    = client::get_client_and_project_dropdowns_and_links($clientID, $projectID);
 
 $TPL["show_client_options"] = $client_link;
 $TPL["show_project_options"] = $project_link;
@@ -406,11 +406,11 @@ $status = $productSale->get_value("status");
 if ($productSaleID && $status == "edit") {
     define("DISPLAY", DISPLAY_PRODUCT_SALE_ITEM_EDIT);
 
-// Show line item + transaction + edit
+    // Show line item + transaction + edit
 } else if ($productSaleID && ($status == "allocate" || ($status == "admin" && $productSale->have_perm(PERM_APPROVE_PRODUCT_TRANSACTIONS)))) {
     define("DISPLAY", DISPLAY_PRODUCT_SALE_ITEM_TRANSACTION_EDIT);
 
-// Show line item + transaction + view
+    // Show line item + transaction + view
 } else if ($productSaleID && ($status == "finished" || !$productSale->have_perm(PERM_APPROVE_PRODUCT_TRANSACTIONS))) {
     define("DISPLAY", DISPLAY_PRODUCT_SALE_ITEM_TRANSACTION_VIEW);
 } else {

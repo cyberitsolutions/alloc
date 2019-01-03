@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 // For use like get_attachment.php?entity=project&id=5&file=foo.bar
 
@@ -38,7 +38,7 @@ if (isset($_GET["id"]) && $file && !bad_filename($file)) {
             $fp = fopen($file, "rb");
             $mimetype = get_mimetype($file);
 
-          // Forge html for the whatsnew files
+            // Forge html for the whatsnew files
             if (basename(dirname(dirname($file))) == "whatsnew") {
                 $forged_suffix = ".html";
                 $mimetype="text/html";
