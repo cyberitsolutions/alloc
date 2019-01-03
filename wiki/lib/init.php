@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 
 require_once(dirname(__FILE__)."/markdown.inc.php");
@@ -36,12 +36,12 @@ class wiki_module extends module
     function file_save($file, $body)
     {
         if (is_dir(dirname($file)) && path_under_path(dirname($file), wiki_module::get_wiki_path())) {
-          // Save the file ...
+            // Save the file ...
             $handle = fopen($file, "w+b");
             fputs($handle, $body);
             fclose($handle);
 
-          // Update the search index for this file, if any
+            // Update the search index for this file, if any
             $index = Zend_Search_Lucene::open(ATTACHMENTS_DIR.'search/wiki');
             $f = str_replace(wiki_module::get_wiki_path(), "", $file);
             $hits = $index->find('id:' . $f);
@@ -55,14 +55,14 @@ class wiki_module extends module
 
     function file_delete($file)
     {
-      // remove the file, and remove the search index info for the file
+        // remove the file, and remove the search index info for the file
         if (is_dir(dirname($file)) && path_under_path(dirname($file), wiki_module::get_wiki_path())) {
-          // remove the file
+            // remove the file
             if (file_exists($file)) {
                 unlink($file);
             }
 
-          // Update the search index for this file, if any
+            // Update the search index for this file, if any
             $index = Zend_Search_Lucene::open(ATTACHMENTS_DIR.'search/wiki');
             $f = str_replace(wiki_module::get_wiki_path(), "", $file);
             $hits = $index->find('id:' . $f);
@@ -75,10 +75,10 @@ class wiki_module extends module
 
     function nuke_trailing_spaces_from_all_lines($str)
     {
-      // for some reason trailing slashes on a line appear to not get saved by
-      // particular vcs's. So when we compare the two files (the one on disk and
-      // the one in version control, we need to nuke trailing spaces, from every
-      // line.
+        // for some reason trailing slashes on a line appear to not get saved by
+        // particular vcs's. So when we compare the two files (the one on disk and
+        // the one in version control, we need to nuke trailing spaces, from every
+        // line.
         $lines or $lines = array();
         $str = str_replace("\r\n", "\n", $str);
         $bits = explode("\n", $str);
@@ -104,13 +104,13 @@ class wiki_module extends module
                 exit();
             }
 
-          // Get the regular revision ...
+            // Get the regular revision ...
             $disk_file = file_get_contents($f) or $disk_file = "";
 
             $vcs = vcs::get();
-          //$vcs->debug = true;
+            //$vcs->debug = true;
 
-          // Get a particular revision
+            // Get a particular revision
             if ($vcs) {
                 $vcs_file = $vcs->cat($f, $rev);
             }
@@ -143,13 +143,13 @@ class wiki_module extends module
 
     function update_search_index_doc(&$index, $file)
     {
-      // Attempt to parse pdfs
+        // Attempt to parse pdfs
         if (strtolower(substr($file, -4)) == ".pdf") {
             $pdfstr = file_get_contents(wiki_module::get_wiki_path().$file);
             $pdf_reader = new pdf_reader();
             $pdfstr = $pdf_reader->pdf2txt($pdfstr);
 
-        // Else regular text
+            // Else regular text
         } else {
             $str = file_get_contents(wiki_module::get_wiki_path().$file);
         }

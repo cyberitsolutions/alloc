@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 
 class vcs_mercurial extends vcs
@@ -35,19 +35,19 @@ class vcs_mercurial extends vcs
         $this->add_everything = " add ";
         $this->cat = ' cat -r %2$s %1$s ';
 
-      /*
-      author String. The unmodified author of the changeset.
-      branches String. The name of the branch on which the changeset was committed. Will be empty if the branch name was default.
-      date Date information. The date when the changeset was committed. This is not human-readable; you must pass it through a filter that will render it appropriately. See section 11.6 for more information on filters. The date is expressed as a pair of numbers. The first number is a Unix UTC timestamp (seconds since January 1, 1970); the second is the offset of the committer’s timezone from UTC, in seconds.
-      desc String. The text of the changeset description.
-      files List of strings. All files modified, added, or removed by this changeset.
-      filet4ht@95xadds List of strings. Files added by this changeset.
-      filet4ht@95xdels List of strings. Files removed by this changeset.
-      node String. The changeset identification hash, as a 40-character hexadecimal string.
-      parents List of strings. The parents of the changeset.
-      rev Integer. The repository-local changeset revision number.
-      tags List of strings. Any tags associated with the changeset.
-      */
+        /*
+          author String. The unmodified author of the changeset.
+          branches String. The name of the branch on which the changeset was committed. Will be empty if the branch name was default.
+          date Date information. The date when the changeset was committed. This is not human-readable; you must pass it through a filter that will render it appropriately. See section 11.6 for more information on filters. The date is expressed as a pair of numbers. The first number is a Unix UTC timestamp (seconds since January 1, 1970); the second is the offset of the committer’s timezone from UTC, in seconds.
+          desc String. The text of the changeset description.
+          files List of strings. All files modified, added, or removed by this changeset.
+          filet4ht@95xadds List of strings. Files added by this changeset.
+          filet4ht@95xdels List of strings. Files removed by this changeset.
+          node String. The changeset identification hash, as a 40-character hexadecimal string.
+          parents List of strings. The parents of the changeset.
+          rev Integer. The repository-local changeset revision number.
+          tags List of strings. Any tags associated with the changeset.
+        */
         $this->log = " log --template 'Hash: {node}\nAuthor: {author}\nDate: {date}\nMsg: {desc}\n' ";
         parent::__construct($repo);
     }
@@ -79,7 +79,7 @@ class vcs_mercurial extends vcs
 
     function log($file)
     {
-  
+
         if (is_file(wiki_module::get_wiki_path().DIRECTORY_SEPARATOR.$file)) {
             $this->log.= " -f "; // follow renames to files
         }

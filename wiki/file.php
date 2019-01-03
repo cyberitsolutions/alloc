@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
@@ -45,7 +45,7 @@ if ($_POST["save"]) {
         $error = "<div class='message warn noprint' style='margin-top:0px; margin-bottom:10px; padding:10px;'>";
         $error.= implode("<br>", $errors);
         $error.= "</div>";
-   
+
         $TPL["loadErrorPage"] = 1;
         $TPL["str"] = urlencode($_POST["wikitext"]);
         $TPL["commit_msg"] = urlencode($_POST["commit_msg"]);
@@ -53,16 +53,16 @@ if ($_POST["save"]) {
         $TPL["msg"] = $error;
         include_template("templates/wikiM.tpl");
     } else {
-      // If we're using version control
+        // If we're using version control
         if (is_object($vcs)) {
-          // Creating a new file
+            // Creating a new file
             if (!$file) {
                 wiki_module::file_save(wiki_module::get_wiki_path().$editName, $text);
                 $vcs->add(wiki_module::get_wiki_path().$editName);
                 $vcs->commit(wiki_module::get_wiki_path().$editName, $_POST["commit_msg"]);
                 alloc_redirect($TPL["url_alloc_wiki"]."target=".urlencode($editName));
 
-              // Moving or renaming the file
+                // Moving or renaming the file
             } else if ($file && $editName && $editName != $file) {
                 wiki_module::file_save(wiki_module::get_wiki_path().$file, $text);
                 $msg = $_POST["commit_msg"]." (".$file. " -> ".$editName.")";
@@ -71,7 +71,7 @@ if ($_POST["save"]) {
                 $TPL["file"] = $editName;
                 alloc_redirect($TPL["url_alloc_wiki"]."target=".urlencode($editName));
 
-              // Else just regular save
+                // Else just regular save
             } else if ($editName == $file) {
                 wiki_module::file_save(wiki_module::get_wiki_path().$file, $text);
                 $vcs->commit(wiki_module::get_wiki_path().$file, $_POST["commit_msg"]);
@@ -82,7 +82,7 @@ if ($_POST["save"]) {
                 alloc_redirect($TPL["url_alloc_wiki"]."target=".urlencode($file));
             }
 
-        // Else non-vcs save
+            // Else non-vcs save
         } else {
             wiki_module::file_save(wiki_module::get_wiki_path().$editName, $text);
             $TPL["message_good"][] = "File saved: ".$editName;
@@ -97,7 +97,7 @@ if ($_POST["save"]) {
     $_POST["commit_msg"].= "File deleted: ".$file;
 
     if (!$errors && !is_dir(wiki_module::get_wiki_path().$file)) {
-      // If we're using version control
+        // If we're using version control
         if (is_object($vcs)) {
             wiki_module::file_delete(wiki_module::get_wiki_path().$file);
             $vcs->rm(wiki_module::get_wiki_path().$file, $_POST["commit_msg"]);
@@ -107,7 +107,7 @@ if ($_POST["save"]) {
             $TPL["commit_msg"] = $_POST["commit_msg"];
             alloc_redirect($TPL["url_alloc_wiki"]."target=".urlencode(dirname($file)));
 
-        // Else non-vcs save
+            // Else non-vcs save
         } else {
             wiki_module::file_delete(wiki_module::get_wiki_path().$file);
             $TPL["message_good"][] = "File deleted: ".$file;
@@ -129,7 +129,7 @@ if ($_POST["save"]) {
     include_template("templates/fileM.tpl");
 } else if ($file && is_file(wiki_module::get_wiki_path().$file) && is_readable(wiki_module::get_wiki_path().$file)) {
     $TPL['current_path'] = dirname($file);
-  //dirname may return '.' if there's no dirname, need to get rid of it
+    //dirname may return '.' if there's no dirname, need to get rid of it
     if ($TPL['current_path'] == '.') {
         $TPL['current_path'] = '';
     } else {

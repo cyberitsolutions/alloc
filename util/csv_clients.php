@@ -18,23 +18,23 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
 /*
-ClientName
- Phone Number
- Fax Number
- Postal Address
- Postal Suburb
- Postal State
- Postal Postcode
- Street Address
- Street Suburb
- Comment
- Main_Contact
- Main Contact Email
+  ClientName
+  Phone Number
+  Fax Number
+  Postal Address
+  Postal Suburb
+  Postal State
+  Postal Postcode
+  Street Address
+  Street Suburb
+  Comment
+  Main_Contact
+  Main Contact Email
 
 */
 
@@ -71,7 +71,7 @@ if (($handle = fopen("../../David_Clients.csv", "r")) !== false) {
                 $comment->save();
                 $comment_id = $comment->get_id();
             }
-  
+
             if ($data[10] || $data[11]) {
                 $cc = new clientContact();
                 $cc->set_value("clientID", $client->get_id());
@@ -85,7 +85,7 @@ if (($handle = fopen("../../David_Clients.csv", "r")) !== false) {
         $x++;
         echo "<br>".$client->get_id()." --- ".$cc_id." --- ".$comment_id;
         if ($x>4) {
-          //die();
+            //die();
         }
     }
     fclose($handle);

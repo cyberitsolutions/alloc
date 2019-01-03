@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 
 define("NO_REDIRECT", 1);
@@ -37,14 +37,14 @@ if (path_under_path($PATH, wiki_module::get_wiki_path()) && is_dir($PATH)) {
     $files = scandir($PATH);
     natcasesort($files);
     $str.= "\n<ul class=\"jqueryFileTree\" style=\"display: none;\">";
-  // All dirs
+    // All dirs
     foreach ($files as $file) {
         if (!in_array($file, $dont_print_these_dirs) && is_dir($PATH.$file)) {
             $str.= "\n  <li class=\"directory collapsed\"><a class=\"file\" href=\"#\" rel=\"".page::htmlentities($DIR.$file.DIRECTORY_SEPARATOR)."\">".page::htmlentities($file)."</a></li>";
         }
     }
 
-  // All files
+    // All files
     foreach ($files as $file) {
         if (file_exists($PATH.$file) && $file != '.' && $file != '..' && !is_dir($PATH.$file) && is_readable($PATH.$file)) {
             unset($extra);
@@ -58,6 +58,6 @@ if (path_under_path($PATH, wiki_module::get_wiki_path()) && is_dir($PATH)) {
     }
     $str.= "\n</ul>";
 
-  #echo "<pre>".page::htmlentities($str)."</pre>";
+    #echo "<pre>".page::htmlentities($str)."</pre>";
     echo $str;
 }

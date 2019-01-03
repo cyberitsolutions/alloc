@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
@@ -30,8 +30,8 @@ $dirName = str_replace("..", "", $_POST["dirName"]);
 $vcs = vcs::get();
 
 if ($_POST["save"]) {
-  // path_under_path(wiki_module::get_wiki_path().$dirName, wiki_module::get_wiki_path(),$dont_check_filesystem=false) or $errors[] = "Bad directory name: ";
-  //is_writeable(wiki_module::get_wiki_path().dirname($editName)) or $errors[] = "Path is not writeable.";
+    // path_under_path(wiki_module::get_wiki_path().$dirName, wiki_module::get_wiki_path(),$dont_check_filesystem=false) or $errors[] = "Bad directory name: ";
+    //is_writeable(wiki_module::get_wiki_path().dirname($editName)) or $errors[] = "Path is not writeable.";
     strlen($dirName) or $errors[] = "Directory name empty.";
     $dirName and is_dir(wiki_module::get_wiki_path().$dirName) and $errors[] = "Directory already exists.";
 
@@ -39,15 +39,15 @@ if ($_POST["save"]) {
         $error = "<div class='message warn noprint' style='margin-top:0px; margin-bottom:10px; padding:10px;'>";
         $error.= implode("<br>", $errors);
         $error.= "</div>";
-   
+
         $TPL["loadErrorPageDir"] = 1;
         $TPL["dirName"] = urlencode($dirName);
         $TPL["msg"] = urlencode($error);
         include_template("templates/wikiM.tpl");
     } else {
-      // If we're using version control
+        // If we're using version control
         if (is_object($vcs)) {
-          // Creating a new directory or directories
+            // Creating a new directory or directories
             if (!is_dir(wiki_module::get_wiki_path().$dirName)) {
                 $bits = explode("/", $dirName);
                 $str = wiki_module::get_wiki_path();
@@ -61,9 +61,9 @@ if ($_POST["save"]) {
                 alloc_redirect($TPL["url_alloc_wiki"]."target=".urlencode($dirName));
             }
 
-        // Else non-vcs save
+            // Else non-vcs save
         } else {
-          // Creating a new directory or directories
+            // Creating a new directory or directories
             if (!is_dir(wiki_module::get_wiki_path().$dirName)) {
                 $bits = explode("/", $dirName);
                 $str = wiki_module::get_wiki_path();
