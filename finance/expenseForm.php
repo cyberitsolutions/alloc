@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
@@ -62,7 +62,7 @@ function show_all_exp($template)
             $tf->set_id($transaction->get_value("tfID"));
             $tf->select();
             $TPL["tfIDLink"] = $tf->get_link();
-  
+
             $projectID = $transaction->get_value("projectID");
             if ($projectID) {
                 $project = new project();
@@ -163,7 +163,7 @@ if ($_POST["add"]) {
     $transactionID && $transaction->set_id($_POST["transactionID"]);
     $transaction->read_globals();
 
-  // check we have permission to make the transaction
+    // check we have permission to make the transaction
     if (!$transaction->have_perm(PERM_CREATE)) {
         alloc_error("You do not have permission to create transactions for that Source TF.");
     }
@@ -224,10 +224,10 @@ if (is_object($expenseForm) && $expenseForm->get_value("clientID")) {
     $clientID_sql = prepare(" AND clientID = %d", $expenseForm->get_value("clientID"));
 }
 
-$q = "SELECT projectID AS value, projectName AS label 
-        FROM project 
-       WHERE projectStatus = 'Current' 
-             ".$clientID_sql." 
+$q = "SELECT projectID AS value, projectName AS label
+        FROM project
+       WHERE projectStatus = 'Current'
+             ".$clientID_sql."
     ORDER BY projectName";
 $TPL["projectOptions"] = page::select_options($q, $selectedProjectID);
 
@@ -399,7 +399,7 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
 
 if (is_object($expenseForm) && $expenseForm->get_id()) {
     $db = new db_alloc();
-    $db->query(prepare("SELECT SUM(amount * pow(10,-currencyType.numberToBasic)) AS amount, 
+    $db->query(prepare("SELECT SUM(amount * pow(10,-currencyType.numberToBasic)) AS amount,
                              transaction.currencyTypeID as currency
                         FROM transaction
                    LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID

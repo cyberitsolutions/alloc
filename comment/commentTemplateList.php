@@ -18,15 +18,15 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
 function show_commentTemplate($template_name)
 {
     global $TPL;
-  
-// Run query and loop through the records
+
+    // Run query and loop through the records
     $db = new db_alloc();
     $query = "SELECT * FROM commentTemplate ORDER BY commentTemplateType, commentTemplateName";
     $db->query($query);

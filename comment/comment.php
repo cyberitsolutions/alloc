@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
@@ -41,10 +41,10 @@ if (!$commentID) {
 
 // add additional interested parties
 if ($_REQUEST["eo_email"]) {
-    $other_parties[$_REQUEST["eo_email"]] = array("name"       => $_REQUEST["eo_name"]
-                                               ,"addIP"      => $_REQUEST["eo_add_interested_party"]
-                                               ,"addContact" => $_REQUEST["eo_add_client_contact"]
-                                               ,"clientID"   => $_REQUEST["eo_client_id"]);
+    $other_parties[$_REQUEST["eo_email"]] = array("name"       => $_REQUEST["eo_name"],
+                                                  "addIP"      => $_REQUEST["eo_add_interested_party"],
+                                                  "addContact" => $_REQUEST["eo_add_client_contact"],
+                                                  "clientID"   => $_REQUEST["eo_client_id"]);
 }
 
 // add all interested parties

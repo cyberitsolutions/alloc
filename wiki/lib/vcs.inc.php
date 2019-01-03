@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 
 class vcs
@@ -55,7 +55,7 @@ class vcs
     }
     function get()
     {
-      // Check if we're using a VCS
+        // Check if we're using a VCS
         $class = "vcs_".config::get_config_item("wikiVCS");
         if (class_exists($class)) {
             $vcs = new $class(wiki_module::get_wiki_path());
@@ -64,11 +64,11 @@ class vcs
     }
     function error($msg = "")
     {
-      //echo "\n<br>vcs->error: ".$msg;
+        //echo "\n<br>vcs->error: ".$msg;
     }
     function msg($msg = "")
     {
-      //echo "\n<br>vcs->msg: ".$msg;
+        //echo "\n<br>vcs->msg: ".$msg;
     }
     function juggle_command_order($name, $command, $repo)
     {
@@ -77,7 +77,7 @@ class vcs
     function run($command)
     {
         if ($command) {
-          // 2>&1 nope
+            // 2>&1 nope
             $str = $this->juggle_command_order($this->name, $command, $this->repoprefix);
             $this->debug and print "<br>vcs->run: ".page::htmlentities($str);
             list($output, $result) = $this->exec($str);
@@ -148,13 +148,13 @@ class vcs
     }
     function format_log($logs = array())
     {
-      /*
-        We're expecting each log entry to look like this:
-        Hash: r2432432
-        Author: Alex Lance
-        Date: 43242432
-        Msg: This is the commit message
-      */
+        /*
+          We're expecting each log entry to look like this:
+          Hash: r2432432
+          Author: Alex Lance
+          Date: 43242432
+          Msg: This is the commit message
+        */
 
         $logs or $logs = array();
         $rtn or $rtn = array();

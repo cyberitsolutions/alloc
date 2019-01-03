@@ -26,15 +26,14 @@ class productCost extends db_entity
     public $classname = "productCost";
     public $data_table = "productCost";
     public $key_field = "productCostID";
-    public $data_fields = array("tfID"
-                             ,"productID"
-                             ,"amount" => array("type"=>"money")
-                             ,"isPercentage"=> array("empty_to_null"=>false)
-                             ,"description"
-                             ,"currencyTypeID"
-                             ,"tax"
-                             ,"productCostActive"
-                             );
+    public $data_fields = array("tfID",
+                                "productID",
+                                "amount" => array("type"=>"money"),
+                                "isPercentage"=> array("empty_to_null"=>false),
+                                "description",
+                                "currencyTypeID",
+                                "tax",
+                                "productCostActive");
 
     function validate()
     {

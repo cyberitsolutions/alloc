@@ -18,23 +18,22 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
 $current_user->check_employee();
 
-$defaults = array("showHeader"=>true
-                 ,"showInvoiceNumber"=>true
-                 ,"showInvoiceClient"=>true
-                 ,"showInvoiceName"=>true
-                 ,"showInvoiceAmount"=>true
-                 ,"showInvoiceAmountPaid"=>true
-                 ,"showInvoiceDate"=>true
-                 ,"showInvoiceStatus"=>true
-                 ,"url_form_action"=>$TPL["url_alloc_invoiceList"]
-                 ,"form_name"=>"invoiceList_filter"
-                 );
+$defaults = array("showHeader"            => true,
+                  "showInvoiceNumber"     => true,
+                  "showInvoiceClient"     => true,
+                  "showInvoiceName"       => true,
+                  "showInvoiceAmount"     => true,
+                  "showInvoiceAmountPaid" => true,
+                  "showInvoiceDate"       => true,
+                  "showInvoiceStatus"     => true,
+                  "url_form_action"       => $TPL["url_alloc_invoiceList"],
+                  "form_name"             => "invoiceList_filter");
 
 
 function show_filter()
@@ -75,7 +74,7 @@ Invoices.
 <br><br>
 
 Simply adjust the filter settings and click the <b>Filter</b> button to
-display a list of previously created Invoices. 
+display a list of previously created Invoices.
 If you would prefer to create a new Invoice, click the <b>New Invoice</b> link
 in the top-right hand corner of the box below.";
 }

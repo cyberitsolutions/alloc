@@ -18,15 +18,15 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 
 define("NO_REDIRECT", 1);
 require_once("../alloc.php");
 
 #if ($_GET["projectID"]) {
-  usleep(500000);
-  
+usleep(500000);
+
 if ($_GET["taskID"]) {
     $task = new task();
     $task->set_id($_GET["taskID"]);

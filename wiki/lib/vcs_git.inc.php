@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 
 class vcs_git extends vcs
@@ -27,7 +27,7 @@ class vcs_git extends vcs
     function __construct($repo)
     {
         $current_user = &singleton("current_user");
-      //$this->debug = true;
+        //$this->debug = true;
         $this->name = "git ";
         $this->repodir = $repo;
         $this->repoprefix = " --git-dir '".$repo.".git' --work-tree '".$repo."' ";

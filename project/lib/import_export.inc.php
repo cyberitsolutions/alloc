@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 ////IMPORT FUNCTIONS
 
@@ -27,15 +27,15 @@ define('CSV_EXPIRY', 60*30); //30 mins
 function store_csv($file)
 {
 
-  // Before storing it, go through the tmp directory and clean up any old files.
-  // This is the only point where the number of files should increase, so this
-  // is a good time to limit the expansion.
+    // Before storing it, go through the tmp directory and clean up any old files.
+    // This is the only point where the number of files should increase, so this
+    // is a good time to limit the expansion.
     $dir = ATTACHMENTS_DIR . 'tmp' . DIRECTORY_SEPARATOR;
     $files = glob($dir . "csv_*");
 
     $expiry = time() - CSV_EXPIRY;
     foreach ($files as $fn) {
-      // read the timestamp out of the filename... or maybe stat it?
+        // read the timestamp out of the filename... or maybe stat it?
         $props = stat($fn);
         if ($props['mtime'] < $expiry) {
             unlink($fn);
@@ -43,7 +43,7 @@ function store_csv($file)
     }
 
     if (!is_uploaded_file($file)) {
-      //client messing around
+        //client messing around
         error_log("CSV Upload: '$file' was not an uploaded file.");
         return false;
     }
@@ -60,16 +60,16 @@ function store_csv($file)
 // Sort out the list of interested parties and add them to the task.
 function add_ips($parties, $taskID, $projectID)
 {
-  // each ip can be either a username or an email address. If it's a username,
-  // look them up. If it's an email address, see if it belongs to anybody. If
-  // the email doesn't match a client contact, drop it - if it's added as an IP
-  // their name can't be changed later.
-  
+    // each ip can be either a username or an email address. If it's a username,
+    // look them up. If it's an email address, see if it belongs to anybody. If
+    // the email doesn't match a client contact, drop it - if it's added as an IP
+    // their name can't be changed later.
+
     foreach ($parties as $party) {
         $ipdata = array('entity' => 'task',
-        'entityID' => $taskID);
-      // same logic as the real interested parties code - if the name contains an
-      // '@', it's an email address. Otherwise, it's a login.
+                        'entityID' => $taskID);
+        // same logic as the real interested parties code - if the name contains an
+        // '@', it's an email address. Otherwise, it's a login.
         if (strpos($party, '@') === false) {
             $person = import_find_username(array($party));
             if (!$person) {
@@ -80,7 +80,7 @@ function add_ips($parties, $taskID, $projectID)
             $ipdata['emailAddress'] = $person->get_value("emailAddress");
         } else {
             $ipdata['emailAddress'] = $party;
-          // add_client_contact will figure out the rest
+            // add_client_contact will figure out the rest
         }
         interestedparty::add_interested_party($ipdata);
     }
@@ -92,9 +92,9 @@ function import_csv($infile, $mapping, $header = true)
     global $projectID;
     $current_user = &singleton("current_user");
 
-  /* Make sure the user isn't messing around and inserting ../../ into the
-   * filename.
-   */
+    /* Make sure the user isn't messing around and inserting ../../ into the
+     * filename.
+     */
 
     $rp = realpath(ATTACHMENTS_DIR.'tmp'.DIRECTORY_SEPARATOR.$infile);
     if ($rp === false || strpos($rp, ATTACHMENTS_DIR.'tmp'.DIRECTORY_SEPARATOR) !== 0) {
@@ -102,7 +102,7 @@ function import_csv($infile, $mapping, $header = true)
     }
 
     $db = new db_alloc(); //import_find_username needs it
-  //Import a CSV file
+    //Import a CSV file
     $project = new project();
     $project->set_id($projectID);
     $project->select();
@@ -115,13 +115,13 @@ function import_csv($infile, $mapping, $header = true)
         $result[0] = "There was a problem reading the uploaded file.";
     } else {
         $line = 1;
-      // Find the project manager
+        // Find the project manager
         $projectManager = $project->get_project_manager();
         if ($header) {
             fgetcsv($fh, 8192);               // Skip the header line
             $line++;
         }
-    
+
         while ($row = fgetcsv($fh, 8192)) {
             $warning = false;
 
@@ -144,7 +144,7 @@ function import_csv($infile, $mapping, $header = true)
                         if ($assignee) {
                             $task->set_value('personID', $assignee->get_id());
                         } else {
-                      //We don't know who the manager is, so assign it to the project manager
+                            //We don't know who the manager is, so assign it to the project manager
                             $task->set_value('personID', $projectManager);
                             $task_result []= sprintf('Warning: Unable to find a username corresponding to "%s", assigning task to project manager.', $row[$i]);
                         }
@@ -154,7 +154,7 @@ function import_csv($infile, $mapping, $header = true)
                         if ($manager) {
                             $task->set_value('managerID', $manager->get_id());
                         } else {
-                      //We don't know who the manager is, so assign it to the project manager
+                            //We don't know who the manager is, so assign it to the project manager
                             $task->set_value('managerID', $projectManager);
                             $task_result []= sprintf('Warning: Unable to find a username corresponding to "%s", setting task manager to project manager.', $row[$i]);
                         }
@@ -184,10 +184,10 @@ function import_csv($infile, $mapping, $header = true)
                 }
             }
             $task->set_value('projectID', $projectID);
-          // if no manager set, use the uploader
+            // if no manager set, use the uploader
 
-          // Having a blank assignee actually works, but set it back to the
-          // project manager
+            // Having a blank assignee actually works, but set it back to the
+            // project manager
             if (!$task->get_value('personID')) {
                 $task->set_value('personID', $projectManager);
             }
@@ -196,7 +196,7 @@ function import_csv($infile, $mapping, $header = true)
                 $line++;
                 continue;
             }
-          // Hardcoded defaults
+            // Hardcoded defaults
             $task->set_value('taskTypeID', 'Task');
 
             $task->set_value('priority', '3');
@@ -207,7 +207,7 @@ function import_csv($infile, $mapping, $header = true)
 
             $task_result []= "Task ".$task->get_value('taskName') . " created";
 
-          // can only add interested parties after the task has an ID
+            // can only add interested parties after the task has an ID
             if ($ips) {
                 add_ips($ips, $task->get_id(), $projectID);
             }
@@ -227,22 +227,22 @@ function import_gnome_planner($infile)
     global $TPL;
     global $projectID;
     $current_user = &singleton("current_user");
-  //Import a GNOME Planner XML file
+    //Import a GNOME Planner XML file
     $filename = $_FILES[$infile]['tmp_name'];
     $result = array();
     $fileIsValid = true;
     if (is_uploaded_file($filename)) {
         $doc = get_xml_document();
         if (@$doc->load($filename) === false) {
-          // Something's wrong with the file, bail out
+            // Something's wrong with the file, bail out
             $result[] = "The file does not seem to be a valid GNOME Planner XML file.";
             $TPL['import_result'] = implode("<br>", $result);
             return;
         }
-      // This function does two passes of each file. First, it does a set of basic tests to check the file is valid.
-      // If it is, the function then actually imports the data.
+        // This function does two passes of each file. First, it does a set of basic tests to check the file is valid.
+        // If it is, the function then actually imports the data.
         $result[] = "<li>Checking the file for validity...</li>";
-      // Check that every <resource /> element has a short-name that corresponds to the user id of a user we know about
+        // Check that every <resource /> element has a short-name that corresponds to the user id of a user we know about
         $resource_people = array();
         $resources = $doc->getElementsByTagName("resource");
         for ($i = 0; $i < $resources->length; $i++) {
@@ -257,7 +257,7 @@ function import_gnome_planner($infile)
             }
         }
         $result[] = "<li>Done checking resource names.</li>";
-      // Check that at most one person is assigned to each task
+        // Check that at most one person is assigned to each task
         $task_allocation = array();
         $allocations = $doc->getElementsByTagName("allocation");
         for ($i = 0; $i < $allocations->length; $i++) {
@@ -266,10 +266,10 @@ function import_gnome_planner($infile)
             if (isset($task_allocation[$taskid])) {
                 // multiple people assigned to this task
                 if (is_array($task_allocation[$taskid])) {
-                  // > 2 people assigned to the task, add to the array
+                    // > 2 people assigned to the task, add to the array
                     $task_allocation[$taskid][] = $allocation->getAttribute("resource-id");
                 } else {
-                  // 2 people assigned to the task (so far), convert to an array
+                    // 2 people assigned to the task (so far), convert to an array
                     $task_allocation[$taskid] = array($task_allocation[$taskid], $allocation->getAttribute("resource-id"));
                 }
             } else {
@@ -278,7 +278,7 @@ function import_gnome_planner($infile)
         }
         $result[] = "<li>Done checking task allocations.</li>";
 
-      // OK, checks are done, now we attempt to actually do the import
+        // OK, checks are done, now we attempt to actually do the import
         if ($fileIsValid) {
             $project = new project();
             $project->set_id($projectID);
@@ -286,7 +286,7 @@ function import_gnome_planner($infile)
             $projectManager = $project->get_project_manager();
 
             $result[] = "<li>File looks valid, running import.</li>";
-          // First import tasks
+            // First import tasks
             $taskNode = $doc->getElementsByTagName("tasks");
             $result = array_merge($result, import_planner_tasks($taskNode->item(0), '0', 0, $task_allocation, $resource_people, $projectManager));
             $result[] = "<li>Import completed.</li>";
@@ -301,20 +301,20 @@ function import_gnome_planner($infile)
 
 function import_planner_tasks($parentNode, $parentTaskId, $depth, $task_allocation, $resource_people, $project_manager_ID)
 {
-  //Recursively imports tasks from GNOME Planner, given the parentNode.
+    //Recursively imports tasks from GNOME Planner, given the parentNode.
     global $projectID;
     $current_user = &singleton("current_user");
     $result = array();
-  // our dodgy DOM_NodeList doesn't support foreach....
+    // our dodgy DOM_NodeList doesn't support foreach....
     for ($i = 0; $i < $parentNode->childNodes->length; $i++) {
         $taskXML = $parentNode->childNodes->item($i);
         if ($taskXML->nodeType == XML_ELEMENT_NODE && $taskXML->tagName == "task") {
             $task = new task();
             $task->set_value('taskName', trim($taskXML->getAttribute("name")));
             $task->set_value('projectID', $projectID);
-          // We can find the task assignee's id in the $task_allocation array, and that person's Person record in the $resource_people array
+            // We can find the task assignee's id in the $task_allocation array, and that person's Person record in the $resource_people array
             $planner_taskid = $taskXML->getAttribute("id");
-          // Dates we guess at (i.e., set to now)
+            // Dates we guess at (i.e., set to now)
             $task->set_value('dateCreated', date("Y-m-d H:i:s"));
             $task->set_value('dateAssigned', date("Y-m-d H:i:s"));
             if ($taskXML->hasAttribute("work-start")) {
@@ -337,23 +337,23 @@ function import_planner_tasks($parentNode, $parentTaskId, $depth, $task_allocati
             $task->set_value('taskStatus', 'open_notstarted');
             $task->set_value('priority', '3');
             $task->set_value('parentTaskID', ($parentTaskId == 0 ? "" : $parentTaskId));
-          // The following fields we leave at their default values: duplicateTaskID, dateActualCompletion, dateActualStart, closerID, timeExpected, dateClosed, parentTaskID, taskModifiedUser
+            // The following fields we leave at their default values: duplicateTaskID, dateActualCompletion, dateActualStart, closerID, timeExpected, dateClosed, parentTaskID, taskModifiedUser
 
-          // Handle task assignment
+            // Handle task assignment
             if (isset($task_allocation[$planner_taskid])) {
                 if (is_array($task_allocation[$planner_taskid])) {
-                  // This task was assigned to more than one person. Assign it to the project manager and make a comment about it.
+                    // This task was assigned to more than one person. Assign it to the project manager and make a comment about it.
                     $task->set_value('personID', $project_manager_ID);
-                  // Save the task so we have a task ID
+                    // Save the task so we have a task ID
                     $task->save();
-                  // Make a comment about this task
+                    // Make a comment about this task
                     $comment = new comment();
                     $comment->set_value("commentType", "task");
                     $comment->set_value("commentLinkID", $task->get_id());
                     $comment->set_value("commentCreatedTime", date("Y-m-d H:i:s"));
-                  // The user doing the import is (implicitly) the user creating the comment
+                    // The user doing the import is (implicitly) the user creating the comment
                     $comment->set_value("commentCreatedUser", $current_user->get_id());
-                  // Get the relevant usernames
+                    // Get the relevant usernames
                     $names = array();
                     foreach ($task_allocation[$planner_taskid] as $assignee) {
                         $names[] = person::get_fullname($assignee);
@@ -374,7 +374,7 @@ function import_planner_tasks($parentNode, $parentTaskId, $depth, $task_allocati
 
             $result[] = sprintf('<li>%sCreated task <a href="%s">%d %s</a>.</li>', str_repeat("&gt;", $depth), $task->get_url(), $task->get_id(), $task->get_value('taskName'));
 
-          // Do child nodes
+            // Do child nodes
             if ($taskXML->hasChildNodes()) {
                 $result = array_merge($result, import_planner_tasks($taskXML, $task->get_id(), $depth + 1, $task_allocation, $resource_people, $project_manager_ID));
             }
@@ -390,14 +390,14 @@ function export_gnome_planner($projectID)
     $project->set_id($projectID);
     $project->select();
 
-  // Note: DOM_Document is a wrapper that wraps DOMDocument for PHP5 and DomDocument for PHP4
+    // Note: DOM_Document is a wrapper that wraps DOMDocument for PHP5 and DomDocument for PHP4
     $doc = get_xml_document();
     $doc->load(ALLOC_MOD_DIR."shared".DIRECTORY_SEPARATOR."export_templates".DIRECTORY_SEPARATOR."template.planner");
-  // General metadata
+    // General metadata
     $rootNode = $doc->getElementsByTagName("project");
     $rootNode = $rootNode->item(0);
     $rootNode->setAttribute("company", config::get_config_item("companyName"));
-  // Get the project manager
+    // Get the project manager
     $projectManager = $project->get_project_manager();
     $rootNode->setAttribute("manager", person::get_fullname($projectManager[0]));
     $rootNode->setAttribute("name", $project->get_value("projectName"));
@@ -409,13 +409,13 @@ function export_gnome_planner($projectID)
     $rootNode->setAttribute("project-start", $projectStartDate);
 
     $resourcesUsed = array();
-  // Export all tasks in the project
+    // Export all tasks in the project
     $taskOptions["projectIDs"] = array($project->get_id());
     $taskOptions["return"] = "array";
     $taskOptions["taskView"] = "byProject";
 
     $tasks = task::get_list($taskOptions);
-  // We need to sort by taskID (we assume taskIDs were assigned linearly on import) otherwise Planner will get very confused with ordering
+    // We need to sort by taskID (we assume taskIDs were assigned linearly on import) otherwise Planner will get very confused with ordering
     foreach ($tasks as $task) {
         $taskIDs[] = $task['taskID'];
     }
@@ -424,12 +424,12 @@ function export_gnome_planner($projectID)
     $taskRootNode = $taskRootNode->item(0);
     foreach ($tasks as $task) {
         $taskNode = $doc->createElement("task");
-      // Use the alloc internal ID rather than pointlessly renumbering things
+        // Use the alloc internal ID rather than pointlessly renumbering things
         $taskNode->setAttribute("id", $task["taskID"]);
         $taskNode->setAttribute("name", $task["taskName"]);
         $taskNode->setAttribute("note", $task["taskDescription"]);
 
-      // Ugly date handling
+        // Ugly date handling
         if (!$task["dateActualStart"]) {
             if (!$task["dateTargetStart"]) {
                 // This is a reasonably bad situation
@@ -451,11 +451,13 @@ function export_gnome_planner($projectID)
             $taskEndDate = planner_date_timestamp($task["dateActualCompletion"]);
         }
 
-      // Take a stab at the duration we need to give this task
+        // Take a stab at the duration we need to give this task
         $taskDuration = $taskEndDate - $taskStartDate;
-      // That's the total number of seconds, Planner expects the number of 8-hour days worth of seconds
+        // That's the total number of seconds, Planner expects the number of 8-hour days worth of seconds
         $taskDuration = ($taskDuration / 86400) * 28800;
-      // note: the above doesn't account for weekends so there is a discrepancy between task durations in alloc and those in Planner, the solution is to make people work on the weekends
+        // note: the above doesn't account for weekends so there is a
+        // discrepancy between task durations in alloc and those in Planner,
+        // the solution is to make people work on the weekends
 
         $taskNode->setAttribute("work", $taskDuration);
         $taskNode->setAttribute("start", export_planner_date($taskStartDate));
@@ -477,7 +479,7 @@ function export_gnome_planner($projectID)
         $taskRootNode->appendChild($taskNode);
     }
 
-  // Now do the resources and their linkage to tasks
+    // Now do the resources and their linkage to tasks
     $resourcesRootNode = $doc->getElementsByTagName("resources");
     $resourcesRootNode = $resourcesRootNode->item(0);
     $allocationsRootNode = $doc->getElementsByTagName("allocations");
@@ -495,7 +497,7 @@ function export_gnome_planner($projectID)
 
             $resources[$resourceID] = $person;
 
-          // Add this person to <resources>
+            // Add this person to <resources>
             $resourceNode = $doc->createElement("resource");
             $resourceNode->setAttribute("id", $person->get_id());
             $resourceNode->setAttribute("name", $person->get_value("firstName") . " " . $person->get_value("surname"));
@@ -506,9 +508,9 @@ function export_gnome_planner($projectID)
             $resourcesRootNode->appendChild($resourceNode);
         }
 
-      //Now the actual allocation
+        //Now the actual allocation
         $allocationNode = $doc->createElement("allocation");
-      //Units means "percentage working on this" for which alloc has no analgoue
+        //Units means "percentage working on this" for which alloc has no analgoue
         $allocationNode->setAttribute("units", "100");
         $allocationNode->setAttribute("task-id", $taskID);
         $allocationNode->setAttribute("resource-id", $resourceID);
@@ -525,13 +527,13 @@ function export_csv($projectID)
     $project->select();
 
     $retstr = '"Task Name","Estimated Time","Assignee"';
-  // Export all tasks in the project
+    // Export all tasks in the project
     $taskOptions["projectIDs"] = array($project->get_id());
     $taskOptions["return"] = "array";
     $taskOptions["taskView"] = "byProject";
     $tasks = task::get_list($taskOptions);
 
-  // Sort by taskID--we assume taskIDs were assigned linearly on import/creation--so as to produce an identical file
+    // Sort by taskID--we assume taskIDs were assigned linearly on import/creation--so as to produce an identical file
     foreach ($tasks as $task) {
         $taskIDs[] = $task['taskID'];
     }
@@ -553,11 +555,11 @@ function export_csv($projectID)
 ////GENERAL HELPER FUNCTIONS
 function import_planner_date($indate)
 {
-  //Takes a GNOME Planner formatted date (YYYYMMDDTHHMMSSZ, where "T" and "Z" are literal) and converts it into a MySQL formatted date (Y-m-d H:i:s)
+    //Takes a GNOME Planner formatted date (YYYYMMDDTHHMMSSZ, where "T" and "Z" are literal) and converts it into a MySQL formatted date (Y-m-d H:i:s)
     $year = substr($indate, 0, 4);
     $month = substr($indate, 4, 2);
     $day = substr($indate, 6, 2);
-  // skip the literal "T"
+    // skip the literal "T"
     $hour = substr($indate, 9, 2);
     $minute = substr($indate, 11, 2);
     $second = substr($indate, 13, 2);
@@ -566,7 +568,7 @@ function import_planner_date($indate)
 
 function planner_date_timestamp($indate)
 {
-  //Takes a MySQL formatted date (YYYY-MM-DD HH:MM:SS) and converts it into a Unix timestamp
+    //Takes a MySQL formatted date (YYYY-MM-DD HH:MM:SS) and converts it into a Unix timestamp
     $parts = explode(" ", $indate);
     list($year, $month, $day) = explode("-", $parts[0]);
     if (count($parts) > 0) {
@@ -581,15 +583,15 @@ function planner_date_timestamp($indate)
 
 function export_planner_date($timestamp)
 {
-  //Takes unix timestamp and returns a GNOME Planner formatted date (YYYYMMDDTHHMMSSZ)
+    //Takes unix timestamp and returns a GNOME Planner formatted date (YYYYMMDDTHHMMSSZ)
     return date("Ymd\\THis\\Z", $timestamp);
 }
 
 function import_find_username($candidates)
 {
-  //Attempts to find a Person record that corresponds to one of the names specified in the $candidates array. Returns false on failure.
+    //Attempts to find a Person record that corresponds to one of the names specified in the $candidates array. Returns false on failure.
     global $db;
-  //Our aim is just to find one record that matches the username
+    //Our aim is just to find one record that matches the username
     foreach ($candidates as $candidate) {
         $query = prepare("SELECT * FROM person WHERE username = '%s'", $candidate);
         $db->query($query);
@@ -601,13 +603,13 @@ function import_find_username($candidates)
         }
     }
 
-  //No such user
+    //No such user
     return false;
 }
 
 function export_escape_csv($str)
 {
-  // Escapes the string suitably for CSV
+    // Escapes the string suitably for CSV
     $str = str_replace('"', '""', $str);
     return '"' . $str . '"';
 }
@@ -615,9 +617,9 @@ function export_escape_csv($str)
 //// XML WRAPPER FUNCTIONS and CLASSES
 function get_xml_document()
 {
-  //construct an appropriate XMLDocument class
+    //construct an appropriate XMLDocument class
     if (version_compare(PHP_VERSION, '5.0.0', '<')) {
-      // DOM_XML_Wrapper_Document is a wrapper that wraps PHP 4's DomDocument
+        // DOM_XML_Wrapper_Document is a wrapper that wraps PHP 4's DomDocument
         echo "using php 4 compat";
         return new DOM_XML_Wrapper_Document();
     } else {
@@ -651,8 +653,8 @@ class DOM_XML_Wrapper_Document
 
 class DOM_XML_Wrapper_Node
 {
-  // Technically this class implements the functionality of both DOMNode and DOMElement
-  // For simplicity of the wrapper we have the function as part of one object
+    // Technically this class implements the functionality of both DOMNode and DOMElement
+    // For simplicity of the wrapper we have the function as part of one object
     function DOM_XML_Wrapper_Node($original_node)
     {
         $this->node = $original_node;

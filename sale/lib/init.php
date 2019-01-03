@@ -25,10 +25,9 @@
 class sale_module extends module
 {
     var $module = "sale";
-    var $db_entities = array("product"
-                          ,"productCost"
-                          ,"productSale"
-                          ,"productSaleItem"
-                          );
+    var $db_entities = array("product",
+                             "productCost",
+                             "productSale",
+                             "productSaleItem");
     var $home_items = array("saleListHomeItemAdmin","saleListHomeItem");
 }

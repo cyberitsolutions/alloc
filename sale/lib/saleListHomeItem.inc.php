@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 class saleListHomeItem extends home_item
 {
@@ -33,7 +33,7 @@ class saleListHomeItem extends home_item
         $current_user = &singleton("current_user");
         return isset($current_user) && $current_user->is_employee();
     }
-  
+
     function render()
     {
         $current_user = &singleton("current_user");

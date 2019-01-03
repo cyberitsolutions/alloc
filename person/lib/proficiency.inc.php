@@ -25,8 +25,7 @@ class proficiency extends db_entity
     public $data_table = "proficiency";
     public $display_field_name = "personID";
     public $key_field = "proficiencyID";
-    public $data_fields = array("personID"
-                             ,"skillID"
-                             ,"skillProficiency"
-                             );
+    public $data_fields = array("personID",
+                                "skillID",
+                                "skillProficiency");
 }

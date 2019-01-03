@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
@@ -29,38 +29,36 @@ $comment_defaults = array("starred"=>true);
 $productSale_defaults = array("starred"=>true);
 $wiki_defaults = array("starred"=>true);
 
-$task_defaults = array("showHeader"=>true
-                      ,"showTaskID"=>true
-                      ,"showStarred"=>true
-                      ,"showStatus" =>true
-                      ,"showProject"=>true
-                      ,"starred"=>true
-                      );
+$task_defaults = array("showHeader"  => true,
+                       "showTaskID"  => true,
+                       "showStarred" => true,
+                       "showStatus"  => true,
+                       "showProject" => true,
+                       "starred"     => true);
 
-$timeSheet_defaults = array("starred"=>true,"noextra"=>true);
+$timeSheet_defaults = array("starred" => true, "noextra" => true);
 
-$invoice_defaults = array("showHeader"=>true
-                         ,"showInvoiceNumber"=>true
-                         ,"showInvoiceClient"=>true
-                         ,"showInvoiceName"=>true
-                         ,"showInvoiceAmount"=>true
-                         ,"showInvoiceAmountPaid"=>true
-                         ,"showInvoiceDate"=>true
-                         ,"showInvoiceStatus"=>true
-                         ,"starred"=>true
-                         );
+$invoice_defaults = array("showHeader"            => true,
+                          "showInvoiceNumber"     => true,
+                          "showInvoiceClient"     => true,
+                          "showInvoiceName"       => true,
+                          "showInvoiceAmount"     => true,
+                          "showInvoiceAmountPaid" => true,
+                          "showInvoiceDate"       => true,
+                          "showInvoiceStatus"     => true,
+                          "starred"               => true);
 
-$star_entities = array("client"        => array("label"=>"Clients"       ,"form"=> $client_defaults)
-                      ,"clientContact" => array("label"=>"Contacts"      ,"form"=> $clientContact_defaults)
-                      ,"project"       => array("label"=>"Projects"      ,"form"=> $project_defaults)
-                      ,"task"          => array("label"=>"Tasks"         ,"form"=> $task_defaults)
-                      ,"comment"       => array("label"=>"Comments"      ,"form"=> $comment_defaults)
-                      ,"timeSheet"     => array("label"=>"Time Sheets"   ,"form"=> $timeSheet_defaults)
-                      ,"invoice"       => array("label"=>"Invoices"      ,"form"=> $invoice_defaults)
-                      ,"productSale"   => array("label"=>"Sales"         ,"form"=> $productSale_defaults)
-                      ,"wiki"          => array("label"=>"Wiki Documents","form"=> $wiki_defaults)
-            //          ,"tf"            => array("label"=>"Tagged Funds"  ,"form"=> $tf_defaults)
-                      );
+$star_entities = array("client"        => array("label"=>"Clients"       ,"form"=> $client_defaults),
+                       "clientContact" => array("label"=>"Contacts"      ,"form"=> $clientContact_defaults),
+                       "project"       => array("label"=>"Projects"      ,"form"=> $project_defaults),
+                       "task"          => array("label"=>"Tasks"         ,"form"=> $task_defaults),
+                       "comment"       => array("label"=>"Comments"      ,"form"=> $comment_defaults),
+                       "timeSheet"     => array("label"=>"Time Sheets"   ,"form"=> $timeSheet_defaults),
+                       "invoice"       => array("label"=>"Invoices"      ,"form"=> $invoice_defaults),
+                       "productSale"   => array("label"=>"Sales"         ,"form"=> $productSale_defaults),
+                       "wiki"          => array("label"=>"Wiki Documents","form"=> $wiki_defaults),
+                       //"tf"            => array("label"=>"Tagged Funds"  ,"form"=> $tf_defaults)
+);
 
 $TPL["star_entities"] = $star_entities;
 

@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
@@ -140,8 +140,8 @@ $tf->get_value("tfActive") || !$tf->get_id() and $TPL["tfIsActive"] = " checked"
 $TPL["main_alloc_title"] = "Edit TF - ".APPLICATION_NAME;
 
 if (!$tf->get_id()) {
-    $TPL["message_help"][] = "Enter the details below and click the Save button to create a new Tagged Fund. 
-                            <br><br>A Tagged Fund or TF, is like a sort of bank account within allocPSA. 
+    $TPL["message_help"][] = "Enter the details below and click the Save button to create a new Tagged Fund.
+                            <br><br>A Tagged Fund or TF, is like a sort of bank account within allocPSA.
                             It contains transactions which track the transfer of monies.";
 }
 

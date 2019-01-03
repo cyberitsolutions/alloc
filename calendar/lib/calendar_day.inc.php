@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 
 class calendar_day
@@ -32,7 +32,7 @@ class calendar_day
     var $start_tasks = array();
     var $complete_tasks = array();
     var $reminders = array();
-      
+
     function __construct()
     {
     }
@@ -60,12 +60,12 @@ class calendar_day
     function draw_day_html()
     {
         global $TPL;
-    
+
         if ($this->absences) {
             $rows[] = "<br>Absent:";
             $rows[] = implode("<br>", $this->absences);
         }
-  
+
         if ($this->start_tasks) {
             $rows[] = "<br>To be started:";
             $rows[] = implode("<br>", $this->start_tasks);

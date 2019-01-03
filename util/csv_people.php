@@ -18,18 +18,18 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
 /*
-Username,
-First_Name,
-Surname,
-Password,
-E-mail,
-Phone No,
-Comments
+  Username,
+  First_Name,
+  Surname,
+  Password,
+  E-mail,
+  Phone No,
+  Comments
 */
 
 $cur = config::get_config_item("currency");
@@ -38,7 +38,7 @@ $row = 1;
 if (($handle = fopen("../../David_People.csv", "r")) !== false) {
     while (($data = fgetcsv($handle, 1000, ",")) !== false) {
         foreach ($data as $key => $val) {
-        #  $data[$key] = utf8_encode($data[$key]);
+            #  $data[$key] = utf8_encode($data[$key]);
         }
 
         $person = new person();
@@ -58,7 +58,7 @@ if (($handle = fopen("../../David_People.csv", "r")) !== false) {
         $x++;
         echo "<br>here: ".$person->get_id().$data[0];
         if ($x>4) {
-          //die();
+            //die();
         }
     }
     fclose($handle);

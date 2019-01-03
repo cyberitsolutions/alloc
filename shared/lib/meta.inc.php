@@ -18,37 +18,36 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 class meta extends db_entity
 {
 
     private $t;
 
-  // This variable contains the definitive list of all the referential
-  // integrity tables that the user is allowed to edit.
-    public static $tables = array("absenceType"     => "Absence Types"
-                     ,"clientStatus"              => "Client Statuses"
-                     #,"configType"                => "Config Types"
-                     #,"invoiceStatus"             => "Invoice Statuses"
-                     ,"itemType"                  => "Item Types"
-                     ,"projectType"               => "Project Types"
-                     ,"currencyType"              => "Currency Types"
-                     ,"projectStatus"             => "Project Statuses"
-                     ,"taskStatus"                 => "Task Statuses"
-                     #,"roleLevel"                 => "Role Levels"
-                     #,"reminderRecuringInterval"  => "Reminder Intervals"
-                     #,"reminderAdvNoticeInterval" => "Advanced Notice Int"
-                     #,"sentEmailType"             => "Sent Email Types"
-                     ,"skillProficiency"          => "Skill Proficiencies"
-                     #,"changeType"                => "Change Types"
-                     #,"timeSheetStatus"           => "Time Sheet Statuses"
-                     #,"transactionStatus"         => "Transaction Statuses"
-                     ,"transactionType"           => "Transaction Types"
-                     ,"timeSheetItemMultiplier"   => "Time Sheet Multipliers"
-                     #,"productSaleStatus"         => "Product Sale Statuses"
-                     ,"taskType"                 => "Task Types"
-                     );
+    // This variable contains the definitive list of all the referential
+    // integrity tables that the user is allowed to edit.
+    public static $tables = array("absenceType"               => "Absence Types",
+                                  "clientStatus"              => "Client Statuses",
+                                  #"configType"                => "Config Types",
+                                  #"invoiceStatus"             => "Invoice Statuses",
+                                  "itemType"                  => "Item Types",
+                                  "projectType"               => "Project Types",
+                                  "currencyType"              => "Currency Types",
+                                  "projectStatus"             => "Project Statuses",
+                                  "taskStatus"                => "Task Statuses",
+                                  #"roleLevel"                 => "Role Levels",
+                                  #"reminderRecuringInterval"  => "Reminder Intervals",
+                                  #"reminderAdvNoticeInterval" => "Advanced Notice Int",
+                                  #"sentEmailType"             => "Sent Email Types",
+                                  "skillProficiency"          => "Skill Proficiencies",
+                                  #"changeType"                => "Change Types",
+                                  #"timeSheetStatus"           => "Time Sheet Statuses",
+                                  #"transactionStatus"         => "Transaction Statuses",
+                                  "transactionType"           => "Transaction Types",
+                                  "timeSheetItemMultiplier"   => "Time Sheet Multipliers",
+                                  #"productSaleStatus"         => "Product Sale Statuses",
+                                  "taskType"                  => "Task Types");
 
     function __construct($table = "")
     {
@@ -56,9 +55,7 @@ class meta extends db_entity
         $this->data_table = $table;
         $this->display_field_name = $table."ID";
         $this->key_field = $table."ID";
-        $this->data_fields = array($table."Seq"
-                              ,$table."Active"
-                              );
+        $this->data_fields = array($table."Seq", $table."Active");
         if ($table == "taskStatus") {
             $this->data_fields[] = "taskStatusLabel";
             $this->data_fields[] = "taskStatusColour";

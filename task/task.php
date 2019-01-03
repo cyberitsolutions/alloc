@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 define("PAGE_IS_PRINTABLE", 1);
@@ -32,7 +32,7 @@ function show_task_children($template)
         $options["taskView"] = "byProject";
         $task->get_value("projectID") and $options["projectIDs"][] = $task->get_value("projectID");
         $options["showDates"] = true;
-      #$options["showCreator"] = true;
+        #$options["showCreator"] = true;
         $options["showAssigned"] = true;
         $options["showPercent"] = true;
         $options["showHeader"] = true;
@@ -56,15 +56,15 @@ function show_task_children($template)
 function get_parent_taskIDs($taskID)
 {
     $q = prepare(
-        "SELECT taskID,taskName,parentTaskID 
-                    FROM task 
-                   WHERE taskID = %d 
-                     AND (taskID != parentTaskID OR parentTaskID IS NULL)",
+        "SELECT taskID,taskName,parentTaskID
+           FROM task
+          WHERE taskID = %d
+            AND (taskID != parentTaskID OR parentTaskID IS NULL)",
         $taskID
     );
     $db = new db_alloc();
     $db->query($q);
-    
+
     while ($db->next_record()) {
         $rtn[$db->f("taskName")] = $db->f("taskID");
         $arr = get_parent_taskIDs($db->f("parentTaskID"));
@@ -140,11 +140,11 @@ $task = new task();
 $taskID = $_POST["taskID"] or $taskID = $_GET["taskID"];
 
 if (isset($taskID)) {
-  // Displaying a record
+    // Displaying a record
     $task->set_id($taskID);
     $task->select();
 
-// Creating a new record
+    // Creating a new record
 } else {
     $_POST["dateCreated"] = date("Y-m-d H:i:s");
     $task->read_globals();
@@ -159,7 +159,7 @@ if ($_POST["save_attachment"]) {
     move_attachment("task", $taskID);
     alloc_redirect($TPL["url_alloc_task"]."taskID=".$taskID."&sbs_link=attachments");
 }
-  
+
 
 // If saving a record
 if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POST["save_and_summary"] || $_POST["timeSheet_save"] || $_POST["close_task"]) {
@@ -169,12 +169,12 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
         $task->set_value("taskStatus", "closed_complete");
     }
 
-  // If we're auto-nuking the pending tasks, we need to do that before the call to task->save()
+    // If we're auto-nuking the pending tasks, we need to do that before the call to task->save()
     if ($task->get_id() && !$_POST["pendingTasksIDs"]) {
         $task->add_pending_tasks($_POST["pendingTasksIDs"]);
     }
 
-  // Moved all validation over into task.inc.php save()
+    // Moved all validation over into task.inc.php save()
     $success = $task->save();
 
     count($msg) and $msg = "&message_good=".urlencode(implode("<br>", $msg));
@@ -182,26 +182,26 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
     if ($success) {
         interestedParty::make_interested_parties("task", $task->get_id(), $_POST["interestedParty"]);
 
-      // A task can only have a pending task or pending reopen date - pending task is fixed up in JS, but check here too
+        // A task can only have a pending task or pending reopen date - pending task is fixed up in JS, but check here too
         if ($task->get_value("taskStatus") != "pending_tasks") {
             $_POST['pendingTaskIDs'] = '';
         }
         $task->add_pending_tasks($_POST["pendingTasksIDs"]);
         $task->add_tags($_POST["tags"]);
 
-      // This is only valid on pending_, but not on pending_task (because it has a different field)
+        // This is only valid on pending_, but not on pending_task (because it has a different field)
         if (strpos($task->get_value("taskStatus"), "pending_") !== 0 || $task->get_value("taskStatus") == "pending_tasks") {
             $_POST['reopen_task'] = '';
         }
         $task->add_reopen_reminder($_POST["reopen_task"]);
 
-      // Create reminders if necessary
+        // Create reminders if necessary
         if ($_POST["createTaskReminder"] == true) {
             $task->create_task_reminder();
         }
-  
+
         if ($_POST["save"] && $_POST["view"] == "brief") {
-          #$url = $TPL["url_alloc_taskList"];
+            #$url = $TPL["url_alloc_taskList"];
             $url = $TPL["url_alloc_task"]."taskID=".$task->get_id();
         } else if ($_POST["save"] || $_POST["close_task"]) {
             $url = $TPL["url_alloc_task"]."taskID=".$task->get_id();
@@ -220,7 +220,7 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
         exit();
     }
 
-// If deleting a record
+    // If deleting a record
 } else if ($_POST["delete"]) {
     if ($task->can_be_deleted()) {
         $task->read_globals();
@@ -397,7 +397,7 @@ if (in_str("pending_", $task->get_value("taskStatus"))) {
         $TPL["message_help_no_esc"][] = 'This task is set to
                                     <a href="'.$TPL["url_alloc_reminder"].'step=3&reminderID='.$r["rID"].'&returnToParent=task">
 				    automatically reopen at '.$r["reminderTime"].'</a>';
-      // Which date gets plugged in is arbitrary, but it would be unusual for there to be more than one
+        // Which date gets plugged in is arbitrary, but it would be unusual for there to be more than one
         $TPL['reopen_task'] = strftime("%Y-%m-%d", strtotime($r['reminderTime']));
     }
 }

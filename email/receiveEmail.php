@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 define("NO_AUTH", 1);
 require_once("../alloc.php");
@@ -44,7 +44,7 @@ if ($num_new_emails >0) {
     $msg_nums = $email_receive->get_new_email_msg_uids();
     print $nl.date("Y-m-d H:i:s")." Found ".count($msg_nums)." new/unseen emails.".$nl;
     foreach ($msg_nums as $num) {
-      // Errors from previous iterations shouldn't affect processing of the next email
+        // Errors from previous iterations shouldn't affect processing of the next email
         db_alloc::$stop_doing_queries = false;
 
         $email_receive->set_msg($num);
@@ -52,7 +52,7 @@ if ($num_new_emails >0) {
         $keys = $email_receive->get_hashes();
 
         try {
-          // If no keys
+            // If no keys
             if (!$keys) {
                 // If email sent from a known staff member
                 $from_staff = inbox::change_current_user($email_receive->mail_headers["from"]);
@@ -63,7 +63,7 @@ if ($num_new_emails >0) {
                     alloc_error("Could not create a task from this email. Email was not sent by a staff member. Email resides in INBOX.");
                 }
 
-              // Else if we have a key, append to comment
+            // Else if we have a key, append to comment
             } else {
                 // Skip over emails that are from alloc. These emails are kept only for
                 // posterity and should not be parsed and downloaded and re-emailed etc.
@@ -75,10 +75,10 @@ if ($num_new_emails >0) {
                 }
             }
         } catch (Exception $e) {
-          // There may have been a database error, so let the database know it can run this next bit
+            // There may have been a database error, so let the database know it can run this next bit
             db_alloc::$stop_doing_queries = false;
 
-          // Try forwarding the errant email
+            // Try forwarding the errant email
             try {
                 $email_receive->forward(
                     config::get_config_item("allocEmailAdmin"),
@@ -86,7 +86,7 @@ if ($num_new_emails >0) {
                     "\n".$e->getMessage()."\n\n".$e->getTraceAsString()
                 );
 
-              // If that fails, try last-ditch email send
+            // If that fails, try last-ditch email send
             } catch (Exception $e) {
                 mail(config::get_config_item("allocEmailAdmin"), "Email command failed(2)", "\n".$e->getMessage()."\n\n".$e->getTraceAsString());
             }

@@ -18,17 +18,16 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 class projectCommissionPerson extends db_entity
 {
     public $data_table = "projectCommissionPerson";
     public $display_field_name = "projectID";
     public $key_field = "projectCommissionPersonID";
-    public $data_fields = array("projectID"
-                             ,"tfID"
-                             ,"commissionPercent"
-                             );
+    public $data_fields = array("projectID",
+                                "tfID",
+                                "commissionPercent");
 
     function is_owner($person = "")
     {
@@ -40,7 +39,7 @@ class projectCommissionPerson extends db_entity
 
     function save()
     {
-      // Just ensure multiple 0 entries cannot be saved.
+        // Just ensure multiple 0 entries cannot be saved.
         if ($this->get_value("commissionPercent") == 0) {
             $q = prepare("SELECT * FROM projectCommissionPerson WHERE projectID = %d AND commissionPercent = 0 AND projectCommissionPersonID != %d", $this->get_value("projectID"), $this->get_id());
             $db = new db_alloc();

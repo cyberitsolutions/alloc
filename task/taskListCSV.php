@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
@@ -26,11 +26,10 @@ $_FORM = $_GET;
 
 // Add requested fields to pdf
 $_FORM["showEdit"] = false;
-                              $fields["taskID"]               = "ID";
-                              $fields["taskName"]             = "Task";
+$fields["taskID"] = "ID";
+$fields["taskName"] = "Task";
 $_FORM["showProject"]     and $fields["projectName"]          = "Project";
-$_FORM["showPriority"] || $_FORM["showPriorityFactor"]
-                          and $fields["priorityFactor"]       = "Pri";
+$_FORM["showPriority"] || $_FORM["showPriorityFactor"] and $fields["priorityFactor"] = "Pri";
 $_FORM["showPriority"]    and $fields["taskPriority"]         = "Task Pri";
 $_FORM["showPriority"]    and $fields["projectPriority"]      = "Proj Pri";
 $_FORM["showCreator"]     and $fields["creator_name"]         = "Creator";
@@ -67,7 +66,7 @@ if ($taskListRows) {
     header('Content-Disposition: attachment;filename=tasklist'.time().'.csv');
     $fp = fopen('php://output', 'w');
 
-  // header row
+    // header row
     fputcsv($fp, array_keys(current($taskListRows)));
 
     foreach ($taskListRows as $row) {

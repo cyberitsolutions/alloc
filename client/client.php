@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
@@ -46,9 +46,9 @@ function show_client_contacts()
     $client->select();
 
     // other contacts
-    $query = prepare("SELECT * 
+    $query = prepare("SELECT *
                         FROM clientContact
-                       WHERE clientID=%d    
+                       WHERE clientID=%d
                     ORDER BY clientContactActive DESC, primaryContact DESC, clientContactName", $clientID);
 
     $db = new db_alloc();
@@ -176,7 +176,7 @@ function show_attachments()
     global $clientID;
     util_show_attachments("client", $clientID);
 }
- 
+
 function show_comments()
 {
     global $clientID;
@@ -241,7 +241,7 @@ if ($_POST["save"]) {
     $client->set_values("client_");
 
     if (!$client->get_id()) {
-      // New client.
+        // New client.
         $client->set_value("clientCreatedTime", date("Y-m-d"));
         $new_client = true;
     }
@@ -291,7 +291,7 @@ if ($_POST["clientContact_save"] || $_POST["clientContact_delete"]) {
     $clientContact->read_globals();
 
     if ($_POST["clientContact_save"]) {
-      #$clientContact->set_value('clientID', $_POST["clientID"]);
+        #$clientContact->set_value('clientID', $_POST["clientID"]);
         $clientContact->save();
     }
 
@@ -314,9 +314,7 @@ if ($current_user->have_role("admin")) {
     $TPL["invoice_links"].= "<a href=\"".$TPL["url_alloc_invoice"]."clientID=".$clientID."\">New Invoice</a>";
 }
 
-$projectListOps = array("showProjectType"=>true
-                       ,"clientID"=>$client->get_id()
-                       );
+$projectListOps = array("showProjectType"=>true, "clientID"=>$client->get_id());
 
 $TPL["projectListRows"] = project::get_list($projectListOps);
 

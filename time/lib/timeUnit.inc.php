@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 
 class timeUnit extends db_entity
@@ -27,13 +27,12 @@ class timeUnit extends db_entity
     public $data_table = "timeUnit";
     public $display_field_name = "timeUnitLabelA";
     public $key_field = "timeUnitID";
-    public $data_fields = array("timeUnitName"
-                               ,"timeUnitLabelA"
-                               ,"timeUnitLabelB"
-                               ,"timeUnitSeconds"
-                               ,"timeUnitActive"
-                               ,"timeUnitSequence"
-                               );
+    public $data_fields = array("timeUnitName",
+                                "timeUnitLabelA",
+                                "timeUnitLabelB",
+                                "timeUnitSeconds",
+                                "timeUnitActive",
+                                "timeUnitSequence");
 
     function seconds_to_display_time_unit($seconds)
     {
@@ -41,7 +40,7 @@ class timeUnit extends db_entity
         $db = new db_alloc();
         $db->query($q);
         while ($db->next_record()) {
-          //blag someother time
+            //blag someother time
         }
     }
 }

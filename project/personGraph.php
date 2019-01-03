@@ -47,9 +47,9 @@ if ($projectID) {
     $project->select();
     $TPL["navigation_links"] = $project->get_navigation_links();
     $person_query = prepare("SELECT person.*
-                             FROM person, projectPerson
-                            WHERE person.personID = projectPerson.personID
-                              AND projectPerson.projectID=%d", $project->get_id());
+                               FROM person, projectPerson
+                              WHERE person.personID = projectPerson.personID
+                                AND projectPerson.projectID=%d", $project->get_id());
 } else if ($_GET["personID"]) {
     $person_query = prepare("SELECT * FROM person WHERE personID = %d ORDER BY username", $_GET["personID"]);
 } else {

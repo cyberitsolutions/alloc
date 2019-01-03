@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 class item extends db_entity
 {
@@ -26,14 +26,13 @@ class item extends db_entity
     public $data_table = "item";
     public $display_field_name = "itemName";
     public $key_field = "itemID";
-    public $data_fields = array("itemModifiedUser"
-                             ,"itemName"
-                             ,"itemAuthor"
-                             ,"itemNotes"
-                             ,"itemModifiedTime"
-                             ,"itemType"
-                                   ,"personID"
-                             );
+    public $data_fields = array("itemModifiedUser",
+                                "itemName",
+                                "itemAuthor",
+                                "itemNotes",
+                                "itemModifiedTime",
+                                "itemType",
+                                "personID");
 
     function update_search_index_doc(&$index)
     {

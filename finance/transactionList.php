@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
@@ -43,14 +43,13 @@ if (!$startDate && !$endDate && !$monthDate && !$applyFilter) {
     $monthDate = date("Y-m-d");
 }
 
-$defaults = array("url_form_action"=>$TPL["url_alloc_transactionList"]
-                 ,"form_name"=>"transactionList_filter"
-                 ,"applyFilter"=>$applyFilter
-                 ,"tfID"=>$tfID
-                 ,"startDate"=>$startDate
-                 ,"endDate"=>$endDate
-                 ,"monthDate"=>$monthDate
-                 );
+$defaults = array("url_form_action" => $TPL["url_alloc_transactionList"],
+                  "form_name"       => "transactionList_filter",
+                  "applyFilter"     => $applyFilter,
+                  "tfID"            => $tfID,
+                  "startDate"       => $startDate,
+                  "endDate"         => $endDate,
+                  "monthDate"       => $monthDate);
 
 if ($download) {
     $_FORM = transaction::load_form_data($defaults);

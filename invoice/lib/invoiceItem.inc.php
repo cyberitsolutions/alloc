@@ -18,27 +18,26 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 class invoiceItem extends db_entity
 {
     public $data_table = "invoiceItem";
     public $display_field_name = "iiMemo";
     public $key_field = "invoiceItemID";
-    public $data_fields = array("invoiceID"
-                             ,"timeSheetID"
-                             ,"timeSheetItemID"
-                             ,"expenseFormID"
-                             ,"transactionID"
-                             ,"productSaleID"
-                             ,"productSaleItemID"
-                             ,"iiMemo"
-                             ,"iiQuantity"
-                             ,"iiUnitPrice" => array("type"=>"money")
-                             ,"iiAmount" => array("type"=>"money")
-                             ,"iiTax"
-                             ,"iiDate"
-                             );
+    public $data_fields = array("invoiceID",
+                                "timeSheetID",
+                                "timeSheetItemID",
+                                "expenseFormID",
+                                "transactionID",
+                                "productSaleID",
+                                "productSaleItemID",
+                                "iiMemo",
+                                "iiQuantity",
+                                "iiUnitPrice" => array("type"=>"money"),
+                                "iiAmount" => array("type"=>"money"),
+                                "iiTax",
+                                "iiDate");
 
     function is_owner($person = "")
     {
@@ -115,15 +114,15 @@ class invoiceItem extends db_entity
     {
         global $TPL;
 
-      // It checks for approved transactions and only approves the timesheets
-      // or expenseforms that are completely paid for by an invoice item.
+        // It checks for approved transactions and only approves the timesheets
+        // or expenseforms that are completely paid for by an invoice item.
         $db = new db_alloc();
-        $q = prepare("SELECT amount, currencyTypeID, status 
-                    FROM transaction 
-                   WHERE invoiceItemID = %d 
-                ORDER BY transactionCreatedTime DESC 
-                   LIMIT 1
-                 ", $this->get_id());
+        $q = prepare("SELECT amount, currencyTypeID, status
+                        FROM transaction
+                       WHERE invoiceItemID = %d
+                    ORDER BY transactionCreatedTime DESC
+                       LIMIT 1
+                     ", $this->get_id());
         $db->query($q);
         $row = $db->row();
         $total = $row["amount"];
@@ -137,18 +136,18 @@ class invoiceItem extends db_entity
             $timeSheet = new timeSheet();
             $timeSheet->set_id($timeSheetID);
             $timeSheet->select();
-      
+
             $db = new db_alloc();
 
             if ($timeSheet->get_value("status") == "invoiced") {
-              // If the time sheet doesn't have any transactions and it is in
-              // status invoiced, then we'll simulate the "Create Default Transactions"
-              // button being pressed.
-                $q = prepare("SELECT count(*) as num_transactions 
-                        FROM transaction 
-                       WHERE timeSheetID = %d 
-                         AND invoiceItemID IS NULL
-                     ", $timeSheet->get_id());
+                // If the time sheet doesn't have any transactions and it is in
+                // status invoiced, then we'll simulate the "Create Default Transactions"
+                // button being pressed.
+                $q = prepare("SELECT count(*) as num_transactions
+                                FROM transaction
+                               WHERE timeSheetID = %d
+                                 AND invoiceItemID IS NULL
+                             ", $timeSheet->get_id());
                 $db->query($q);
                 $row = $db->row();
                 if ($row["num_transactions"]==0) {
@@ -157,13 +156,13 @@ class invoiceItem extends db_entity
                         $TPL["message_good"][] = "Automatically created time sheet transactions.";
                 }
 
-              // Get total of all time sheet transactions.
-                $q = prepare("SELECT SUM(amount) AS total 
-                        FROM transaction 
-                       WHERE timeSheetID = %d 
-                         AND status != 'rejected' 
-                         AND invoiceItemID IS NULL
-                     ", $timeSheet->get_id());
+                // Get total of all time sheet transactions.
+                $q = prepare("SELECT SUM(amount) AS total
+                                FROM transaction
+                               WHERE timeSheetID = %d
+                                 AND status != 'rejected'
+                                 AND invoiceItemID IS NULL
+                             ", $timeSheet->get_id());
                 $db->query($q);
                 $row = $db->row();
                 $total_timeSheet = $row["total"];
@@ -184,7 +183,7 @@ class invoiceItem extends db_entity
             $expenseForm->set_id($expenseFormID);
             $expenseForm->select();
             $total_expenseForm = $expenseForm->get_abs_sum_transactions();
-      
+
             if ($total == $total_expenseForm) {
                 $expenseForm->set_status("approved");
                 $TPL["message_good"][] = "Approved Expense Form #".$expenseForm->get_id().".";
@@ -201,7 +200,7 @@ class invoiceItem extends db_entity
         $this->currency = $invoice->get_value("currencyTypeID");
         $db = new db_alloc();
 
-      // If there already a transaction for this invoiceItem, use it instead of creating a new one
+        // If there already a transaction for this invoiceItem, use it instead of creating a new one
         $q = prepare("SELECT * FROM transaction WHERE invoiceItemID = %d ORDER BY transactionCreatedTime DESC LIMIT 1", $this->get_id());
         $db->query($q);
         if ($db->row()) {
@@ -209,18 +208,18 @@ class invoiceItem extends db_entity
             $transaction->select();
         }
 
-      // If there already a transaction for this timeSheet, use it instead of creating a new one
+        // If there already a transaction for this timeSheet, use it instead of creating a new one
         if ($this->get_value("timeSheetID")) {
             $q = prepare(
-                "SELECT * 
-                      FROM transaction 
-                     WHERE timeSheetID = %d 
-                       AND fromTfID = %d
-                       AND tfID = %d
-                       AND amount = %d
-                       AND (invoiceItemID = %d or invoiceItemID IS NULL)
-                  ORDER BY transactionCreatedTime DESC LIMIT 1
-                         ",
+                "SELECT *
+                   FROM transaction
+                  WHERE timeSheetID = %d
+                    AND fromTfID = %d
+                    AND tfID = %d
+                    AND amount = %d
+                    AND (invoiceItemID = %d or invoiceItemID IS NULL)
+               ORDER BY transactionCreatedTime DESC LIMIT 1
+                ",
                 $this->get_value("timeSheetID"),
                 config::get_config_item("inTfID"),
                 $tfID,
@@ -250,7 +249,7 @@ class invoiceItem extends db_entity
 
     function get_list_filter($filter = array())
     {
-      // Filter on invoiceID
+        // Filter on invoiceID
         if ($filter["invoiceID"] && is_array($filter["invoiceID"])) {
             $sql[] = prepare("(invoice.invoiceID in (%s))", $filter["invoiceID"]);
         } else if ($filter["invoiceID"]) {
@@ -265,10 +264,10 @@ class invoiceItem extends db_entity
         if (is_array($filter) && count($filter)) {
             $f = " WHERE ".implode(" AND ", $filter);
         }
-        $q = prepare("SELECT * FROM invoiceItem 
-               LEFT JOIN invoice ON invoice.invoiceID = invoiceItem.invoiceID
-               LEFT JOIN client ON client.clientID = invoice.clientID
-               ".$f);
+        $q = prepare("SELECT * FROM invoiceItem
+                   LEFT JOIN invoice ON invoice.invoiceID = invoiceItem.invoiceID
+                   LEFT JOIN client ON client.clientID = invoice.clientID
+                     ".$f);
         $db = new db_alloc();
         $db->query($q);
         while ($row = $db->row()) {

@@ -51,7 +51,7 @@ if ($sessID) {
 
         $method = g("method");
 
-      // Ouch
+        // Ouch
         $n = count($parameters);
         if ($n == 9) {
             echo alloc_json_encode($services->$method($a[0], $a[1], $a[2], $a[3], $a[4], $a[5], $a[6], $a[7], $a[8]));

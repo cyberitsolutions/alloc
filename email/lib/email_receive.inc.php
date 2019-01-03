@@ -18,11 +18,10 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 class email_receive
 {
-
     var $host;
     var $port;
     var $username;
@@ -38,7 +37,7 @@ class email_receive
     var $mail_info;
     var $dir;
     var $mime_types = array("text", "multipart", "message", "application", "audio", "image", "video", "other");
-  
+
     function __construct($info, $lockfile = false)
     {
         $this->host     = $info["host"];
@@ -48,7 +47,7 @@ class email_receive
         $this->protocol = $info["protocol"] or $this->protocol = "imap";
         $this->lockfile = $lockfile;
 
-      // Nuke lock files that are more that 30 min old
+        // Nuke lock files that are more that 30 min old
         if ($this->lockfile && file_exists($this->lockfile) && (time() - filemtime($this->lockfile)) > 1800) {
             $this->unlock();
         }
@@ -59,7 +58,7 @@ class email_receive
             $this->lock();
         }
     }
-  
+
     function open_mailbox($folder = "", $ops = OP_HALFOPEN, $fatal = true)
     {
         if ($this->connection && is_resource($this->connection)) {
@@ -202,14 +201,14 @@ class email_receive
     {
         $lines = preg_split("/\r?\n/", $headers);
         foreach ($lines as $line) {
-          // start new header
+            // start new header
             if (preg_match('/^[A-Za-z]/', $line)) {
                 preg_match('/([^:]+): ?(.*)$/', $line, $matches);
                 $newHeader = strtolower($matches[1]);
                 $rtn[$newHeader] = trim($matches[2]);
                 $currentHeader = $newHeader;
 
-              // continue header
+            // continue header
             } else if ($line && $currentHeader) {
                 $rtn[$currentHeader] .= " ".trim($line);
             }
@@ -251,13 +250,13 @@ class email_receive
 
     function get_raw_email_by_msg_uid($msg_uid)
     {
-      // $result = imap_fetch_overview($this->connection,$msg_uid,FT_UID);
-      // only view emails that *have* been seen before otherwise
-      // we might view an email before it has been downloaded by
-      // receiveEmail.php
-      //if (is_array($result) && $result[0]->seen) {
+        // $result = imap_fetch_overview($this->connection,$msg_uid,FT_UID);
+        // only view emails that *have* been seen before otherwise
+        // we might view an email before it has been downloaded by
+        // receiveEmail.php
+        //if (is_array($result) && $result[0]->seen) {
 
-      // Now we don't care if it's been seen before, since we're not polling IMAP anymore
+        // Now we don't care if it's been seen before, since we're not polling IMAP anymore
         return $this->get_raw_header_and_body($msg_uid);
     }
 
@@ -294,7 +293,7 @@ class email_receive
                 $mail_html = $thing;
             }
         }
-  
+
         if ($mail_text) {
             return $mail_text;
         } else if ($mail_html) {
@@ -336,7 +335,7 @@ class email_receive
             }
         }
 
-      // If there's no text/plain part, then search out a text/html one
+        // If there's no text/plain part, then search out a text/html one
         if (!$this->mail_text) {
             foreach ($this->mail_parts as $v) {
                 $s = $v["part_object"]; // structure
@@ -466,7 +465,7 @@ class email_receive
     {
         $this->unlock();
         if ($this->connection) {
-          #imap_close($this->connection);
+            #imap_close($this->connection);
             imap_close($this->connection, CL_EXPUNGE); // expunge messages marked for deletion
         }
     }
@@ -479,9 +478,9 @@ class email_receive
             if ($token->get_value("tokenEntity") == "comment") {
                 $db = new db_alloc();
                 $row = $db->qr(
-                    "SELECT commentMaster,commentMasterID 
-                          FROM comment
-                         WHERE commentID = %d",
+                    "SELECT commentMaster,commentMasterID
+                       FROM comment
+                      WHERE commentID = %d",
                     $token->get_value("tokenEntityID")
                 );
                 $m = $row["commentMaster"];
@@ -495,7 +494,7 @@ class email_receive
         }
         $mailbox or $mailbox = "INBOX";
 
-      // Some IMAP servers like dot-separated mail folders, some like slash-separated
+        // Some IMAP servers like dot-separated mail folders, some like slash-separated
         if ($mailbox) {
             $this->create_mailbox($mailbox);
 
@@ -516,7 +515,7 @@ class email_receive
 
     function delete($x = 0)
     {
-      #return;
+        #return;
         $x or $x = $this->msg_uid;
         if ($this->connection) {
             imap_delete($this->connection, $x, FT_UID);
@@ -558,10 +557,10 @@ class email_receive
         list($header,$body) = $this->get_raw_header_and_body();
         $header and $header_obj = $this->parse_headers($header);
         $subject = $header_obj["subject"];
-    
+
         $e = new email_send();
         $e->set_headers($header);
-  
+
 
         $str = $header_obj["in-reply-to"]." ".$header_obj["references"];
         preg_match_all("/\.alloc\.key\.([A-Za-z0-9]{8})@/", $str, $m);
@@ -572,45 +571,46 @@ class email_receive
             }
         }
 
-      // We now have: $header,$body,$subject
+        // We now have: $header,$body,$subject
         if ($commands) {
-          /* Disabled ...
-          // Look for commands in the email's header
-          foreach ($commands as $k=>$v) {
-            $h = trim($e->get_header("x-alloc-".$k));
-            $h and $rtn[strtolower($k)][] = $h;
-          }
-
-          // Look for commands in the email's body
-          $lines = explode("\n",$this->mail_text);
-
-          #echo "Lines: ".print_r($lines,1);
-          #echo "<br>Com:".print_r($commands,1);
-
-          // Loop through the email backwards, we're looking for the final paragraph of commands
-          for($i=count($lines);$i>0;$i--){
-            #echo "<br>line: [".$i."]:".$lines[$i]." go:".sprintf("%d",$go)." starting_line: ".$starting_line;
-            $lines[$i] and $go = true;
-            $go && !$lines[$i] and $starting_line = $i;
-          }
-
-          // Loop forwards and accumulate the commands
-          for($i=$starting_line-1;$i<=count($lines);$i++) {
-            foreach ($commands as $k=>$v) {
-            preg_match("/^".$k.":\s*(.*)$/i",$lines[$i],$matches);
-            if ($matches[1]) {
-            $rtn[strtolower($k)][] = trim($matches[1]);
+            /* Disabled ...
+            // Look for commands in the email's header
+            foreach ($commands as $k => $v) {
+                $h = trim($e->get_header("x-alloc-".$k));
+                $h and $rtn[strtolower($k)][] = $h;
             }
+
+            // Look for commands in the email's body
+            $lines = explode("\n", $this->mail_text);
+
+            #echo "Lines: ".print_r($lines,1);
+            #echo "<br>Com:".print_r($commands,1);
+
+            // Loop through the email backwards, we're looking for the final paragraph of commands
+            for ($i=count($lines); $i>0; $i--) {
+                #echo "<br>line: [".$i."]:".$lines[$i]." go:".sprintf("%d",$go)." starting_line: ".$starting_line;
+                $lines[$i] and $go = true;
+                $go && !$lines[$i] and $starting_line = $i;
             }
-          }
-          */
-          // Look for commands in the email's subject line
+
+            // Loop forwards and accumulate the commands
+            for ($i=$starting_line-1; $i<=count($lines); $i++) {
+                foreach ($commands as $k => $v) {
+                    preg_match("/^".$k.":\s*(.*)$/i", $lines[$i], $matches);
+                    if ($matches[1]) {
+                          $rtn[strtolower($k)][] = trim($matches[1]);
+                    }
+                }
+            }
+            */
+
+            // Look for commands in the email's subject line
             preg_match("/{(Key:[^}]*)}/i", $subject, $matches);
             $subject = $matches[1];
             $bits = explode("^", $subject);
             foreach ($bits as $bit) {
                 if ($bit) {
-                  // ^something: value
+                    // ^something: value
                     $chunks = explode(":", $bit);
                     $key = trim(array_shift($chunks));
                     $val = trim(implode(":", $chunks));
@@ -620,9 +620,9 @@ class email_receive
                 }
             }
         }
-  
-      // we can have multiple time: entries in an email
-      // all other commands are only used once per email
+
+        // we can have multiple time: entries in an email
+        // all other commands are only used once per email
         foreach ((array)$rtn as $k => $v) {
             if ($k == "time") {
                 $r[$k] = $v;
@@ -633,21 +633,21 @@ class email_receive
 
         return (array)$r;
     }
-  
+
     function decode_part($encoding, $thing)
     {
         if ($encoding == 0) {
-          // 7bit
+            // 7bit
         } else if ($encoding == 1) {
-          // 8bit
+            // 8bit
         } else if ($encoding == 2) {
-          // 8bit
+            // 8bit
         } else if ($encoding == 3) {
             $thing = imap_base64($thing);  // Decodes base64
         } else if ($encoding == 4) {
             $thing = imap_qprint($thing);  // quoted-printable to 8bit
         } else if ($encoding == 5) {
-          // ietf-token
+            // ietf-token
         }
         return $thing;
     }
@@ -659,7 +659,7 @@ class email_receive
                 foreach ($struct->parts as $count => $part) {
                     $this->add_part_to_array($part, ($count+1));
                 }
-              // Email does not have a seperate mime attachment for text
+            // Email does not have a seperate mime attachment for text
             } else {
                 $this->mail_parts[] = array('part_number'=>'1', 'part_object'=>$struct);
             }
@@ -671,23 +671,23 @@ class email_receive
     {
         $this->mail_parts[] = array('part_number'=>$partno, 'part_object'=>$struct);
 
-      // Check to see if the part is an attached email message, as in the RFC-822 type
+        // Check to see if the part is an attached email message, as in the RFC-822 type
         if ($struct->type == 2) {
             if (sizeof($struct->parts) > 0) {
                 foreach ($struct->parts as $count => $part) {
-                  // Iterate here again to compensate for the broken way that imap_fetchbody() handles attachments
+                    // Iterate here again to compensate for the broken way that imap_fetchbody() handles attachments
                     if (sizeof($part->parts) > 0) {
                         foreach ($part->parts as $count2 => $part2) {
                             $this->add_part_to_array($part2, $partno.".".($count2+1));
                         }
 
-                        // Attached email does not have a seperate mime attachment for text
+                    // Attached email does not have a seperate mime attachment for text
                     } else {
                         $this->mail_parts[] = array('part_number'=>$partno.'.'.($count+1), 'part_object'=>$struct);
                     }
                 }
 
-              // Not sure if this is possible
+            // Not sure if this is possible
             } else {
                 $this->mail_parts[] = array('part_number'=>$prefix.'.1', 'part_object'=>$struct);
             }
@@ -726,10 +726,10 @@ class email_receive
 
     function get_converted_encoding()
     {
-      // Update comment with the text body and the creator
+        // Update comment with the text body and the creator
         $body = trim($this->mail_text);
 
-      // if the email has a different encoding, change it to the DB connection encoding so mysql doesn't choke
+        // if the email has a different encoding, change it to the DB connection encoding so mysql doesn't choke
         $enc = $this->get_charset();
         if ($enc) {
             $db = new db_alloc();
@@ -758,7 +758,7 @@ class email_receive
 if (basename($_SERVER["PHP_SELF"]) == "email_receive.inc.php") {
     define("NO_AUTH", 1);
     require_once("alloc.php");
-  //require_once("emailsettings.php");
+    //require_once("emailsettings.php");
 
     $num = 30;
 
@@ -770,22 +770,22 @@ if (basename($_SERVER["PHP_SELF"]) == "email_receive.inc.php") {
     echo "\ncheck_mail(): ".str_replace("\n", " ", print_r($e->mail_info, 1));
     echo "\nget_new_email_msg_uids(): ".str_replace("\n", " ", print_r($e->get_new_email_msg_uids(), 1));
     echo "\nget_all_email_msg_uids(): ".str_replace("\n", " ", print_r($e->get_all_email_msg_uids(), 1));
-  //exit();
+    //exit();
     echo "\nget_emails_UIDs_search(): ".str_replace("\n", " ", print_r($e->get_emails_UIDs_search("SUBJECT alloc"), 1));
-  //echo "\nget_msg_header(): ".str_replace("\n"," ",print_r($e->get_msg_header($num),1));
+    //echo "\nget_msg_header(): ".str_replace("\n"," ",print_r($e->get_msg_header($num),1));
 
     echo "\n";
     $e->set_msg($num);
     $e->load_structure();
     echo "\nload_structure(): ".str_replace(" ", " ", print_r($e->mail_structure, 1));
     echo "\nget_charset(): ".$e->get_charset();
-  //exit();
+    //exit();
 
     list($h,$b) = $e->get_raw_email_by_msg_uid($num);
-  //echo "\nget_raw_email_by_msg_uid(): "."HEADER: ".$h."\nBODY: ".$b;
+    //echo "\nget_raw_email_by_msg_uid(): "."HEADER: ".$h."\nBODY: ".$b;
 
     echo "\nsave_email(): ".$e->save_email();
-  //echo "\nload_parts(): ".print_r($e->mail_parts,1);
+    //echo "\nload_parts(): ".print_r($e->mail_parts,1);
     echo "\nmail_text (plaintext version): ".$e->mail_text;
     echo "\nget_commands(): ".print_r($e->get_commands(task::get_exposed_fields()), 1);
     echo "\n";

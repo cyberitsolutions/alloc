@@ -22,12 +22,11 @@
 
 require_once("../alloc.php");
 
-$defaults = array("showHeader"=>true
-                 ,"showProject"=>true
-                 ,"padding"=>1
-                 ,"url_form_action"=>$TPL["url_alloc_projectGraph"]
-                 ,"form_name"=>"projectSummary_filter"
-                 );
+$defaults = array("showHeader"      => true,
+                  "showProject"     => true,
+                  "padding"         => 1,
+                  "url_form_action" => $TPL["url_alloc_projectGraph"],
+                  "form_name"       => "projectSummary_filter");
 
 function show_filter()
 {
@@ -47,7 +46,7 @@ function show_projects($template_name)
     $_FORM = task::load_form_data($defaults);
     $arr = task::load_task_filter($_FORM);
     is_array($arr) and $TPL = array_merge($TPL, $arr);
- 
+
     if (is_array($_FORM["projectID"])) {
         $projectIDs = $_FORM["projectID"];
         foreach ($projectIDs as $projectID) {

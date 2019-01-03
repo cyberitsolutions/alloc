@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 
 class pendingApprovalTimeSheetListHomeItem extends home_item
@@ -34,7 +34,7 @@ class pendingApprovalTimeSheetListHomeItem extends home_item
         $current_user = &singleton("current_user");
         return (isset($current_user) && $current_user->is_employee() && has_pending_timesheet());
     }
-  
+
     function render()
     {
         return true;
@@ -72,11 +72,11 @@ function show_time_sheets_list_for_classes($template_name, $doAdmin = false)
         }
         unset($TPL["warning"]);
 
-      // older than $current_user->prefs["timeSheetDaysWarn"] days
+        // older than $current_user->prefs["timeSheetDaysWarn"] days
         if ($date && imp($current_user->prefs["timeSheetDaysWarn"]) && (mktime()-format_date("U", $date))/60/60/24 > $current_user->prefs["timeSheetDaysWarn"]) {
             $TPL["warning"] = page::help("This time sheet was submitted to you over ".$current_user->prefs["timeSheetDaysWarn"]." days ago.", page::warn());
         }
-    
+
         $TPL["date"] = "<a href=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."\">".$date."</a>";
         $TPL["user"] = $people[$timeSheet->get_value("personID")]["name"];
         $TPL["projectName"] = $db->f("projectName");
@@ -87,51 +87,51 @@ function show_time_sheets_list_for_classes($template_name, $doAdmin = false)
 
 function get_pending_timesheet_db()
 {
-  /*
-   -----------     -----------------     --------
-   | project |  <  | projectPerson |  <  | role |
-   -----------     -----------------     --------
+    /*
+      -----------     -----------------     --------
+      | project |  <  | projectPerson |  <  | role |
+      -----------     -----------------     --------
       /\
-   -------------
-   | timeSheet |
-   -------------
+      -------------
+      | timeSheet |
+      -------------
       /\
-   -----------------
-   | timeSheetItem |
-   -----------------
-  */
+      -----------------
+      | timeSheetItem |
+      -----------------
+    */
 
     $current_user = &singleton("current_user");
     $db = new db_alloc();
 
-  // Get all the time sheets that are in status manager, and are the responsibility of only the default manager
+    // Get all the time sheets that are in status manager, and are the responsibility of only the default manager
     if (in_array($current_user->get_id(), config::get_config_item("defaultTimeSheetManagerList"))) {
-      // First get the blacklist of projects that we don't want to include below
+        // First get the blacklist of projects that we don't want to include below
         $query = prepare("SELECT timeSheet.*, sum(timeSheetItem.timeSheetItemDuration * timeSheetItem.rate) as total_dollars
-                           , COALESCE(projectShortName, projectName) as projectName
-                        FROM timeSheet
-                             LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID
-                             LEFT JOIN project on project.projectID = timeSheet.projectID
-                       WHERE timeSheet.status='manager'
-                         AND timeSheet.projectID NOT IN
-                               (SELECT projectID FROM projectPerson WHERE personID != %d AND roleID = 3)
-                    GROUP BY timeSheet.timeSheetID 
-                    ORDER BY timeSheet.dateSubmittedToManager
+                               , COALESCE(projectShortName, projectName) as projectName
+                            FROM timeSheet
+                                 LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID
+                                 LEFT JOIN project on project.projectID = timeSheet.projectID
+                           WHERE timeSheet.status='manager'
+                             AND timeSheet.projectID NOT IN
+                                 (SELECT projectID FROM projectPerson WHERE personID != %d AND roleID = 3)
+                        GROUP BY timeSheet.timeSheetID
+                        ORDER BY timeSheet.dateSubmittedToManager
                      ", $current_user->get_id());
 
-    // Get all the time sheets that are in status manager, where the currently logged in user is the manager
+        // Get all the time sheets that are in status manager, where the currently logged in user is the manager
     } else {
         $query = prepare(
             "SELECT timeSheet.*, sum(timeSheetItem.timeSheetItemDuration * timeSheetItem.rate) as total_dollars
-                           , COALESCE(projectShortName, projectName) as projectName
-                        FROM timeSheet
-                             LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID
-                             LEFT JOIN project on project.projectID = timeSheet.projectID
-                             LEFT JOIN projectPerson on project.projectID = projectPerson.projectID 
-                             LEFT JOIN role on projectPerson.roleID = role.roleID
-                       WHERE projectPerson.personID = %d AND role.roleHandle = 'timeSheetRecipient' AND timeSheet.status='manager'
-                    GROUP BY timeSheet.timeSheetID 
-                    ORDER BY timeSheet.dateSubmittedToManager",
+                  , COALESCE(projectShortName, projectName) as projectName
+               FROM timeSheet
+                    LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID
+                    LEFT JOIN project on project.projectID = timeSheet.projectID
+                    LEFT JOIN projectPerson on project.projectID = projectPerson.projectID
+                    LEFT JOIN role on projectPerson.roleID = role.roleID
+              WHERE projectPerson.personID = %d AND role.roleHandle = 'timeSheetRecipient' AND timeSheet.status='manager'
+           GROUP BY timeSheet.timeSheetID
+           ORDER BY timeSheet.dateSubmittedToManager",
             $current_user->get_id()
         );
     }
@@ -144,17 +144,17 @@ function get_pending_admin_timesheet_db()
 {
     $current_user = &singleton("current_user");
     $db = new db_alloc();
- 
+
     $timeSheetAdminPersonIDs = config::get_config_item("defaultTimeSheetAdminList");
 
     if (in_array($current_user->get_id(), $timeSheetAdminPersonIDs)) {
         $query = "SELECT timeSheet.*, sum(timeSheetItem.timeSheetItemDuration * timeSheetItem.rate) as total_dollars, COALESCE(projectShortName, projectName) as projectName
-                FROM timeSheet
-           LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID
-           LEFT JOIN project on project.projectID = timeSheet.projectID
-               WHERE timeSheet.status='admin'
-            GROUP BY timeSheet.timeSheetID 
-            ORDER BY timeSheet.dateSubmittedToAdmin";
+                    FROM timeSheet
+               LEFT JOIN timeSheetItem ON timeSheet.timeSheetID = timeSheetItem.timeSheetID
+               LEFT JOIN project on project.projectID = timeSheet.projectID
+                   WHERE timeSheet.status='admin'
+                GROUP BY timeSheet.timeSheetID
+                ORDER BY timeSheet.dateSubmittedToAdmin";
     }
     $db->query($query);
     return $db;

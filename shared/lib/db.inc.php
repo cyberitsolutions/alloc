@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 // DB abstraction
 class db
@@ -37,7 +37,7 @@ class db
 
     function __construct($username = "", $password = "", $hostname = "", $database = "")
     {
- // Constructor
+        // Constructor
         $this->username = $username;
         $this->password = $password;
         $this->hostname = $hostname;
@@ -92,12 +92,12 @@ class db
     function error($msg = false, $errno = false)
     {
         if ($errno == 1451 || $errno == 1217) {
-            $m = "Error: ".$errno." There are other records in the database that depend on the item you just tried to delete. 
-            Remove those other records first and then try to delete this item again. 
+            $m = "Error: ".$errno." There are other records in the database that depend on the item you just tried to delete.
+            Remove those other records first and then try to delete this item again.
             <br><br>".$msg;
         } else if ($errno == 1216) {
-            $m = "Error: ".$errno." The parent record of the item you just tried to create does not exist in the database. 
-            Create that other record first and then try to create this item again. 
+            $m = "Error: ".$errno." The parent record of the item you just tried to create does not exist in the database.
+            Create that other record first and then try to create this item again.
             <br><br>".$msg;
         } else if (preg_match("/(ALLOC ERROR:([^']*)')/m", $msg, $matches)) {
             $m = "Error: ".$matches[2];
@@ -121,7 +121,7 @@ class db
     {
         return $this->pdo->lastInsertId();
     }
-  
+
     function esc($str)
     {
         if (is_numeric($str)) {
@@ -138,16 +138,16 @@ class db
 
     function select_db($db = "")
     {
-      // Select a database
+        // Select a database
         $this->database = $db;
         return $this->connect(true);
     }
 
     function qr()
     {
-      // Quick Row run it like this:
-      // $row = $db->qr("SELECT * FROM hey WHERE heyID = %d",$heyID);
-      // arguments will be automatically escaped
+        // Quick Row run it like this:
+        // $row = $db->qr("SELECT * FROM hey WHERE heyID = %d",$heyID);
+        // arguments will be automatically escaped
         $args = func_get_args();
         $query = $this->get_escaped_query_str($args);
         $id = $this->query($query);
@@ -231,7 +231,7 @@ class db
         }
     }
 
-  // DEPRECATED
+    // DEPRECATED
     function next_record()
     {
         return $this->row();
@@ -242,7 +242,7 @@ class db
         return $this->row[$name];
     }
 
-  // Return true if a particular table exists
+    // Return true if a particular table exists
     function table_exists($table, $db = "")
     {
         $db or $db = $this->database;
@@ -284,7 +284,7 @@ class db
         if ($keys[$table]) {
             return $keys[$table];
         }
-    
+
         $this->query("SHOW KEYS FROM %s", $table);
         while ($row = $this->row()) {
             if (!$row["Non_unique"]) {
@@ -376,7 +376,7 @@ class db
     {
         $valid_field_names = $this->get_table_fields($table);
         $keys = array_keys($keys);
-    
+
         foreach ($row as $field_name => $v) {
             if (!in_array($field_name, $valid_field_names) || in_array($field_name, $keys)) {
                 unset($row[$field_name]);

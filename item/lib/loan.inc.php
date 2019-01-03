@@ -18,19 +18,18 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 class loan extends db_entity
 {
     public $data_table = "loan";
     public $display_field_name = "itemID";
     public $key_field = "loanID";
-    public $data_fields = array("itemID"
-                             ,"personID"
-                             ,"loanModifiedUser"
-                             ,"loanModifiedTime"
-                             ,"dateBorrowed"
-                             ,"dateToBeReturned"
-                             ,"dateReturned"
-                             );
+    public $data_fields = array("itemID",
+                                "personID",
+                                "loanModifiedUser",
+                                "loanModifiedTime",
+                                "dateBorrowed",
+                                "dateToBeReturned",
+                                "dateReturned");
 }

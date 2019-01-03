@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 define("DEFAULT_SEP", "\n");
 
@@ -28,7 +28,7 @@ class taskListPrint
     function get_printable_file($_FORM = array())
     {
         global $TPL;
-  
+
         $db = new db_alloc();
 
         $TPL["companyName"] = config::get_config_item("companyName");
@@ -51,13 +51,13 @@ class taskListPrint
         $taskPriorities = config::get_config_item("taskPriorities");
         $projectPriorities = config::get_config_item("projectPriorities");
 
-      // Add requested fields to pdf
+        // Add requested fields to pdf
         $_FORM["showEdit"] = false;
-                                  $fields["taskID"]               = "ID";
-                                  $fields["taskName"]             = "Task";
+        $fields["taskID"]               = "ID";
+        $fields["taskName"]             = "Task";
         $_FORM["showProject"]     and $fields["projectName"]          = "Project";
         $_FORM["showPriority"] || $_FORM["showPriorityFactor"]
-                              and $fields["priorityFactor"]       = "Pri";
+            and $fields["priorityFactor"]       = "Pri";
         $_FORM["showPriority"]    and $fields["taskPriority"]         = "Task Pri";
         $_FORM["showPriority"]    and $fields["projectPriority"]      = "Proj Pri";
         $_FORM["showCreator"]     and $fields["creator_name"]         = "Creator";
@@ -88,14 +88,14 @@ class taskListPrint
 
 
         if ($_FORM["format"] != "html" && $_FORM["format"] != "html_plus") {
-          // Build PDF document
+            // Build PDF document
             $font1 = ALLOC_MOD_DIR."util/fonts/Helvetica.afm";
             $font2 = ALLOC_MOD_DIR."util/fonts/Helvetica-Oblique.afm";
 
-            $pdf_table_options = array("showLines"=>0,"shaded"=>0,"showHeadings"=>0,"xPos"=>"left"
-                                ,"xOrientation"=>"right","fontSize"=>10,"rowGap"=>0,"fontSize"=>10);
-            $pdf_table_options3 = array("showLines"=>2,"shaded"=>0,"width"=>750, "xPos"=>"center","fontSize"=>10
-                                 ,"lineCol"=>array(0.8, 0.8, 0.8),"splitRows"=>1,"protectRows"=>0);
+            $pdf_table_options = array("showLines"=>0,"shaded"=>0,"showHeadings"=>0,"xPos"=>"left",
+                                       "xOrientation"=>"right","fontSize"=>10,"rowGap"=>0,"fontSize"=>10);
+            $pdf_table_options3 = array("showLines"=>2,"shaded"=>0,"width"=>750, "xPos"=>"center","fontSize"=>10,
+                                        "lineCol"=>array(0.8, 0.8, 0.8),"splitRows"=>1,"protectRows"=>0);
 
             $pdf = new Cezpdf(null, 'landscape');
             $pdf->ezSetMargins(40, 40, 40, 40);
@@ -123,8 +123,8 @@ class taskListPrint
 
             $image_jpg = ALLOC_LOGO;
             if (file_exists($image_jpg)) {
-                  $pdf->ezImage($image_jpg, 0, sprintf("%d", config::get_config_item("logoScaleX")), 'none');
-                  $y = 700;
+                $pdf->ezImage($image_jpg, 0, sprintf("%d", config::get_config_item("logoScaleX")), 'none');
+                $y = 700;
             } else {
                 $y = $pdf->ezText($TPL["companyName"], 27, array("justification"=>"right"));
             }
@@ -143,7 +143,7 @@ class taskListPrint
             $pdf->ezSetY($y -20);
             $pdf->ezStream();
 
-        // Else HTML format
+            // Else HTML format
         } else {
             echo task::get_list_html($taskListRows, $_FORM);
         }

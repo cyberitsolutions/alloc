@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 define("DEFAULT_SEP", "\n");
 
@@ -27,7 +27,7 @@ class timeSheetPrint
 
     function get_timeSheetItem_vars($timeSheetID)
     {
- 
+
         $timeSheet = new timeSheet();
         $timeSheet->set_id($timeSheetID);
         $timeSheet->select();
@@ -87,7 +87,7 @@ class timeSheetPrint
             $d = $timeSheetItem->get_value('taskID', DST_HTML_DISPLAY) . ": " . $timeSheetItem->get_value('description', DST_HTML_DISPLAY);
             $d && !$rows[$taskID]["desc"] and $str[] = "<b>".$d."</b>"; //inline because the PDF needs it that way
 
-          // Get task description
+            // Get task description
             if ($taskID && $TPL["printDesc"]) {
                 $t = new task();
                 $t->set_id($taskID);
@@ -105,7 +105,7 @@ class timeSheetPrint
             is_array($str) and $rows[$taskID]["desc"].= trim(implode(DEFAULT_SEP, $str));
         }
 
-      // Group by units ie, a particular row/task might have  3 Weeks, 2 Hours of work done.
+        // Group by units ie, a particular row/task might have  3 Weeks, 2 Hours of work done.
         $units or $units = array();
         foreach ($units as $tid => $u) {
             unset($commar);
@@ -124,7 +124,7 @@ class timeSheetPrint
 
         $info["total_inc_gst"] = page::money($timeSheet->get_value("currencyTypeID"), $info["total"]+$info["total_gst"], "%s%mo");
 
-      // If we are in dollar mode, then prefix the total with a dollar sign
+        // If we are in dollar mode, then prefix the total with a dollar sign
         $info["total"] = page::money($timeSheet->get_value("currencyTypeID"), $info["total"], "%s%mo");
         $info["total_gst"] = page::money($timeSheet->get_value("currencyTypeID"), $info["total_gst"], "%s%mo");
         $rows or $rows = array();
@@ -145,7 +145,7 @@ class timeSheetPrint
             $taskID or $taskID = "hey"; // Catch entries without task selected. ie timesheetitem.comment entries.
 
             $num = sprintf("%0.2f", $timeSheetItem->get_value("timeSheetItemDuration"));
-          #$info["total"] += $num;
+            #$info["total"] += $num;
 
             $unit = $unit_array[$timeSheetItem->get_value("timeSheetItemDurationUnitID")];
             $units[$taskID][$unit] += $num;
@@ -155,7 +155,7 @@ class timeSheetPrint
             $d && !$rows[$taskID]["desc"] and $str[] = "<b>".$d."</b>";
 
 
-          // Get task description
+            // Get task description
             if ($taskID && $TPL["printDesc"]) {
                 $t = new task();
                 $t->set_id($taskID);
@@ -174,7 +174,7 @@ class timeSheetPrint
             is_array($str) and $rows[$taskID]["desc"].= trim(implode(DEFAULT_SEP, $str));
         }
 
-      // Group by units ie, a particular row/task might have  3 Weeks, 2 Hours of work done.
+        // Group by units ie, a particular row/task might have  3 Weeks, 2 Hours of work done.
         $units or $units = array();
         foreach ($units as $tid => $u) {
             unset($commar);
@@ -224,7 +224,7 @@ class timeSheetPrint
             $d = $timeSheetItem->get_value('taskID', DST_HTML_DISPLAY) . ": " . $timeSheetItem->get_value('description', DST_HTML_DISPLAY);
             $d && !$rows[$row_num]["desc"] and $str[] = "<b>".$d."</b>";
 
-          // Get task description
+            // Get task description
             if ($taskID && $TPL["printDesc"]) {
                 $t = new task();
                 $t->set_id($taskID);
@@ -272,13 +272,13 @@ class timeSheetPrint
             $timeSheet->set_tpl_values("timeSheet_");
 
 
-          // Display the project name.
+            // Display the project name.
             $project = new project();
             $project->set_id($timeSheet->get_value("projectID"));
             $project->select();
             $TPL["timeSheet_projectName"] = $project->get_value("projectName", DST_HTML_DISPLAY);
 
-          // Get client name
+            // Get client name
             $client = $project->get_foreign_object("client");
             $client->set_tpl_values();
             $TPL["clientName"] = $client->get_value("clientName", DST_HTML_DISPLAY);
@@ -297,10 +297,10 @@ class timeSheetPrint
             $timeSheet->load_pay_info();
 
             $db->query(prepare("SELECT max(dateTimeSheetItem) AS maxDate
-                                ,min(dateTimeSheetItem) AS minDate
-                                ,count(timeSheetItemID) as count
-                            FROM timeSheetItem 
-                           WHERE timeSheetID=%d ", $timeSheetID));
+                                      ,min(dateTimeSheetItem) AS minDate
+                                      ,count(timeSheetItemID) as count
+                                  FROM timeSheetItem
+                                 WHERE timeSheetID=%d ", $timeSheetID));
 
             $db->next_record();
             $timeSheet->set_id($timeSheetID);
@@ -327,8 +327,8 @@ class timeSheetPrint
             $default_total_label = "TOTAL AMOUNT PAYABLE";
 
             if ($timeSheetPrintMode == "money") {
-                  $default_header = "Tax Invoice";
-                  $default_id_label = "Invoice Number";
+                $default_header = "Tax Invoice";
+                $default_id_label = "Invoice Number";
             }
             if ($timeSheetPrintMode == "estimate") {
                 $default_header = "Estimate";
@@ -452,7 +452,7 @@ class timeSheetPrint
                 $pdf->ezText(str_replace(array("<br>","<br/>","<br />"), "\n", $TPL["footer"]), 10);
                 $pdf->ezStream(array("Content-Disposition"=>"timeSheet_".$timeSheetID.".pdf"));
 
-              // Else HTML format
+                // Else HTML format
             } else {
                 if (file_exists(ALLOC_LOGO)) {
                     $TPL["companyName"] = '<img alt="Company logo" src="'.$TPL["url_alloc_logo"].'" />';

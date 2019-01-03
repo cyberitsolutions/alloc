@@ -18,46 +18,45 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 class tf extends db_entity
 {
     public $data_table = "tf";
     public $display_field_name = "tfName";
     public $key_field = "tfID";
-    public $data_fields = array("tfName"
-                             ,"tfComments"
-                             ,"tfModifiedUser"
-                             ,"tfModifiedTime"
-                             ,"qpEmployeeNum"
-                             ,"quickenAccount"
-                             ,"tfActive"
-                             );
+    public $data_fields = array("tfName",
+                                "tfComments",
+                                "tfModifiedUser",
+                                "tfModifiedTime",
+                                "qpEmployeeNum",
+                                "quickenAccount",
+                                "tfActive");
 
     function get_balance($where = array(), $debug = "")
     {
         $current_user = &singleton("current_user");
- 
-      // If no status is requested then default to approved.
+
+        // If no status is requested then default to approved.
         $where["status"] or $where["status"] = "approved";
-    
+
         if (!$this->is_owner() && !$current_user->have_role("admin")) {
             return false;
         }
 
-      // Get belance
+        // Get belance
         $db = new db_alloc();
         $query = prepare(
-            "SELECT sum( if(fromTfID=%d,-amount,amount) * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance 
-                        FROM transaction 
-                   LEFT JOIN currencyType ON transaction.currencyTypeID = currencyType.currencyTypeID
-                       WHERE (tfID = %d or fromTfID = %d) ",
+            "SELECT sum( if(fromTfID=%d,-amount,amount) * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance
+               FROM transaction
+          LEFT JOIN currencyType ON transaction.currencyTypeID = currencyType.currencyTypeID
+              WHERE (tfID = %d or fromTfID = %d) ",
             $this->get_id(),
             $this->get_id(),
             $this->get_id()
         );
 
-      // Build up the rest of the WHERE sql
+        // Build up the rest of the WHERE sql
         foreach ($where as $column_name => $value) {
             $op = " = ";
             if (is_array($value)) {
@@ -67,7 +66,7 @@ class tf extends db_entity
             $query.= " AND ".$column_name.$op." '".db_esc($value)."'";
         }
 
-      #echo "<br>".$debug." q: ".$query;
+        #echo "<br>".$debug." q: ".$query;
         $db->query($query);
         $db->next_record() || alloc_error("TF $tfID not found in tf::get_balance");
         return $db->f("balance");
@@ -84,8 +83,8 @@ class tf extends db_entity
         if (!$this->get_id()) {
             return false;
         }
-  
-      // optimization
+
+        // optimization
         if (isset($owners[$person->get_id()])) {
             return in_array($this->get_id(), $owners[$person->get_id()]);
         }
@@ -111,9 +110,9 @@ class tf extends db_entity
 
         $nav_links = array();
 
-      // Alla melded the have entity perm for transactionRepeat into the
-      // have entity perm for transaction because I figured they were the
-      // same and it nukes the error message!
+        // Alla melded the have entity perm for transactionRepeat into the
+        // have entity perm for transaction because I figured they were the
+        // same and it nukes the error message!
 
         if (have_entity_perm("tf", PERM_UPDATE, $current_user, $this->is_owner())) {
             $statement_url = $TPL["url_alloc_tf"]."tfID=".$this->get_id();
@@ -161,7 +160,7 @@ class tf extends db_entity
     public static function get_permitted_tfs($requested_tfs = array())
     {
         $current_user = &singleton("current_user");
-      // If admin, just use the requested tfs
+        // If admin, just use the requested tfs
         if ($current_user->have_role('admin')) {
             $rtn = $requested_tfs;
 
@@ -174,8 +173,8 @@ class tf extends db_entity
                 }
             }
         }
-    
-      // db_esc everything
+
+        // db_esc everything
         foreach ((array)$rtn as $tf) {
             $r[] = db_esc($tf);
         }
@@ -212,15 +211,15 @@ class tf extends db_entity
         if (is_array($filter2) && count($filter2)) {
             $f2 = " AND ".implode(" AND ", $filter2);
         }
-  
+
         $db = new db_alloc();
         $q = prepare("SELECT transaction.tfID as id, tf.tfName, transactionID, transaction.status,
-                         sum(amount * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance
-                    FROM transaction
-               LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
-               LEFT JOIN tf on transaction.tfID = tf.tfID
-                   WHERE 1 AND transaction.status != 'rejected' ".$f2."
-                GROUP BY transaction.status,transaction.tfID");
+                             sum(amount * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance
+                        FROM transaction
+                   LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
+                   LEFT JOIN tf on transaction.tfID = tf.tfID
+                       WHERE 1 AND transaction.status != 'rejected' ".$f2."
+                    GROUP BY transaction.status,transaction.tfID");
         $db->query($q);
         while ($row = $db->row()) {
             if ($row["status"] == "approved") {
@@ -230,14 +229,14 @@ class tf extends db_entity
             }
         }
 
-        
+
         $q = prepare("SELECT transaction.fromTfID as id, tf.tfName, transactionID, transaction.status,
-                         sum(amount * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance
-                    FROM transaction
-               LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
-               LEFT JOIN tf on transaction.fromTfID = tf.tfID
-                   WHERE 1 AND transaction.status != 'rejected' ".$f2."
-                GROUP BY transaction.status,transaction.fromTfID");
+                             sum(amount * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance
+                        FROM transaction
+                   LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
+                   LEFT JOIN tf on transaction.fromTfID = tf.tfID
+                       WHERE 1 AND transaction.status != 'rejected' ".$f2."
+                    GROUP BY transaction.status,transaction.fromTfID");
         $db->query($q);
         while ($row = $db->row()) {
             if ($row["status"] == "approved") {
@@ -247,12 +246,12 @@ class tf extends db_entity
             }
         }
 
-        $q = prepare("SELECT tf.* 
-                    FROM tf 
-               LEFT JOIN tfPerson ON tf.tfID = tfPerson.tfID 
-                   WHERE 1 ".$f."
-                GROUP BY tf.tfID 
-                ORDER BY tf.tfName");
+        $q = prepare("SELECT tf.*
+                        FROM tf
+                   LEFT JOIN tfPerson ON tf.tfID = tfPerson.tfID
+                       WHERE 1 ".$f."
+                    GROUP BY tf.tfID
+                    ORDER BY tf.tfName");
 
         $db->query($q);
         while ($row = $db->row()) {

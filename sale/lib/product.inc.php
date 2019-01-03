@@ -27,14 +27,13 @@ class product extends db_entity
     public $data_table = "product";
     public $display_field_name = "productName";
     public $key_field = "productID";
-    public $data_fields = array("productName"
-                             ,"sellPrice" => array("type"=>"money","currency"=>"sellPriceCurrencyTypeID")
-                             ,"sellPriceCurrencyTypeID"
-                             ,"sellPriceIncTax" => array("empty_to_null"=>false)
-                             ,"description"
-                             ,"comment"
-                             ,"productActive"
-                             );
+    public $data_fields = array("productName",
+                                "sellPrice" => array("type"=>"money","currency"=>"sellPriceCurrencyTypeID"),
+                                "sellPriceCurrencyTypeID",
+                                "sellPriceIncTax" => array("empty_to_null"=>false),
+                                "description",
+                                "comment",
+                                "productActive");
 
     function delete()
     {
@@ -44,7 +43,7 @@ class product extends db_entity
 
     function get_list_filter($filter)
     {
-      // stub function for one day when you can filter products
+        // stub function for one day when you can filter products
         return $sql;
     }
 
@@ -61,7 +60,7 @@ class product extends db_entity
             $f = " WHERE ".implode(" AND ", $filter);
         }
 
-      // Put the inactive ones down the bottom.
+        // Put the inactive ones down the bottom.
         $f .= " ORDER BY productActive DESC, productName";
 
         $taxName = config::get_config_item("taxName");
@@ -91,7 +90,7 @@ class product extends db_entity
 
     function get_list_vars()
     {
-      // stub function for one day when you can specify list parameters
+        // stub function for one day when you can specify list parameters
         return array();
     }
 
@@ -100,11 +99,11 @@ class product extends db_entity
         $id or $id = $this->get_id();
         $db = new db_alloc();
         $q = prepare("SELECT amount, currencyTypeID, tax
-                    FROM productCost
-                   WHERE isPercentage != 1
-                     AND productID = %d
-                     AND productCostActive = true
-                 ", $id);
+                        FROM productCost
+                       WHERE isPercentage != 1
+                         AND productID = %d
+                         AND productCostActive = true
+                     ", $id);
         $db->query($q);
         while ($row = $db->row()) {
             if ($row["tax"]) {

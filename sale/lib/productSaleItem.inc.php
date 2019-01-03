@@ -26,14 +26,13 @@ class productSaleItem extends db_entity
     public $classname = "productSaleItem";
     public $data_table = "productSaleItem";
     public $key_field = "productSaleItemID";
-    public $data_fields = array("productID"
-                             ,"productSaleID"
-                             ,"sellPrice" => array("type"=>"money", "currency"=>"sellPriceCurrencyTypeID")
-                             ,"sellPriceCurrencyTypeID"
-                             ,"sellPriceIncTax" => array("empty_to_null"=>false)
-                             ,"quantity"
-                             ,"description"
-                             );
+    public $data_fields = array("productID",
+                                "productSaleID",
+                                "sellPrice" => array("type"=>"money", "currency"=>"sellPriceCurrencyTypeID"),
+                                "sellPriceCurrencyTypeID",
+                                "sellPriceIncTax" => array("empty_to_null"=>false),
+                                "quantity",
+                                "description");
     function is_owner()
     {
         $productSale = $this->get_foreign_object("productSale");
@@ -54,14 +53,14 @@ class productSaleItem extends db_entity
         $db = new db_alloc();
         $q = prepare(
             "SELECT fromTfID, tfID,
-                         (amount * pow(10,-currencyType.numberToBasic) * exchangeRate) as amount
-                    FROM transaction 
-               LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
-                   WHERE tfID = %d
-                     AND productSaleID = %d
-                     AND status != 'rejected'
-                     AND productSaleItemID = %d
-                ",
+                    (amount * pow(10,-currencyType.numberToBasic) * exchangeRate) as amount
+               FROM transaction
+          LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
+              WHERE tfID = %d
+                AND productSaleID = %d
+                AND status != 'rejected'
+                AND productSaleItemID = %d
+            ",
             config::get_config_item("outTfID"),
             $this->get_value("productSaleID"),
             $this->get_id()
@@ -79,14 +78,14 @@ class productSaleItem extends db_entity
         $db = new db_alloc();
         $q = prepare(
             "SELECT fromTfID, tfID,
-                         (amount * pow(10,-currencyType.numberToBasic) * exchangeRate) as amount
-                    FROM transaction 
-               LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
-                   WHERE fromTfID = %d
-                     AND productSaleID = %d
-                     AND status != 'rejected'
-                     AND productSaleItemID = %d
-                ",
+                    (amount * pow(10,-currencyType.numberToBasic) * exchangeRate) as amount
+               FROM transaction
+          LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
+              WHERE fromTfID = %d
+                AND productSaleID = %d
+                AND status != 'rejected'
+                AND productSaleItemID = %d
+            ",
             config::get_config_item("inTfID"),
             $this->get_value("productSaleID"),
             $this->get_id()
@@ -102,20 +101,20 @@ class productSaleItem extends db_entity
     function get_amount_other()
     {
         $db = new db_alloc();
-      // Don't need to do numberToBasic conversion here
+        // Don't need to do numberToBasic conversion here
         $q = prepare(
             "SELECT fromTfID, tfID,
-                         (amount * exchangeRate) as amount
-                    FROM transaction 
-               LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
-                   WHERE fromTfID != %d
-                     AND tfID != %d
-                     AND tfID != %d
-                     AND productSaleID = %d
-                     AND productSaleItemID = %d
-                     AND status != 'rejected'
-                     AND productCostID IS NULL
-                ",
+                    (amount * exchangeRate) as amount
+               FROM transaction
+          LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
+              WHERE fromTfID != %d
+                AND tfID != %d
+                AND tfID != %d
+                AND productSaleID = %d
+                AND productSaleItemID = %d
+                AND status != 'rejected'
+                AND productCostID IS NULL
+            ",
             config::get_config_item("inTfID"),
             config::get_config_item("outTfID"),
             config::get_config_item("taxTfID"),
@@ -136,7 +135,7 @@ class productSaleItem extends db_entity
         $productSale = $this->get_foreign_object("productSale");
         $transactions = $productSale->get_transactions($this->get_id());
 
-      // margin = sellPrice - GST - costs
+        // margin = sellPrice - GST - costs
         foreach ($transactions as $row) {
             $row["saleTransactionType"] == "sellPrice" and $sellPrice = exchangeRate::convert($row["currencyTypeID"], $row["amount"]);
             $row["saleTransactionType"] == "tax"       and $tax      += exchangeRate::convert($row["currencyTypeID"], $row["amount"]);
@@ -186,9 +185,9 @@ class productSaleItem extends db_entity
         $taxTfID = config::get_config_item("taxTfID");
         $mainTfID = $productSale->get_value("tfID");
 
-      // Next transaction represents the amount that someone has paid the
-      // sellPrice amount for the product. This money is transferred from
-      // the Incoming transactions TF, to the Main Finance TF.
+        // Next transaction represents the amount that someone has paid the
+        // sellPrice amount for the product. This money is transferred from
+        // the Incoming transactions TF, to the Main Finance TF.
         $this->create_transaction(
             config::get_config_item("inTfID"),
             $mainTfID,
@@ -197,15 +196,15 @@ class productSaleItem extends db_entity
             $this->get_value("sellPriceCurrencyTypeID")
         );
 
-      // Now loop through all the productCosts for the sale items product.
+        // Now loop through all the productCosts for the sale items product.
         $query = prepare(
             "SELECT productCost.*, product.productName
-                        FROM productCost 
-                   LEFT JOIN product ON product.productID = productCost.productID
-                       WHERE productCost.productID = %d 
-                         AND isPercentage != 1
-                         AND productCostActive = true
-                    ORDER BY productCostID",
+               FROM productCost
+          LEFT JOIN product ON product.productID = productCost.productID
+              WHERE productCost.productID = %d
+                AND isPercentage != 1
+                AND productCostActive = true
+           ORDER BY productCostID",
             $this->get_value("productID")
         );
 
@@ -222,18 +221,18 @@ class productSaleItem extends db_entity
             );
         }
 
-      // Need to do the percentages separately because they rely on the $totalUnallocated figure
+        // Need to do the percentages separately because they rely on the $totalUnallocated figure
         $totalUnallocated = page::money(config::get_config_item("currency"), $this->get_amount_unallocated(), "%mo");
 
-      // Now loop through all the productCosts % COMMISSIONS for the sale items product.
+        // Now loop through all the productCosts % COMMISSIONS for the sale items product.
         $query = prepare(
             "SELECT productCost.*, product.productName
-                        FROM productCost 
-                   LEFT JOIN product ON product.productID = productCost.productID
-                       WHERE productCost.productID = %d 
-                         AND isPercentage = 1
-                         AND productCostActive = true
-                    ORDER BY productCostID",
+               FROM productCost
+          LEFT JOIN product ON product.productID = productCost.productID
+              WHERE productCost.productID = %d
+                AND isPercentage = 1
+                AND productCostActive = true
+           ORDER BY productCostID",
             $this->get_value("productID")
         );
 
@@ -265,7 +264,7 @@ class productSaleItem extends db_entity
         $taxPercent = config::get_config_item("taxPercent");
 
 
-      // If this price includes tax, then perform a tax transfer
+        // If this price includes tax, then perform a tax transfer
         $amount_of_tax = $this->get_value("sellPrice") * ($taxPercent/100);
         $amount_of_tax = exchangeRate::convert($this->get_value("sellPriceCurrencyTypeID"), $amount_of_tax, null, null, "%mo");
         $this->create_transaction(
@@ -278,15 +277,15 @@ class productSaleItem extends db_entity
             'tax'
         );
 
-      // Now loop through all the productCosts for the sale items product.
+        // Now loop through all the productCosts for the sale items product.
         $query = prepare(
             "SELECT productCost.*, product.productName
-                        FROM productCost 
-                   LEFT JOIN product ON product.productID = productCost.productID
-                       WHERE productCost.productID = %d 
-                         AND isPercentage != 1
-                         AND productCostActive = true
-                    ORDER BY productCostID",
+               FROM productCost
+          LEFT JOIN product ON product.productID = productCost.productID
+              WHERE productCost.productID = %d
+                AND isPercentage != 1
+                AND productCostActive = true
+           ORDER BY productCostID",
             $this->get_value("productID")
         );
 

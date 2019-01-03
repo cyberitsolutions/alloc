@@ -16,7 +16,7 @@ $events = array();
 function gen_key($prefix = 0)
 {
     static $subidx = 0;
-  //this falls apart if the feed runs to more than 9999 items
+    //this falls apart if the feed runs to more than 9999 items
     return '!' . $prefix . sprintf("%04d", $subidx++);
 }
 
@@ -53,11 +53,11 @@ while ($row = $db->next_record()) {
     $key = $row['dateChanged'] . gen_key(1);
     $el = array("date" => $row['dateChanged']);
 
-  //overwrite the new data (taskStatus, personID) with the correct (historical) data
+    //overwrite the new data (taskStatus, personID) with the correct (historical) data
     if ($trace[$row['taskID']]) {
         $row = array_merge($row, $trace[$row['taskID']]);
     }
-  
+
     if (!$row['personID']) {
         $name = "Unassigned";
     } else {
@@ -91,7 +91,7 @@ while ($row = $db->next_record()) {
         }
         $events[$key] = $el;
     }
-  //record the history
+    //record the history
     $trace[$db->f('taskID')][$db->f('field')] = $db->f('value');
 }
 

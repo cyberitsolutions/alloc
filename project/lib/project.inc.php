@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 define("PERM_PROJECT_VIEW_TASK_ALLOCS", 256);
 define("PERM_PROJECT_ADD_TASKS", 512);
@@ -29,49 +29,48 @@ class project extends db_entity
     public $data_table = "project";
     public $display_field_name = "projectName";
     public $key_field = "projectID";
-    public $data_fields = array("projectName"
-                             ,"projectShortName"
-                             ,"projectComments"
-                             ,"clientID"
-                             ,"projectType"
-                             ,"projectClientName"
-                             ,"projectClientPhone"
-                             ,"projectClientMobile"
-                             ,"projectClientEMail"
-                             ,"projectClientAddress"
-                             ,"dateTargetStart"
-                             ,"dateTargetCompletion"
-                             ,"dateActualStart"
-                             ,"dateActualCompletion"
-                             ,"projectBudget" => array("type"=>"money")
-                             ,"currencyTypeID"
-                             ,"projectPriority"
-                             ,"projectStatus"
-                             ,"cost_centre_tfID"
-                             ,"customerBilledDollars" => array("type"=>"money")
-                             ,"clientContactID"
-                             ,"projectCreatedTime"
-                             ,"projectCreatedUser"
-                             ,"projectModifiedTime"
-                             ,"projectModifiedUser"
-                             ,"defaultTaskLimit"
-                             ,"defaultTimeSheetRate" => array("type"=>"money")
-                             ,"defaultTimeSheetRateUnitID"
-                             );
+    public $data_fields = array("projectName",
+                                "projectShortName",
+                                "projectComments",
+                                "clientID",
+                                "projectType",
+                                "projectClientName",
+                                "projectClientPhone",
+                                "projectClientMobile",
+                                "projectClientEMail",
+                                "projectClientAddress",
+                                "dateTargetStart",
+                                "dateTargetCompletion",
+                                "dateActualStart",
+                                "dateActualCompletion",
+                                "projectBudget" => array("type"=>"money"),
+                                "currencyTypeID",
+                                "projectPriority",
+                                "projectStatus",
+                                "cost_centre_tfID",
+                                "customerBilledDollars" => array("type"=>"money"),
+                                "clientContactID",
+                                "projectCreatedTime",
+                                "projectCreatedUser",
+                                "projectModifiedTime",
+                                "projectModifiedUser",
+                                "defaultTaskLimit",
+                                "defaultTimeSheetRate" => array("type"=>"money"),
+                                "defaultTimeSheetRateUnitID");
 
-    public $permissions = array(PERM_PROJECT_VIEW_TASK_ALLOCS => "view task allocations"
-                             ,PERM_PROJECT_ADD_TASKS => "add tasks");
+    public $permissions = array(PERM_PROJECT_VIEW_TASK_ALLOCS => "view task allocations",
+                                PERM_PROJECT_ADD_TASKS => "add tasks");
 
     function save()
     {
         global $TPL;
-      // The data prior to the save
+        // The data prior to the save
         $old = $this->all_row_fields;
         $ids = '';
         $commar = '';
         $db = new db_alloc();
 
-      // If we're archiving the project, then archive the tasks.
+        // If we're archiving the project, then archive the tasks.
         if ($old["projectStatus"] != "Archived" && $this->get_value("projectStatus") == "Archived") {
             $q = prepare("SELECT taskID FROM task WHERE projectID = %d AND SUBSTRING(taskStatus,1,6) != 'closed'", $this->get_id());
             $q1 = $db->query($q);
@@ -83,7 +82,7 @@ class project extends db_entity
             }
             $ids and $TPL["message_good"][] = "All open and pending tasks (".$ids.") have had their status changed to Closed: Archived.";
 
-        // Else if we're un-archiving the project, then un-archive the tasks.
+            // Else if we're un-archiving the project, then un-archive the tasks.
         } else if ($old["projectStatus"] == "Archived" && $this->get_value("projectStatus") != "Archived") {
             $q = prepare("SELECT taskID FROM task WHERE projectID = %d AND taskStatus = 'closed_archived'", $this->get_id());
             $q1 = $db->query($q);
@@ -118,7 +117,7 @@ class project extends db_entity
         if ($sess->Started()) {
             $url = $sess->url(SCRIPT_PATH.$url);
 
-        // This for urls that are emailed
+            // This for urls that are emailed
         } else {
             static $prefix;
             $prefix or $prefix = config::get_config_item("allocURL");
@@ -154,32 +153,32 @@ class project extends db_entity
         $current_user = &singleton("current_user");
         $person or $person = $current_user;
 
-      // If brand new record then let it be created.
+        // If brand new record then let it be created.
         if (!$this->get_id()) {
             return true;
         }
 
-      // Else check that user has isManager or timeSheetRecipient permission for this project
+        // Else check that user has isManager or timeSheetRecipient permission for this project
         return is_object($person) && ($person->have_role("manage") || $this->has_project_permission($person, array("isManager","timeSheetRecipient")));
     }
 
     function has_project_permission($person = "", $permissions = array())
     {
-      // Check that user has permission for this project
+        // Check that user has permission for this project
         $current_user = &singleton("current_user");
         $person or $person = $current_user;
         if (is_object($person)) {
             $permissions and $p = " AND ".sprintf_implode("ppr.roleHandle = '%s'", $permissions);
 
             $query = prepare(
-                "SELECT personID, projectID, pp.roleID, ppr.roleName, ppr.roleHandle 
-                          FROM projectPerson pp 
-                     LEFT JOIN role ppr ON ppr.roleID = pp.roleID 
-                         WHERE projectID = '%d' and personID = '%d' ".$p,
+                "SELECT personID, projectID, pp.roleID, ppr.roleName, ppr.roleHandle
+                   FROM projectPerson pp
+              LEFT JOIN role ppr ON ppr.roleID = pp.roleID
+                  WHERE projectID = '%d' and personID = '%d' ".$p,
                 $this->get_id(),
                 $person->get_id()
             );
-          #echo "<br><br>".$query;
+            #echo "<br><br>".$query;
 
             $db = new db_alloc();
             $db->query($query);
@@ -191,7 +190,7 @@ class project extends db_entity
     {
         $rows = $this->get_project_people_by_role("timeSheetRecipient");
 
-      // Fallback time sheet manager person
+        // Fallback time sheet manager person
         if (!$rows) {
             $people = config::get_config_item("defaultTimeSheetManagerList");
             $people and $rows = $people;
@@ -203,9 +202,9 @@ class project extends db_entity
     {
         $rows = array();
         $q = prepare("SELECT projectPerson.personID as personID
-                    FROM projectPerson
-               LEFT JOIN role ON projectPerson.roleID = role.roleID 
-                   WHERE projectPerson.projectID = %d AND role.roleHandle = '%s'", $this->get_id(), $role);
+                        FROM projectPerson
+                   LEFT JOIN role ON projectPerson.roleID = role.roleID
+                       WHERE projectPerson.projectID = %d AND role.roleHandle = '%s'", $this->get_id(), $role);
         $db = new db_alloc();
         $db->query($q);
         while ($db->next_record()) {
@@ -216,7 +215,7 @@ class project extends db_entity
 
     function get_project_manager()
     {
-      // Finds either the time sheet recipient or the project manager
+        // Finds either the time sheet recipient or the project manager
         $projectManager = $this->get_project_people_by_role("timeSheetRecipient");
         if (!count($projectManager)) {
             $projectManager = $this->get_project_people_by_role("isManager");
@@ -234,37 +233,37 @@ class project extends db_entity
         global $TPL;
         $current_user = &singleton("current_user");
 
-      // Client
+        // Client
         if ($this->get_value("clientID")) {
             $url = $TPL["url_alloc_client"]."clientID=".$this->get_value("clientID");
             $links[] = "<a href=\"$url\" class=\"nobr noprint\">Client</a>";
         }
 
-      // Project
+        // Project
         if ($ops["showProject"]) {
             $url = $TPL["url_alloc_project"]."projectID=".$this->get_id();
             $links[] = "<a href=\"$url\" class=\"nobr noprint\">Project</a>";
         }
 
-      // Tasks
+        // Tasks
         if ($this->have_perm()) {
             $url = $TPL["url_alloc_taskList"]."applyFilter=1&amp;taskStatus=open&amp;taskView=byProject&amp;projectID=".$this->get_id();
             $links[] = "<a href=\"$url\" class=\"nobr noprint\">Tasks</a>";
         }
 
-      // Graph
+        // Graph
         if ($this->have_perm()) {
             $url = $TPL["url_alloc_projectGraph"]."applyFilter=1&projectID=".$this->get_id()."&taskStatus=open&showTaskID=true";
             $links[] = "<a href=\"$url\" class=\"nobr noprint\">Graph</a>";
         }
 
-      // Allocation
+        // Allocation
         if ($this->have_perm(PERM_PROJECT_VIEW_TASK_ALLOCS)) {
             $url = $TPL["url_alloc_personGraph"]."projectID=".$this->get_id();
             $links[] = "<a href=\"$url\" class=\"nobr noprint\">Allocation</a>";
         }
 
-      // To Time Sheet
+        // To Time Sheet
         if ($this->have_perm(PERM_PROJECT_ADD_TASKS)) {
             if ($ops["taskID"]) {
                 $extra = "&taskID=".$ops["taskID"];
@@ -273,13 +272,13 @@ class project extends db_entity
             $links[] = "<a href=\"$url\" class=\"nobr noprint\">Time Sheet</a>";
         }
 
-      // New Task
+        // New Task
         if ($this->have_perm(PERM_PROJECT_ADD_TASKS)) {
             $url = $TPL["url_alloc_task"]."projectID=".$this->get_id();
             $links[] = "<a href=\"$url\" class=\"nobr noprint\">New Task</a>";
         }
 
-      // Join links up with space
+        // Join links up with space
         if (is_array($links)) {
             return implode(" ", $links);
         }
@@ -295,48 +294,48 @@ class project extends db_entity
         if ($type == "mine") {
             $q = prepare(
                 "SELECT project.projectID, project.projectName
-                      FROM project
-                 LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID
-                 LEFT JOIN role ON projectPerson.roleID = role.roleID
-                     WHERE projectPerson.personID = '%d' ".$projectStatus_sql."
-                  GROUP BY projectID 
-                  ORDER BY project.projectName",
+                   FROM project
+              LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID
+              LEFT JOIN role ON projectPerson.roleID = role.roleID
+                  WHERE projectPerson.personID = '%d' ".$projectStatus_sql."
+               GROUP BY projectID
+               ORDER BY project.projectName",
                 $personID
             );
         } else if ($type == "pm") {
             $q = prepare(
                 "SELECT project.projectID, project.projectName
-                      FROM project
-                 LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID
-                 LEFT JOIN role ON projectPerson.roleID = role.roleID
-                     WHERE projectPerson.personID = '%d' ".$projectStatus_sql."
-                       AND role.roleHandle = 'isManager' 
-                  GROUP BY projectID 
-                  ORDER BY project.projectName",
+                   FROM project
+              LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID
+              LEFT JOIN role ON projectPerson.roleID = role.roleID
+                  WHERE projectPerson.personID = '%d' ".$projectStatus_sql."
+                    AND role.roleHandle = 'isManager'
+               GROUP BY projectID
+               ORDER BY project.projectName",
                 $personID
             );
         } else if ($type == "tsm") {
             $q = prepare(
                 "SELECT project.projectID, project.projectName
-                      FROM project
-                 LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID
-                 LEFT JOIN role ON projectPerson.roleID = role.roleID
-                     WHERE projectPerson.personID = '%d' ".$projectStatus_sql."
-                       AND role.roleHandle = 'timeSheetRecipient' 
-                  GROUP BY projectID 
-                  ORDER BY project.projectName",
+                   FROM project
+              LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID
+              LEFT JOIN role ON projectPerson.roleID = role.roleID
+                  WHERE projectPerson.personID = '%d' ".$projectStatus_sql."
+                    AND role.roleHandle = 'timeSheetRecipient'
+               GROUP BY projectID
+               ORDER BY project.projectName",
                 $personID
             );
         } else if ($type == "pmORtsm") {
             $q = prepare(
                 "SELECT project.projectID, project.projectName
-                      FROM project
-                 LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID
-                 LEFT JOIN role ON projectPerson.roleID = role.roleID
-                     WHERE projectPerson.personID = '%d' ".$projectStatus_sql."
-                       AND (role.roleHandle = 'isManager' or role.roleHandle = 'timeSheetRecipient')
-                  GROUP BY projectID 
-                  ORDER BY project.projectName",
+                   FROM project
+              LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID
+              LEFT JOIN role ON projectPerson.roleID = role.roleID
+                  WHERE projectPerson.personID = '%d' ".$projectStatus_sql."
+                    AND (role.roleHandle = 'isManager' or role.roleHandle = 'timeSheetRecipient')
+               GROUP BY projectID
+               ORDER BY project.projectName",
                 $personID
             );
         } else if ($type == "all") {
@@ -370,7 +369,7 @@ class project extends db_entity
     {
         $db = new db_alloc();
         $q = project::get_project_type_query($type);
-      // Project dropdown
+        // Project dropdown
         $db->query($q);
         while ($db->next_record()) {
             $ops[$db->f("projectID")] = $db->f("projectName");
@@ -390,7 +389,7 @@ class project extends db_entity
             $o = project::get_list_by_client(null, $onlymine);
             is_object($this) and $this->get_id() and $o[$this->get_id()] = $this->get_value("projectName");
             $ops.= page::select_options($o, $this->get_id())."</select>";
-          #$ops.= project::get_list_dropdown_options("curr",$this->get_id(),100)."</select>";
+            #$ops.= project::get_list_dropdown_options("curr",$this->get_id(),100)."</select>";
         }
         return $ops;
     }
@@ -409,7 +408,7 @@ class project extends db_entity
     {
         $current_user = &singleton("current_user");
 
-      // If they want starred, load up the projectID filter element
+        // If they want starred, load up the projectID filter element
         if ($filter["starred"]) {
             foreach ((array)$current_user->prefs["stars"]["project"] as $k => $v) {
                 $filter["projectID"][] = $k;
@@ -417,10 +416,10 @@ class project extends db_entity
             is_array($filter["projectID"]) or $filter["projectID"][] = -1;
         }
 
-      // Filter on projectID
+        // Filter on projectID
         $filter["projectID"] and $sql[] = sprintf_implode("IFNULL(project.projectID,0) = %d", $filter["projectID"]);
 
-      // No point continuing if primary key specified, so return
+        // No point continuing if primary key specified, so return
         if ($filter["projectID"] || $filter["starred"]) {
             return $sql;
         }
@@ -432,7 +431,7 @@ class project extends db_entity
         $filter["projectName"]      and $sql[] = sprintf_implode("IFNULL(project.projectName,'') LIKE '%%%s%%'", $filter["projectName"]);
         $filter["projectShortName"] and $sql[] = sprintf_implode("IFNULL(project.projectShortName,'') LIKE '%%%s%%'", $filter["projectShortName"]);
 
-      // project name or project nick name or project id
+        // project name or project nick name or project id
         $filter["projectNameMatches"] and $sql[] = sprintf_implode(
             "project.projectName LIKE '%%%s%%'
                                                                OR project.projectShortName LIKE '%%%s%%'
@@ -446,10 +445,10 @@ class project extends db_entity
 
     public static function get_list($_FORM)
     {
-      /*
-       * This is the definitive method of getting a list of projects that need a sophisticated level of filtering
-       *
-       */
+        /*
+         * This is the definitive method of getting a list of projects that need a sophisticated level of filtering
+         *
+         */
 
         global $TPL;
         $filter = project::get_list_filter($_FORM);
@@ -457,7 +456,7 @@ class project extends db_entity
         $debug = $_FORM["debug"];
         $debug and print "<pre>_FORM: ".print_r($_FORM, 1)."</pre>";
         $debug and print "<pre>filter: ".print_r($filter, 1)."</pre>";
-  
+
         $_FORM["return"] or $_FORM["return"] = "html";
 
         if ($_FORM["personID"]) {
@@ -468,14 +467,14 @@ class project extends db_entity
             $filter = " WHERE ".implode(" AND ", $filter);
         }
 
-        $q = "SELECT project.*, client.* 
-            FROM project".$from."
-       LEFT JOIN client ON project.clientID = client.clientID 
-                 ".$filter." 
-        GROUP BY project.projectID 
-        ORDER BY projectName";
+        $q = "SELECT project.*, client.*
+                FROM project".$from."
+           LEFT JOIN client ON project.clientID = client.clientID
+                     ".$filter."
+            GROUP BY project.projectID
+            ORDER BY projectName";
 
-      // Zero is a valid limit
+        // Zero is a valid limit
         if ($_FORM["limit"] || $_FORM["limit"] === 0 || $_FORM["limit"] === "0") {
             $q.= prepare(" LIMIT %d", $_FORM["limit"]);
         }
@@ -483,7 +482,7 @@ class project extends db_entity
         $debug and print "Query: ".$q;
         $db = new db_alloc();
         $db->query($q);
-    
+
         while ($row = $db->next_record()) {
             $print = true;
             $p = new project();
@@ -502,20 +501,18 @@ class project extends db_entity
 
     function get_list_vars()
     {
-   
-        return array("projectID"          => "The Project ID"
-                ,"projectStatus"      => "Status of the project eg: Current | Potential | Archived"
-                ,"clientID"           => "Show projects that are owned by this Client"
-                ,"projectType"        => "Type of project eg: Contract | Job | Project | Prepaid"
-                ,"personID"           => "Projects that have this person on them."
-                ,"projectName"        => "Project name like *something*"
-                ,"limit"              => "Limit the number of records returned"
-                ,"url_form_action"    => "The submit action for the filter form"
-                ,"form_name"          => "The name of this form, i.e. a handle for referring to this saved form"
-                ,"dontSave"           => "A flag that allows the user to specify that the filter preferences should not be saved this time"
-                ,"applyFilter"        => "Saves this filter as the persons preference"
-                ,"showProjectType"    => "Show the project type"
-                );
+        return array("projectID"       => "The Project ID",
+                     "projectStatus"   => "Status of the project eg: Current | Potential | Archived",
+                     "clientID"        => "Show projects that are owned by this Client",
+                     "projectType"     => "Type of project eg: Contract | Job | Project | Prepaid",
+                     "personID"        => "Projects that have this person on them.",
+                     "projectName"     => "Project name like *something*",
+                     "limit"           => "Limit the number of records returned",
+                     "url_form_action" => "The submit action for the filter form",
+                     "form_name"       => "The name of this form, i.e. a handle for referring to this saved form",
+                     "dontSave"        => "A flag that allows the user to specify that the filter preferences should not be saved this time",
+                     "applyFilter"     => "Saves this filter as the persons preference",
+                     "showProjectType" => "Show the project type");
     }
 
     function load_form_data($defaults = array())
@@ -523,7 +520,7 @@ class project extends db_entity
         $current_user = &singleton("current_user");
 
         $page_vars = array_keys(project::get_list_vars());
-  
+
         $_FORM = get_all_form_data($page_vars, $defaults);
 
         if (!$_FORM["applyFilter"]) {
@@ -560,7 +557,7 @@ class project extends db_entity
         $rtn["projectName"] = $_FORM["projectName"];
 
 
-      // Get
+        // Get
         $rtn["FORM"] = "FORM=".urlencode(serialize($_FORM));
 
         return $rtn;
@@ -568,7 +565,7 @@ class project extends db_entity
 
     function get_project_type_array()
     {
-      // optimization
+        // optimization
         static $rows;
         if (!$rows) {
             $m = new meta("projectType");
@@ -589,11 +586,11 @@ class project extends db_entity
 
         $q = prepare(
             "SELECT *
-                    FROM invoice 
-                   WHERE projectID = %d
-                     AND invoiceStatus != 'finished' 
-                ORDER BY invoiceDateFrom ASC 
-                   LIMIT 1",
+               FROM invoice
+              WHERE projectID = %d
+                AND invoiceStatus != 'finished'
+           ORDER BY invoiceDateFrom ASC
+              LIMIT 1",
             $this->get_id()
         );
         $db->query($q);
@@ -603,12 +600,12 @@ class project extends db_entity
         } else if ($this->get_value("clientID")) {
             $q = prepare(
                 "SELECT *
-                      FROM invoice 
-                     WHERE clientID = %d 
-                       AND (projectID IS NULL OR projectID = 0 OR projectID = '')
-                       AND invoiceStatus != 'finished' 
-                  ORDER BY invoiceDateFrom ASC 
-                     LIMIT 1",
+                   FROM invoice
+                  WHERE clientID = %d
+                    AND (projectID IS NULL OR projectID = 0 OR projectID = '')
+                    AND invoiceStatus != 'finished'
+               ORDER BY invoiceDateFrom ASC
+                  LIMIT 1",
                 $this->get_value("clientID")
             );
             $db->query($q);
@@ -667,7 +664,7 @@ class project extends db_entity
 
     public static function get_projectID_sql($filter, $table = "project")
     {
-    
+
         if (!$filter["projectID"] && $filter["projectType"] && $filter["projectType"] != "all") {
             $db = new db_alloc();
             $q = project::get_project_type_query($filter["projectType"], $filter["current_user"], "current");
@@ -676,23 +673,23 @@ class project extends db_entity
                 $filter["projectIDs"][] = $db->f("projectID");
             }
 
-          // Oi! What a pickle. Need this flag for when someone doesn't have entries loaded in the above while loop.
+            // Oi! What a pickle. Need this flag for when someone doesn't have entries loaded in the above while loop.
             $firstOption = true;
 
-        // If projectID is an array
+            // If projectID is an array
         } else if ($filter["projectID"] && is_array($filter["projectID"])) {
             $filter["projectIDs"] = $filter["projectID"];
 
-        // Else a project has been specified in the url
+            // Else a project has been specified in the url
         } else if ($filter["projectID"] && is_numeric($filter["projectID"])) {
             $filter["projectIDs"][] = $filter["projectID"];
         }
 
-      // If passed array projectIDs then join them up with commars and put them in an sql subset
+        // If passed array projectIDs then join them up with commars and put them in an sql subset
         if (is_array($filter["projectIDs"]) && count($filter["projectIDs"])) {
             return sprintf_implode("(".$table.".projectID = %d)", $filter["projectIDs"]);
 
-        // If there are no projects in $filter["projectIDs"][] and we're attempting the first option..
+            // If there are no projects in $filter["projectIDs"][] and we're attempting the first option..
         } else if ($firstOption) {
             return "(".$table.".projectID = 0)";
         }
@@ -702,7 +699,7 @@ class project extends db_entity
     {
         $interestedParty = array();
         $interestedPartyOptions = array();
-    
+
         if (is_object($this)) {
             $interestedPartyOptions = $this->get_all_parties($projectID);
         } else {
@@ -742,15 +739,15 @@ class project extends db_entity
                 $interestedPartyOptions[$email]["name"] = $name;
             }
 
-          // Get primary client contact from Project page
+            // Get primary client contact from Project page
             $db = new db_alloc();
             $q = prepare("SELECT projectClientName,projectClientEMail FROM project WHERE projectID = %d", $projectID);
             $db->query($q);
             $db->next_record();
             $interestedPartyOptions[$db->f("projectClientEMail")]["name"] = $db->f("projectClientName");
             $interestedPartyOptions[$db->f("projectClientEMail")]["external"] = "1";
-  
-          // Get all other client contacts from the Client pages for this Project
+
+            // Get all other client contacts from the Client pages for this Project
             $q = prepare("SELECT clientID FROM project WHERE projectID = %d", $projectID);
             $db->query($q);
             $db->next_record();
@@ -760,19 +757,19 @@ class project extends db_entity
                 $interestedPartyOptions = array_merge((array)$interestedPartyOptions, (array)$client->get_all_parties());
             }
 
-          // Get all the project people for this tasks project
+            // Get all the project people for this tasks project
             $q = prepare("SELECT emailAddress, firstName, surname, person.personID, username
-                     FROM projectPerson 
-                LEFT JOIN person on projectPerson.personID = person.personID 
-                    WHERE projectPerson.projectID = %d AND person.personActive = 1 ", $projectID);
+                            FROM projectPerson
+                       LEFT JOIN person on projectPerson.personID = person.personID
+                           WHERE projectPerson.projectID = %d AND person.personActive = 1 ", $projectID);
             $db->query($q);
             while ($db->next_record()) {
-                  unset($name);
-                  $db->f("firstName") && $db->f("surname") and $name = $db->f("firstName")." ".$db->f("surname");
-                  $name or $name = $db->f("username");
-                  $interestedPartyOptions[$db->f("emailAddress")]["name"] = $name;
-                  $interestedPartyOptions[$db->f("emailAddress")]["personID"] = $db->f("personID");
-                  $interestedPartyOptions[$db->f("emailAddress")]["internal"] = true;
+                unset($name);
+                $db->f("firstName") && $db->f("surname") and $name = $db->f("firstName")." ".$db->f("surname");
+                $name or $name = $db->f("username");
+                $interestedPartyOptions[$db->f("emailAddress")]["name"] = $name;
+                $interestedPartyOptions[$db->f("emailAddress")]["personID"] = $db->f("personID");
+                $interestedPartyOptions[$db->f("emailAddress")]["internal"] = true;
             }
         }
 
@@ -781,7 +778,7 @@ class project extends db_entity
             $interestedPartyOptions[$current_user->get_value("emailAddress")]["personID"] = $current_user->get_id();
         }
 
-      // return an aggregation of the current task/proj/client parties + the existing interested parties
+        // return an aggregation of the current task/proj/client parties + the existing interested parties
         $interestedPartyOptions = interestedParty::get_interested_parties("project", $projectID, $interestedPartyOptions, $task_exists);
         return (array)$interestedPartyOptions;
     }
@@ -806,7 +803,7 @@ class project extends db_entity
 
     function get_changes_list()
     {
-      // This function returns HTML rows for the changes that have been made to this project
+        // This function returns HTML rows for the changes that have been made to this project
         $rows = array();
         $people_cache =& get_cached_table("person");
         $timeUnit = new timeUnit();
@@ -886,7 +883,7 @@ class project extends db_entity
                 case 'dateActualStart':
                 case 'dateTargetStart':
                 case 'dateTargetCompletion':
-                  // these cases are more or less identical
+                    // these cases are more or less identical
                     switch ($audit['field']) {
                         case 'dateActualCompletion':
                             $fieldDesc = "actual completion date";
@@ -898,7 +895,7 @@ class project extends db_entity
                             $fieldDesc = "estimate/target start date";
                             break;
                         case 'dateTargetCompletion':
-                                  $fieldDesc = "estimate/target completion date";
+                            $fieldDesc = "estimate/target completion date";
                             break;
                     }
                     if (!$newValue) {

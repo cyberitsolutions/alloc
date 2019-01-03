@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 define("PERM_PROJECT_READ_TASK_DETAIL", 256);
 
@@ -28,32 +28,32 @@ class task extends db_entity
     public $data_table = "task";
     public $display_field_name = "taskName";
     public $key_field = "taskID";
-    public $data_fields = array("taskName"
-                             ,"taskDescription"
-                             ,"creatorID"
-                             ,"closerID"
-                             ,"priority"
-                             ,"timeLimit"
-                             ,"timeBest"
-                             ,"timeWorst"
-                             ,"timeExpected"
-                             ,"dateCreated"
-                             ,"dateAssigned"
-                             ,"dateClosed"
-                             ,"dateTargetStart"
-                             ,"dateTargetCompletion"
-                             ,"dateActualStart"
-                             ,"dateActualCompletion"
-                             ,"taskStatus"
-                             ,"taskModifiedUser"
-                             ,"projectID"
-                             ,"parentTaskID"
-                             ,"taskTypeID"
-                             ,"personID"
-                             ,"managerID"
-                             ,"estimatorID"
-                             ,"duplicateTaskID"
-                             );
+    public $data_fields = array("taskName",
+                                "taskDescription",
+                                "creatorID",
+                                "closerID",
+                                "priority",
+                                "timeLimit",
+                                "timeBest",
+                                "timeWorst",
+                                "timeExpected",
+                                "dateCreated",
+                                "dateAssigned",
+                                "dateClosed",
+                                "dateTargetStart",
+                                "dateTargetCompletion",
+                                "dateActualStart",
+                                "dateActualCompletion",
+                                "taskStatus",
+                                "taskModifiedUser",
+                                "projectID",
+                                "parentTaskID",
+                                "taskTypeID",
+                                "personID",
+                                "managerID",
+                                "estimatorID",
+                                "duplicateTaskID");
+
     public $permissions = array(PERM_PROJECT_READ_TASK_DETAIL => "read details");
 
     function save()
@@ -70,12 +70,12 @@ class task extends db_entity
                 $db = new db_alloc();
                 $db->query("call change_task_status(%d,'%s')", $this->get_id(), $this->get_value("taskStatus"));
                 $row = $db->qr("SELECT taskStatus
-                              ,dateActualCompletion
-                              ,dateActualStart
-                              ,dateClosed
-                              ,closerID
-                          FROM task
-                         WHERE taskID = %d", $this->get_id());
+                                      ,dateActualCompletion
+                                      ,dateActualStart
+                                      ,dateClosed
+                                      ,closerID
+                                  FROM task
+                                 WHERE taskID = %d", $this->get_id());
                 // Changing a task's status changes these fields.
                 // Unfortunately the call to save() below erroneously nukes these fields.
                 // So we manually set them to whatever change_task_status() has dictated.
@@ -99,23 +99,23 @@ class task extends db_entity
 
     function validate()
     {
-      // Validate/coerce the fields
-        $coerce = array("inprogress"=>"open_inprogress"
-                   ,"notstarted"=>"open_notstarted"
-                   ,"info"      =>"pending_info"
-                   ,"client"    =>"pending_client"
-                   ,"manager"   =>"pending_manager"
-                   ,"tasks"     =>"pending_tasks"
-                   ,"invalid"   =>"closed_invalid"
-                   ,"duplicate" =>"closed_duplicate"
-                   ,"incomplete"=>"closed_incomplete"
-                   ,"complete"  =>"closed_complete"
-                   ,"archived"  =>"closed_archived"
-                   ,"open"      =>"open_inprogress"
-                   ,"pending"   =>"pending_info"
-                   ,"close"     =>"closed_complete"
-                   ,"closed"    =>"closed_complete"
-                   );
+        // Validate/coerce the fields
+        $coerce = array("inprogress" => "open_inprogress",
+                        "notstarted" => "open_notstarted",
+                        "info"       => "pending_info",
+                        "client"     => "pending_client",
+                        "manager"    => "pending_manager",
+                        "tasks"      => "pending_tasks",
+                        "invalid"    => "closed_invalid",
+                        "duplicate"  => "closed_duplicate",
+                        "incomplete" => "closed_incomplete",
+                        "complete"   => "closed_complete",
+                        "archived"   => "closed_archived",
+                        "open"       => "open_inprogress",
+                        "pending"    => "pending_info",
+                        "close"      => "closed_complete",
+                        "closed"     => "closed_complete");
+
         if ($this->get_value("taskStatus") && !in_array($this->get_value("taskStatus"), $coerce)) {
             $orig = $this->get_value("taskStatus");
             $cleaned = str_replace("-", "_", strtolower($orig));
@@ -206,15 +206,15 @@ class task extends db_entity
     function get_reopen_reminders()
     {
         $q = prepare("SELECT reminder.*,token.*,tokenAction.*, reminder.reminderID as rID
-                    FROM reminder
-               LEFT JOIN token ON reminder.reminderHash = token.tokenHash
-               LEFT JOIN tokenAction ON token.tokenActionID = tokenAction.tokenActionID
-                   WHERE token.tokenEntity = 'task'
-                     AND token.tokenEntityID = %d
-                     AND reminder.reminderActive = 1
-                     AND token.tokenActionID = 4
-                GROUP BY reminder.reminderID
-                 ", $this->get_id());
+                        FROM reminder
+                   LEFT JOIN token ON reminder.reminderHash = token.tokenHash
+                   LEFT JOIN tokenAction ON token.tokenActionID = tokenAction.tokenActionID
+                       WHERE token.tokenEntity = 'task'
+                         AND token.tokenEntityID = %d
+                         AND reminder.reminderActive = 1
+                         AND token.tokenActionID = 4
+                    GROUP BY reminder.reminderID
+                     ", $this->get_id());
 
         $db = new db_alloc();
         $db->query($q);
@@ -228,9 +228,9 @@ class task extends db_entity
     function add_reopen_reminder($date)
     {
         $rows = $this->get_reopen_reminders();
-      // If this reopen event already exists, do nothing
-      // Allows the form to be saved without changing anything
-      // the 8:30 is the same as creation, below.
+        // If this reopen event already exists, do nothing
+        // Allows the form to be saved without changing anything
+        // the 8:30 is the same as creation, below.
         if ($date) {
             $check_date = strtotime($date . " 08:30:00");
             foreach ($rows as $r) {
@@ -247,11 +247,11 @@ class task extends db_entity
             $reminder->deactivate();
         }
 
-      // alloc-cli can pass 'null' to kill future reopening
-      // Removing the field in the web UI does the same
+        // alloc-cli can pass 'null' to kill future reopening
+        // Removing the field in the web UI does the same
         if ($check_date && $date != 'null') {
             $tokenActionID = 4;
-          //$maxUsed = 1; nope, so people can have recurring reminders
+            //$maxUsed = 1; nope, so people can have recurring reminders
             $name = "Task reopened: ".$this->get_name(array("prefixTaskID"=>true));
             $desc = "This reminder will have automatically reopened this task, if it was pending:\n\n".$this->get_name(array("prefixTaskID"=>true));
             $recipients = array(array("field"=>"metaPersonID","who"=>-2),array("field"=>"metaPersonID","who"=>-3));
@@ -264,10 +264,10 @@ class task extends db_entity
 
     function create_task_reminder()
     {
-      // Create a reminder for this task based on the priority.
+        // Create a reminder for this task based on the priority.
         $current_user = &singleton("current_user");
 
-      // Get the task type
+        // Get the task type
         $taskTypeName = $this->get_value("taskTypeID");
         $label = $this->get_priority_label();
         $reminderInterval = "Day";
@@ -302,7 +302,7 @@ class task extends db_entity
         }
         $reminder->set_value('reminderTime', $date);
         $reminder->save();
-      // the negative is due to ugly reminder internals
+        // the negative is due to ugly reminder internals
         $reminder->update_recipients(array(-REMINDER_METAPERSON_TASK_ASSIGNEE));
     }
 
@@ -313,30 +313,30 @@ class task extends db_entity
             return false;
         }
 
-      // A user owns a task if they 'own' the project
+        // A user owns a task if they 'own' the project
         if ($this->get_id()) {
-          // Check for existing task
+            // Check for existing task
             has("project") and $p = $this->get_foreign_object("project");
         } else if (has("project") && $_POST["projectID"]) {
-          // Or maybe they are creating a new task
+            // Or maybe they are creating a new task
             $p = new project();
             $p->set_id($_POST["projectID"]);
         }
 
-      // if this task doesn't exist (no ID)
-      // OR the person has isManager or canEditTasks for this tasks project
-      // OR if this person is the Creator of this task.
-      // OR if this person is the For Person of this task.
-      // OR if this person has super 'manage' perms
-      // OR if we're skipping the perms checking because i.e. we're having our task status updated by a timesheet
+        // if this task doesn't exist (no ID)
+        // OR the person has isManager or canEditTasks for this tasks project
+        // OR if this person is the Creator of this task.
+        // OR if this person is the For Person of this task.
+        // OR if this person has super 'manage' perms
+        // OR if we're skipping the perms checking because i.e. we're having our task status updated by a timesheet
         if (!$this->get_id()
-        || (is_object($p) && ($p->has_project_permission($person, array("isManager", "canEditTasks", "timeSheetRecipient")))
-        || $this->get_value("creatorID") == $person->get_id()
-        || $this->get_value("personID") == $person->get_id()
-        || $this->get_value("managerID") == $person->get_id()
-        || $person->have_role("manage")
-        || $this->skip_perms_check
-        )) {
+            || (is_object($p) && ($p->has_project_permission($person, array("isManager", "canEditTasks", "timeSheetRecipient")))
+                || $this->get_value("creatorID") == $person->get_id()
+                || $this->get_value("personID") == $person->get_id()
+                || $this->get_value("managerID") == $person->get_id()
+                || $person->have_role("manage")
+                || $this->skip_perms_check
+            )) {
             return true;
         }
     }
@@ -370,7 +370,7 @@ class task extends db_entity
     function get_parent_task_select($projectID = "")
     {
         global $TPL;
-    
+
         if (is_object($this)) {
             $projectID = $this->get_value("projectID");
             $parentTaskID = $this->get_value("parentTaskID");
@@ -382,13 +382,13 @@ class task extends db_entity
         $db = new db_alloc();
         if ($projectID) {
             list($ts_open,$ts_pending,$ts_closed) = task::get_task_status_in_set_sql();
-          // Status may be closed_<something>
+            // Status may be closed_<something>
             $query = prepare("SELECT taskID AS value, taskName AS label
-                        FROM task 
-                        WHERE projectID= '%d' 
-                        AND taskTypeID = 'Parent'
-                        AND (taskStatus NOT IN (".$ts_closed.") OR taskID = %d)
-                        ORDER BY taskName", $projectID, $parentTaskID);
+                                FROM task
+                               WHERE projectID= '%d'
+                                 AND taskTypeID = 'Parent'
+                                 AND (taskStatus NOT IN (".$ts_closed.") OR taskID = %d)
+                            ORDER BY taskName", $projectID, $parentTaskID);
             $options = page::select_options($query, $parentTaskID, 70);
         }
         return "<select name=\"parentTaskID\"><option value=\"\">".$options."</select>";
@@ -397,11 +397,11 @@ class task extends db_entity
     function get_task_cc_list_select($projectID = "")
     {
 
-      // If task exists, grab existing IPs
+        // If task exists, grab existing IPs
         if (is_object($this)) {
             $interestedPartyOptions = $this->get_all_parties($projectID);
 
-        // Else get default IPs from project and config
+            // Else get default IPs from project and config
         } else {
             if ($_GET["projectID"]) {
                 $projectID = $_GET["projectID"];
@@ -477,7 +477,7 @@ class task extends db_entity
                 $interestedPartyOptions[$p->get_value("emailAddress")]["selected"] = 1;
             }
         }
-      // return an aggregation of the current task/proj/client parties + the existing interested parties
+        // return an aggregation of the current task/proj/client parties + the existing interested parties
         $interestedPartyOptions = interestedParty::get_interested_parties("task", $this->get_id(), $interestedPartyOptions);
         return $interestedPartyOptions;
     }
@@ -485,7 +485,7 @@ class task extends db_entity
     function get_personList_dropdown($projectID, $field, $selected = null)
     {
         $current_user = &singleton("current_user");
- 
+
         $db = new db_alloc();
 
         if ($this->get_id()) {
@@ -502,23 +502,23 @@ class task extends db_entity
                 $managers_only = true;
             }
 
-            $q = prepare("SELECT * 
-                      FROM projectPerson 
-                 LEFT JOIN person ON person.personID = projectPerson.personID
-                 LEFT JOIN role ON role.roleID = projectPerson.roleID
-                     WHERE person.personActive = 1 ".$manager_sql."
-                       AND projectID = %d
-                  ORDER BY firstName, username
-                   ", $projectID);
+            $q = prepare("SELECT *
+                            FROM projectPerson
+                       LEFT JOIN person ON person.personID = projectPerson.personID
+                       LEFT JOIN role ON role.roleID = projectPerson.roleID
+                           WHERE person.personActive = 1 ".$manager_sql."
+                             AND projectID = %d
+                        ORDER BY firstName, username
+                         ", $projectID);
             $db->query($q);
             while ($row = $db->row()) {
                 if ($managers_only && $current_user->get_id() == $row["personID"]) {
                     $current_user_is_manager = true;
                 }
-                  $ops[$row["personID"]] = $peoplenames[$row["personID"]];
+                $ops[$row["personID"]] = $peoplenames[$row["personID"]];
             }
 
-        // Everyone
+            // Everyone
         } else {
             $ops = $peoplenames;
         }
@@ -539,19 +539,19 @@ class task extends db_entity
     function get_project_options($projectID = "")
     {
         $projectID or $projectID = $_GET["projectID"];
-      // Project Options - Select all projects
+        // Project Options - Select all projects
         $db = new db_alloc();
-        $query = prepare("SELECT projectID AS value, projectName AS label 
-                        FROM project 
-                       WHERE projectStatus IN ('Current', 'Potential') OR projectID = %d
-                    ORDER BY projectName", $projectID);
+        $query = prepare("SELECT projectID AS value, projectName AS label
+                            FROM project
+                           WHERE projectStatus IN ('Current', 'Potential') OR projectID = %d
+                        ORDER BY projectName", $projectID);
         $str = page::select_options($query, $projectID, 60);
         return $str;
     }
 
     function set_option_tpl_values()
     {
-      // Set template values to provide options for edit selects
+        // Set template values to provide options for edit selects
         global $TPL;
         $current_user = &singleton("current_user");
         global $isMessage;
@@ -561,26 +561,26 @@ class task extends db_entity
         $TPL["managerPersonOptions"] = "<select name=\"managerID\"><option value=\"\">".$this->get_personList_dropdown($projectID, "managerID")."</select>";
         $TPL["estimatorPersonOptions"] = "<select name=\"estimatorID\"><option value=\"\">".$this->get_personList_dropdown($projectID, "estimatorID")."</select>";
 
-      // TaskType Options
+        // TaskType Options
         $taskType = new meta("taskType");
         $taskType_array = $taskType->get_assoc_array("taskTypeID", "taskTypeID");
         $TPL["taskTypeOptions"] = page::select_options($taskType_array, $this->get_value("taskTypeID"));
 
-      // Project dropdown
+        // Project dropdown
         $TPL["projectOptions"] = task::get_project_options($projectID);
-    
-      // We're building these two with the <select> tags because they will be
-      // replaced by an AJAX created dropdown when the projectID changes.
+
+        // We're building these two with the <select> tags because they will be
+        // replaced by an AJAX created dropdown when the projectID changes.
         $TPL["parentTaskOptions"] = $this->get_parent_task_select();
         $TPL["interestedPartyOptions"] = $this->get_task_cc_list_select();
 
         $db->query(prepare("SELECT fullName, emailAddress, clientContactPhone, clientContactMobile
-                          FROM interestedParty
-                     LEFT JOIN clientContact ON interestedParty.clientContactID = clientContact.clientContactID
-                         WHERE entity='task' 
-                           AND entityID = %d
-                           AND interestedPartyActive = 1
-                      ORDER BY fullName", $this->get_id()));
+                              FROM interestedParty
+                         LEFT JOIN clientContact ON interestedParty.clientContactID = clientContact.clientContactID
+                             WHERE entity='task'
+                               AND entityID = %d
+                               AND interestedPartyActive = 1
+                          ORDER BY fullName", $this->get_id()));
         while ($db->next_record()) {
             $value = interestedParty::get_encoded_interested_party_identifier($db->f("fullName"), $db->f("emailAddress"));
             $phone = array("p"=>$db->f('clientContactPhone'),"m"=>$db->f('clientContactMobile'));
@@ -592,7 +592,7 @@ class task extends db_entity
         $TPL["task_taskStatusValue"] = $this->get_value("taskStatus");
         $TPL["task_taskStatusOptions"] = page::select_options(task::get_task_statii_array(true), $this->get_value("taskStatus"));
 
-      // Project label
+        // Project label
         if (has("project")) {
             $p = new project();
             $p->set_id($this->get_value("projectID"));
@@ -619,21 +619,21 @@ class task extends db_entity
         $TPL["priorityLabel"].= "]</div>";
 
 
-      // If we're viewing the printer friendly view
+        // If we're viewing the printer friendly view
         if ($_GET["media"] == "print") {
-          // Parent Task label
+            // Parent Task label
             $t = new task();
             $t->set_id($this->get_value("parentTaskID"));
             $t->select();
             $TPL["parentTask"] = $t->get_display_value();
 
-          // Task Type label
+            // Task Type label
             $TPL["taskType"] = $this->get_value("taskTypeID");
 
-          // Priority
+            // Priority
             $TPL["priority"] = $this->get_value("priority");
 
-          // Assignee label
+            // Assignee label
             $p = new person();
             $p->set_id($this->get_value("personID"));
             $p->select();
@@ -688,7 +688,7 @@ class task extends db_entity
         if ($sess->Started() && !$absolute) {
             $url = $sess->url(SCRIPT_PATH.$url);
 
-        // This for urls that are emailed
+            // This for urls that are emailed
         } else {
             static $prefix;
             $prefix or $prefix = config::get_config_item("allocURL");
@@ -699,7 +699,7 @@ class task extends db_entity
 
     public static function get_task_statii_array($flat = false)
     {
-      // This gets an array that is useful for building the two types of dropdown lists that taskStatus uses
+        // This gets an array that is useful for building the two types of dropdown lists that taskStatus uses
         $taskStatii = task::get_task_statii();
         if ($flat) {
             $m = new meta("taskStatus");
@@ -721,10 +721,10 @@ class task extends db_entity
 
     function get_task_statii()
     {
-      // looks like:
-      //$arr["open"]["notstarted"] = array("label"=>"Not Started","colour"=>"#ffffff");
-      //$arr["open"]["inprogress"] = array("label"=>"In Progress","colour"=>"#ffffff");
-      //etc
+        // looks like:
+        //$arr["open"]["notstarted"] = array("label"=>"Not Started","colour"=>"#ffffff");
+        //$arr["open"]["inprogress"] = array("label"=>"In Progress","colour"=>"#ffffff");
+        //etc
         static $rows;
         if (!$rows) {
             $m = new meta("taskStatus");
@@ -786,7 +786,7 @@ class task extends db_entity
     {
         $current_user = &singleton("current_user");
 
-      // If they want starred, load up the taskID filter element
+        // If they want starred, load up the taskID filter element
         if ($filter["starred"]) {
             foreach ((array)$current_user->prefs["stars"]["task"] as $k => $v) {
                 $filter["taskID"][] = $k;
@@ -794,19 +794,19 @@ class task extends db_entity
             is_array($filter["taskID"]) or $filter["taskID"][] = -1;
         }
 
-      // Filter on taskID
+        // Filter on taskID
         $filter["taskID"] and $sql[] = sprintf_implode("task.taskID = %d", $filter["taskID"]);
 
-      // No point continuing if primary key specified, so return
+        // No point continuing if primary key specified, so return
         if ($filter["taskID"]) {
             return array($sql,"");
         }
 
-      // This takes care of projectID singular and plural
+        // This takes care of projectID singular and plural
         has("project") and $projectIDs = project::get_projectID_sql($filter);
         $projectIDs and $sql["projectIDs"] = $projectIDs;
 
-      // project name or project nick name or project id
+        // project name or project nick name or project id
         $filter["projectNameMatches"] and $sql[] = sprintf_implode(
             "project.projectName LIKE '%%%s%%'
                                                                OR project.projectShortName LIKE '%%%s%%'
@@ -818,66 +818,66 @@ class task extends db_entity
 
         list($ts_open,$ts_pending,$ts_closed) = task::get_task_status_in_set_sql();
 
-      // New Tasks
+        // New Tasks
         if ($filter["taskDate"] == "new") {
             $past = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - 2, date("Y")))." 00:00:00";
             date("D") == "Mon" and $past = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - 4, date("Y")))." 00:00:00";
             $sql[] = prepare("(task.taskStatus NOT IN (".$ts_closed.") AND task.dateCreated >= '".$past."')");
 
-        // Due Today
+            // Due Today
         } else if ($filter["taskDate"] == "due_today") {
             $sql[] = "(task.taskStatus NOT IN (".$ts_closed.") AND task.dateTargetCompletion = '".date("Y-m-d")."')";
 
-        // Overdue
+            // Overdue
         } else if ($filter["taskDate"] == "overdue") {
             $sql[] = "(task.taskStatus NOT IN (".$ts_closed.")
-                AND 
+                AND
                 (task.dateTargetCompletion IS NOT NULL AND task.dateTargetCompletion != '' AND '".date("Y-m-d")."' > task.dateTargetCompletion))";
-  
-        // Date Created
+
+            // Date Created
         } else if ($filter["taskDate"] == "d_created") {
             $filter["dateOne"] and $sql[] = prepare("(task.dateCreated >= '%s')", $filter["dateOne"]);
             $filter["dateTwo"] and $sql[] = prepare("(task.dateCreated <= '%s 23:59:59')", $filter["dateTwo"]);
 
-        // Date Assigned
+            // Date Assigned
         } else if ($filter["taskDate"] == "d_assigned") {
             $filter["dateOne"] and $sql[] = prepare("(task.dateAssigned >= '%s')", $filter["dateOne"]);
             $filter["dateTwo"] and $sql[] = prepare("(task.dateAssigned <= '%s 23:59:59')", $filter["dateTwo"]);
 
-        // Date Target Start
+            // Date Target Start
         } else if ($filter["taskDate"] == "d_targetStart") {
             $filter["dateOne"] and $sql[] = prepare("(task.dateTargetStart >= '%s')", $filter["dateOne"]);
             $filter["dateTwo"] and $sql[] = prepare("(task.dateTargetStart <= '%s')", $filter["dateTwo"]);
 
-        // Date Target Completion
+            // Date Target Completion
         } else if ($filter["taskDate"] == "d_targetCompletion") {
             $filter["dateOne"] and $sql[] = prepare("(task.dateTargetCompletion >= '%s')", $filter["dateOne"]);
             $filter["dateTwo"] and $sql[] = prepare("(task.dateTargetCompletion <= '%s')", $filter["dateTwo"]);
 
-        // Date Actual Start
+            // Date Actual Start
         } else if ($filter["taskDate"] == "d_actualStart") {
             $filter["dateOne"] and $sql[] = prepare("(task.dateActualStart >= '%s')", $filter["dateOne"]);
             $filter["dateTwo"] and $sql[] = prepare("(task.dateActualStart <= '%s')", $filter["dateTwo"]);
 
-        // Date Actual Completion
+            // Date Actual Completion
         } else if ($filter["taskDate"] == "d_actualCompletion") {
             $filter["dateOne"] and $sql[] = prepare("(task.dateActualCompletion >= '%s')", $filter["dateOne"]);
             $filter["dateTwo"] and $sql[] = prepare("(task.dateActualCompletion <= '%s')", $filter["dateTwo"]);
         }
 
-      // Task status filtering
+        // Task status filtering
         $filter["taskStatus"] and $sql[] = task::get_taskStatus_sql($filter["taskStatus"]);
         $filter["taskTypeID"] and $sql[] = sprintf_implode("task.taskTypeID = '%s'", $filter["taskTypeID"]);
 
-      // Filter on %taskName%
+        // Filter on %taskName%
         $filter["taskName"] and $sql[] = sprintf_implode("task.taskName LIKE '%%%s%%'", $filter["taskName"]);
 
-      // If personID filter
+        // If personID filter
         $filter["personID"]  and $sql["personID"]  = sprintf_implode("IFNULL(task.personID,0) = %d", $filter["personID"]);
         $filter["creatorID"] and $sql["creatorID"] = sprintf_implode("IFNULL(task.creatorID,0) = %d", $filter["creatorID"]);
         $filter["managerID"] and $sql["managerID"] = sprintf_implode("IFNULL(task.managerID,0) = %d", $filter["managerID"]);
 
-      // If tags filter
+        // If tags filter
         if ($filter["tags"] && is_array($filter["tags"])) {
             foreach ((array)$filter["tags"] as $k => $tag) {
                 $tag and $tags[] = $tag;
@@ -886,7 +886,7 @@ class task extends db_entity
             $having = prepare("HAVING count(DISTINCT seltag.name) = %d", count($tags));
         }
 
-      // These filters are for the time sheet dropdown list
+        // These filters are for the time sheet dropdown list
         if ($filter["taskTimeSheetStatus"] == "open") {
             unset($sql["personID"]);
             $sql[] = prepare("(task.taskStatus NOT IN (".$ts_closed."))");
@@ -968,11 +968,11 @@ class task extends db_entity
     {
         $current_user = &singleton("current_user");
 
-      /*
-       * This is the definitive method of getting a list of tasks that need a sophisticated level of filtering
-       *
-       */
- 
+        /*
+         * This is the definitive method of getting a list of tasks that need a sophisticated level of filtering
+         *
+         */
+
         list($filter, $having) = task::get_list_filter($_FORM);
 
         $debug = $_FORM["debug"];
@@ -981,7 +981,7 @@ class task extends db_entity
 
         $_FORM["taskView"] or $_FORM["taskView"] = 'prioritised';
 
-      // Zero is a valid limit
+        // Zero is a valid limit
         if ($_FORM["limit"] || $_FORM["limit"] === 0 || $_FORM["limit"] === "0") {
             $limit = prepare("limit %d", $_FORM["limit"]);
         }
@@ -998,7 +998,7 @@ class task extends db_entity
             $order_limit = " ORDER BY projectName,taskName ".$limit;
         }
 
-      // Get a hierarchical list of tasks
+        // Get a hierarchical list of tasks
         if (is_array($filter) && count($filter)) {
             $f = " WHERE ".implode(" AND ", $filter);
         }
@@ -1009,26 +1009,26 @@ class task extends db_entity
         $scale_halved = sprintf("%d", config::get_config_item("taskPriorityScale")/2);
 
         $q = "SELECT task.*
-                ,projectName
-                ,projectShortName
-                ,clientID
-                ,projectPriority
-                ,project.currencyTypeID as currency
-                ,rate
-                ,rateUnitID
-                ,GROUP_CONCAT(pendingTask.pendingTaskID) as pendingTaskIDs
-                ,GROUP_CONCAT(DISTINCT alltag.name SEPARATOR ', ') as tags
-            FROM task
-       LEFT JOIN project ON project.projectID = task.projectID
-       LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID AND projectPerson.personID = '".$uid."'
-       LEFT JOIN pendingTask ON pendingTask.taskID = task.taskID
-       LEFT JOIN tag alltag ON alltag.taskID = task.taskID
-       LEFT JOIN tag seltag ON seltag.taskID = task.taskID
-                 ".$f."
-        GROUP BY task.taskID
-                 ".$having."
-                 ".$order_limit;
-      
+                    ,projectName
+                    ,projectShortName
+                    ,clientID
+                    ,projectPriority
+                    ,project.currencyTypeID as currency
+                    ,rate
+                    ,rateUnitID
+                    ,GROUP_CONCAT(pendingTask.pendingTaskID) as pendingTaskIDs
+                    ,GROUP_CONCAT(DISTINCT alltag.name SEPARATOR ', ') as tags
+                FROM task
+           LEFT JOIN project ON project.projectID = task.projectID
+           LEFT JOIN projectPerson ON project.projectID = projectPerson.projectID AND projectPerson.personID = '".$uid."'
+           LEFT JOIN pendingTask ON pendingTask.taskID = task.taskID
+           LEFT JOIN tag alltag ON alltag.taskID = task.taskID
+           LEFT JOIN tag seltag ON seltag.taskID = task.taskID
+                     ".$f."
+            GROUP BY task.taskID
+                     ".$having."
+                     ".$order_limit;
+
         $debug and print "\n<br>QUERY: ".$q;
         $_FORM["debug"] and print "\n<br>QUERY: ".$q;
         $db = new db_alloc();
@@ -1088,13 +1088,13 @@ class task extends db_entity
                 }
             }
         }
- 
+
         if ($_FORM["taskView"] == "byProject") {
             $parentTaskID = $_FORM["parentTaskID"] or $parentTaskID = 0;
             $t = task::get_recursive_child_tasks($parentTaskID, (array)$rows);
             list($tasks,$done) = task::build_recursive_task_list($t, $_FORM);
 
-          // This bit appends the orphan tasks onto the end..
+            // This bit appends the orphan tasks onto the end..
             foreach ((array)$rows as $taskID => $r) {
                 $row = $r["row"];
                 $row["padding"] = 0;
@@ -1152,15 +1152,15 @@ class task extends db_entity
         }
         if ($taskID) {
             $db = new db_alloc();
-          // Get tally from timeSheetItem table
+            // Get tally from timeSheetItem table
             $db->query("SELECT sum(timeSheetItemDuration*timeUnitSeconds) as sum_of_time
-                    FROM timeSheetItem 
-               LEFT JOIN timeUnit ON timeSheetItemDurationUnitID = timeUnitID 
-                   WHERE taskID = %d
-               GROUP BY taskID", $taskID);
+                          FROM timeSheetItem
+                     LEFT JOIN timeUnit ON timeSheetItemDurationUnitID = timeUnitID
+                         WHERE taskID = %d
+                      GROUP BY taskID", $taskID);
             while ($db->next_record()) {
-                  $results[$taskID] = $db->f("sum_of_time");
-                  return $db->f("sum_of_time");
+                $results[$taskID] = $db->f("sum_of_time");
+                return $db->f("sum_of_time");
             }
             return "";
         }
@@ -1175,18 +1175,18 @@ class task extends db_entity
         if ($timeExpected>0 && is_object($this)) {
             $percent = $timeActual / $timeExpected * 100;
             $this->get_value("dateActualCompletion") and $closed_text = "<del>" and $closed_text_end = "</del> Closed";
- 
-          // Return number
+
+            // Return number
             if ($get_num) {
                 $this->get_value("dateActualCompletion") || $percent>100 and $percent = 100;
                 return $percent;
-       
-              // Else if task <= 100%
+
+                // Else if task <= 100%
             } else if ($percent <= 100) {
                 return $closed_text.sprintf("%d%%", $percent).$closed_text_end;
-                    
-       
-              // Else if task > 100%
+
+
+                // Else if task > 100%
             } else if ($percent > 100) {
                 return "<span class='bad'>".$closed_text.sprintf("%d%%", $percent).$closed_text_end."</span>";
             }
@@ -1202,13 +1202,13 @@ class task extends db_entity
 
     function get_forecast_completion()
     {
-      // Get the date the task is forecast to be completed given an actual start
-      // date and percent complete
+        // Get the date the task is forecast to be completed given an actual start
+        // date and percent complete
         $date_actual_start = $this->get_value("dateActualStart");
         $percent_complete = $this->get_percentComplete(true);
 
         if (!($date_actual_start && $percent_complete)) {
-          // Can't calculate forecast date without date_actual_start and % complete
+            // Can't calculate forecast date without date_actual_start and % complete
             return 0;
         }
 
@@ -1229,64 +1229,63 @@ class task extends db_entity
             $pipe = " | ";
         }
 
-        return array("taskView"             => "[MANDATORY] eg: byProject | prioritised"
-                ,"return"               => "[MANDATORY] eg: html | array"
-                ,"limit"                => "Appends an SQL limit (only for prioritised and objects views)"
-                ,"projectIDs"           => "An array of projectIDs"
-                ,"projectID"            => "A single projectID"
-                ,"taskStatus"           => $taskStatiiStr
-                ,"taskDate"             => "new | due_today | overdue | d_created | d_assigned | d_targetStart | d_targetCompletion | d_actualStart | d_actualCompletion (all the d_* options require a dateOne (From Date) or a dateTwo (To Date) to be filled)"
-                ,"dateOne"              => "From Date (must be used with a d_* taskDate option)"
-                ,"dateTwo"              => "To Date (must be used with a d_* taskDate option)"
-                ,"taskTimeSheetStatus"  => "my_open | not_assigned | my_closed | my_recently_closed | all"
-                ,"taskTypeID"           => "Task | Parent | Message | Fault | Milestone"
-                ,"current_user"         => "Lets us fake a current_user id for when generating task emails and there is no \$current_user object"
-                ,"taskID"               => "Task ID"
-                ,"starred"              => "Tasks that you have starred"
-                ,"taskName"             => "Task Name (eg: *install*)"
-                ,"tags"                 => "Task tags"
-                ,"creatorID"            => "Task creator"
-                ,"managerID"            => "The person managing task"
-                ,"personID"             => "The person assigned to the task"
-                ,"parentTaskID"         => "ID of parent task, all top level tasks have parentTaskID of 0, so this defaults to 0"
-                ,"projectType"          => "mine | pm | tsm | pmORtsm | Current | Potential | Archived | all"
-                ,"applyFilter"          => "Saves this filter as the persons preference"
-                ,"padding"              => "Initial indentation level (useful for byProject lists)"
-                ,"url_form_action"      => "The submit action for the filter form"
-                ,"hide_field_options"   => "Hide the filter's field's panel."
-                ,"form_name"            => "The name of this form, i.e. a handle for referring to this saved form"
-                ,"dontSave"             => "Specify that the filter preferences should not be saved this time"
-                ,"skipObject"           => "Services coming over SOAP should set this true to minimize the amount of bandwidth"
-                ,"showDates"            => "Show dates 1-4"
-                ,"showDate1"            => "Date Target Start"
-                ,"showDate2"            => "Date Target Completion"
-                ,"showDate3"            => "Date Actual Start"
-                ,"showDate4"            => "Date Actual Completion"
-                ,"showDate5"            => "Date Created"
-                ,"showProject"          => "The tasks Project (has different layout when prioritised vs byProject)"
-                ,"showPriority"         => "The calculated overall priority, then the tasks, then the projects priority"
-                ,"showPriorityFactor"   => "The calculated overall priority"
-                ,"showStatus"           => "A colour coded textual description of the status of the task"
-                ,"showCreator"          => "The tasks creator"
-                ,"showAssigned"         => "The person assigned to the task"
-                ,"showTimes"            => "The original estimate and the time billed and percentage"
-                ,"showHeader"           => "A descriptive html header row"
-                ,"showDescription"      => "The tasks description"
-                ,"showComments"         => "The tasks comments"
-                ,"showTaskID"           => "The task ID"
-                ,"showParentID"         => "The task's parent ID"
-                ,"showManager"          => "Show the tasks manager"
-                ,"showPercent"          => "The percent complete"
-                ,"showTags"             => "The task's tags"
-                ,"showEdit"             => "Display the html edit controls to allow en masse task editing"
-                ,"showTotals"           => "Display the totals of certain columns in the html view"
-                );
+        return array("taskView"            => "[MANDATORY] eg: byProject | prioritised",
+                     "return"              => "[MANDATORY] eg: html | array",
+                     "limit"               => "Appends an SQL limit (only for prioritised and objects views)",
+                     "projectIDs"          => "An array of projectIDs",
+                     "projectID"           => "A single projectID",
+                     "taskStatus"          => $taskStatiiStr,
+                     "taskDate"            => "new | due_today | overdue | d_created | d_assigned | d_targetStart | d_targetCompletion | d_actualStart | d_actualCompletion (all the d_* options require a dateOne (From Date) or a dateTwo (To Date) to be filled)",
+                     "dateOne"             => "From Date (must be used with a d_* taskDate option)",
+                     "dateTwo"             => "To Date (must be used with a d_* taskDate option)",
+                     "taskTimeSheetStatus" => "my_open | not_assigned | my_closed | my_recently_closed | all",
+                     "taskTypeID"          => "Task | Parent | Message | Fault | Milestone",
+                     "current_user"        => "Lets us fake a current_user id for when generating task emails and there is no \$current_user object",
+                     "taskID"              => "Task ID",
+                     "starred"             => "Tasks that you have starred",
+                     "taskName"            => "Task Name (eg: *install*)",
+                     "tags"                => "Task tags",
+                     "creatorID"           => "Task creator",
+                     "managerID"           => "The person managing task",
+                     "personID"            => "The person assigned to the task",
+                     "parentTaskID"        => "ID of parent task, all top level tasks have parentTaskID of 0, so this defaults to 0",
+                     "projectType"         => "mine | pm | tsm | pmORtsm | Current | Potential | Archived | all",
+                     "applyFilter"         => "Saves this filter as the persons preference",
+                     "padding"             => "Initial indentation level (useful for byProject lists)",
+                     "url_form_action"     => "The submit action for the filter form",
+                     "hide_field_options"  => "Hide the filter's field's panel.",
+                     "form_name"           => "The name of this form, i.e. a handle for referring to this saved form",
+                     "dontSave"            => "Specify that the filter preferences should not be saved this time",
+                     "skipObject"          => "Services coming over SOAP should set this true to minimize the amount of bandwidth",
+                     "showDates"           => "Show dates 1-4",
+                     "showDate1"           => "Date Target Start",
+                     "showDate2"           => "Date Target Completion",
+                     "showDate3"           => "Date Actual Start",
+                     "showDate4"           => "Date Actual Completion",
+                     "showDate5"           => "Date Created",
+                     "showProject"         => "The tasks Project (has different layout when prioritised vs byProject)",
+                     "showPriority"        => "The calculated overall priority, then the tasks, then the projects priority",
+                     "showPriorityFactor"  => "The calculated overall priority",
+                     "showStatus"          => "A colour coded textual description of the status of the task",
+                     "showCreator"         => "The tasks creator",
+                     "showAssigned"        => "The person assigned to the task",
+                     "showTimes"           => "The original estimate and the time billed and percentage",
+                     "showHeader"          => "A descriptive html header row",
+                     "showDescription"     => "The tasks description",
+                     "showComments"        => "The tasks comments",
+                     "showTaskID"          => "The task ID",
+                     "showParentID"        => "The task's parent ID",
+                     "showManager"         => "Show the tasks manager",
+                     "showPercent"         => "The percent complete",
+                     "showTags"            => "The task's tags",
+                     "showEdit"            => "Display the html edit controls to allow en masse task editing",
+                     "showTotals"          => "Display the totals of certain columns in the html view");
     }
 
     public static function load_form_data($defaults = array())
     {
         $current_user = &singleton("current_user");
-  
+
         $page_vars = array_keys(task::get_list_vars());
 
         $_FORM = get_all_form_data($page_vars, $defaults);
@@ -1308,7 +1307,7 @@ class task extends db_entity
         }
 
         if ($_FORM["applyFilter"] && is_object($current_user)) {
-          // we have a new filter configuration from the user, and must save it
+            // we have a new filter configuration from the user, and must save it
             if (!$_FORM["dontSave"]) {
                 $url = $_FORM["url_form_action"];
                 unset($_FORM["url_form_action"]);
@@ -1316,7 +1315,7 @@ class task extends db_entity
                 $_FORM["url_form_action"] = $url;
             }
         } else {
-          // we haven't been given a filter configuration, so load it from user preferences
+            // we haven't been given a filter configuration, so load it from user preferences
             $_FORM = $current_user->prefs[$_FORM["form_name"]];
             if (!isset($current_user->prefs[$_FORM["form_name"]])) {
                 $_FORM["projectType"] = "mine";
@@ -1325,7 +1324,7 @@ class task extends db_entity
             }
         }
 
-      // If have check Show Description checkbox then display the Long Description and the Comments
+        // If have check Show Description checkbox then display the Long Description and the Comments
         if ($_FORM["showDescription"]) {
             $_FORM["showComments"] = true;
         } else {
@@ -1341,11 +1340,11 @@ class task extends db_entity
 
         $db = new db_alloc();
 
-      // Load up the forms action url
+        // Load up the forms action url
         $rtn["url_form_action"] = $_FORM["url_form_action"];
         $rtn["hide_field_options"] = $_FORM["hide_field_options"];
 
-      //time Load up the filter bits
+        //time Load up the filter bits
         has("project") and $rtn["projectOptions"] = project::get_list_dropdown($_FORM["projectType"], $_FORM["projectID"]);
 
         $_FORM["projectType"] and $rtn["projectType_checked"][$_FORM["projectType"]] = " checked";
@@ -1377,19 +1376,18 @@ class task extends db_entity
         $_FORM["showProject"]     and $rtn["showProject_checked"]     = " checked";
         $_FORM["showTags"]        and $rtn["showTags_checked"]        = " checked";
         $_FORM["showParentID"]    and $rtn["showParentID_checked"]    = " checked";
-    
+
         $arrow = " --&gt;";
-        $taskDateOps = array(""                   => ""
-                        ,"new"                => "New Tasks"
-                        ,"due_today"          => "Due Today"
-                        ,"overdue"            => "Overdue"
-                        ,"d_created"          => "Date Created".$arrow
-                        ,"d_assigned"         => "Date Assigned".$arrow
-                        ,"d_targetStart"      => "Estimated Start".$arrow
-                        ,"d_targetCompletion" => "Estimated Completion".$arrow
-                        ,"d_actualStart"      => "Date Started".$arrow
-                        ,"d_actualCompletion" => "Date Completed".$arrow
-                        );
+        $taskDateOps = array(""                   => "",
+                             "new"                => "New Tasks",
+                             "due_today"          => "Due Today",
+                             "overdue"            => "Overdue",
+                             "d_created"          => "Date Created".$arrow,
+                             "d_assigned"         => "Date Assigned".$arrow,
+                             "d_targetStart"      => "Estimated Start".$arrow,
+                             "d_targetCompletion" => "Estimated Completion".$arrow,
+                             "d_actualStart"      => "Date Started".$arrow,
+                             "d_actualCompletion" => "Date Completed".$arrow);
         $rtn["taskDateOptions"] = page::select_options($taskDateOps, $_FORM["taskDate"], 45, false);
 
         if (!in_array($_FORM["taskDate"], array("new","due_today","overdue"))) {
@@ -1397,42 +1395,42 @@ class task extends db_entity
             $rtn["dateTwo"] = $_FORM["dateTwo"];
         }
 
-        $task_num_ops = array("" => "All results"
-                         ,1     => "1 result"
-                         ,2     => "2 results"
-                         ,3     => "3 results"
-                         ,4     => "4 results"
-                         ,5     => "5 results"
-                         ,10    => "10 results"
-                         ,15    => "15 results"
-                         ,20    => "20 results"
-                         ,30    => "30 results"
-                         ,40    => "40 results"
-                         ,50    => "50 results"
-                         ,100   => "100 results"
-                         ,150   => "150 results"
-                         ,200   => "200 results"
-                         ,300   => "300 results"
-                         ,400   => "400 results"
-                         ,500   => "500 results"
-                         ,1000  => "1000 results"
-                         ,2000  => "2000 results"
-                         ,3000  => "3000 results"
-                         ,4000  => "4000 results"
-                         ,5000  => "5000 results"
-                         ,10000 => "10000 results"
-                         );
+        $task_num_ops = array(""    => "All results",
+                              1     => "1 result",
+                              2     => "2 results",
+                              3     => "3 results",
+                              4     => "4 results",
+                              5     => "5 results",
+                              10    => "10 results",
+                              15    => "15 results",
+                              20    => "20 results",
+                              30    => "30 results",
+                              40    => "40 results",
+                              50    => "50 results",
+                              100   => "100 results",
+                              150   => "150 results",
+                              200   => "200 results",
+                              300   => "300 results",
+                              400   => "400 results",
+                              500   => "500 results",
+                              1000  => "1000 results",
+                              2000  => "2000 results",
+                              3000  => "3000 results",
+                              4000  => "4000 results",
+                              5000  => "5000 results",
+                              10000 => "10000 results");
+
         $rtn["limitOptions"] = page::select_options($task_num_ops, $_FORM["limit"]);
 
 
-      // unset vars that aren't necessary
+        // unset vars that aren't necessary
         foreach ((array)$_FORM as $k => $v) {
             if (!$v) {
                 unset($_FORM[$k]);
             }
         }
 
-      // Get
+        // Get
         $rtn["FORM"] = "FORM=".urlencode(serialize($_FORM));
 
         return $rtn;
@@ -1440,7 +1438,7 @@ class task extends db_entity
 
     function get_changes_list()
     {
-      // This function returns HTML rows for the changes that have been made to this task
+        // This function returns HTML rows for the changes that have been made to this task
         $rows = array();
 
         $people_cache =& get_cached_table("person");
@@ -1517,7 +1515,7 @@ class task extends db_entity
                 case 'timeBest':
                 case 'timeWorst':
                 case 'timeExpected':
-                  // these cases are more or less identical
+                    // these cases are more or less identical
                     switch ($audit['field']) {
                         case 'dateActualCompletion':
                             $fieldDesc = "actual completion date";
@@ -1529,19 +1527,19 @@ class task extends db_entity
                             $fieldDesc = "estimate/target start date";
                             break;
                         case 'dateTargetCompletion':
-                                  $fieldDesc = "estimate/target completion date";
+                            $fieldDesc = "estimate/target completion date";
                             break;
                         case 'timeLimit':
-                                  $fieldDesc = "hours worked limit";
+                            $fieldDesc = "hours worked limit";
                             break;
                         case 'timeBest':
-                                  $fieldDesc = "best estimate";
+                            $fieldDesc = "best estimate";
                             break;
                         case 'timeWorst':
-                                  $fieldDesc = "worst estimate";
+                            $fieldDesc = "worst estimate";
                             break;
                         case 'timeExpected':
-                                  $fieldDesc = "expected estimate";
+                            $fieldDesc = "expected estimate";
                     }
                     if ($newValue) {
                         $changeDescription = "The $fieldDesc was set to $newValue.";
@@ -1558,7 +1556,7 @@ class task extends db_entity
 
     function load_entity($type, $id, &$entity)
     {
-      // helper function to cut down on code duplication in the above function
+        // helper function to cut down on code duplication in the above function
         if ($id) {
             $entity = new $type;
             $entity->set_id($id);
@@ -1646,11 +1644,11 @@ class task extends db_entity
             if (substr($this->get_value("taskStatus"), 0, 4) == 'open') {
                 $db = new db_alloc();
                 $q = prepare("SELECT *
-                        FROM audit
-                       WHERE taskID = %d
-                         AND field = 'taskStatus'
-                    ORDER BY dateChanged DESC
-                       LIMIT 2,1", $this->get_id());
+                                FROM audit
+                               WHERE taskID = %d
+                                 AND field = 'taskStatus'
+                            ORDER BY dateChanged DESC
+                               LIMIT 2,1", $this->get_id());
                 $row = $db->qr($q);
                 return substr($row["value"], 0, 7) == "pending";
             }

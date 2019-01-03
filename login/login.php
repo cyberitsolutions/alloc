@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 
 define("NO_AUTH", 1);
@@ -71,7 +71,7 @@ if ($sess->Started()) {
     $db->query("SELECT * FROM person WHERE emailAddress = '%s'", $_POST["email"]);
 
     if ($db->next_record()) {
-      // generate new random password
+        // generate new random password
         $password = "";
         $pwSource = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!?";
         srand((float) microtime() * 1000000);
@@ -85,7 +85,7 @@ if ($sess->Started()) {
         $db2->query($q);
 
         $e = new email_send($_POST["email"], "New Password", "Your new temporary password: ".$password, "new_password");
-      #echo "Your new temporary password: ".$password;
+        #echo "Your new temporary password: ".$password;
         if ($e->send()) {
             $TPL["message_good"][] = "New password sent to: ".$_POST["email"];
         } else {
@@ -129,7 +129,7 @@ $files = get_attachments("whatsnew", 0);
 
 if (is_array($files) && count($files)) {
     while ($f = array_pop($files)) {
-      // Only show entries that are newer that 4 weeks old
+        // Only show entries that are newer that 4 weeks old
         if (format_date("U", basename($f["path"])) > mktime() - (60*60*24*28)) {
             $x++;
             if ($x>3) {

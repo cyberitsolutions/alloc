@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 define("PERM_READ", 1);
 define("PERM_UPDATE", 2);
@@ -46,22 +46,22 @@ class db_entity
 
         $this->data_table or $this->data_table = get_class($this);
         $this->classname  or $this->classname  = get_class($this);
-  
+
         $this->permissions[PERM_READ]   = "Read";
         $this->permissions[PERM_UPDATE] = "Update";
         $this->permissions[PERM_DELETE] = "Delete";
         $this->permissions[PERM_CREATE] = "Create";
 
-      // convert key_field into a field object
+        // convert key_field into a field object
         $this->key_field = new db_field($this->key_field);
 
-      // we're going to reload the data_fields as $name => $object
+        // we're going to reload the data_fields as $name => $object
         $fields = $this->data_fields;
         unset($this->data_fields);
 
-      // convert data_fields into field objects
+        // convert data_fields into field objects
         foreach ($fields as $k => $v) {
-          // This caters for per-field options.
+            // This caters for per-field options.
             if (is_array($v)) {
                 $this->data_fields[$k] = new db_field($k, $v);
             } else {
@@ -69,7 +69,7 @@ class db_entity
             }
         }
 
-      // If we're passed an id load this object up
+        // If we're passed an id load this object up
         if ($id) {
             $this->set_id($id);
             $this->select();
@@ -91,7 +91,7 @@ class db_entity
         }
 
         $entity_id = 0;
-    
+
         if (is_object($person) && method_exists($person, "get_id") && $person->get_id()) {
             $person_id = $person->get_id();
             $person_type = $person->classname;
@@ -109,17 +109,17 @@ class db_entity
 
         $db = new db_alloc();
         $query = prepare(
-            "SELECT * 
-                        FROM permission 
-                        WHERE (tableName = '%s')
-                         AND (actions & %d = %d)
-                    ORDER BY entityID DESC",
+            "SELECT *
+               FROM permission
+              WHERE (tableName = '%s')
+                AND (actions & %d = %d)
+           ORDER BY entityID DESC",
             $this->data_table,
             $action,
             $action
         );
         $db->query($query);
-    
+
         while ($db->next_record()) {
             // Ignore this record if it specifies a role the user doesn't have
             if ($db->f("roleName") && is_object($person) && !$person->have_role($db->f("roleName"))) {
@@ -140,7 +140,7 @@ class db_entity
             return true;
         }
 
-      // No matching records - return false
+        // No matching records - return false
         $permission_cache[$record_cache_key] = false;
         return false;
     }
@@ -163,7 +163,7 @@ class db_entity
             }
         }
     }
- 
+
     function perm_cleanup(&$row = array())
     {
         foreach ($row as $field_name => $object) {
@@ -231,13 +231,13 @@ class db_entity
             $this->set_value($this->data_table."CreatedTime", date("Y-m-d H:i:s"));
         }
         if (isset($this->data_fields[$this->data_table."ModifiedUser"])) {
-          #$this->set_value($this->data_table."ModifiedUser", $current_user_id);
+            #$this->set_value($this->data_table."ModifiedUser", $current_user_id);
         }
         if (isset($this->data_fields[$this->data_table."ModifiedTime"])) {
-          #$this->set_value($this->data_table."ModifiedTime", date("Y-m-d H:i:s"));
+            #$this->set_value($this->data_table."ModifiedTime", date("Y-m-d H:i:s"));
         }
 
-      // Even if we're doing an insert, if a primary key is set, then insert the row with that PK.
+        // Even if we're doing an insert, if a primary key is set, then insert the row with that PK.
         if ($this->get_id()) {
             $this->data_fields[] = $this->key_field;
         }
@@ -279,7 +279,7 @@ class db_entity
             return false;
         }
 
-      // retrieve a copy of this object with the old values from the database
+        // retrieve a copy of this object with the old values from the database
         if (class_exists($this->data_table)) {
             $old_this = new $this->data_table;
             $old_this->set_id($this->get_id());
@@ -326,8 +326,8 @@ class db_entity
         } else if ($this->key_field->has_value() && $this->key_field->get_name() && $this->key_field->get_value()) {
             $db = $this->get_db();
             $row = $db->qr("SELECT ".db_esc($this->key_field->get_name())."
-                        FROM ".db_esc($this->data_table)."
-                       WHERE ".db_esc($this->key_field->get_name())." = '".db_esc($this->key_field->get_value())."'");
+                              FROM ".db_esc($this->data_table)."
+                             WHERE ".db_esc($this->key_field->get_name())." = '".db_esc($this->key_field->get_value())."'");
             return !$row;
         }
     }
@@ -351,14 +351,14 @@ class db_entity
             $rtn = $this->update();
         }
 
-      // Update the search index for this entity, if any
+        // Update the search index for this entity, if any
         if ($rtn && $this->get_id() && $this->classname && is_dir(ATTACHMENTS_DIR.'search/'.$this->classname)) {
-          // Update the index asynchronously (later from a job running search/updateIndex.php)
+            // Update the index asynchronously (later from a job running search/updateIndex.php)
             if ($this->updateSearchIndexLater) {
                 $db = $this->get_db();
                 $db->query("call update_search_index('%s',%d)", $this->classname, $this->get_id());
 
-              // Update the index right now
+                // Update the index right now
             } else {
                 $index = Zend_Search_Lucene::open(ATTACHMENTS_DIR.'search/'.$this->classname);
                 $this->delete_search_index_doc($index);
@@ -401,13 +401,13 @@ class db_entity
     function read_array(&$array, $source_prefix = "", $source = SRC_VARIABLE)
     {
 
-      // Data fields
+        // Data fields
         foreach ($this->data_fields as $field_index => $field) {
             $source_index = $source_prefix.$field->get_name();
             $this->set_field_value($this->data_fields[$field_index], $array[$source_index], $source);
         }
 
-      // Key field
+        // Key field
         $source_index = $source_prefix.$this->key_field->get_name();
         $this->key_field->set_value($array[$source_index], $source);
         $this->debug and print "db_entity->read_array key_field->set_value(".$array[$source_index].", $source)<br>\n";
@@ -417,14 +417,14 @@ class db_entity
     function write_array(&$array, $dest = DST_VARIABLE, $array_index_prefix = "")
     {
 
-      // Data fields
+        // Data fields
         reset($this->data_fields);
         while (list($field_name) = each($this->data_fields)) {
             $array_index = $array_index_prefix.$field_name;
             $array[$array_index] = $this->get_value($field_name, $dest);
         }
 
-      // Key field
+        // Key field
         $array_index = $array_index_prefix.$this->key_field->get_name();
         $array[$array_index] = $this->key_field->get_value($dest);
     }
@@ -617,13 +617,13 @@ class db_entity
     function clear()
     {
 
-      // Data fields
+        // Data fields
         reset($this->data_fields);
         while (list($field_index,) = each($this->data_fields)) {
             $this->clear_field_value($this->data_fields[$field_index]);
         }
 
-      // Key field
+        // Key field
         $this->key_field->clear_value();
         if ($this->debug) {
             echo "db_entity->read_array key_field->set_value(".$array[$source_index].", $source)<br>\n";
@@ -631,10 +631,10 @@ class db_entity
         $this->fields_loaded = false;
     }
 
-  /**************************************************************************
-  'Private' utilitity functions These functions probably won't be useful to
-  users of this class but are used by the other functions in the class
-  ***************************************************************************/
+    /*
+     * 'Private' utilitity functions These functions probably won't be useful to
+     * users of this class but are used by the other functions in the class
+     */
     function get_db()
     {
         if (!is_object($this->db)) {
@@ -698,12 +698,12 @@ class db_entity
             $extra = $pkey_sql.db_esc($sel);
         }
 
-      // If they haven't specifically asked for inactive or all
-      // records, we default to giving them only active records.
+        // If they haven't specifically asked for inactive or all
+        // records, we default to giving them only active records.
         if (is_object($this->data_fields[$this->data_table."Active"]) && !isset($where[$this->data_table."Active"])) {
             $where[$this->data_table."Active"] = 1;
 
-        // Else get all records
+            // Else get all records
         } else if ($where[$this->data_table."Active"] == "all") {
             unset($where[$this->data_table."Active"]);
         }

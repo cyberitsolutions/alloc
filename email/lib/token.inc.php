@@ -18,39 +18,37 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 class token extends db_entity
 {
     public $classname = "token";
     public $data_table = "token";
     public $key_field = "tokenID";
-    public $data_fields = array("tokenHash"
-                             ,"tokenEntity"
-                             ,"tokenEntityID"
-                             ,"tokenActionID"
-                             ,"tokenExpirationDate"
-                             ,"tokenUsed"
-                             ,"tokenMaxUsed"
-                             ,"tokenActive"
-                             ,"tokenCreatedBy"
-                             ,"tokenCreatedDate"
-                             );
+    public $data_fields = array("tokenHash",
+                                "tokenEntity",
+                                "tokenEntityID",
+                                "tokenActionID",
+                                "tokenExpirationDate",
+                                "tokenUsed",
+                                "tokenMaxUsed",
+                                "tokenActive",
+                                "tokenCreatedBy",
+                                "tokenCreatedDate");
 
 
     function set_hash($hash, $validate = true)
     {
-    
         $validate and $extra = " AND tokenActive = 1";
         $validate and $extra.= " AND (tokenUsed < tokenMaxUsed OR tokenMaxUsed IS NULL OR tokenMaxUsed = 0)";
         $validate and $extra.= prepare(" AND (tokenExpirationDate > '%s' OR tokenExpirationDate IS NULL)", date("Y-m-d H:i:s"));
-    
 
-        $q = prepare("SELECT * FROM token 
-                   WHERE tokenHash = '%s'
-                  $extra
-                 ", $hash);
-      #echo "<br><br>".$q;
+
+        $q = prepare("SELECT * FROM token
+                       WHERE tokenHash = '%s'
+                      $extra
+                     ", $hash);
+        #echo "<br><br>".$q;
         $db = new db_alloc();
         $db->query($q);
         if ($db->next_record()) {
@@ -112,7 +110,7 @@ class token extends db_entity
 
     function generate_hash()
     {
-      // Make an eight character base 36 garbage fds3ys79 / also check that we haven't used this ID already
+        // Make an eight character base 36 garbage fds3ys79 / also check that we haven't used this ID already
         $randval = $this->get_hash_str();
         while (strlen($randval) < 8 || $this->set_hash($randval, false)) {
             $randval.= $this->get_hash_str();
@@ -124,12 +122,12 @@ class token extends db_entity
     function select_token_by_entity_and_action($entity, $entityID, $action)
     {
         $q = prepare("SELECT token.*, tokenAction.*
-                    FROM token 
-               LEFT JOIN tokenAction ON token.tokenActionID = tokenAction.tokenActionID 
-                   WHERE tokenEntity = '%s' 
-                     AND tokenEntityID = %d
-                     AND tokenAction.tokenActionMethod = '%s'
-                ", $entity, $entityID, $action);
+                        FROM token
+                   LEFT JOIN tokenAction ON token.tokenActionID = tokenAction.tokenActionID
+                       WHERE tokenEntity = '%s'
+                         AND tokenEntityID = %d
+                         AND tokenAction.tokenActionMethod = '%s'
+                     ", $entity, $entityID, $action);
         $db = new db_alloc();
         $db->query($q);
         if ($db->next_record()) {
@@ -146,11 +144,11 @@ class token extends db_entity
         $filter["tokenHash"]     and $sql[] = sprintf_implode("token.tokenHash = '%s'", $filter["tokenHash"]);
         return $sql;
     }
-  
+
     public static function get_list($_FORM)
     {
         $filter = token::get_list_filter($_FORM);
-    
+
         if (is_array($filter) && count($filter)) {
             $filter = " WHERE ".implode(" AND ", $filter);
         }

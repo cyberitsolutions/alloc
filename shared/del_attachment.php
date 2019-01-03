@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 // For use like get_attachment.php?entity=project&id=5&file=foo.bar
 
@@ -33,8 +33,8 @@ $id = sprintf("%d", $id);
 
 
 if ($id && $file
-&& !preg_match("/\.\./", $file) && !preg_match("/\//", $file)
-&& !preg_match("/\.\./", $entity) && !preg_match("/\//", $entity)) {
+    && !preg_match("/\.\./", $file) && !preg_match("/\//", $file)
+    && !preg_match("/\.\./", $entity) && !preg_match("/\//", $entity)) {
     $e = new $entity;
     $e->set_id($id);
     $e->select();

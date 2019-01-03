@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
@@ -49,8 +49,13 @@ if ($_POST["save"]) {
 // Load data for display in the template
 $commentTemplate->set_values();
 
-$ops = array(""=>"Comment Template Type","task"=>"Task","timeSheet"=>"Time Sheet","project"=>"Project"
-            ,"client"=>"Client", "invoice"=>"Invoice","productSale"=>"Sale");
+$ops = array(""            => "Comment Template Type",
+             "task"        => "Task",
+             "timeSheet"   => "Time Sheet",
+             "project"     => "Project",
+             "client"      => "Client",
+             "invoice"     => "Invoice",
+             "productSale" => "Sale");
 $TPL["commentTemplateTypeOptions"] = page::select_options($ops, $commentTemplate->get_value("commentTemplateType"));
 
 $TPL["main_alloc_title"] = "Edit Comment Template - ".APPLICATION_NAME;

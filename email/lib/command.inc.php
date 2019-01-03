@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 class command
 {
@@ -40,66 +40,61 @@ class command
     {
 
         $comment = array(
-        "key"   => array("","The comment thread key.")
-        ,"ip"    => array("","Add to a comment's interested parties. Eg: jon,jane@j.com,Hal Comp <hc@hc.com> ... can also remove eg: -jon")
-        ,"quiet" => array("","Don't resend the email back out to anyone.")
-        );
+            "key"   => array("","The comment thread key."),
+            "ip"    => array("","Add to a comment's interested parties. Eg: jon,jane@j.com,Hal Comp <hc@hc.com> ... can also remove eg: -jon"),
+            "quiet" => array("","Don't resend the email back out to anyone."));
 
         $item = array(
-        "tsid"      => array("timeSheetID",           "time sheet that this item belongs to")
-        ,"date"      => array("dateTimeSheetItem",     "time sheet item's date")
-        ,"duration"  => array("timeSheetItemDuration", "time sheet item's duration")
-        ,"unit"      => array("timeSheetItemDurationUnitID", "time sheet item's unit of duration eg: 1=hours 2=days 3=week 4=month 5=fixed")
-        ,"task"      => array("taskID",                "ID of the time sheet item's task")
-        ,"rate"      => array("rate",                  "\$rate of the time sheet item's")
-        ,"private"   => array("commentPrivate",        "privacy setting of the time sheet item's comment eg: 1=private 0=normal")
-        ,"comment"   => array("comment",               "time sheet item comment")
-        ,"multiplier"=> array("multiplier",            "time sheet item multiplier eg: 1=standard 1.5=time-and-a-half 2=double-time 3=triple-time 0=no-charge")
-        ,"delete"    => array("",                      "set this to 1 to delete the time sheet item")
-        ,"time"      => array("",                      "Add some time to a time sheet. Auto-creates time sheet if none exist.")
-        );
+            "tsid"      => array("timeSheetID",           "time sheet that this item belongs to"),
+            "date"      => array("dateTimeSheetItem",     "time sheet item's date"),
+            "duration"  => array("timeSheetItemDuration", "time sheet item's duration"),
+            "unit"      => array("timeSheetItemDurationUnitID", "time sheet item's unit of duration eg: 1=hours 2=days 3=week 4=month 5=fixed"),
+            "task"      => array("taskID",                "ID of the time sheet item's task"),
+            "rate"      => array("rate",                  "\$rate of the time sheet item's"),
+            "private"   => array("commentPrivate",        "privacy setting of the time sheet item's comment eg: 1=private 0=normal"),
+            "comment"   => array("comment",               "time sheet item comment"),
+            "multiplier"=> array("multiplier",            "time sheet item multiplier eg: 1=standard 1.5=time-and-a-half 2=double-time 3=triple-time 0=no-charge"),
+            "delete"    => array("",                      "set this to 1 to delete the time sheet item"),
+            "time"      => array("",                      "Add some time to a time sheet. Auto-creates time sheet if none exist."));
 
         $task = array(
-        "status"    => array("taskStatus",      "inprogress, notstarted, info, client, manager, invalid, duplicate, incomplete, complete; or: open, pending, closed")
-        ,"name"      => array("taskName",        "task's title")
-        ,"assign"    => array("personID",        "username of the person that the task is assigned to")
-        ,"manage"    => array("managerID",       "username of the person that the task is managed by")
-        ,"desc"      => array("taskDescription", "task's long description")
-        ,"priority"  => array("priority",        "1, 2, 3, 4 or 5; or one of Wishlist, Minor, Normal, Important or Critical")
-        ,"limit"     => array("timeLimit",       "limit in hours for effort spend on this task")
-        ,"best"      => array("timeBest",        "shortest estimate of how many hours of effort this task will take")
-        ,"likely"    => array("timeExpected",    "most likely amount of hours of effort this task will take")
-        ,"worst"     => array("timeWorst",       "longest estimate of how many hours of effort this task will take")
-        ,"estimator" => array("estimatorID",     "the person who created the estimates on this task")
-        ,"targetstart" => array("dateTargetStart","estimated date for work to start on this task")
-        ,"targetcompletion" => array("dateTargetCompletion","estimated date for when this task should be finished")
-        ,"project"   => array("projectID",       "task's project ID")
-        ,"type"      => array("taskTypeID",      "Task, Fault, Message, Milestone or Parent")
-        ,"dupe"      => array("duplicateTaskID", "If the task status is duplicate, then this should be set to the task ID of the related dupe")
-        ,"pend"      => array("",                "The task ID(s), commar separated, that block this task")
-        ,"reopen"    => array("",                "Reopen the task on this date. To be used with --status=pending.")
-        ,"task"      => array("",                "A task ID, or the word 'new' to create a new task.")
-        ,"dip"       => array("",                "Add some default interested parties.")
-        ,"tags"      => array("",                "Add some tags, comma separated tags")
-        );
+            "status"    => array("taskStatus",      "inprogress, notstarted, info, client, manager, invalid, duplicate, incomplete, complete; or: open, pending, closed"),
+            "name"      => array("taskName",        "task's title"),
+            "assign"    => array("personID",        "username of the person that the task is assigned to"),
+            "manage"    => array("managerID",       "username of the person that the task is managed by"),
+            "desc"      => array("taskDescription", "task's long description"),
+            "priority"  => array("priority",        "1, 2, 3, 4 or 5; or one of Wishlist, Minor, Normal, Important or Critical"),
+            "limit"     => array("timeLimit",       "limit in hours for effort spend on this task"),
+            "best"      => array("timeBest",        "shortest estimate of how many hours of effort this task will take"),
+            "likely"    => array("timeExpected",    "most likely amount of hours of effort this task will take"),
+            "worst"     => array("timeWorst",       "longest estimate of how many hours of effort this task will take"),
+            "estimator" => array("estimatorID",     "the person who created the estimates on this task"),
+            "targetstart" => array("dateTargetStart","estimated date for work to start on this task"),
+            "targetcompletion" => array("dateTargetCompletion","estimated date for when this task should be finished"),
+            "project"   => array("projectID",       "task's project ID"),
+            "type"      => array("taskTypeID",      "Task, Fault, Message, Milestone or Parent"),
+            "dupe"      => array("duplicateTaskID", "If the task status is duplicate, then this should be set to the task ID of the related dupe"),
+            "pend"      => array("",                "The task ID(s), commar separated, that block this task"),
+            "reopen"    => array("",                "Reopen the task on this date. To be used with --status=pending."),
+            "task"      => array("",                "A task ID, or the word 'new' to create a new task."),
+            "dip"       => array("",                "Add some default interested parties."),
+            "tags"      => array("",                "Add some tags, comma separated tags"));
 
         $reminder = array(
-        "date"            => array("reminderTime",             "")
-        ,"subject"         => array("reminderSubject",          "")
-        ,"body"            => array("reminderContent",          "")
-        ,"frequency"       => array("reminderRecuringValue",    "")
-        ,"frequency_units" => array("reminderRecuringInterval", "")
-        ,"active"          => array("reminderActive",           "")
-        ,"notice"          => array("reminderAdvNoticeValue",   "")
-        ,"notice_units"    => array("reminderAdvNoticeInterval","")
-        );
+            "date"            => array("reminderTime",             ""),
+            "subject"         => array("reminderSubject",          ""),
+            "body"            => array("reminderContent",          ""),
+            "frequency"       => array("reminderRecuringValue",    ""),
+            "frequency_units" => array("reminderRecuringInterval", ""),
+            "active"          => array("reminderActive",           ""),
+            "notice"          => array("reminderAdvNoticeValue",   ""),
+            "notice_units"    => array("reminderAdvNoticeInterval",""));
 
-        $types = array("all"=>array_merge($comment, $item, $task, $reminder)
-                  ,"comment"=>$comment
-                  ,"item"=>$item
-                  ,"task"=>$task
-                  ,"reminder"=>$reminder
-                  );
+        $types = array("all"      => array_merge($comment, $item, $task, $reminder),
+                       "comment"  => $comment,
+                       "item"     => $item,
+                       "task"     => $task,
+                       "reminder" => $reminder);
         return $types[$type];
     }
 
@@ -129,14 +124,14 @@ class command
             $message = $m;
         }
 
-      // Status will be yay, msg, err or die, i.e. mirrored with the alloc-cli messaging system
+        // Status will be yay, msg, err or die, i.e. mirrored with the alloc-cli messaging system
         return array("status"=>$status,"message"=>$message);
     }
 
     function edit_task($commands, $email_receive)
     {
         $task_fields = $this->get_fields("task");
-      // Task commands
+        // Task commands
         if ($commands["task"]) {
             unset($changes);
 
@@ -147,7 +142,7 @@ class command
 
             $people_by_username = person::get_people_by_username();
 
-          // Else edit/create the task ...
+            // Else edit/create the task ...
             $task = new task();
             if ($commands["task"] && strtolower($commands["task"]) != "new") {
                 $task->set_id($commands["task"]);
@@ -163,7 +158,7 @@ class command
                     $v = $people_by_username[$v]["personID"];
                     $v or alloc_error("Unrecognized username.");
                 }
-        
+
                 if ($k == "manage") {
                     $changes[$k] = "managerID";
                     $v = $people_by_username[$v]["personID"];
@@ -226,7 +221,7 @@ class command
                 $after_label = "Fields: ";
             }
 
-          // Save task
+            // Save task
             $err = $task->validate();
             if (!$err && $task->save()) {
                 $task->select();
@@ -257,7 +252,7 @@ class command
                 if ($commands["dip"]) {
                     interestedParty::add_remove_ips($commands["dip"], "task", $task->get_id(), $task->get_value("projectID"));
                 }
-  
+
                 if (strtolower($commands["task"]) == "new") {
                     $status[] = "yay";
                     $message[] = "Task ".$task->get_id()." created.";
@@ -266,7 +261,7 @@ class command
                     $message[] = "Task ".$task->get_id()." updated.";
                 }
 
-              // Problems
+            // Problems
             } else {
                 alloc_error("Problem updating task: ".implode("\n", (array)$err));
             }
@@ -278,7 +273,7 @@ class command
     {
         $item_fields = $this->get_fields("item");
 
-      // Time Sheet Item commands
+        // Time Sheet Item commands
         if ($commands["item"]) {
             $timeSheetItem = new timeSheetItem();
             if ($commands["item"] && strtolower($commands["item"] != "new")) {
@@ -326,7 +321,7 @@ class command
                 $status[] = "yay";
                 $message[] = "Time sheet item ".$id." deleted.";
 
-              // Save timeSheetItem
+            // Save timeSheetItem
             } else if (!$err && $commands["item"] && $timeSheetItem->save()) {
                 $timeSheetItem->select();
                 $str = $this->condense_changes($changes, $timeSheetItem->row());
@@ -339,7 +334,7 @@ class command
                     $message[] = "Time sheet item ".$timeSheetItem->get_id()." updated.";
                 }
 
-              // Problems
+            // Problems
             } else if ($err && $commands["item"]) {
                 alloc_error("Problem updating time sheet item: ".implode("\n", (array)$err));
             }
@@ -356,7 +351,7 @@ class command
             $reminder->set_id($id);
             $reminder->select();
         } else if ($id == "new") {
-          // extra sanity checks, partially filled in reminder isn't much good
+            // extra sanity checks, partially filled in reminder isn't much good
             if (!$options['date'] || !$options['subject'] || !$options['recipients']) {
                 $status[] = "err";
                 $message[] = "Missing one of date, subject or recipients.";
@@ -375,7 +370,7 @@ class command
             }
         }
 
-      // Tear apart the frequency bits
+        // Tear apart the frequency bits
         if ($options['frequency']) {
             list($freq, $units) = sscanf($options['frequency'], "%d%c");
             $freq_units = array('h' => 'Hour', 'd' => 'Day', 'w' => 'Week', 'm' => 'Month', 'y' => 'Year');
@@ -406,7 +401,7 @@ class command
 
         $reminder->save();
 
-      // Deal with recipients
+        // Deal with recipients
         if ($options['recipients']) {
             list($_x, $recipients) = $reminder->get_recipient_options();
             if ($options['recipients']) {
@@ -417,7 +412,7 @@ class command
             }
             $reminder->update_recipients($recipients);
         }
-    
+
         if (is_object($reminder) && $reminder->get_id()) {
             $status[] = "yay";
             $message[] = "Reminder ".$reminder->get_id()." saved.";
@@ -432,7 +427,7 @@ class command
     {
         $current_user = &singleton("current_user");
         if ($commands["time"]) {
-          // CLI passes time along as a string, email passes time along as an array
+            // CLI passes time along as a string, email passes time along as an array
             if (!is_array($commands["time"])) {
                 $t = $commands["time"];
                 unset($commands["time"]);
@@ -456,7 +451,7 @@ class command
 
     function add_comment_via_email($commands, $email_receive)
     {
-      // If there's Key in the email, then add a comment with the contents of the email.
+        // If there's Key in the email, then add a comment with the contents of the email.
         $token = new token();
         if ($commands["key"] && $token->set_hash($commands["key"])) {
             $db = new db_alloc();
@@ -485,12 +480,12 @@ class command
         }
         return array($status,$message);
     }
- 
+
     function add_comment($commands)
     {
         $commentID = comment::add_comment($commands["entity"], $commands["entityID"], $commands["comment_text"]);
 
-      // add interested parties
+        // add interested parties
         foreach ((array)$commands["ip"] as $k => $info) {
             $info["entity"] = "comment";
             $info["entityID"] = $commentID;
@@ -504,7 +499,7 @@ class command
             $emailRecipients[] = $from_address;
         }
 
-      // Re-email the comment out
+        // Re-email the comment out
         comment::send_comment($commentID, $emailRecipients);
         return array($status,$message);
     }

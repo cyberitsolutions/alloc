@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 define("NO_REDIRECT", 1);
 require_once("../alloc.php");
@@ -28,9 +28,9 @@ $rev = $_GET["rev"];
 $pathfile = realpath(wiki_module::get_wiki_path().$file);
 
 if (path_under_path(dirname($pathfile), wiki_module::get_wiki_path())) {
-  // Check if we're using a VCS
+    // Check if we're using a VCS
     $vcs = vcs::get();
-  #$vcs->debug = true;
+    #$vcs->debug = true;
     if (is_object($vcs)) {
         $logs = $vcs->log($pathfile);
         $logs = $vcs->format_log($logs);

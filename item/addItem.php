@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
@@ -80,7 +80,7 @@ $TPL["personID"] = $current_user->get_id();
 $itemType = new meta("itemType");
 $TPL["itemTypes"] = page::select_options($itemType->get_assoc_array("itemTypeID", "itemTypeID"), $item->get_value("itemType"));
 
-  // setup item list (for removals)
+// setup item list (for removals)
 $item_list = array();
 $db = new db_alloc();
 $db->query("SELECT * FROM item ORDER BY itemName");

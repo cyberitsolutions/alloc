@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
@@ -62,13 +62,13 @@ if ($_REQUEST["commentID"]) {
         exit();
     }
 
-  //$uids = $mail->get_all_email_msg_uids();
+    //$uids = $mail->get_all_email_msg_uids();
 
     $t = new token();
     $t->select_token_by_entity_and_action($c->get_value("commentType"), $c->get_value("commentLinkID"), "add_comment_from_email");
     $hash = $t->get_value("tokenHash");
 
-  // First try a messageID search
+    // First try a messageID search
     if ($c->get_value("commentEmailMessageID")) {
         $str = sprintf('TEXT "%s"', $c->get_value("commentEmailMessageID"));
         $uids = $mail->get_emails_UIDs_search($str);
@@ -79,7 +79,7 @@ if ($_REQUEST["commentID"]) {
         }
     }
 
-  // Next try a hash lookup
+    // Next try a hash lookup
     if ($hash) {
         $str = sprintf('TEXT "%s"', $hash);
         $uids = $mail->get_emails_UIDs_search($str);
@@ -93,19 +93,19 @@ if ($_REQUEST["commentID"]) {
     $uids and $all_uids += $uids;
 
 
-  // Couldn't get a body text search to work! Refuses to match long needles.
-  //echo "<br><br>Using FROM and DATE:".print_r($uids,1);
-  //$text = $c->get_value("comment");
-  //$text = str_replace('\r\n','\n',$text);
-  //$text = str_replace('\n',' ',$text);
-  //$text = str_replace('\r',' ',$text);
-  //$text = str_replace('"','\"',$text);
-  //$text = substr($text,0,25);
-  //$text = trim($text);
-  //echo "<br><br>--".htmlentities($text)."--<br><br>";
-  //$str = sprintf('BODY "%s"',$text);
-  //$uids = $mail->get_emails_UIDs_search($str);
-  //echo "<br><br>Using BODY:".print_r($uids,1);
+    // Couldn't get a body text search to work! Refuses to match long needles.
+    //echo "<br><br>Using FROM and DATE:".print_r($uids,1);
+    //$text = $c->get_value("comment");
+    //$text = str_replace('\r\n','\n',$text);
+    //$text = str_replace('\n',' ',$text);
+    //$text = str_replace('\r',' ',$text);
+    //$text = str_replace('"','\"',$text);
+    //$text = substr($text,0,25);
+    //$text = trim($text);
+    //echo "<br><br>--".htmlentities($text)."--<br><br>";
+    //$str = sprintf('BODY "%s"',$text);
+    //$uids = $mail->get_emails_UIDs_search($str);
+    //echo "<br><br>Using BODY:".print_r($uids,1);
 
     $mail->close();
 }

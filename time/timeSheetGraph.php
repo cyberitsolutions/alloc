@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
@@ -33,11 +33,10 @@ function show_filter()
     include_template("templates/timeSheetGraphFilterS.tpl");
 }
 
-$defaults = array("url_form_action"=>$TPL["url_alloc_timeSheetGraph"]
-                 ,"form_name"=>"timeSheetGraph_filter"
-                 ,"groupBy"=>"day"
-                 ,"personID"=>$current_user->get_id()
-                 );
+$defaults = array("url_form_action" => $TPL["url_alloc_timeSheetGraph"],
+                  "form_name"       => "timeSheetGraph_filter",
+                  "groupBy"         => "day",
+                  "personID"        => $current_user->get_id());
 
 
 $_FORM = timeSheetGraph::load_filter($defaults);

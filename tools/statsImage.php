@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 
 require_once("../alloc.php");
@@ -46,8 +46,8 @@ $right_margin = 0;
 
 for ($date = $start_date; $date < time(); $date += 86400) {
     $count = ($projects["new"][$id][date("Y-m-d", $date)]
-            + $tasks["new"][$id][date("Y-m-d", $date)]
-            + $comments["new"][$id][date("Y-m-d", $date)]);
+              + $tasks["new"][$id][date("Y-m-d", $date)]
+              + $comments["new"][$id][date("Y-m-d", $date)]);
     if ($height < $count) {
         $height = $count;
     }
@@ -116,15 +116,15 @@ imagefilledpolygon($image, $tasks_points, ($count + 2) / 2, $color_tasks);
 imagefilledpolygon($image, $projects_points, ($count + 2) / 2, $color_projects);
 
 if ($labels) {
-  /* baseline */
+    /* baseline */
     imageline($image, $left_margin, $height - $bottom_margin - 1, $width - $right_margin - 1, $height - $bottom_margin - 1, $color_foreground);
-  /* dates */
+    /* dates */
     imagestring($image, 2, $left_margin, $height - $bottom_margin - 1, date("Y-m-d", $start_date), $color_foreground);
     imagestring($image, 2, $width - $right_margin - 60, $height - $bottom_margin - 1, date("Y-m-d"), $color_foreground);
 
-  /* sideline */
+    /* sideline */
     imageline($image, $left_margin, $height - $bottom_margin - 1, $left_margin, $top_margin - 1, $color_foreground);
-  /* max count */
+    /* max count */
     if ($disp_height > 0) {
         imagestring($image, 2, 5, 0, $disp_height, $color_foreground);
     }

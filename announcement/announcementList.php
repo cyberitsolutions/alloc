@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
@@ -27,9 +27,9 @@ function show_announcements($template_name)
     global $TPL;
 
     $people =& get_cached_table("person");
-    $query = "SELECT announcement.* 
-              FROM announcement 
-              ORDER BY displayFromDate DESC";
+    $query = "SELECT announcement.*
+                FROM announcement
+            ORDER BY displayFromDate DESC";
     $db = new db_alloc();
     $db->query($query);
     while ($db->next_record()) {

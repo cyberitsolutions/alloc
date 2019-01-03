@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
@@ -79,7 +79,7 @@ if ($_POST["update_currencyless_transactions"] && $_POST["currency"]) {
     $q = prepare("UPDATE invoice SET invoice.currencyTypeID = '%s' WHERE invoice.currencyTypeID IS NULL", $_POST["currency"]);
     $db->query($q);
 
-  // Update currencyType table too
+    // Update currencyType table too
     $q = prepare("UPDATE currencyType SET currencyTypeSeq = 1, currencyTypeActive = true WHERE currencyTypeID = '%s'", $_POST["currency"]);
     $db->query($q);
     $_POST["save"] = true;
@@ -105,13 +105,13 @@ if ($_POST["save"]) {
         $db->query($q);
     }
 
-  // remove bracketed [Alex Lance <]alla@cyber.com.au[>] bits, leaving just alla@cyber.com.au
+    // remove bracketed [Alex Lance <]alla@cyber.com.au[>] bits, leaving just alla@cyber.com.au
     if ($_POST["AllocFromEmailAddress"]) {
         $_POST["AllocFromEmailAddress"] = preg_replace("/^.*</", "", $_POST["AllocFromEmailAddress"]);
         $_POST["AllocFromEmailAddress"] = str_replace(">", "", $_POST["AllocFromEmailAddress"]);
     }
 
-  // Save the companyLogo and a smaller version too.
+    // Save the companyLogo and a smaller version too.
     if ($_FILES["companyLogo"] && !$_FILES["companyLogo"]["error"]) {
         $img = image_create_from_file($_FILES["companyLogo"]["tmp_name"]);
         if ($img) {
@@ -149,9 +149,9 @@ if ($_POST["save"]) {
         }
     }
 
-  // Handle the only checkbox specially. If more checkboxes are added this
-  // should be rewritten.
-  #echo var_dump($_POST);
+    // Handle the only checkbox specially. If more checkboxes are added this
+    // should be rewritten.
+    #echo var_dump($_POST);
     if ($_POST['sbs_link'] == "rss" && !$_POST['rssShowProject']) {
         $c = new config();
         $c->set_id(config::get_config_item_id('rssShowProject'));
@@ -187,18 +187,18 @@ $TPL["inTfOptions"] = page::select_options($options, config::get_config_item("in
 $TPL["taxTfOptions"] = page::select_options($options, config::get_config_item("taxTfID"));
 $TPL["expenseFormTfOptions"] = page::select_options($options, config::get_config_item("expenseFormTfID"));
 
-$tabops = array("home"=>"Home"
-               ,"client"=>"Clients"
-               ,"project"=>"Projects"
-               ,"task"=>"Tasks"
-               ,"time"=>"Time"
-               ,"invoice"=>"Invoices"
-               ,"sale"=>"Sales"
-               ,"person"=>"People"
-               ,"wiki"=>"Wiki"
-               ,"inbox"=>"Inbox"
-               ,"tools"=>"Tools"
-                );
+$tabops = array("home"    => "Home",
+                "client"  => "Clients",
+                "project" => "Projects",
+                "task"    => "Tasks",
+                "time"    => "Time",
+                "invoice" => "Invoices",
+                "sale"    => "Sales",
+                "person"  => "People",
+                "wiki"    => "Wiki",
+                "inbox"   => "Inbox",
+                "tools"   => "Tools");
+
 $selected_tabops = config::get_config_item("allocTabs") or $selected_tabops = array_keys($tabops);
 $TPL["allocTabsOptions"] = page::select_options($tabops, $selected_tabops);
 
@@ -220,7 +220,13 @@ foreach ($people as $p) {
 $TPL["defaultTimeSheetManagerListText"] = get_person_list(config::get_config_item("defaultTimeSheetManagerList"));
 $TPL["defaultTimeSheetAdminListText"] = get_person_list(config::get_config_item("defaultTimeSheetAdminList"));
 
-$days =  array("Sun"=>"Sun","Mon"=>"Mon","Tue"=>"Tue","Wed"=>"Wed","Thu"=>"Thu","Fri"=>"Fri","Sat"=>"Sat");
+$days =  array("Sun" => "Sun",
+               "Mon" => "Mon",
+               "Tue" => "Tue",
+               "Wed" => "Wed",
+               "Thu" => "Thu",
+               "Fri" => "Fri",
+               "Sat" => "Sat");
 $TPL["calendarFirstDayOptions"] = page::select_options($days, config::get_config_item("calendarFirstDay"));
 
 $TPL["timeSheetPrintOptions"] = page::select_options($TPL["timeSheetPrintOptions"], $TPL["timeSheetPrint"]);

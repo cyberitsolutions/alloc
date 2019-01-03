@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 define("IN_INSTALL_RIGHT_NOW", 1);
 require_once("../alloc.php");
@@ -82,14 +82,13 @@ $server_user = getenv("APACHE_RUN_USER") or $server_user = "apache";
 
 $default_allocURL = "http://".$_SERVER["SERVER_NAME"].SCRIPT_PATH;
 
-$config_vars = array("ALLOC_DB_NAME"     => array("default"=>"alloc",              "info"=>"Database name")
-                    ,"ALLOC_DB_USER"     => array("default"=>"alloc",              "info"=>"Database username")
-                    ,"ALLOC_DB_PASS"     => array("default"=>"changeme",           "info"=>"Database password")
-                    ,"ALLOC_DB_HOST"     => array("default"=>"localhost",          "info"=>"Database hostname")
-                    ,"ATTACHMENTS_DIR"   => array("default"=>"/var/local/alloc/",  "info"=>"Enter a folder that can be used for file upload storage (outside webroot)")
-                    ,"allocURL"          => array("default"=>$default_allocURL,    "info"=>"The URL for allocPSA, eg: http://example.com/alloc/")
-                    ,"currency"          => array("default"=>"USD",                "info"=>"The default currency")
-                    );
+$config_vars = array("ALLOC_DB_NAME"     => array("default"=>"alloc",              "info"=>"Database name"),
+                     "ALLOC_DB_USER"     => array("default"=>"alloc",              "info"=>"Database username"),
+                     "ALLOC_DB_PASS"     => array("default"=>"changeme",           "info"=>"Database password"),
+                     "ALLOC_DB_HOST"     => array("default"=>"localhost",          "info"=>"Database hostname"),
+                     "ATTACHMENTS_DIR"   => array("default"=>"/var/local/alloc/",  "info"=>"Enter a folder that can be used for file upload storage (outside webroot)"),
+                     "allocURL"          => array("default"=>$default_allocURL,    "info"=>"The URL for allocPSA, eg: http://example.com/alloc/"),
+                     "currency"          => array("default"=>"USD",                "info"=>"The default currency"));
 
 
 foreach ($config_vars as $name => $arr) {
@@ -127,7 +126,7 @@ if ($_POST["submit_stage_2"]) {
         $text_tab_2a[] = "This directory is not writeable by the webserver: ".$_FORM["ATTACHMENTS_DIR"];
         $failed = 1;
     } else if (!$failed) {
-      // Create directories under attachment dir and chmod them
+        // Create directories under attachment dir and chmod them
         $dirs = $external_storage_directories; // something like array("task","client","project","invoice","comment","backups");
         foreach ($dirs as $dir) {
             $d = $_FORM["ATTACHMENTS_DIR"].$dir;
@@ -143,7 +142,7 @@ if ($_POST["submit_stage_2"]) {
     }
 
     if (!$failed) {
-      // Create search indexes
+        // Create search indexes
         $search_item_indexes = array("client", "comment", "item", "project", "task", "timeSheet", "wiki");
         foreach ($search_item_indexes as $i) {
             $index = Zend_Search_Lucene::create($_FORM["ATTACHMENTS_DIR"].'search'.DIRECTORY_SEPARATOR.$i);
@@ -180,7 +179,7 @@ if ($_POST["test_db"]) {
     $db = new db($_FORM["ALLOC_DB_USER"], $_FORM["ALLOC_DB_PASS"], $_FORM["ALLOC_DB_HOST"], $_FORM["ALLOC_DB_NAME"]);
     singleton("db", $db); // this makes db_esc() work as expected
 
-  // Test supplied credentials
+    // Test supplied credentials
     if ($db->connect()) {
         $text_tab_3b[] = "Connected to MySQL database server as user '".$_FORM["ALLOC_DB_USER"]."'.";
     } else {
@@ -277,7 +276,7 @@ if ($_POST["test_db"]) {
     }
 
     if (!$failed) {
-      // one way to test the constraints is by trying to break them
+        // one way to test the constraints is by trying to break them
         $query = "DELETE FROM tfPerson WHERE tfID = 321321 AND personID = 374921;";
         $db->query($query);
         $query = "INSERT INTO tfPerson (tfID,personID) VALUES (321321,374921);";
@@ -332,7 +331,7 @@ if ($_FORM["ALLOC_DB_NAME"] && $_FORM["ALLOC_DB_USER"]) {
     $text_tab_3[] = "CREATE DATABASE ".$_FORM["ALLOC_DB_NAME"].";";
 
     if ($_FORM["ALLOC_DB_USER"] != 'root') {
-      // grant all on alloc14.* to 'heydiddle'@'localhost' IDENTIFIED BY 'hey';
+        // grant all on alloc14.* to 'heydiddle'@'localhost' IDENTIFIED BY 'hey';
         $text_tab_3[] = "";
         $text_tab_3[] = "GRANT ALL ON ".$_FORM["ALLOC_DB_NAME"].".* TO '".$_FORM["ALLOC_DB_USER"]."'@'".$_FORM["ALLOC_DB_HOST"]."' IDENTIFIED BY '".$_FORM["ALLOC_DB_PASS"]."';";
     }

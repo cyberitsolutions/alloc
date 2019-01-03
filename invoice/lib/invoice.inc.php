@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 define("DEFAULT_SEP", "\n");
 class invoice extends db_entity
@@ -27,24 +27,23 @@ class invoice extends db_entity
     public $data_table = "invoice";
     public $display_field_name = "invoiceName";
     public $key_field = "invoiceID";
-    public $data_fields = array("invoiceName"
-                             ,"clientID"
-                             ,"projectID"
-                             ,"tfID"
-                             ,"invoiceDateFrom"
-                             ,"invoiceDateTo"
-                             ,"invoiceNum"
-                             ,"invoiceName"
-                             ,"invoiceStatus"
-                             ,"currencyTypeID"
-                             ,"maxAmount" => array("type"=>"money")
-                             ,"invoiceRepeatID"
-                             ,"invoiceRepeatDate"
-                             ,"invoiceCreatedTime"
-                             ,"invoiceCreatedUser"
-                             ,"invoiceModifiedTime"
-                             ,"invoiceModifiedUser"
-                             );
+    public $data_fields = array("invoiceName",
+                                "clientID",
+                                "projectID",
+                                "tfID",
+                                "invoiceDateFrom",
+                                "invoiceDateTo",
+                                "invoiceNum",
+                                "invoiceName",
+                                "invoiceStatus",
+                                "currencyTypeID",
+                                "maxAmount" => array("type"=>"money"),
+                                "invoiceRepeatID",
+                                "invoiceRepeatDate",
+                                "invoiceCreatedTime",
+                                "invoiceCreatedUser",
+                                "invoiceModifiedTime",
+                                "invoiceModifiedUser");
 
     function save()
     {
@@ -78,20 +77,19 @@ class invoice extends db_entity
 
     function get_invoice_statii()
     {
-        return array("create"=>"Create"
-                ,"edit"=>"Add Items"
-                ,"reconcile"=>"Approve/Reject"
-                ,"finished"=>"Completed");
+        return array("create"    => "Create",
+                     "edit"      => "Add Items",
+                     "reconcile" => "Approve/Reject",
+                     "finished"  => "Completed");
     }
 
     function get_invoice_statii_payment()
     {
-        return array("pending"=>"Not Paid In Full"
-                // "partly_paid"=>"Waiting to be Paid"
-                ,"rejected"=>"Has Rejected Transactions"
-                ,"fully_paid"=>"Paid In Full"
-                ,"over_paid"=>"Overpaid/Pre-Paid"
-                );
+        return array("pending"    => "Not Paid In Full",
+                     // "partly_paid"=>"Waiting to be Paid"
+                     "rejected"   => "Has Rejected Transactions",
+                     "fully_paid" => "Paid In Full",
+                     "over_paid"  => "Overpaid/Pre-Paid");
     }
 
     function get_invoice_statii_payment_image($payment_status = false)
@@ -210,7 +208,7 @@ class invoice extends db_entity
             $d = $invoiceItem->get_value('iiMemo');
             $str[] = $d;
 
-          // Get task description
+            // Get task description
             if ($invoiceItem->get_value("timeSheetID") && $verbose) {
                 $q = prepare("SELECT * FROM timeSheetItem WHERE timeSheetID = %d", $invoiceItem->get_value("timeSheetID"));
                 $db2 = new db_alloc();
@@ -233,7 +231,7 @@ class invoice extends db_entity
         }
         $info["total_inc_gst"] = page::money($currency, $info["total"]+$info["total_gst"], "%s%m");
 
-      // If we are in dollar mode, then prefix the total with a dollar sign
+        // If we are in dollar mode, then prefix the total with a dollar sign
         $info["total"] =     page::money($currency, $info["total"], "%s%m");
         $info["total_gst"] = page::money($currency, $info["total_gst"], "%s%m");
         $rows or $rows = array();
@@ -243,17 +241,17 @@ class invoice extends db_entity
 
     function generate_invoice_file($verbose = false, $getfile = false)
     {
-      // Build PDF document
+        // Build PDF document
         $font1 = ALLOC_MOD_DIR."util/fonts/Helvetica.afm";
         $font2 = ALLOC_MOD_DIR."util/fonts/Helvetica-Oblique.afm";
-  
+
         $db = new db_alloc();
 
-      // Get client name
+        // Get client name
         $client = $this->get_foreign_object("client");
         $clientName = $client->get_value("clientName");
 
-      // Get cyber info
+        // Get cyber info
         $companyName = config::get_config_item("companyName");
         $companyNos1 = config::get_config_item("companyACN");
         $companyNos2 = config::get_config_item("companyABN");
@@ -368,13 +366,13 @@ class invoice extends db_entity
         $pdf->ezText(str_replace(array("<br>","<br/>","<br />"), "\n", $footer), 10);
 
 
-      // Add footer
-      #$all = $pdf->openObject();
-      #$pdf->saveState();
-      #$pdf->addText(415,80,12,"<b>".$default_id_label.":</b>".$this->get_value("invoiceNum"));
-      #$pdf->restoreState();
-      #$pdf->closeObject();
-      #$pdf->addObject($all,'all');
+        // Add footer
+        #$all = $pdf->openObject();
+        #$pdf->saveState();
+        #$pdf->addText(415,80,12,"<b>".$default_id_label.":</b>".$this->get_value("invoiceNum"));
+        #$pdf->restoreState();
+        #$pdf->closeObject();
+        #$pdf->addObject($all,'all');
 
         if ($getfile) {
             return $pdf->ezOutput();
@@ -428,7 +426,7 @@ class invoice extends db_entity
         $current_user = &singleton("current_user");
         $sql = array();
 
-      // If they want starred, load up the invoiceID filter element
+        // If they want starred, load up the invoiceID filter element
         if ($filter["starred"]) {
             foreach ((array)$current_user->prefs["stars"]["invoice"] as $k => $v) {
                 $filter["invoiceID"][] = $k;
@@ -436,19 +434,19 @@ class invoice extends db_entity
             is_array($filter["invoiceID"]) or $filter["invoiceID"][] = -1;
         }
 
-      // Filter invoiceID
+        // Filter invoiceID
         $filter["invoiceID"] and $sql[] = sprintf_implode("invoice.invoiceID = %d", $filter["invoiceID"]);
 
-      // No point continuing if primary key specified, so return
+        // No point continuing if primary key specified, so return
         if ($filter["invoiceID"] || $filter["starred"]) {
             return $sql;
         }
 
         if ($filter["personID"]) {
             $q = "SELECT DISTINCT project.clientID
-              FROM projectPerson LEFT JOIN project ON projectPerson.projectID = project.projectID
-             WHERE ".sprintf_implode("projectPerson.personID = %d", $filter["personID"])."
-               AND project.clientID IS NOT NULL";
+                    FROM projectPerson LEFT JOIN project ON projectPerson.projectID = project.projectID
+                   WHERE ".sprintf_implode("projectPerson.personID = %d", $filter["personID"])."
+                     AND project.clientID IS NOT NULL";
             $db = new db_alloc();
             $db->query($q);
             while ($row = $db->row()) {
@@ -480,7 +478,7 @@ class invoice extends db_entity
 
     function get_list_filter2($filter = array())
     {
-      // Filter for the HAVING clause
+        // Filter for the HAVING clause
         $sql = array();
         if ($filter["invoiceStatusPayment"] == "pending") {
             $sql[] = "(COALESCE(amountPaidApproved,0) < iiAmountSum)";
@@ -499,10 +497,10 @@ class invoice extends db_entity
 
     public static function get_list($_FORM)
     {
-      /*
-       * This is the definitive method of getting a list of invoices that need a sophisticated level of filtering
-       *
-       */
+        /*
+         * This is the definitive method of getting a list of invoices that need a sophisticated level of filtering
+         *
+         */
 
         global $TPL;
         $filter1_where = invoice::get_list_filter($_FORM);
@@ -517,35 +515,35 @@ class invoice extends db_entity
 
         is_array($filter1_where) && count($filter1_where) and $f1_where = " WHERE ".implode(" AND ", $filter1_where);
         is_array($filter2_having) && count($filter2_having) and $f2_having = " HAVING ".implode(" AND ", $filter2_having);
- 
+
         $q1= "CREATE TEMPORARY TABLE invoice_details
-          SELECT SUM(invoiceItem.iiAmount * pow(10,-currencyType.numberToBasic)) as iiAmountSum
-               , invoice.*
-               , client.clientName
-            FROM invoice
-       LEFT JOIN invoiceItem on invoiceItem.invoiceID = invoice.invoiceID
-       LEFT JOIN client ON invoice.clientID = client.clientID
-       LEFT JOIN currencyType on invoice.currencyTypeID = currencyType.currencyTypeID
-              $f1_where
-        GROUP BY invoice.invoiceID
-        ORDER BY invoiceDateFrom";
+              SELECT SUM(invoiceItem.iiAmount * pow(10,-currencyType.numberToBasic)) as iiAmountSum
+                   , invoice.*
+                   , client.clientName
+                FROM invoice
+           LEFT JOIN invoiceItem on invoiceItem.invoiceID = invoice.invoiceID
+           LEFT JOIN client ON invoice.clientID = client.clientID
+           LEFT JOIN currencyType on invoice.currencyTypeID = currencyType.currencyTypeID
+             $f1_where
+            GROUP BY invoice.invoiceID
+            ORDER BY invoiceDateFrom";
 
         $db = new db_alloc();
-      #$db->query("DROP TABLE IF EXISTS invoice_details");
+        #$db->query("DROP TABLE IF EXISTS invoice_details");
         $db->query($q1);
 
         $q2= "SELECT invoice_details.*
-               , SUM(transaction_approved.amount) as amountPaidApproved
-               , SUM(transaction_pending.amount) as amountPaidPending
-               , SUM(transaction_rejected.amount) as amountPaidRejected
-            FROM invoice_details
-       LEFT JOIN invoiceItem on invoiceItem.invoiceID = invoice_details.invoiceID
-       LEFT JOIN transaction transaction_approved on invoiceItem.invoiceItemID = transaction_approved.invoiceItemID AND transaction_approved.status='approved'
-       LEFT JOIN transaction transaction_pending on invoiceItem.invoiceItemID = transaction_pending.invoiceItemID AND transaction_pending.status='pending'
-       LEFT JOIN transaction transaction_rejected on invoiceItem.invoiceItemID = transaction_rejected.invoiceItemID AND transaction_rejected.status='rejected'
-        GROUP BY invoice_details.invoiceID
-              $f2_having
-        ORDER BY invoiceDateFrom";
+                   , SUM(transaction_approved.amount) as amountPaidApproved
+                   , SUM(transaction_pending.amount) as amountPaidPending
+                   , SUM(transaction_rejected.amount) as amountPaidRejected
+                FROM invoice_details
+           LEFT JOIN invoiceItem on invoiceItem.invoiceID = invoice_details.invoiceID
+           LEFT JOIN transaction transaction_approved on invoiceItem.invoiceItemID = transaction_approved.invoiceItemID AND transaction_approved.status='approved'
+           LEFT JOIN transaction transaction_pending on invoiceItem.invoiceItemID = transaction_pending.invoiceItemID AND transaction_pending.status='pending'
+           LEFT JOIN transaction transaction_rejected on invoiceItem.invoiceItemID = transaction_rejected.invoiceItemID AND transaction_rejected.status='rejected'
+            GROUP BY invoice_details.invoiceID
+             $f2_having
+            ORDER BY invoiceDateFrom";
          // Don't do this! It doubles the totals!
          //LEFT JOIN tfPerson ON tfPerson.tfID = transaction_approved.tfID OR tfPerson.tfID = transaction_pending.tfID OR tfPerson.tfID = transaction_rejected.tfID
 
@@ -568,7 +566,7 @@ class invoice extends db_entity
             $row["amountPaidApproved"] == $row["iiAmountSum"] and $payment_status[] = "fully_paid";
             $row["amountPaidApproved"] > $row["iiAmountSum"] and $payment_status[] = "over_paid";
             $row["amountPaidRejected"] > 0 and $payment_status[] = "rejected";
-          #$row["amountPaidApproved"] > 0 && $row["amountPaidApproved"] < $row["iiAmountSum"] and $payment_status[] = "partly_paid";
+            #$row["amountPaidApproved"] > 0 && $row["amountPaidApproved"] < $row["iiAmountSum"] and $payment_status[] = "partly_paid";
             $row["amountPaidApproved"] < $row["iiAmountSum"] and $payment_status[] = "pending";
 
             foreach ((array)$payment_status as $ps) {
@@ -588,31 +586,30 @@ class invoice extends db_entity
     function get_list_vars()
     {
 
-        return array("return"                   => "[MANDATORY] eg: array | html | dropdown_options"
-                ,"invoiceID"                => "Invoice by ID"
-                ,"clientID"                 => "Invoices for a particular Client"
-                ,"invoiceNum"               => "Invoice by invoice number"
-                ,"dateOne"                  => "Where invoice date from is >= a particular date"
-                ,"dateTwo"                  => "Where invoice date to is <= a particular date"
-                ,"invoiceName"              => "Invoice by name"
-                ,"invoiceStatus"            => "Invoice status eg: edit | reconcile | finished"
-                ,"invoiceStatusPayment"     => "Invoice payment status eg: pending | rejected | fully_paid | over_paid"
-                ,"personID"                 => "Invoices that are for this persons TF's"
-                ,"tfIDs"                    => "Invoices that are for these TF's"
-                ,"url_form_action"          => "The submit action for the filter form"
-                ,"form_name"                => "The name of this form, i.e. a handle for referring to this saved form"
-                ,"dontSave"                 => "Specify that the filter preferences should not be saved this time"
-                ,"applyFilter"              => "Saves this filter as the persons preference"
-                ,"showHeader"               => "A descriptive html header row"
-                ,"showInvoiceNumber"        => "Shows the invoice number"
-                ,"showInvoiceClient"        => "Shows the invoices client"
-                ,"showInvoiceName"          => "Shows the invoices name"
-                ,"showInvoiceAmount"        => "Shows the total amount for each invoice"
-                ,"showInvoiceAmountPaid"    => "Shows the total amount paid for each invoice"
-                ,"showInvoiceDate"          => "Shows the invoices date"
-                ,"showInvoiceStatus"        => "Shows the invoices status"
-                ,"showInvoiceStatusPayment" => "Shows the invoices payment status"
-                );
+        return array("return"                   => "[MANDATORY] eg: array | html | dropdown_options",
+                     "invoiceID"                => "Invoice by ID",
+                     "clientID"                 => "Invoices for a particular Client",
+                     "invoiceNum"               => "Invoice by invoice number",
+                     "dateOne"                  => "Where invoice date from is >= a particular date",
+                     "dateTwo"                  => "Where invoice date to is <= a particular date",
+                     "invoiceName"              => "Invoice by name",
+                     "invoiceStatus"            => "Invoice status eg: edit | reconcile | finished",
+                     "invoiceStatusPayment"     => "Invoice payment status eg: pending | rejected | fully_paid | over_paid",
+                     "personID"                 => "Invoices that are for this persons TF's",
+                     "tfIDs"                    => "Invoices that are for these TF's",
+                     "url_form_action"          => "The submit action for the filter form",
+                     "form_name"                => "The name of this form, i.e. a handle for referring to this saved form",
+                     "dontSave"                 => "Specify that the filter preferences should not be saved this time",
+                     "applyFilter"              => "Saves this filter as the persons preference",
+                     "showHeader"               => "A descriptive html header row",
+                     "showInvoiceNumber"        => "Shows the invoice number",
+                     "showInvoiceClient"        => "Shows the invoices client",
+                     "showInvoiceName"          => "Shows the invoices name",
+                     "showInvoiceAmount"        => "Shows the total amount for each invoice",
+                     "showInvoiceAmountPaid"    => "Shows the total amount paid for each invoice",
+                     "showInvoiceDate"          => "Shows the invoices date",
+                     "showInvoiceStatus"        => "Shows the invoices status",
+                     "showInvoiceStatusPayment" => "Shows the invoices payment status");
     }
 
     function load_form_data($defaults = array())
@@ -643,7 +640,7 @@ class invoice extends db_entity
     {
         global $TPL;
 
-      // Load up the forms action url
+        // Load up the forms action url
         $rtn["url_form_action"] = $_FORM["url_form_action"];
 
         $statii = invoice::get_invoice_statii();
@@ -665,7 +662,7 @@ class invoice extends db_entity
         $ops = array_kv($ops, "clientID", "clientName");
         $rtn["clientOptions"] = page::select_options($ops, $_FORM["clientID"]);
 
-      // Get
+        // Get
         $rtn["FORM"] = "FORM=".urlencode(serialize($_FORM));
 
         return $rtn;
@@ -676,8 +673,8 @@ class invoice extends db_entity
         $db = new db_alloc();
         $db->query(prepare(
             "SELECT max(iiDate) AS maxDate, min(iiDate) AS minDate
-                          FROM invoiceItem
-                         WHERE invoiceID=%d",
+               FROM invoiceItem
+              WHERE invoiceID=%d",
             $invoiceID
         ));
         $db->next_record();
@@ -696,9 +693,9 @@ class invoice extends db_entity
         foreach ($invoiceItemIDs as $invoiceItemID) {
             $q = prepare(
                 "SELECT *
-                      FROM transaction
-                     WHERE invoiceItemID = %d
-                       AND status = 'pending'",
+                   FROM transaction
+                  WHERE invoiceItemID = %d
+                    AND status = 'pending'",
                 $invoiceItemID
             );
             $db->query($q);
@@ -713,7 +710,7 @@ class invoice extends db_entity
 
     function next_status($direction)
     {
- 
+
         $steps["forwards"][""] = "edit";
         $steps["forwards"]["edit"] = "reconcile";
         $steps["forwards"]["reconcile"] = "finished";
@@ -727,7 +724,7 @@ class invoice extends db_entity
 
         return $newstatus;
     }
- 
+
     function change_status($direction)
     {
         $newstatus = $this->next_status($direction);
@@ -778,13 +775,13 @@ class invoice extends db_entity
         }
         return true;
     }
-  
+
     function has_pending_transactions()
     {
-        $q = prepare("SELECT * 
-                    FROM transaction
-               LEFT JOIN invoiceItem on transaction.invoiceItemID = invoiceItem.invoiceItemID
-                   WHERE invoiceItem.invoiceID = %d AND transaction.status = 'pending' 
+        $q = prepare("SELECT *
+                        FROM transaction
+                   LEFT JOIN invoiceItem on transaction.invoiceItemID = invoiceItem.invoiceItemID
+                       WHERE invoiceItem.invoiceID = %d AND transaction.status = 'pending'
                    ", $this->get_id());
         $db = new db_alloc();
         $db->query($q);
@@ -795,17 +792,17 @@ class invoice extends db_entity
     {
         if ($timeSheetID) {
             $q = prepare(
-                "SELECT * 
-                      FROM invoiceItem 
-                     WHERE invoiceID = %d 
-                       AND timeSheetID = %d",
+                "SELECT *
+                   FROM invoiceItem
+                  WHERE invoiceID = %d
+                    AND timeSheetID = %d",
                 $this->get_id(),
                 $timeSheetID
             );
             $db = new db_alloc();
             $db->query($q);
-          // Add this time sheet to the invoice if the timeSheet hasn't already
-          // been added to this invoice
+            // Add this time sheet to the invoice if the timeSheet hasn't already
+            // been added to this invoice
             if (!$db->row()) {
                   invoiceEntity::save_invoice_timeSheet($this->get_id(), $timeSheetID);
             }
@@ -829,13 +826,13 @@ class invoice extends db_entity
             $client = new client($clientID);
             $interestedPartyOptions = array_merge((array)$interestedPartyOptions, (array)$client->get_all_parties());
         }
-  
+
         $extra_interested_parties = config::get_config_item("defaultInterestedParties") or $extra_interested_parties=array();
         foreach ($extra_interested_parties as $name => $email) {
             $interestedPartyOptions[$email] = array("name"=>$name);
         }
 
-      // return an aggregation of the current task/proj/client parties + the existing interested parties
+        // return an aggregation of the current task/proj/client parties + the existing interested parties
         $interestedPartyOptions = interestedParty::get_interested_parties("invoice", $this->get_id(), $interestedPartyOptions);
         return $interestedPartyOptions;
     }

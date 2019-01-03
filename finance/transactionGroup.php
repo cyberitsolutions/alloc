@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
@@ -29,11 +29,11 @@ function show_transaction_list($template)
     global $transactionGroupID;
 
     $q = prepare("SELECT *, amount * pow(10,-currencyType.numberToBasic) as amount
-                  FROM transaction
-             LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
-                 WHERE transactionGroupID = %d
-              ORDER BY transactionID
-               ", $transactionGroupID);
+                    FROM transaction
+               LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
+                   WHERE transactionGroupID = %d
+                ORDER BY transactionID
+                 ", $transactionGroupID);
     $db = new db_alloc();
     $db->query($q);
 
@@ -72,7 +72,7 @@ function show_transaction_new($template)
 
 function add_inactive_tf($tfID, $options)
 {
-  // add a tf to the array of options, if it's not already there
+    // add a tf to the array of options, if it's not already there
     global $TPL;
     if ($tfID && !array_key_exists($tfID, $options)) {
         $tf = new tf();
@@ -97,7 +97,7 @@ if ($_POST["save_transactions"]) {
 
     if (is_array($_POST["transactionID"]) && count($_POST["transactionID"])) {
         foreach ($_POST["transactionID"] as $k => $transactionID) {
-          // Delete
+            // Delete
             if ($transactionID && in_array($transactionID, $_POST["deleteTransaction"])) {
                 $transaction = new transaction();
                 $transaction->set_id($transactionID);
@@ -106,7 +106,7 @@ if ($_POST["save_transactions"]) {
                 $deleted.= $commar1.$transactionID;
                 $commar1 = ", ";
 
-              // Save
+            // Save
             } else if ($_POST["amount"][$k]) {
                 $a = array("amount"             => $_POST["amount"][$k]
                   ,"tfID"               => $_POST["tfID"][$k]

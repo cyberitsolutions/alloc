@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 class timeSheetStatusHomeItem extends home_item
 {
@@ -37,17 +37,17 @@ class timeSheetStatusHomeItem extends home_item
         }
 
         return (isset($current_user) && $current_user->is_employee()
-        && ($current_user->prefs["showTimeSheetStatsHome"]));
+                && ($current_user->prefs["showTimeSheetStatsHome"]));
     }
 
     function render()
     {
         $current_user = &singleton("current_user");
         global $TPL;
-      // Get averages for hours worked over the past fortnight and year
+        // Get averages for hours worked over the past fortnight and year
         $t = new timeSheetItem();
         $day = 60*60*24;
-      //mktime(0,0,0,date("m"),date("d")-1, date("Y"))
+        //mktime(0,0,0,date("m"),date("d")-1, date("Y"))
         $today = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d")-1, date("Y")));
         $yestA = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d")-2, date("Y")));
         $yestB = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d")-1, date("Y")));

@@ -18,12 +18,13 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 class stats
 {
     var $classname = "stats";
 
+    // FIXME:: I didn't reindent this because it is too messey 😞 -- cjb, 2019-01
     var $projects = array("all"=>array("total"=>array( /* <date>=> <number> */ )
                                        // <uid>=> array( <date>=> <number>, .. ),
                         ), "new"=>array("total"=>array( /* <date>=> <number> */ )
@@ -52,7 +53,7 @@ class stats
 
     function project_stats()
     {
-      // date from which a project is counted as being new. if monday then date back to friday, else the previous day
+        // date from which a project is counted as being new. if monday then date back to friday, else the previous day
         $days = date("w") == 1 ? 3 : 1;
         $date = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - $days, date("Y")));
 
@@ -117,25 +118,25 @@ class stats
         $db = new db_alloc();
 
         list($ts_open,$ts_pending,$ts_closed) = task::get_task_status_in_set_sql();
-      // Get total amount of current tasks for every person
+        // Get total amount of current tasks for every person
         $q = "SELECT person.personID, person.username, count(taskID) as tally
-            FROM task 
-       LEFT JOIN person ON task.personID = person.personID 
-           WHERE task.taskStatus NOT IN (".$ts_closed.")
-        GROUP BY person.personID";
+                FROM task
+           LEFT JOIN person ON task.personID = person.personID
+               WHERE task.taskStatus NOT IN (".$ts_closed.")
+            GROUP BY person.personID";
 
         $db->query($q);
         while ($db->next_record()) {
             $this->tasks["current"][$db->f("personID")] = $db->f("tally");
             $this->tasks["current"]["total"] += $db->f("tally");
         }
-    
-      // Get total amount of completed tasks for every person
+
+        // Get total amount of completed tasks for every person
         $q = "SELECT person.personID, person.username, count(taskID) as tally
-            FROM task 
-       LEFT JOIN person ON task.personID = person.personID 
-           WHERE task.taskStatus NOT IN (".$ts_closed.")
-        GROUP BY person.personID";
+                FROM task
+           LEFT JOIN person ON task.personID = person.personID
+               WHERE task.taskStatus NOT IN (".$ts_closed.")
+            GROUP BY person.personID";
 
         $db->query($q);
         while ($db->next_record()) {
@@ -144,11 +145,11 @@ class stats
         }
 
 
-      // Get total amount of all tasks for every person
+        // Get total amount of all tasks for every person
         $q = "SELECT person.personID, person.username, count(taskID) as tally
-            FROM task 
-       LEFT JOIN person ON task.personID = person.personID 
-        GROUP BY person.personID";
+                FROM task
+           LEFT JOIN person ON task.personID = person.personID
+            GROUP BY person.personID";
 
         $db->query($q);
         while ($db->next_record()) {
@@ -156,15 +157,15 @@ class stats
             $this->tasks["total"]["total"] += $db->f("tally");
         }
 
-      // date from which a task is counted as being new. if monday then date back to friday, else the previous day
+        // date from which a task is counted as being new. if monday then date back to friday, else the previous day
         $days = date("w") == 1 ? 3 : 1;
         $date = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - $days, date("Y")));
-      // Get total amount of completed tasks for every person
+        // Get total amount of completed tasks for every person
         $q = prepare("SELECT person.personID, person.username, count(taskID) as tally, task.dateCreated
-            FROM task 
-       LEFT JOIN person ON task.personID = person.personID 
-           WHERE ('%s' <= task.dateCreated)
-        GROUP BY person.personID", $date);
+                        FROM task
+                   LEFT JOIN person ON task.personID = person.personID
+                       WHERE ('%s' <= task.dateCreated)
+                    GROUP BY person.personID", $date);
 
         $db->query($q);
         while ($db->next_record()) {
@@ -173,15 +174,15 @@ class stats
             $v += $db->f("tally");
             $this->tasks["new"]["total"][$d] = $v;
         }
-   
-                
+
+
 
         return $this->tasks;
     }
 
     function comment_stats()
     {
-      // date from which a comment is counted as being new. if monday then date back to friday, else the previous day
+        // date from which a comment is counted as being new. if monday then date back to friday, else the previous day
         $days = date("w") == 1 ? 3 : 1;
         $date = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - $days, date("Y")));
 
@@ -217,7 +218,7 @@ class stats
     function compare($a, $b)
     {
         if ($a["count_back"] == $b["count_back"]) {
-          // if last added item was added on the same day then look at how many were added on that day
+            // if last added item was added on the same day then look at how many were added on that day
             if ($a["value"] == $b["value"]) {
                 // if the same number of items added on same day then sort alphabetically
                 return strcmp($a["username"], $b["username"]);

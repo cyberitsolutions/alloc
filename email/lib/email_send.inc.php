@@ -18,27 +18,25 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 // Class to handle all emails that alloc sends
-//
 // Will log emails sent, and will not attempt to send email when the server is a dev boxes
-//
+
 class email_send
 {
-  
-  // If URL has any of these strings in it then the email won't be sent.
-  #var $no_email_urls = array("alloc_dev");
+    // If URL has any of these strings in it then the email won't be sent.
+    #var $no_email_urls = array("alloc_dev");
     var $no_email_urls = array();
 
-  // If alloc is running on any of these boxes then no emails will be sent!
+    // If alloc is running on any of these boxes then no emails will be sent!
     var $no_email_hosts = array();
 
-  // Set to true to skip host and url checking
+    // Set to true to skip host and url checking
     var $ignore_no_email_hosts = false;
     var $ignore_no_email_urls = false;
 
-  // Actual email variables
+    // Actual email variables
     var $to_address = "";
     var $headers = "";
     var $default_headers = "";
@@ -57,7 +55,7 @@ class email_send
     function set_to_address($to = false)
     {
         $to or $to = $this->to_address;
-      #$to or $to = ALLOC_DEFAULT_TO_ADDRESS; // no
+        #$to or $to = ALLOC_DEFAULT_TO_ADDRESS; // no
         $this->to_address = $to;
         $this->del_header("to");
     }
@@ -97,7 +95,7 @@ class email_send
     }
     function set_date($date = false)
     {
-      // Date: Tue, 07 Jun 2011 15:37:32 +1000
+        // Date: Tue, 07 Jun 2011 15:37:32 +1000
         $date or $date = date("D, d M Y H:i:s O");
         $this->add_header("Date", $date);
     }
@@ -131,7 +129,7 @@ class email_send
         }
 
         if ($this->is_valid_url()) {
-          // if we've added attachments to the email, end the mime boundary
+            // if we've added attachments to the email, end the mime boundary
             if ($this->done_top_mime_header) {
                 $this->body.= $this->get_bottom_mime_header();
             }
@@ -141,11 +139,11 @@ class email_send
             $this->headers = str_replace("\r\n", "\n", $this->headers);
             $this->headers = str_replace("\n", PHP_EOL, $this->headers); // according to php.net/mail
 
-          # echo "<pre><br>HEADERS:\n".page::htmlentities($this->headers)."</pre>";
-          # echo "<pre><br>TO:\n".page::htmlentities($this->to_address)."</pre>";
-          # echo "<pre><br>SUBJECT:\n".page::htmlentities($this->subject)."</pre>";
-          # echo "<pre><br>BODY:\n".page::htmlentities($this->body)."</pre>";
-    
+            # echo "<pre><br>HEADERS:\n".page::htmlentities($this->headers)."</pre>";
+            # echo "<pre><br>TO:\n".page::htmlentities($this->to_address)."</pre>";
+            # echo "<pre><br>SUBJECT:\n".page::htmlentities($this->subject)."</pre>";
+            # echo "<pre><br>BODY:\n".page::htmlentities($this->body)."</pre>";
+
             if (defined("ALLOC_DEFAULT_RETURN_PATH_ADDRESS") && ALLOC_DEFAULT_RETURN_PATH_ADDRESS) {
                 $return_path = "-f".ALLOC_DEFAULT_RETURN_PATH_ADDRESS;
             }
@@ -190,18 +188,17 @@ class email_send
     }
     function is_valid_url()
     {
-
-      // Validate against particular hosts
+        // Validate against particular hosts
         in_array($_SERVER["SERVER_NAME"], $this->no_email_hosts) and $dont_send = true;
         $this->ignore_no_email_hosts and $dont_send = false;
 
-      // Validate against particular bits in the url
+        // Validate against particular bits in the url
         foreach ($this->no_email_urls as $url) {
             preg_match("/".$url."/", $_SERVER["SCRIPT_FILENAME"]) and $dont_send = true;
         }
         $this->ignore_no_email_urls and $dont_send = false;
 
-      // Invert return
+        // Invert return
         return !$dont_send;
     }
     function log()
@@ -218,7 +215,7 @@ class email_send
     }
     function get_mime_boundary()
     {
-      // This function will generate a new mime boundary
+        // This function will generate a new mime boundary
         if (!$this->mime_boundary) {
             $rand = md5(time().microtime());
             $this->mime_boundary = "alloc".mktime().$rand;
@@ -249,15 +246,15 @@ class email_send
             $this->add_header("MIME-Version", "1.0");
             $this->add_header("Content-Type", "multipart/mixed; boundary=\"".$mime_boundary."\"");
             $this->add_header("Content-Disposition", "inline");
-  
-          // Read the file to be attached ('rb' = read binary)
+
+            // Read the file to be attached ('rb' = read binary)
             $fh = fopen($file, 'rb');
             $data = fread($fh, filesize($file));
             fclose($fh);
 
             $mimetype = get_mimetype($file);
-  
-          // Base64 encode the file data
+
+            // Base64 encode the file data
             $data = chunk_split(base64_encode($data));
             $name = basename($file);
 
@@ -271,11 +268,11 @@ class email_send
     }
     function get_header_mime_boundary()
     {
-      // This function will parse the header for a mime boundary
+        // This function will parse the header for a mime boundary
         $content_type = $this->get_header("Content-Type");
-      // If the email is a multipart, ie has attachments
+        // If the email is a multipart, ie has attachments
         if (preg_match("/multipart/i", $content_type) && preg_match("/boundary/i", $content_type)) {
-          // Suck out the mime boundary
+            // Suck out the mime boundary
             preg_match("/boundary=\"?([^\"]*)\"?/i", $content_type, $matches);
             $mime_boundary = $matches[1];
             return $mime_boundary;

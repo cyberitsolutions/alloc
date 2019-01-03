@@ -25,10 +25,9 @@ class absence extends db_entity
     public $data_table = "absence";
     public $display_field_name = "personID";
     public $key_field = "absenceID";
-    public $data_fields = array("dateFrom"
-                             ,"dateTo"
-                             ,"personID"
-                             ,"absenceType"
-                             ,"contactDetails"
-                             );
+    public $data_fields = array("dateFrom",
+                                "dateTo",
+                                "personID",
+                                "absenceType",
+                                "contactDetails");
 }

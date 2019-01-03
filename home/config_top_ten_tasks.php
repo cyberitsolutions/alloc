@@ -18,18 +18,17 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 define("NO_REDIRECT", 1);
 require_once("../alloc.php");
 
-$defaults = array("showHeader"=>true
-                 ,"showTaskID"=>true
-                 ,"taskView" => "prioritised"
-                 ,"showStatus" => "true"
-                 ,"url_form_action"=>$TPL["url_alloc_settings"]
-                 ,"form_name"=>"taskListHome_filter"
-                 );
+$defaults = array("showHeader"      => true,
+                  "showTaskID"      => true,
+                  "taskView"        => "prioritised",
+                  "showStatus"      => "true",
+                  "url_form_action" => $TPL["url_alloc_settings"],
+                  "form_name"       => "taskListHome_filter");
 
 $_FORM = task::load_form_data($defaults);
 $arr = task::load_task_filter($_FORM);

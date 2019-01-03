@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 define("NO_AUTH", true);
 define("IS_GOD", true);
@@ -60,13 +60,13 @@ while ($row = $db->row($q1)) {
     }
 
     if (!$current_index || $current_index != $row["entity"]) {
-      // commit previous index
+        // commit previous index
         if (is_object($index)) {
             echoo("Committing index: ".$current_index);
             $index->commit();
         }
 
-      // start a new index
+        // start a new index
         echoo("New \$index: ".$row["entity"]);
         $index = Zend_Search_Lucene::open(ATTACHMENTS_DIR.'search/'.$row["entity"]);
     }
@@ -82,7 +82,7 @@ while ($row = $db->row($q1)) {
     $e->update_search_index_doc($index);
 
 
-  // Nuke item from queue
+    // Nuke item from queue
     $db->query("DELETE FROM indexQueue WHERE indexQueueID = %d", $row["indexQueueID"]);
 }
 

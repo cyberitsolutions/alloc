@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
@@ -99,24 +99,24 @@ if ($transactionRepeat->get_value("transactionRepeatModifiedUser")) {
 
 
 if (have_entity_perm("tf", PERM_READ, $current_user, false)) {
-  // Person can access all TF records
+    // Person can access all TF records
     $q = prepare(
-        "SELECT tfID AS value, tfName AS label 
-                  FROM tf 
-                 WHERE tfActive = 1 
-                    OR tf.tfID = %d 
-                    OR tf.tfID = %d 
-              ORDER BY tfName",
+        "SELECT tfID AS value, tfName AS label
+           FROM tf
+          WHERE tfActive = 1
+             OR tf.tfID = %d
+             OR tf.tfID = %d
+       ORDER BY tfName",
         $transactionRepeat->get_value("tfID"),
         $transactionRepeat->get_value("fromTfID")
     );
 } else if (have_entity_perm("tf", PERM_READ, $current_user, true)) {
-  // Person can only read TF records that they own
+    // Person can only read TF records that they own
     $q = prepare(
         "SELECT tf.tfID AS value, tf.tfName AS label
-                  FROM tf, tfPerson 
-                 WHERE tfPerson.personID=%d 
-                   AND tf.tfID=tfPerson.tfID 
+                  FROM tf, tfPerson
+                 WHERE tfPerson.personID=%d
+                   AND tf.tfID=tfPerson.tfID
                    AND (tf.tfActive = 1 OR tf.tfID = %d OR tf.tfID = %d)
               ORDER BY tfName",
         $current_user->get_id(),
@@ -147,11 +147,11 @@ $TPL["currencyTypeOptions"] = page::select_options($currencyOps, $transactionRep
 $TPL["tfOptions"] = page::select_options($q, $transactionRepeat->get_value("tfID"));
 $TPL["fromTfOptions"] = page::select_options($q, $transactionRepeat->get_value("fromTfID"));
 $TPL["basisOptions"] = page::select_options(
-    array("weekly"     =>"weekly"
-                                                 ,"fortnightly"=>"fortnightly"
-                                                 ,"monthly"    =>"monthly"
-                                                 ,"quarterly"  =>"quarterly"
-                                                 ,"yearly"     =>"yearly"),
+    array("weekly"      => "weekly",
+          "fortnightly" => "fortnightly",
+          "monthly"     => "monthly",
+          "quarterly"   => "quarterly",
+          "yearly"      => "yearly"),
     $transactionRepeat->get_value("paymentBasis")
 );
 

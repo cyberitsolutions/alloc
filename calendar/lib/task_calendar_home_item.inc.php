@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 class task_calendar_home_item extends home_item
 {
@@ -33,7 +33,7 @@ class task_calendar_home_item extends home_item
     function visible()
     {
         $current_user = &singleton("current_user");
-  
+
         if (!isset($current_user->prefs["showCalendarHome"])) {
             $current_user->prefs["showCalendarHome"] = 1;
             $current_user->prefs["tasksGraphPlotHome"] = 4;

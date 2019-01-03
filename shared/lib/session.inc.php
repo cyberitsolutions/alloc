@@ -18,11 +18,11 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 class session
 {
-  
+
     var $key;          # the unique key for the session
     var $db;           # database object
     var $session_data; # assoc array which holds all session data
@@ -30,22 +30,22 @@ class session
     var $mode;         # whether to use get or cookies
 
 
-  // * * * * * * * * * * * * * * * * *//
-  //                                  //
-  //         Public Methods           //
-  //                                  //
-  // * * * * * * * * * * * * * * * * *//
+    // * * * * * * * * * * * * * * * * *//
+    //                                  //
+    //         Public Methods           //
+    //                                  //
+    // * * * * * * * * * * * * * * * * *//
 
 
 
-  // Constructor
+    // Constructor
     function __construct($key = "")
     {
         global $TPL;
         $this->key           = $key or $this->key = $_COOKIE["alloc_cookie"] or $this->key = $_GET["sess"] or $this->key = $_REQUEST["sessID"];
         $TPL["sessID"]       = $_GET["sess"];
         $this->db            = new db_alloc();
-      #$this->session_life  = (5);
+        #$this->session_life  = (5);
         $this->session_life  = (config::get_config_item("allocSessionMinutes")*60);
         $this->session_life < 1 and $this->session_life = 10000; // just in case.
         $this->session_data  = $this->UnEncode($this->GetSessionData());
@@ -58,7 +58,7 @@ class session
     }
 
 
-  // Call this in a login page to start session
+    // Call this in a login page to start session
     function Start($row, $nuke_prev_sessions = true)
     {
         $this->key = md5($row["personID"]."mix it up#@!".md5(mktime().md5(microtime())));
@@ -77,7 +77,7 @@ class session
         $this->Put("personID", $row["personID"]);
     }
 
-  // Test whether session has started
+    // Test whether session has started
     function Started()
     {
         if ($this->Get("session_started") && !$this->Expired()) {
@@ -126,10 +126,10 @@ class session
     function MakeCookie()
     {
 
-      // Attempt to unset the test cookie
-      #SetCookie("alloc_test_cookie",FALSE,0,"/","");
+        // Attempt to unset the test cookie
+        #SetCookie("alloc_test_cookie",FALSE,0,"/","");
 
-      // Set the session cookie
+        // Set the session cookie
         $rtn = SetCookie("alloc_cookie", $this->key, 0, "/", "");
         if (!$rtn) {
             $this->mode = "get";
@@ -184,7 +184,7 @@ class session
         $this->DestroyCookie();
         $this->Put("session_mode", $this->mode);
     }
- 
+
     function UseCookie()
     {
         $this->mode = "cookie";
@@ -193,13 +193,13 @@ class session
     }
 
 
-  // * * * * * * * * * * * * * * * * *//
-  //                                  //
-  //         Private Methods          //
-  //                                  //
-  // * * * * * * * * * * * * * * * * *//
+    // * * * * * * * * * * * * * * * * *//
+    //                                  //
+    //         Private Methods          //
+    //                                  //
+    // * * * * * * * * * * * * * * * * *//
 
-  // Fetches data given a key
+    // Fetches data given a key
     function GetSessionData()
     {
         if ($this->key) {
@@ -208,26 +208,26 @@ class session
         }
     }
 
-  // if $this->session_life seconds have passed then session has expired
+    // if $this->session_life seconds have passed then session has expired
     function Expired()
     {
         if ($this->Get("session_started") && (mktime() > ($this->Get("session_started")+$this->session_life))) {
             return true;
         }
     }
-  // add encryption for session_data here
+    // add encryption for session_data here
     function Encode($data)
     {
         return serialize($data);
     }
 
-  // and add unencryption for session_data here
+    // and add unencryption for session_data here
     function UnEncode($data)
     {
         return unserialize($data);
     }
-  
-  // errors fix me
+
+    // errors fix me
     function Error($msg)
     {
         alloc_error($msg);
