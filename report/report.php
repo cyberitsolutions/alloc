@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
@@ -110,8 +110,7 @@ if ($_POST["do_step_2"]) {
     }
 
 
-  /*
-     this is how to not include particular fields $ignored_fields[] = "timeSheetItem.timeSheetItemID"; */
+    // this is how to not include particular fields $ignored_fields[] = "timeSheetItem.timeSheetItemID";
 
     $query["start"] = " SELECT ";
     $query["where"] = " WHERE 1=1 ";
@@ -295,7 +294,7 @@ if ($_POST["do_step_3"]) {
                     $person = new person();
                     $person->set_id($db->f($field));
                     $person->select();
-          
+
                     $result = $person->get_name(array("format"=>"nick"));
                 } else if (stripos("tfID", $field) !== false) {
                     $result = tf::get_name($db->f($field));
@@ -314,7 +313,7 @@ if ($_POST["do_step_3"]) {
         $TPL["counter"] = "Number of rows(s): ".$counter;
 
         if ($_POST["generate_file"]) {
-          // write to file
+            // write to file
             header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
             header('Content-Type: application/octet-stream');
             header('Content-Size: '.strlen($TPL["result_row"]));

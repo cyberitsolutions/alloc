@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 define("NO_AUTH", true);
 require_once("../alloc.php");
@@ -30,7 +30,7 @@ $query = prepare("SELECT *
                     FROM reminder
                    WHERE reminderActive = 1
                      AND reminderAdvNoticeSent = 0
-                     AND NOW() > 
+                     AND NOW() >
                          CASE
                            WHEN reminderAdvNoticeInterval = 'Minute' THEN DATE_SUB(reminderTime, INTERVAL reminderAdvNoticeValue MINUTE)
                            WHEN reminderAdvNoticeInterval = 'Hour'   THEN DATE_SUB(reminderTime, INTERVAL reminderAdvNoticeValue HOUR)
@@ -44,7 +44,7 @@ $db->query($query);
 while ($db->next_record()) {
     $reminder = new reminder();
     $reminder->read_db_record($db);
-  //echo "<br>Adv: ".$reminder->get_id();
+    //echo "<br>Adv: ".$reminder->get_id();
     $current_user = new person();
     $current_user->load_current_user($db->f('reminderCreatedUser'));
     singleton("current_user", $current_user);
@@ -67,7 +67,7 @@ $db->query($query);
 while ($db->next_record()) {
     $reminder = new reminder();
     $reminder->read_db_record($db);
-  //echo "<br>Rem: ".$reminder->get_id();
+    //echo "<br>Rem: ".$reminder->get_id();
     $current_user = new person();
     $current_user->load_current_user($db->f('reminderCreatedUser'));
     singleton("current_user", $current_user);
