@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 class inbox extends db_entity
 {
@@ -30,7 +30,7 @@ class inbox extends db_entity
         $personID = $person->find_by_email($from_address);
         $personID or $personID = $person->find_by_name($from_name);
 
-      // If we've determined a personID from the $from_address
+        // If we've determined a personID from the $from_address
         if ($personID) {
             $current_user = new person();
             $current_user->load_current_user($personID);
@@ -115,7 +115,7 @@ class inbox extends db_entity
         $current_user = &singleton("current_user");
         $orig_current_user = &$current_user;
 
-      // wrap db queries in a transaction
+        // wrap db queries in a transaction
         $db = new db_alloc();
         $db->start_transaction();
 
@@ -123,7 +123,7 @@ class inbox extends db_entity
         $current_user = &singleton("current_user");
         $email_receive->save_email();
 
-      // Run any commands that have been embedded in the email
+        // Run any commands that have been embedded in the email
         $command = new command();
         $fields = $command->get_fields();
         $commands = $email_receive->get_commands($fields);
@@ -138,13 +138,13 @@ class inbox extends db_entity
             throw new Exception($e);
         }
 
-      // Commit the db, and move the email into its storage location eg: INBOX.task1234
+        // Commit the db, and move the email into its storage location eg: INBOX.task1234
         if (!$failed && !$TPL["message"]) {
             $db->commit();
             $email_receive->archive();
         }
 
-      // Put current_user back to normal
+        // Put current_user back to normal
         $current_user = &$orig_current_user;
         singleton("current_user", $current_user);
     }
@@ -165,7 +165,7 @@ class inbox extends db_entity
 
         $email_receive->save_email();
 
-      // Subject line is name, email body is body
+        // Subject line is name, email body is body
         $task = new task();
         $task->set_value("taskName", $email_receive->mail_headers["subject"]);
         $task->set_value("taskDescription", $email_receive->mail_text);
@@ -199,7 +199,7 @@ class inbox extends db_entity
             $ip["entityID"] = $task->get_id();
             interestedParty::add_interested_party($ip);
         }
-      // Put current_user back to normal
+        // Put current_user back to normal
         $current_user = &$orig_current_user;
         singleton("current_user", $current_user);
     }
@@ -225,7 +225,7 @@ class inbox extends db_entity
             $commentID = $c->get_id();
             $commentID and $TPL["message_good_no_esc"][] = "Created comment ".$commentID." on task ".$task->get_task_link(array("prefixTaskID"=>true));
 
-          // Possibly change the identity of current_user
+            // Possibly change the identity of current_user
             list($from_address,$from_name) = parse_email_address($email_receive->mail_headers["from"]);
             $person = new person();
             $personID = $person->find_by_email($from_address);
@@ -236,11 +236,11 @@ class inbox extends db_entity
                 singleton("current_user", $current_user);
             }
 
-          // swap back to normal user
+            // swap back to normal user
             $current_user = &$orig_current_user;
             singleton("current_user", $current_user);
 
-          // manually add task manager and assignee to ip list
+            // manually add task manager and assignee to ip list
             $extraips = array();
             if ($task->get_value("personID")) {
                 $p = new person($task->get_value("personID"));
@@ -261,7 +261,7 @@ class inbox extends db_entity
                 }
             }
 
-          // add all the other interested parties
+            // add all the other interested parties
             $ips = interestedParty::get_interested_parties("task", $req["taskID"], $extraips);
             foreach ((array)$ips as $k => $inf) {
                 $inf["entity"] = "comment";
@@ -275,14 +275,14 @@ class inbox extends db_entity
                     $recipients[] = $inf["name"]." ".add_brackets($k);
                 }
             }
-    
+
             $recipients and $recipients = implode(", ", (array)$recipients);
             $recipients and $TPL["message_good"][] = "Sent email to ".$recipients;
 
-          // Re-email the comment out
+            // Re-email the comment out
             comment::send_comment($commentID, array("interested"), $email_receive);
 
-          // File email away in the task's mail folder
+            // File email away in the task's mail folder
             $mailbox = "INBOX/task".$task->get_id();
             $email_receive->create_mailbox($mailbox) and $TPL["message_good"][] = "Created mailbox: ".$mailbox;
             $email_receive->move_mail($req["id"], $mailbox) and $TPL["message_good"][] = "Moved email ".$req["id"]." to ".$mailbox;
@@ -325,7 +325,7 @@ class inbox extends db_entity
 
     public static function get_list()
     {
-      // Get list of emails
+        // Get list of emails
         $info = inbox::get_mail_info();
         $email_receive = new email_receive($info);
         $email_receive->open_mailbox($info["folder"], OP_HALFOPEN | OP_READONLY);

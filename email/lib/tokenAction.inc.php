@@ -18,15 +18,14 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 class tokenAction extends db_entity
 {
     public $classname = "tokenAction";
     public $data_table = "tokenAction";
     public $key_field = "tokenActionID";
-    public $data_fields = array("tokenAction"
-                             ,"tokenActionType"
-                             ,"tokenActionMethod"
-                             );
+    public $data_fields = array("tokenAction",
+                                "tokenActionType",
+                                "tokenActionMethod");
 }

@@ -79,19 +79,19 @@ $keys = $email_receive->get_hashes();
 try {
     // If no keys
     if (!$keys) {
-      // If email sent from a known staff member
+        // If email sent from a known staff member
         $from_staff = inbox::change_current_user($email_receive->mail_headers["from"]);
         if ($from_staff) {
             inbox::convert_email_to_new_task($email_receive, true);
         } else {
-          //$email_receive->mark_seen(); in alouy we want the emails to still appear new (as opposed to alloc with receiveEmail.php)
+            //$email_receive->mark_seen(); in alouy we want the emails to still appear new (as opposed to alloc with receiveEmail.php)
             $email_receive->archive();
         }
 
     // Else if we have a key, append to comment
     } else {
-      // Skip over emails that are from alloc. These emails are kept only for
-      // posterity and should not be parsed and downloaded and re-emailed etc.
+        // Skip over emails that are from alloc. These emails are kept only for
+        // posterity and should not be parsed and downloaded and re-emailed etc.
         if (same_email_address($email_receive->mail_headers["from"], ALLOC_DEFAULT_FROM_ADDRESS)) {
             $email_receive->mark_seen();
             $email_receive->archive();
@@ -111,7 +111,7 @@ try {
             "\n".$e->getMessage()."\n\n".$e->getTraceAsString()
         );
 
-      // If that fails, try last-ditch email send
+    // If that fails, try last-ditch email send
     } catch (Exception $e) {
         mail(config::get_config_item("allocEmailAdmin"), "Email command failed(2)", "\n".$e->getMessage()."\n\n".$e->getTraceAsString());
     }
