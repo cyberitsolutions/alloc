@@ -18,19 +18,18 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 class exchangeRate extends db_entity
 {
     public $data_table = "exchangeRate";
     public $display_field_name = "exchangeRate";
     public $key_field = "exchangeRateID";
-    public $data_fields = array("exchangeRateCreatedDate"
-                             ,"exchangeRateCreatedTime"
-                             ,"fromCurrency"
-                             ,"toCurrency"
-                             ,"exchangeRate"
-                             );
+    public $data_fields = array("exchangeRateCreatedDate",
+                                "exchangeRateCreatedTime",
+                                "fromCurrency",
+                                "toCurrency",
+                                "exchangeRate");
 
     public static function get_er($from, $to, $date = "")
     {
@@ -42,11 +41,11 @@ class exchangeRate extends db_entity
         if ($date) {
             $q = prepare(
                 "SELECT *
-                      FROM exchangeRate 
-                     WHERE exchangeRateCreatedDate = '%s'
-                       AND fromCurrency = '%s'
-                       AND toCurrency = '%s'
-                   ",
+                   FROM exchangeRate
+                  WHERE exchangeRateCreatedDate = '%s'
+                    AND fromCurrency = '%s'
+                    AND toCurrency = '%s'
+                ",
                 $date,
                 $from,
                 $to
@@ -58,12 +57,12 @@ class exchangeRate extends db_entity
         if (!$row) {
             $q = prepare(
                 "SELECT *
-                      FROM exchangeRate 
-                     WHERE fromCurrency = '%s'
-                       AND toCurrency = '%s'
-                  ORDER BY exchangeRateCreatedTime DESC
-                     LIMIT 1
-                   ",
+                   FROM exchangeRate
+                  WHERE fromCurrency = '%s'
+                    AND toCurrency = '%s'
+               ORDER BY exchangeRateCreatedTime DESC
+                  LIMIT 1
+                ",
                 $from,
                 $to
             );
@@ -100,10 +99,10 @@ class exchangeRate extends db_entity
 
     public static function download()
     {
-      // Get default currency
+        // Get default currency
         $default_currency = config::get_config_item("currency");
 
-      // Get list of active currencies
+        // Get list of active currencies
         $meta = new meta("currencyType");
         $currencies = $meta->get_list();
 

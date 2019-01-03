@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 $current_user->check_employee();
@@ -32,7 +32,7 @@ global $saveGoTf;
 
 function add_tf($tfID, $options, $warningKey, $warningValue)
 {
-  // add a tf to the array of options, if it's not already there
+    // add a tf to the array of options, if it's not already there
     global $TPL;
     if ($tfID && !array_key_exists($tfID, $options)) {
         $tf = new tf();
@@ -89,7 +89,7 @@ if ($_POST["save"] || $_POST["saveAndNew"] || $_POST["saveGoTf"]) {
 */
     $transaction->read_globals();
 
-  // Tweaked validation to allow reporting of multiple errors
+    // Tweaked validation to allow reporting of multiple errors
     $transaction->get_value("amount")          or alloc_error("You must enter a valid amount");
     $transaction->get_value("transactionDate") or alloc_error("You must enter a date for the transaction");
     $transaction->get_value("product")         or alloc_error("You must enter a product");
@@ -98,8 +98,8 @@ if ($_POST["save"] || $_POST["saveAndNew"] || $_POST["saveGoTf"]) {
     $transaction->get_value("tfID")            or alloc_error("You must select a Destination Tagged Fund to add this transaction against");
     $transaction->get_value("transactionType") or alloc_error("You must set a transaction type");
     $transaction->get_value("currencyTypeID")  or alloc_error("You must set a transaction currency");
-  #$transaction->get_value("projectID")       or alloc_error("You must select a project");
-  #$transaction->get_value("companyDetails")  or alloc_error("You must enter the company details");
+    #$transaction->get_value("projectID")       or alloc_error("You must select a project");
+    #$transaction->get_value("companyDetails")  or alloc_error("You must enter the company details");
 
     if (!count($TPL["message"])) {
         $transaction->set_value("amount", str_replace(array("$",","), "", $transaction->get_value("amount")));

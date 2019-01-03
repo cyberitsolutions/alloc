@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
@@ -33,7 +33,6 @@ include_template("templates/transactionRepeatListM.tpl");
 
 function show_expenseFormList($template_name)
 {
-
     global $db;
     global $TPL;
     global $transactionRepeat;

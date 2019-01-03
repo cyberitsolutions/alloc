@@ -18,24 +18,23 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 class expenseForm extends db_entity
 {
     public $data_table = "expenseForm";
     public $key_field = "expenseFormID";
-    public $data_fields = array("expenseFormModifiedUser"
-                             ,"expenseFormModifiedTime"
-                             ,"paymentMethod"
-                             ,"reimbursementRequired"=>array("empty_to_null"=>false)
-                             ,"seekClientReimbursement"=>array("empty_to_null"=>false)
-                             ,"transactionRepeatID"
-                             ,"clientID"
-                             ,"expenseFormCreatedUser"
-                             ,"expenseFormCreatedTime"
-                             ,"expenseFormFinalised"=>array("empty_to_null"=>false)
-                             ,"expenseFormComment"
-                             );
+    public $data_fields = array("expenseFormModifiedUser",
+                                "expenseFormModifiedTime",
+                                "paymentMethod",
+                                "reimbursementRequired"=>array("empty_to_null"=>false),
+                                "seekClientReimbursement"=>array("empty_to_null"=>false),
+                                "transactionRepeatID",
+                                "clientID",
+                                "expenseFormCreatedUser",
+                                "expenseFormCreatedTime",
+                                "expenseFormFinalised"=>array("empty_to_null"=>false),
+                                "expenseFormComment");
 
     function is_owner($person = "")
     {
@@ -44,13 +43,13 @@ class expenseForm extends db_entity
         if ($person == "") {
             $person = $current_user;
         }
-      // Return true if this user created the expense form
+        // Return true if this user created the expense form
         if ($person->get_id() == $this->get_value("expenseFormCreatedUser", DST_VARIABLE)) {
             return true;
         }
 
         if ($this->get_id()) {
-          // Return true if any of the transactions on the expense form are accessible by the current user
+            // Return true if any of the transactions on the expense form are accessible by the current user
             $current_user_tfIDs = $current_user->get_tfIDs();
             $query = prepare("SELECT * FROM transaction WHERE expenseFormID=%d", $this->get_id());
             $db = new db_alloc();
@@ -75,17 +74,16 @@ class expenseForm extends db_entity
 
     public static function get_reimbursementRequired_array()
     {
-        return array("0"=>"Unpaid"
-                ,"1"=>"Paid by me"
-                ,"2"=>"Paid by company"
-                );
+        return array("0" => "Unpaid",
+                     "1" => "Paid by me",
+                     "2" => "Paid by company");
     }
 
     function set_status($status)
     {
-      // This sets the status of the expense form. Actually, the expense form
-      // doesn't have its own status - this sets the status of the transactions on the
-      // expense form
+        // This sets the status of the expense form. Actually, the expense form
+        // doesn't have its own status - this sets the status of the transactions on the
+        // expense form
         $current_user = &singleton("current_user");
         $transactions = $this->get_foreign_objects("transaction");
         while (list(, $transaction) = each($transactions)) {
@@ -147,7 +145,7 @@ class expenseForm extends db_entity
             $q = prepare("SELECT * FROM invoice WHERE clientID = %d AND invoiceStatus = 'edit' ".$extra, $this->get_value("clientID"));
             $db->query($q);
 
-          // Create invoice
+            // Create invoice
             if (!$db->next_record()) {
                 $invoice = new invoice();
                 $invoice->set_value("clientID", $this->get_value("clientID"));
@@ -159,12 +157,12 @@ class expenseForm extends db_entity
                 $invoice->save();
                 $invoiceID = $invoice->get_id();
 
-              // Use existing invoice
+            // Use existing invoice
             } else {
                 $invoiceID = $db->f("invoiceID");
             }
 
-          // Add invoiceItem and add expense form transactions to invoiceItem
+            // Add invoiceItem and add expense form transactions to invoiceItem
             if ($_POST["split_invoice"]) {
                 invoiceEntity::save_invoice_expenseFormItems($invoiceID, $this->get_id());
             } else {
@@ -217,9 +215,9 @@ class expenseForm extends db_entity
         }
         $db = new db_alloc();
         $q = prepare("SELECT sum(amount * pow(10,-currencyType.numberToBasic) * exchangeRate) AS amount
-                    FROM transaction 
-               LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
-                   WHERE expenseFormID = %d", $id);
+                        FROM transaction
+                   LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
+                       WHERE expenseFormID = %d", $id);
         $db->query($q);
         $row = $db->row();
         return $row["amount"];
@@ -249,14 +247,14 @@ class expenseForm extends db_entity
         $rr_options = expenseForm::get_reimbursementRequired_array();
 
         $q = prepare("SELECT expenseForm.*
-                        ,SUM(transaction.amount * pow(10,-currencyType.numberToBasic)) as formTotal
-                        ,transaction.currencyTypeID
-                    FROM expenseForm, transaction
-               LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
-                   WHERE expenseForm.expenseFormID = transaction.expenseFormID
-                         ".$f."
-                GROUP BY expenseForm.expenseFormID, transaction.currencyTypeID
-                ORDER BY expenseFormID");
+                            ,SUM(transaction.amount * pow(10,-currencyType.numberToBasic)) as formTotal
+                            ,transaction.currencyTypeID
+                        FROM expenseForm, transaction
+                   LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
+                       WHERE expenseForm.expenseFormID = transaction.expenseFormID
+                             ".$f."
+                    GROUP BY expenseForm.expenseFormID, transaction.currencyTypeID
+                    ORDER BY expenseFormID");
 
         $db->query($q);
 
@@ -287,9 +285,9 @@ class expenseForm extends db_entity
     {
         global $TPL;
         $transactionTypes = transaction::get_transactionTypes();
-        $q = "SELECT * FROM transaction 
-              LEFT JOIN transactionRepeat on transactionRepeat.transactionRepeatID = transaction.transactionRepeatID 
-                  WHERE transaction.transactionRepeatID IS NOT NULL AND transaction.status = 'pending'";
+        $q = "SELECT * FROM transaction
+           LEFT JOIN transactionRepeat on transactionRepeat.transactionRepeatID = transaction.transactionRepeatID
+               WHERE transaction.transactionRepeatID IS NOT NULL AND transaction.status = 'pending'";
         $db = new db_alloc();
         $db->query($q);
         while ($row = $db->row()) {

@@ -18,34 +18,33 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 class transactionRepeat extends db_entity
 {
     public $data_table = "transactionRepeat";
     public $display_field_name = "product";
     public $key_field = "transactionRepeatID";
-    public $data_fields = array("companyDetails" => array("empty_to_null"=>false)
-                             ,"payToName" => array("empty_to_null"=>false)
-                             ,"payToAccount" => array("empty_to_null"=>false)
-                             ,"tfID"
-                             ,"fromTfID"
-                             ,"emailOne"
-                             ,"emailTwo"
-                             ,"transactionStartDate"
-                             ,"transactionFinishDate"
-                             ,"transactionRepeatModifiedUser"
-                             ,"reimbursementRequired" => array("empty_to_null"=>false)
-                             ,"transactionRepeatModifiedTime"
-                             ,"transactionRepeatCreatedTime"
-                             ,"transactionRepeatCreatedUser"
-                             ,"paymentBasis"
-                             ,"amount" => array("type"=>"money")
-                             ,"currencyTypeID"
-                             ,"product"
-                             ,"status"
-                             ,"transactionType"
-                             );
+    public $data_fields = array("companyDetails" => array("empty_to_null"=>false),
+                                "payToName" => array("empty_to_null"=>false),
+                                "payToAccount" => array("empty_to_null"=>false),
+                                "tfID",
+                                "fromTfID",
+                                "emailOne",
+                                "emailTwo",
+                                "transactionStartDate",
+                                "transactionFinishDate",
+                                "transactionRepeatModifiedUser",
+                                "reimbursementRequired" => array("empty_to_null"=>false),
+                                "transactionRepeatModifiedTime",
+                                "transactionRepeatCreatedTime",
+                                "transactionRepeatCreatedUser",
+                                "paymentBasis",
+                                "amount" => array("type"=>"money"),
+                                "currencyTypeID",
+                                "product",
+                                "status",
+                                "transactionType");
 
 
     function is_owner()
