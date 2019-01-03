@@ -18,20 +18,19 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 class audit extends db_entity
 {
     public $data_table = "audit";
     public $key_field = "auditID";
-    public $data_fields = array("auditID"
-                             ,"taskID"
-                             ,"projectID"
-                             ,"personID"
-                             ,"dateChanged"
-                             ,"field"
-                             ,"value"
-                             );
+    public $data_fields = array("auditID",
+                                "taskID",
+                                "projectID",
+                                "personID",
+                                "dateChanged",
+                                "field",
+                                "value");
 
     public static function get_list($_FORM)
     {
@@ -61,9 +60,9 @@ class audit extends db_entity
 
 
         $q = "SELECT *
-            FROM audit
-          $where_clause
-        ORDER BY dateChanged";
+                FROM audit
+              $where_clause
+            ORDER BY dateChanged";
 
         $db = new db_alloc();
         $db->query($q);
@@ -88,8 +87,7 @@ class audit extends db_entity
 
     function get_list_vars()
     {
-        return array("taskID"           => "The task id to find audit records for"
-                ,"projectID"        => "The project id to find audit records for"
-                );
+        return array("taskID"           => "The task id to find audit records for",
+                     "projectID"        => "The project id to find audit records for");
     }
 }

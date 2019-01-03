@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 // The order of file processing usually goes:
 // requested_script.php -> alloc.php -> alloc_config.php -> more includes -> back to requested_script.php
@@ -75,39 +75,48 @@ define("SRC_REQUEST", 3);  // Reading the value from a get or post variable
 define("DST_DATABASE", 1);  // For writing to a database
 define("DST_VARIABLE", 2);  // For use within the PHP script itself
 define("DST_HTML_DISPLAY", 4);  // For display to the user as non-editable HTML text
-  
+
 // The list of all the modules that are enabled for this install of alloc
-$m = array("shared"
-          ,"home"
-          ,"project"
-          ,"task"
-          ,"time"
-          ,"finance"
-          ,"invoice"
-          ,"client"
-          ,"comment"
-          ,"item"
-          ,"person"
-          ,"announcement"
-          ,"reminder"
-          ,"security"
-          ,"config"
-          ,"search"
-          ,"tools"
-          ,"report"
-          ,"login"
-          ,"services"
-          ,"installation"
-          ,"help"
-          ,"email"
-          ,"sale"
-          ,"wiki"
-          ,"audit"
-          ,"calendar"
-          );
+$m = array("shared",
+           "home",
+           "project",
+           "task",
+           "time",
+           "finance",
+           "invoice",
+           "client",
+           "comment",
+           "item",
+           "person",
+           "announcement",
+           "reminder",
+           "security",
+           "config",
+           "search",
+           "tools",
+           "report",
+           "login",
+           "services",
+           "installation",
+           "help",
+           "email",
+           "sale",
+           "wiki",
+           "audit",
+           "calendar");
 
 // Sub-dirs under ATTACHMENTS_DIR where upload, email and backup data can be stored
-$external_storage_directories = array("task","client","project","invoice","comment","backups","whatsnew","wiki","logos","search","tmp");
+$external_storage_directories = array("task",
+                                      "client",
+                                      "project",
+                                      "invoice",
+                                      "comment",
+                                      "backups",
+                                      "whatsnew",
+                                      "wiki",
+                                      "logos",
+                                      "search",
+                                      "tmp");
 
 // Helper functions
 require_once(ALLOC_MOD_DIR."shared".DIRECTORY_SEPARATOR."util.inc.php");
@@ -133,21 +142,20 @@ define("SCRIPT_PATH", $path);
 
 unset($m);
 
-$TPL = array("url_alloc_index"                          => SCRIPT_PATH."index.php"
-            ,"url_alloc_login"                          => SCRIPT_PATH."login/login.php"
-            ,"url_alloc_installation"                   => SCRIPT_PATH."installation/install.php"
-            ,"url_alloc_styles"                         => ALLOC_MOD_DIR."css/src/"
-            ,"url_alloc_stylesheets"                    => SCRIPT_PATH."css/"
-            ,"url_alloc_javascript"                     => SCRIPT_PATH."javascript/"
-            ,"url_alloc_images"                         => SCRIPT_PATH."images/"
-            ,"url_alloc_cache"                          => SCRIPT_PATH."cache_".get_alloc_version()."/"
-            ,"url_alloc_help"                           => ALLOC_MOD_DIR."help".DIRECTORY_SEPARATOR
-            ,"alloc_help_link_name"                     => end(array_slice(explode("/", $_SERVER["PHP_SELF"]), -2, 1))
-            ,"script_path"                              => SCRIPT_PATH
-            ,"main_alloc_title"                         => end(explode("/", $_SERVER["SCRIPT_NAME"]))
-            );
+$TPL = array("url_alloc_index"        => SCRIPT_PATH."index.php",
+             "url_alloc_login"        => SCRIPT_PATH."login/login.php",
+             "url_alloc_installation" => SCRIPT_PATH."installation/install.php",
+             "url_alloc_styles"       => ALLOC_MOD_DIR."css/src/",
+             "url_alloc_stylesheets"  => SCRIPT_PATH."css/",
+             "url_alloc_javascript"   => SCRIPT_PATH."javascript/",
+             "url_alloc_images"       => SCRIPT_PATH."images/",
+             "url_alloc_cache"        => SCRIPT_PATH."cache_".get_alloc_version()."/",
+             "url_alloc_help"         => ALLOC_MOD_DIR."help".DIRECTORY_SEPARATOR,
+             "alloc_help_link_name"   => end(array_slice(explode("/", $_SERVER["PHP_SELF"]), -2, 1)),
+             "script_path"            => SCRIPT_PATH,
+             "main_alloc_title"       => end(explode("/", $_SERVER["SCRIPT_NAME"])));
 
-  
+
 if (file_exists(ALLOC_MOD_DIR."alloc_config.php")) {
     require_once(ALLOC_MOD_DIR."alloc_config.php");
 }
@@ -161,60 +169,60 @@ define("ALLOC_LOGO_SMALL", ATTACHMENTS_DIR."logos/logo_small.jpg");
 
 // If we're inside the installation process
 if (defined("IN_INSTALL_RIGHT_NOW")) {
-  // Re-direct home if an alloc_config.php already exists
+    // Re-direct home if an alloc_config.php already exists
     if (!defined("ALLOCPSA_PLATFORM") && file_exists(ALLOC_MOD_DIR."alloc_config.php") && is_readable(ALLOC_MOD_DIR."alloc_config.php") && filesize(ALLOC_MOD_DIR."alloc_config.php") >= 2 && defined("ALLOC_DB_NAME")) {
         alloc_redirect($TPL["url_alloc_login"]);
         exit();
     }
 
-// Else if were not in the installation process and there's no alloc_config.php file then redirect to the installation directory
+    // Else if were not in the installation process and there's no alloc_config.php file then redirect to the installation directory
 } else if (!file_exists(ALLOC_MOD_DIR."alloc_config.php") || !is_readable(ALLOC_MOD_DIR."alloc_config.php") || filesize(ALLOC_MOD_DIR."alloc_config.php") < 5 || !defined("ALLOC_DB_NAME")) {
     alloc_redirect($TPL["url_alloc_installation"]);
     exit();
 
-// Else include the alloc_config.php file and begin with proceedings..
+    // Else include the alloc_config.php file and begin with proceedings..
 } else {
-  // The timezone must be dealt with before anything else uses it or php will emit a warning
+    // The timezone must be dealt with before anything else uses it or php will emit a warning
     $timezone = config::get_config_item("allocTimezone");
     date_default_timezone_set($timezone);
 
-  // Now the timezone is set, replace the missing stuff from the template
+    // Now the timezone is set, replace the missing stuff from the template
     $TPL["current_date"] = date("Y-m-d H:i:s");
     $TPL["today"] = date("Y-m-d");
 
 
-  // The default From: email address
+    // The default From: email address
     if (config::get_config_item("AllocFromEmailAddress")) {
         define("ALLOC_DEFAULT_FROM_ADDRESS", add_brackets(config::get_config_item("AllocFromEmailAddress")));
     }
 
-  // The default email bounce address
+    // The default email bounce address
     define("ALLOC_DEFAULT_RETURN_PATH_ADDRESS", config::get_config_item("allocEmailAdmin"));
 
 
-  // If a script has NO_AUTH enabled, then it will perform its own
-  // authentication. And will be responsible for setting up any of:
-  // $current_user and $sess.
+    // If a script has NO_AUTH enabled, then it will perform its own
+    // authentication. And will be responsible for setting up any of:
+    // $current_user and $sess.
     if (!defined("NO_AUTH")) {
         $current_user = &singleton("current_user", new person());
         $sess = new session();
 
-      // If session hasn't been started re-direct to login page
+        // If session hasn't been started re-direct to login page
         if (!$sess->Started()) {
             defined("NO_REDIRECT") && exit("Session expired. Please <a href='".$TPL["url_alloc_login"]."'>log in</a> again.");
             alloc_redirect($TPL["url_alloc_login"] . ($_SERVER['REQUEST_URI'] != '/' ? '?forward='.urlencode($_SERVER['REQUEST_URI']) : ''));
 
-        // Else load up the current_user and continue
+            // Else load up the current_user and continue
         } else if ($sess->Get("personID")) {
             $current_user->load_current_user($sess->Get("personID"));
         }
     }
 
-  // Setup all the urls
+    // Setup all the urls
     require_once(ALLOC_MOD_DIR."shared".DIRECTORY_SEPARATOR."global_tpl_values.inc.php");
     $TPL = get_alloc_urls($TPL, $sess);
 
-  // Add user's navigation to quick list dropdown
+    // Add user's navigation to quick list dropdown
     if (is_object($current_user) && $current_user->get_id()) {
         $history = new history();
         $history->save_history();

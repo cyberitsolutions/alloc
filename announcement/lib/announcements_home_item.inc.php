@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 class announcements_home_item extends home_item
 {
@@ -44,9 +44,9 @@ class announcements_home_item extends home_item
         global $TPL;
 
         $query = "SELECT *
-                FROM announcement 
-               WHERE displayFromDate <= CURDATE() AND displayToDate >= CURDATE()
-            ORDER BY displayFromDate desc";
+                    FROM announcement
+                   WHERE displayFromDate <= CURDATE() AND displayToDate >= CURDATE()
+                ORDER BY displayFromDate desc";
         $db = new db_alloc();
         $db->query($query);
         while ($db->next_record()) {
