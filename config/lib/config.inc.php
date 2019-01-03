@@ -18,16 +18,15 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 class config extends db_entity
 {
     public $data_table = "config";
     public $key_field = "configID";
-    public $data_fields = array("name"
-                             ,"value"
-                             ,"type"
-                             );
+    public $data_fields = array("name",
+                                "value",
+                                "type");
 
     public static function get_config_item($name = '', $anew = false)
     {

@@ -18,29 +18,28 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 class comment extends db_entity
 {
     public $classname = "comment";
     public $data_table = "comment";
     public $key_field = "commentID";
-    public $data_fields = array("commentMaster"
-                             ,"commentMasterID"
-                             ,"commentType"
-                             ,"commentLinkID"
-                             ,"commentCreatedUser"
-                             ,"commentCreatedTime"
-                             ,"commentModifiedTime"
-                             ,"commentModifiedUser"
-                             ,"commentCreatedUserClientContactID"
-                             ,"commentCreatedUserText"
-                             ,"commentEmailRecipients"
-                             ,"commentEmailUID"
-                             ,"commentEmailMessageID"
-                             ,"commentMimeParts"
-                             ,"comment"
-                             );
+    public $data_fields = array("commentMaster",
+                                "commentMasterID",
+                                "commentType",
+                                "commentLinkID",
+                                "commentCreatedUser",
+                                "commentCreatedTime",
+                                "commentModifiedTime",
+                                "commentModifiedUser",
+                                "commentCreatedUserClientContactID",
+                                "commentCreatedUserText",
+                                "commentEmailRecipients",
+                                "commentEmailUID",
+                                "commentEmailMessageID",
+                                "commentMimeParts",
+                                "comment");
 
     function save()
     {
@@ -60,7 +59,7 @@ class comment extends db_entity
 
     function delete()
     {
-  
+
         if ($this->get_id()) {
             $dir = ATTACHMENTS_DIR."comment".DIRECTORY_SEPARATOR.$this->get_id();
             if (is_dir($dir)) {
@@ -108,22 +107,22 @@ class comment extends db_entity
         $rows = array();
         if ($commentMaster && $commentMasterID) {
             $q = prepare(
-                "SELECT commentID, 
-                           commentMaster, commentMasterID,
-                           commentLinkID, commentType,
-                           commentCreatedUser as personID, 
-                           commentCreatedTime as date, 
-                           commentModifiedTime, 
-                           commentModifiedUser, 
-                           comment, 
-                           commentCreatedUserClientContactID as clientContactID,
-                           commentCreatedUserText,
-                           commentEmailRecipients,
-                           commentEmailUID,
-                           commentMimeParts
-                      FROM comment 
-                     WHERE commentMaster = '%s' AND commentMasterID = %d 
-                  ORDER BY commentCreatedTime",
+                "SELECT commentID,
+                        commentMaster, commentMasterID,
+                        commentLinkID, commentType,
+                        commentCreatedUser as personID,
+                        commentCreatedTime as date,
+                        commentModifiedTime,
+                        commentModifiedUser,
+                        comment,
+                        commentCreatedUserClientContactID as clientContactID,
+                        commentCreatedUserText,
+                        commentEmailRecipients,
+                        commentEmailUID,
+                        commentMimeParts
+                   FROM comment
+                  WHERE commentMaster = '%s' AND commentMasterID = %d
+               ORDER BY commentCreatedTime",
                 $commentMaster,
                 $commentMasterID
             );
@@ -139,10 +138,10 @@ class comment extends db_entity
                 }
             }
         }
-      # commentID    commmentMaster   commmentMasterID  commentType   commentLinkID
-      # 1            task             10                task          10
-      # 2            task             10                comment       1
-      # 3            task             10                comment       1
+        # commentID    commmentMaster   commmentMasterID  commentType   commentLinkID
+        # 1            task             10                task          10
+        # 2            task             10                comment       1
+        # 3            task             10                comment       1
         return $rows;
     }
 
@@ -180,7 +179,7 @@ class comment extends db_entity
             foreach ((array)$all_parties as $email => $info) {
                 $recipient_ops[$info["identifier"]] = $info["name"]. " <".$email.">";
             }
-  
+
             $new["recipient_editor"] = "<span class='nobr' style='width:100%;display:inline;' class='recipient_editor'>";
 
             $new["recipient_editor"].= "<span class='noprint hidden' id='recipient_dropdown_".$new["commentID"]."'>
@@ -222,7 +221,7 @@ class comment extends db_entity
                 $new["form"].= '<input type="hidden" name="sessID" value="'.$TPL["sessID"].'">';
                 $new["form"].= '</form>';
             }
-  
+
             $v["commentMimeParts"] and $files = unserialize($v["commentMimeParts"]);
             if (is_array($files)) {
                 foreach ($files as $file) {
@@ -245,7 +244,7 @@ class comment extends db_entity
         $current_user = &singleton("current_user");
         $rows = array();
         $new_rows = array();
-      // Need to get timeSheet comments too for task comments
+        // Need to get timeSheet comments too for task comments
         if ($entity == "task") {
             $rows = comment::get_comments($entity, $id);
             has("time") and $rows2 = timeSheetItem::get_timeSheetItemComments($id);
@@ -263,7 +262,7 @@ class comment extends db_entity
         $e->set_id($id);
         $e->select();
         $all_parties = $e->get_all_parties();
-      
+
         foreach ((array)$rows as $v) {
             unset($children);
             foreach ((array)$v["children"] as $c) {
@@ -364,7 +363,7 @@ class comment extends db_entity
             }
         }
 
-      // Hide signature too
+        // Hide signature too
         foreach ($new_lines as $k => $line) {
             if (!$sig_started && preg_match("/^--(\s|\n|\r|<br>|<br \/>)*$/", $line)) {
                 $sig_started = true;
@@ -374,7 +373,7 @@ class comment extends db_entity
         }
 
         $sig_num_lines_hidden = count($new_lines2)-1-$sig_start_position;
-  
+
         if ($sig_started && $sig_num_lines_hidden > 1) {
             $new_lines2[$sig_start_position-1].= "<div style=\"display:inline;\" class=\"hidden_text button_".$class."\"> --- ".$sig_num_lines_hidden." lines hidden (signature) --- <br></div>";
             $new_lines2[$sig_start_position-1].= "<div style=\"display:none;\" class=\"hidden_text ".$class."\">";
@@ -389,7 +388,7 @@ class comment extends db_entity
     {
         $rtn = array();
         foreach ($children as $child) {
-          // style=\"padding:0px; padding-left:".($padding*15+5)."px; padding-right:6px;\"
+            // style=\"padding:0px; padding-left:".($padding*15+5)."px; padding-right:6px;\"
             $rtn[] = "<tr><td colspan=\"3\" style=\"padding:0px; padding-left:6px; padding-right:6px;\">".comment::get_comment_html_table($child)."</td></tr>";
             if (is_array($child["children"]) && count($child["children"])) {
                 $padding += 1;
@@ -408,7 +407,7 @@ class comment extends db_entity
             $cc = new clientContact();
             $cc->set_id($comment["clientContactID"]);
             $cc->select();
-          #$author = " <a href=\"".$TPL["url_alloc_client"]."clientID=".$cc->get_value("clientID")."\">".$cc->get_value("clientContactName")."</a>";
+            #$author = " <a href=\"".$TPL["url_alloc_client"]."clientID=".$cc->get_value("clientID")."\">".$cc->get_value("clientContactName")."</a>";
             $author = $cc->get_value("clientContactName");
         } else if ($comment["personID"]) {
             $author = person::get_fullname($comment["personID"]);
@@ -477,7 +476,7 @@ class comment extends db_entity
 
         $comment->rename_email_attachment_dir($email_receive->dir);
 
-      // Try figure out and populate the commentCreatedUser/commentCreatedUserClientContactID fields
+        // Try figure out and populate the commentCreatedUser/commentCreatedUserClientContactID fields
         list($from_address,$from_name) = parse_email_address($email_receive->mail_headers["from"]);
         list($personID,$clientContactID,$from_name) = comment::get_person_and_client($from_address, $from_name, $entity->get_project_id());
         $personID and $comment->set_value('commentCreatedUser', $personID);
@@ -493,7 +492,7 @@ class comment extends db_entity
             comment::update_mime_parts($comment->get_id(), $email_receive->mimebits);
         }
 
-      // CYBER-ONLY: Re-open task, if comment has been made by an external party.
+        // CYBER-ONLY: Re-open task, if comment has been made by an external party.
         if (config::for_cyber() && !$comment->get_value('commentCreatedUser')) {
             $e = $entity->get_parent_object();
             if ($e->classname == "task" && substr($e->get_value("taskStatus"), 0, 4) != "open") {
@@ -517,7 +516,7 @@ class comment extends db_entity
         $people =& get_cached_table("person");
 
         foreach ($options as $selected_option) {
-          // Determine recipients
+            // Determine recipients
             if ($selected_option == "interested") {
                 $db = new db_alloc();
                 if ($entity && $entityID) {
@@ -545,7 +544,7 @@ class comment extends db_entity
 
         $emailMethod = config::get_config_item("allocEmailAddressMethod");
 
-      // Build up To: and Bcc: headers
+        // Build up To: and Bcc: headers
         foreach ($recipients as $recipient) {
             unset($recipient_full_name);
 
@@ -582,7 +581,7 @@ class comment extends db_entity
                     $bcc[] = $email_without_name;
                     $successful_recipients[] = $name_and_email;
 
-                // The To address contains no actual email addresses, ie "Alex Lance": ; all the real recipients are in the Bcc.
+                    // The To address contains no actual email addresses, ie "Alex Lance": ; all the real recipients are in the Bcc.
                 } else if ($emailMethod == "tobcc") {
                     if (!same_email_address(ALLOC_DEFAULT_FROM_ADDRESS, $email_without_name)) {
                         $to_address[] = '"'.$name.'": ;';
@@ -631,7 +630,7 @@ class comment extends db_entity
             } else {
                 $email->set_body($body);
                 if ($files) {
-                  // (if we're bouncing a complete email body the attachments are already included, else do this...)
+                    // (if we're bouncing a complete email body the attachments are already included, else do this...)
                     foreach ((array)$files as $file) {
                         $email->add_attachment($file["fullpath"]);
                     }
@@ -642,25 +641,25 @@ class comment extends db_entity
 
             $bcc && $email->add_header("Bcc", $bcc);
 
-          // nuke bounce headers - mail won't send properly otherwise
+            // nuke bounce headers - mail won't send properly otherwise
             $email->del_header("Resent-From");
             $email->del_header("Resent-Date");
             $email->del_header("Resent-Message-ID");
             $email->del_header("Resent-To");
-      
+
             $email->add_header("X-Alloc-CommentID", $this->get_id());
             if (is_object($e) && method_exists($e, "get_name")) {
                 $email->add_header("X-Alloc-".ucwords($e->classname), $e->get_name());
                 $email->add_header("X-Alloc-".ucwords($e->key_field->get_name()), $e->get_id());
             }
 
-          // Add project header too, if possible
+            // Add project header too, if possible
             if (has("project") && $e->classname != "project" && isset($e->data_fields["projectID"])) {
                 $p = $e->get_foreign_object("project");
                 $email->add_header("X-Alloc-Project", $p->get_value("projectName"));
                 $email->add_header("X-Alloc-ProjectID", $p->get_id());
             }
-      
+
             $email->set_to_address($to_address);
             $messageid = $email->set_message_id($hash);
             $subject_extra = "{Key:".$hash."}";
@@ -676,8 +675,8 @@ class comment extends db_entity
             $email->set_subject($subject." ".$subject_extra);
             $email->set_message_type($type);
 
-          // If from name is empty, then use the email address instead
-          // eg: From: jon@jonny.com -> From: "jon@jonny.com via allocPSA" <alloc@cyber.com>
+            // If from name is empty, then use the email address instead
+            // eg: From: jon@jonny.com -> From: "jon@jonny.com via allocPSA" <alloc@cyber.com>
             $from_name or $from_name = $from_address;
             is_object($current_user) && !$from_name and $from_name = $current_user->get_name();
 
@@ -709,7 +708,7 @@ class comment extends db_entity
     {
         $current_user = &singleton("current_user");
 
-      // If they want starred, load up the commentID filter element
+        // If they want starred, load up the commentID filter element
         if ($filter["starred"]) {
             foreach ((array)$current_user->prefs["stars"]["comment"] as $k => $v) {
                 $filter["commentID"][] = $k;
@@ -717,14 +716,14 @@ class comment extends db_entity
             is_array($filter["commentID"]) or $filter["commentID"][] = -1;
         }
 
-      // Filter ocommentID
+        // Filter ocommentID
         if ($filter["commentID"] && is_array($filter["commentID"])) {
             $sql[] = prepare("(comment.commentID in (%s))", $filter["commentID"]);
         } else if ($filter["commentID"]) {
             $sql[] = prepare("(comment.commentID = %d)", $filter["commentID"]);
         }
 
-      // No point continuing if primary key specified, so return
+        // No point continuing if primary key specified, so return
         if ($filter["commentID"] || $filter["starred"]) {
             return $sql;
         }
@@ -732,8 +731,7 @@ class comment extends db_entity
 
     public static function get_list($_FORM = array())
     {
-
-      // Two modes, 1: get all comments for an entity, eg a task
+        // Two modes, 1: get all comments for an entity, eg a task
         if ($_FORM["entity"] && in_array($_FORM["entity"], array("project","client","task","timeSheet")) && $_FORM["entityID"]) {
             $e = new $_FORM["entity"];
             $e->set_id($_FORM["entityID"]);
@@ -749,9 +747,9 @@ class comment extends db_entity
             }
 
             $q = "SELECT comment.*, commentCreatedUser as personID, clientContact.clientContactName
-              FROM comment 
+              FROM comment
          LEFT JOIN clientContact on comment.commentCreatedUserClientContactID = clientContact.clientContactID
-                 ".$filter." 
+                 ".$filter."
           ORDER BY commentCreatedTime";
             $db = new db_alloc();
             $db->query($q);
@@ -828,7 +826,7 @@ class comment extends db_entity
         $e->set_id($entity_id);
         $e->select();
         $entity_name = $e->get_name();
-      // If the parent is a comment, then go up one more level
+        // If the parent is a comment, then go up one more level
         if ($entity == "comment") {
             $entity = $e->get_value("commentType");
             $entity_id = $e->get_value("commentLinkID");
@@ -852,8 +850,7 @@ class comment extends db_entity
 
     function get_list_summary_filter($filter = array())
     {
-    
-      // This takes care of projectID singular and plural
+        // This takes care of projectID singular and plural
         has("project") and $projectIDs = project::get_projectID_sql($filter, "task");
         $projectIDs and $sql1["projectIDs"] = $projectIDs;
         $projectIDs and $sql2["projectIDs"] = $projectIDs;
@@ -880,9 +877,8 @@ class comment extends db_entity
 
     function get_list_summary($_FORM = array())
     {
-
-      //$_FORM["fromDate"] = "2010-08-20";
-      //$_FORM["projectID"] = "22";
+        //$_FORM["fromDate"] = "2010-08-20";
+        //$_FORM["projectID"] = "22";
 
         $_FORM["maxCommentLength"] or $_FORM["maxCommentLength"] = 500;
 
@@ -899,25 +895,25 @@ class comment extends db_entity
 
         $q = prepare(
             "SELECT commentID as id
-                       , commentCreatedUser as personID
-                       , UNIX_TIMESTAMP(commentCreatedTime) as sortDate
-                       , date(commentCreatedTime) as date
-                       , commentCreatedTime as displayDate
-                       , commentMasterID as taskID
-                       , task.taskName
-                       , SUBSTRING(comment.comment,1,%d) AS comment_text
-                       , commentCreatedUserText
-                         ".$client_fields."
-                    FROM comment
-               LEFT JOIN task on comment.commentMasterID = task.taskID
-                         ".$client_join."
-                   WHERE commentMaster = 'task'
-                         ".$filter1."
-                ORDER BY commentCreatedTime, commentCreatedUser",
+                  , commentCreatedUser as personID
+                  , UNIX_TIMESTAMP(commentCreatedTime) as sortDate
+                  , date(commentCreatedTime) as date
+                  , commentCreatedTime as displayDate
+                  , commentMasterID as taskID
+                  , task.taskName
+                  , SUBSTRING(comment.comment,1,%d) AS comment_text
+                  , commentCreatedUserText
+                    ".$client_fields."
+               FROM comment
+          LEFT JOIN task on comment.commentMasterID = task.taskID
+                    ".$client_join."
+              WHERE commentMaster = 'task'
+                    ".$filter1."
+           ORDER BY commentCreatedTime, commentCreatedUser",
             $_FORM["maxCommentLength"]
         );
         $q.= " ";
-              
+
         $people =& get_cached_table("person");
 
         $db = new db_alloc();
@@ -938,25 +934,25 @@ class comment extends db_entity
             $rows[$row["taskID"]][$row["sortDate"]][] = $row;
         }
 
-      // Note that timeSheetItemID is selected twice so that the perms checking can work
-      // timeSheetID is also used by the perms checking.
+        // Note that timeSheetItemID is selected twice so that the perms checking can work
+        // timeSheetID is also used by the perms checking.
         $q2 = prepare(
             "SELECT timeSheetItemID as id
-                         ,timeSheetItemID
-                         ,timeSheetID
-                         ,timeSheetItem.personID
-                         ,dateTimeSheetItem as date
-                         ,UNIX_TIMESTAMP(CONCAT(dateTimeSheetItem, ' 23:59:58')) as sortDate
-                         ,dateTimeSheetItem as displayDate
-                         ,timeSheetItem.taskID
-                         ,task.taskName
-                         ,timeSheetItemDuration as duration
-                         ,SUBSTRING(timeSheetItem.comment,1,%d) AS comment_text
-                     FROM timeSheetItem
-                LEFT JOIN task on timeSheetItem.taskID = task.taskID
-                    WHERE 1
-                          ".$filter2."
-                 ORDER BY dateTimeSheetItem",
+                   ,timeSheetItemID
+                   ,timeSheetID
+                   ,timeSheetItem.personID
+                   ,dateTimeSheetItem as date
+                   ,UNIX_TIMESTAMP(CONCAT(dateTimeSheetItem, ' 23:59:58')) as sortDate
+                   ,dateTimeSheetItem as displayDate
+                   ,timeSheetItem.taskID
+                   ,task.taskName
+                   ,timeSheetItemDuration as duration
+                   ,SUBSTRING(timeSheetItem.comment,1,%d) AS comment_text
+               FROM timeSheetItem
+          LEFT JOIN task on timeSheetItem.taskID = task.taskID
+              WHERE 1
+                    ".$filter2."
+           ORDER BY dateTimeSheetItem",
             $_FORM["maxCommentLength"]
         );
 
@@ -980,24 +976,24 @@ class comment extends db_entity
         }
 
 
-      // get manager's guestimates about time worked from tsiHint table
+        // get manager's guestimates about time worked from tsiHint table
         $q3 = prepare(
             "SELECT tsiHintID as id
-                         ,tsiHintID
-                         ,tsiHint.personID
-                         ,tsiHint.date
-                         ,UNIX_TIMESTAMP(CONCAT(tsiHint.date,' 23:59:59')) as sortDate
-                         ,tsiHint.date as displayDate
-                         ,tsiHint.taskID
-                         ,tsiHint.duration
-                         ,tsiHint.tsiHintCreatedUser
-                         ,SUBSTRING(tsiHint.comment,1,%d) AS comment_text
-                         ,task.taskName
-                     FROM tsiHint
-                LEFT JOIN task on tsiHint.taskID = task.taskID
-                    WHERE 1
-                          ".$filter3."
-                 ORDER BY tsiHint.date",
+                   ,tsiHintID
+                   ,tsiHint.personID
+                   ,tsiHint.date
+                   ,UNIX_TIMESTAMP(CONCAT(tsiHint.date,' 23:59:59')) as sortDate
+                   ,tsiHint.date as displayDate
+                   ,tsiHint.taskID
+                   ,tsiHint.duration
+                   ,tsiHint.tsiHintCreatedUser
+                   ,SUBSTRING(tsiHint.comment,1,%d) AS comment_text
+                   ,task.taskName
+               FROM tsiHint
+          LEFT JOIN task on tsiHint.taskID = task.taskID
+              WHERE 1
+                    ".$filter3."
+           ORDER BY tsiHint.date",
             $_FORM["maxCommentLength"]
         );
 
@@ -1020,9 +1016,9 @@ class comment extends db_entity
             $rows[$row["taskID"]][$row["sortDate"]][] = $row;
         }
 
-      // If there is a time sheet entry for 2010-10-10 but there is no comment entry
-      // for that date, then the time sheet entry will appear out of sequence i.e. at
-      // the very end of the whole list. So we need to manually sort them.
+        // If there is a time sheet entry for 2010-10-10 but there is no comment entry
+        // for that date, then the time sheet entry will appear out of sequence i.e. at
+        // the very end of the whole list. So we need to manually sort them.
         foreach ((array)$rows as $tid => $arr) {
             ksort($arr, SORT_NUMERIC);
             $rows[$tid] = $arr;
@@ -1042,7 +1038,7 @@ class comment extends db_entity
 
     function get_list_summary_header($task, $totals, $totals_tsiHint, $_FORM = array())
     {
-  
+
         if ($_FORM["showTaskHeader"]) {
             $rtn[] = "<table class='list' style='border-bottom:0;'>";
             $rtn[] = "<tr>";
@@ -1107,7 +1103,7 @@ class comment extends db_entity
             $clientContactID or $clientContactID = $cc->find_by_name($from_name, $projectID);
         }
 
-      // If we don't have a $from_name, but we do have a personID or clientContactID, get proper $from_name
+        // If we don't have a $from_name, but we do have a personID or clientContactID, get proper $from_name
         if (!$from_name) {
             if ($personID) {
                 $from_name = person::get_fullname($personID);
@@ -1134,8 +1130,7 @@ class comment extends db_entity
     }
 
 
-  // All you need to add a comment, add interested parties, attachments, and re-email it out
-
+    // All you need to add a comment, add interested parties, attachments, and re-email it out
     function add_comment($commentType, $commentLinkID, $comment_text, $commentMaster = null, $commentMasterID = null)
     {
         if ($commentType && $commentLinkID) {
@@ -1153,11 +1148,10 @@ class comment extends db_entity
 
     function add_interested_parties($commentID, $ip = array(), $op = array())
     {
-
-      // We send this email to the default from address, so that a copy of the
-      // original email is kept. The receiveEmail.php script will see that this
-      // email is *from* the same address, and will then skip over it, when going
-      // through the new emails.
+        // We send this email to the default from address, so that a copy of the
+        // original email is kept. The receiveEmail.php script will see that this
+        // email is *from* the same address, and will then skip over it, when going
+        // through the new emails.
         if (defined("ALLOC_DEFAULT_FROM_ADDRESS") && ALLOC_DEFAULT_FROM_ADDRESS) {
             list($from_address,$from_name) = parse_email_address(ALLOC_DEFAULT_FROM_ADDRESS);
             $emailRecipients[] = $from_address;
@@ -1166,7 +1160,7 @@ class comment extends db_entity
         interestedParty::make_interested_parties("comment", $commentID, $ip);
         $emailRecipients[] = "interested";
 
-      // Other parties that are added on-the-fly
+        // Other parties that are added on-the-fly
         foreach ((array)$op as $email => $info) {
             if ($email && in_str("@", $email)) {
                 unset($lt, $gt); // used above
@@ -1245,11 +1239,11 @@ class comment extends db_entity
             list($successful_recipients,$messageid) = $rtn;
         }
 
-      // Append success to end of the comment
+        // Append success to end of the comment
         if ($successful_recipients) {
             $append_comment_text = "Email sent to: ".$successful_recipients;
             $message_good.= $append_comment_text;
-          //$comment->set_value("commentEmailMessageID",$messageid); that's the outbound message-id :-(
+            //$comment->set_value("commentEmailMessageID",$messageid); that's the outbound message-id :-(
             $comment->set_value("commentEmailRecipients", $successful_recipients);
         }
 
@@ -1262,14 +1256,14 @@ class comment extends db_entity
 
     function attach_timeSheet($commentID, $entityID, $options)
     {
-      // Begin buffering output to halt anything being sent to the web browser.
+        // Begin buffering output to halt anything being sent to the web browser.
         ob_start();
         $t = new timeSheetPrint();
         $ops = query_string_to_array($options);
 
         $t->get_printable_timeSheet_file($entityID, $ops["timeSheetPrintMode"], $ops["printDesc"], $ops["format"]);
 
-      // Capture the output into $str
+        // Capture the output into $str
         $str = (string)ob_get_clean();
         $suffix = ".html";
         $ops["format"] != "html" and $suffix = ".pdf";
@@ -1295,22 +1289,21 @@ class comment extends db_entity
     function attach_tasks($commentID, $projectID, $options)
     {
         if ($projectID) {
-          // Begin buffering output to halt anything being sent to the web browser.
+            // Begin buffering output to halt anything being sent to the web browser.
             ob_start();
             $t = new taskListPrint();
-        
-            $defaults = array("showAssigned"=>true
-                       ,"showDate1"=>true
-                       ,"showDate2"=>true
-                       ,"showDate3"=>true
-                       ,"showDate4"=>true
-                       ,"showDate5"=>true
-                       ,"showPercent"=>true
-                       ,"showStatus"=>true
-                       ,"taskView"=>"prioritised"
-                       ,"projectID"=>$projectID
-                       ,"format"=>$options
-                       );
+
+            $defaults = array("showAssigned"=>true,
+                              "showDate1"=>true,
+                              "showDate2"=>true,
+                              "showDate3"=>true,
+                              "showDate4"=>true,
+                              "showDate5"=>true,
+                              "showPercent"=>true,
+                              "showStatus"=>true,
+                              "taskView"=>"prioritised",
+                              "projectID"=>$projectID,
+                              "format"=>$options);
 
             if ($options == "pdf_plus" || $options == "html_plus") {
                   $defaults["showTimes"] = true;
@@ -1318,7 +1311,7 @@ class comment extends db_entity
 
             $t->get_printable_file($defaults);
 
-          // Capture the output into $str
+            // Capture the output into $str
             $str = (string)ob_get_clean();
 
             $suffix = ".html";
@@ -1346,11 +1339,11 @@ class comment extends db_entity
         $msg_nums = $mail->get_all_email_msg_uids();
         $debug and print "<hr><br><b>find_email(): ".date("Y-m-d H:i:s")." found ".count($msg_nums)." emails for mailbox: ".$mailbox."</b>";
 
-      // fetch and parse email
+        // fetch and parse email
         foreach ((array)$msg_nums as $num) {
             $debug and print "<hr><br>Examining message number: ".$num;
             unset($mimebits);
-          // this will stream output
+            // this will stream output
             $mail->set_msg($num);
             $mail->get_msg_header();
             $text = $mail->fetch_mail_text();

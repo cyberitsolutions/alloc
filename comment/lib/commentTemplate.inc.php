@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 
 class commentTemplate extends db_entity
@@ -26,23 +26,22 @@ class commentTemplate extends db_entity
     public $data_table = "commentTemplate";
     public $display_field_name = "commentTemplateName";
     public $key_field = "commentTemplateID";
-    public $data_fields = array("commentTemplateName"
-                             ,"commentTemplateText"
-                             ,"commentTemplateType"
-                             ,"commentTemplateModifiedTime"
-                             );
+    public $data_fields = array("commentTemplateName",
+                                "commentTemplateText",
+                                "commentTemplateType",
+                                "commentTemplateModifiedTime");
 
 
     function get_populated_template($entity, $entityID = false)
     {
-      // Gets a populated template for this->commentTemplateName
+        // Gets a populated template for this->commentTemplateName
         $str = $this->get_value("commentTemplateText");
         return commentTemplate::populate_string($str, $entity, $entityID);
     }
 
     function populate_string($str, $entity, $entityID = false)
     {
-      // Actually do the text substitution
+        // Actually do the text substitution
         $current_user = &singleton("current_user");
         is_object($current_user) and $swap["cu"] = person::get_fullname($current_user->get_id());
 

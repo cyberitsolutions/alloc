@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 class client extends db_entity
 {
@@ -26,31 +26,30 @@ class client extends db_entity
     public $data_table = "client";
     public $display_field_name = "clientName";
     public $key_field = "clientID";
-    public $data_fields = array("clientName"
-                             ,"clientStreetAddressOne"
-                             ,"clientStreetAddressTwo"
-                             ,"clientSuburbOne"
-                             ,"clientSuburbTwo"
-                             ,"clientStateOne"
-                             ,"clientStateTwo"
-                             ,"clientPostcodeOne"
-                             ,"clientPostcodeTwo"
-                             ,"clientPhoneOne"
-                             ,"clientFaxOne"
-                             ,"clientCountryOne"
-                             ,"clientCountryTwo"
-                             ,"clientCreatedTime"
-                             ,"clientModifiedTime"
-                             ,"clientModifiedUser"
-                             ,"clientStatus"
-                             ,"clientCategory"
-                             ,"clientURL"
-                             );
+    public $data_fields = array("clientName",
+                                "clientStreetAddressOne",
+                                "clientStreetAddressTwo",
+                                "clientSuburbOne",
+                                "clientSuburbTwo",
+                                "clientStateOne",
+                                "clientStateTwo",
+                                "clientPostcodeOne",
+                                "clientPostcodeTwo",
+                                "clientPhoneOne",
+                                "clientFaxOne",
+                                "clientCountryOne",
+                                "clientCountryTwo",
+                                "clientCreatedTime",
+                                "clientModifiedTime",
+                                "clientModifiedUser",
+                                "clientStatus",
+                                "clientCategory",
+                                "clientURL");
 
 
     function delete()
     {
-      // delete all contacts and comments linked with this client as well
+        // delete all contacts and comments linked with this client as well
         $db = new db_alloc();
         $query = prepare("SELECT * FROM clientContact WHERE clientID=%d", $this->get_id());
         $db->query($query);
@@ -77,13 +76,13 @@ class client extends db_entity
 
     function has_attachment_permission($person)
     {
-      // Placeholder for security check in shared/get_attchment.php
+        // Placeholder for security check in shared/get_attchment.php
         return true;
     }
 
     function has_attachment_permission_delete($person)
     {
-      // Placeholder for security check in shared/get_attchment.php
+        // Placeholder for security check in shared/get_attchment.php
         return true;
     }
 
@@ -93,11 +92,11 @@ class client extends db_entity
         $db = new db_alloc();
         if ($clientStatus) {
             $q = prepare(
-                "SELECT clientID as value, clientName as label 
-                      FROM client 
-                     WHERE clientStatus = '%s' 
-                        OR clientID = %d 
-                  ORDER BY clientName",
+                "SELECT clientID as value, clientName as label
+                   FROM client
+                  WHERE clientStatus = '%s'
+                     OR clientID = %d
+               ORDER BY clientName",
                 $clientStatus,
                 $clientID
             );
@@ -109,7 +108,7 @@ class client extends db_entity
         $str.= "</select>";
         return $str;
     }
- 
+
     function get_client_contact_select($clientID = "", $clientContactID = "")
     {
         $clientID or $clientID = $_GET["clientID"];
@@ -118,7 +117,7 @@ class client extends db_entity
         $options = page::select_options($q, $clientContactID, 100);
         return "<select id=\"clientContactID\" name=\"clientContactID\" style=\"width:100%\"><option value=\"\">".$options."</select>";
     }
- 
+
     function get_name($_FORM = array())
     {
         if ($_FORM["return"] == "html") {
@@ -138,7 +137,7 @@ class client extends db_entity
     {
         $current_user = &singleton("current_user");
 
-      // If they want starred, load up the clientID filter element
+        // If they want starred, load up the clientID filter element
         if ($filter["starred"]) {
             foreach ((array)$current_user->prefs["stars"]["client"] as $k => $v) {
                 $filter["clientID"][] = $k;
@@ -146,10 +145,10 @@ class client extends db_entity
             is_array($filter["clientID"]) or $filter["clientID"][] = -1;
         }
 
-      // Filter on clientID
+        // Filter on clientID
         $filter["clientID"] and $sql[] = sprintf_implode("client.clientID = %d", $filter["clientID"]);
 
-      // No point continuing if primary key specified, so return
+        // No point continuing if primary key specified, so return
         if ($filter["clientID"] || $filter["starred"]) {
             return $sql;
         }
@@ -182,7 +181,7 @@ class client extends db_entity
         $debug = $_FORM["debug"];
         $debug and print "<pre>_FORM: ".print_r($_FORM, 1)."</pre>";
         $debug and print "<pre>filter: ".print_r($filter, 1)."</pre>";
-  
+
         $_FORM["return"] or $_FORM["return"] = "html";
 
         if (is_array($filter) && count($filter)) {
@@ -195,11 +194,11 @@ class client extends db_entity
         }
 
         $q = "SELECT client.*,clientContactName, clientContactEmail, clientContactPhone, clientContactMobile
-            FROM client 
-       LEFT JOIN clientContact ON client.clientID = clientContact.clientID AND clientContact.clientContactActive = 1
-                 ".$filter." 
-        GROUP BY client.clientID 
-        ORDER BY clientName,clientContact.primaryContact asc";
+                FROM client
+           LEFT JOIN clientContact ON client.clientID = clientContact.clientID AND clientContact.clientContactActive = 1
+                     ".$filter."
+            GROUP BY client.clientID
+            ORDER BY clientName,clientContact.primaryContact asc";
         $debug and print "Query: ".$q;
         $db = new db_alloc();
         $db2 = new db_alloc();
@@ -219,17 +218,15 @@ class client extends db_entity
 
     function get_list_vars()
     {
-
-        return array("clientStatus"             => "Client status eg: Current | Potential | Archived"
-                ,"clientCategory"           => "Client category eg: 1-7"
-                ,"clientName"               => "Client name like *something*"
-                ,"contactName"              => "Client Contact name like *something*"
-                ,"clientLetter"             => "Client name starts with this letter"
-                ,"url_form_action"          => "The submit action for the filter form"
-                ,"form_name"                => "The name of this form, i.e. a handle for referring to this saved form"
-                ,"dontSave"                 => "Specify that the filter preferences should not be saved this time"
-                ,"applyFilter"              => "Saves this filter as the persons preference"
-                );
+        return array("clientStatus"     => "Client status eg: Current | Potential | Archived",
+                     "clientCategory"   => "Client category eg: 1-7",
+                     "clientName"       => "Client name like *something*",
+                     "contactName"      => "Client Contact name like *something*",
+                     "clientLetter"     => "Client name starts with this letter",
+                     "url_form_action"  => "The submit action for the filter form",
+                     "form_name"        => "The name of this form, i.e. a handle for referring to this saved form",
+                     "dontSave"         => "Specify that the filter preferences should not be saved this time",
+                     "applyFilter"      => "Saves this filter as the persons preference");
     }
 
     function load_form_data($defaults = array())
@@ -262,7 +259,7 @@ class client extends db_entity
 
         $db = new db_alloc();
 
-      // Load up the forms action url
+        // Load up the forms action url
         $rtn["url_form_action"] = $_FORM["url_form_action"];
 
         $m = new meta("clientStatus");
@@ -270,7 +267,9 @@ class client extends db_entity
         $rtn["clientStatusOptions"] = page::select_options($clientStatus_array, $_FORM["clientStatus"]);
         $rtn["clientName"] = $_FORM["clientName"];
         $rtn["contactName"] = $_FORM["contactName"];
-        $letters = array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "ALL");
+        $letters = array("A", "B", "C", "D", "E", "F", "G", "H", "I",
+                         "J", "K", "L", "M", "N", "O", "P", "Q", "R",
+                         "S", "T", "U", "V", "W", "X", "Y", "Z", "ALL");
         foreach ($letters as $letter) {
             if ($_FORM["clientLetter"] == $letter) {
                 $rtn["alphabet_filter"].= "&nbsp;&nbsp;".$letter;
@@ -278,7 +277,7 @@ class client extends db_entity
                 $rtn["alphabet_filter"].= "&nbsp;&nbsp;<a href=\"".$TPL["url_alloc_clientList"]."clientLetter=".$letter."&clientStatus=Current&applyFilter=1\">".$letter."</a>";
             }
         }
-    
+
         $clientCategory = $_FORM["clientCategory"];
         $clientCategories = config::get_config_item("clientCategories") or $clientCategories = array();
         foreach ($clientCategories as $k => $v) {
@@ -286,7 +285,7 @@ class client extends db_entity
         }
         $rtn["clientCategoryOptions"] = page::select_options($cc, $clientCategory);
 
-      // Get
+        // Get
         $rtn["FORM"] = "FORM=".urlencode(serialize($_FORM));
 
         return $rtn;
@@ -326,9 +325,9 @@ class client extends db_entity
 
     function get_client_and_project_dropdowns_and_links($clientID = false, $projectID = false, $onlymine = false)
     {
-      // This function returns dropdown lists and links for both client and
-      // project. The two dropdown lists are linked, in that if you change the
-      // client, then the project dropdown dynamically updates
+        // This function returns dropdown lists and links for both client and
+        // project. The two dropdown lists are linked, in that if you change the
+        // client, then the project dropdown dynamically updates
         global $TPL;
 
         $project = new project();
@@ -354,7 +353,7 @@ class client extends db_entity
 
         $project_select = '<div id="projectDropdown" style="display:inline">'.$project->get_dropdown_by_client($clientID, $onlymine).'</div>';
         $project_link = $project->get_link();
-  
+
         return array($client_select, $client_link, $project_select, $project_link);
     }
 
@@ -443,9 +442,9 @@ class client extends db_entity
             $f5 = $this->get_value("clientCountryTwo", DST_HTML_DISPLAY);
         }
 
-      // Create a map link, this will give you a link even if you only have the
-      // street address and the suburb OR post code. -- cjbayliss 2015-01
-    
+        // Create a map link, this will give you a link even if you only have the
+        // street address and the suburb OR post code. -- cjbayliss 2015-01
+
         if ($map_link && !empty($f1) and !empty($f2) || !empty($f4)) {
             $map_base = config::get_config_item('mapURL');
             $address = str_replace("%ad", urlencode(implode(", ", array($f1,$f2,$f3,$f4,$f5))), $map_base);
@@ -467,19 +466,19 @@ class client extends db_entity
             $clientID = $this->get_id();
         }
         if ($clientID) {
-          // Get all client contacts
+            // Get all client contacts
             $db = new db_alloc();
-            $q = prepare("SELECT clientContactName, clientContactEmail, clientContactID 
-                      FROM clientContact 
-                     WHERE clientID = %d
-                       AND clientContactActive = 1
-                     ", $clientID);
+            $q = prepare("SELECT clientContactName, clientContactEmail, clientContactID
+                            FROM clientContact
+                           WHERE clientID = %d
+                             AND clientContactActive = 1
+                         ", $clientID);
             $db->query($q);
             while ($db->next_record()) {
                   $interestedPartyOptions[$db->f("clientContactEmail")] = array("name"=>$db->f("clientContactName"),"external"=>"1","clientContactID"=>$db->f("clientContactID"));
             }
         }
-      // return an aggregation of the current task/proj/client parties + the existing interested parties
+        // return an aggregation of the current task/proj/client parties + the existing interested parties
         $interestedPartyOptions = interestedParty::get_interested_parties("client", $clientID, $interestedPartyOptions);
         return (array)$interestedPartyOptions;
     }

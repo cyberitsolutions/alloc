@@ -18,14 +18,13 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 require_once("../alloc.php");
 
 
-$defaults = array("url_form_action"=>$TPL["url_alloc_clientList"]
-                 ,"form_name"=>"clientList_filter"
-                 );
+$defaults = array("url_form_action"=>$TPL["url_alloc_clientList"],
+                  "form_name"=>"clientList_filter");
 
 
 function show_filter()
@@ -51,7 +50,7 @@ the organisations that you interact with. This page allows you to see a list of 
 <br><br>
 
 Simply adjust the filter settings and click the <b>Filter</b> button to
-display a list of previously created Clients. 
+display a list of previously created Clients.
 If you would prefer to create a new Client, click the <b>New Client</b> link
 in the top-right hand corner of the box below.";
 }
