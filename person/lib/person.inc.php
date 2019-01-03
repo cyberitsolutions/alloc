@@ -31,28 +31,27 @@ class person extends db_entity
     public $data_table = "person";
     public $display_field_name = "username";
     public $key_field = "personID";
-    public $data_fields = array("username"
-                             ,"lastLoginDate"
-                             ,"password"          => array("read_perm_name"=>PERM_PERSON_READ_DETAILS)
-                             ,"perms"             => array("write_perm_name"=>PERM_PERSON_WRITE_ROLES)
-                             ,"emailAddress"
-                             ,"availability"
-                             ,"areasOfInterest"
-                             ,"comments"
-                             ,"managementComments"=> array("read_perm_name"=>PERM_PERSON_READ_MANAGEMENT
-                                                          ,"write_perm_name"=>PERM_PERSON_WRITE_MANAGEMENT)
-                             ,"firstName"
-                             ,"surname"
-                             ,"preferred_tfID"
-                             ,"personActive"
-                             ,"sessData"          => array("read_perm_name"=>PERM_PERSON_READ_DETAILS)
-                             ,"phoneNo1"
-                             ,"phoneNo2"
-                             ,"emergencyContact"
+    public $data_fields = array("username",
+                                "lastLoginDate",
+                                "password" => array("read_perm_name"=>PERM_PERSON_READ_DETAILS),
+                                "perms" => array("write_perm_name"=>PERM_PERSON_WRITE_ROLES),
+                                "emailAddress",
+                                "availability",
+                                "areasOfInterest",
+                                "comments",
+                                "managementComments" => array("read_perm_name"=>PERM_PERSON_READ_MANAGEMENT,
+                                                              "write_perm_name"=>PERM_PERSON_WRITE_MANAGEMENT),
+                                "firstName",
+                                "surname",
+                                "preferred_tfID",
+                                "personActive",
+                                "sessData" => array("read_perm_name"=>PERM_PERSON_READ_DETAILS),
+                                "phoneNo1",
+                                "phoneNo2",
+                                "emergencyContact",
 
-                             ,"defaultTimeSheetRate"  => array("type"=>"money","write_perm_name"=>PERM_PERSON_WRITE_MANAGEMENT)
-                             ,"defaultTimeSheetRateUnitID" => array("write_perm_name"=>PERM_PERSON_WRITE_MANAGEMENT)
-                             );
+                                "defaultTimeSheetRate" => array("type"=>"money","write_perm_name"=>PERM_PERSON_WRITE_MANAGEMENT),
+                                "defaultTimeSheetRateUnitID" => array("write_perm_name"=>PERM_PERSON_WRITE_MANAGEMENT));
 
     public $prefs = array();
     public $permissions = array(PERM_PERSON_READ_DETAILS => "read details"
@@ -63,9 +62,8 @@ class person extends db_entity
 
     function get_tasks_for_email()
     {
-
         $options = array();
-      #$options["projectType"] = "mine";
+        #$options["projectType"] = "mine";
         $options["limit"] = 3;
         $options["current_user"] = $this->get_id();
         $options["personID"] = $this->get_id();
@@ -152,7 +150,7 @@ class person extends db_entity
 
     function is_employee()
     {
-      // Function to check if the person is an employee
+        // Function to check if the person is an employee
         $current_user = &singleton("current_user");
         return true;
         $permissions = explode(",", $current_user->get_value("perms"));
@@ -166,7 +164,7 @@ class person extends db_entity
 
     function check_employee()
     {
-      // Ensure the current user is an employee
+        // Ensure the current user is an employee
         if (!$this->is_employee()) {
             alloc_error("You must be an employee to access this function", true);
         }
@@ -174,7 +172,7 @@ class person extends db_entity
 
     function get_skills($proficiency)
     {
-      // Return a string of skills with a given proficiency
+        // Return a string of skills with a given proficiency
         $query = "SELECT * FROM proficiency LEFT JOIN skill on proficiency.skillID=skill.skillID";
         $query.= prepare(" WHERE personID=%d AND skillProficiency='%s' ORDER BY skillName", $this->get_id(), $proficiency);
 
@@ -195,7 +193,7 @@ class person extends db_entity
     {
         static $rows;
 
-      // Cache rows
+        // Cache rows
         if (!$rows) {
             $q = prepare("SELECT personID, username, firstName, surname, personActive FROM person ORDER BY firstname,surname,username");
             $db = new db_alloc();
@@ -211,7 +209,7 @@ class person extends db_entity
             }
         }
 
-      // If person is active or the person is the selected person (to enable drpodown list to have people who have since been made inactive)
+        // If person is active or the person is the selected person (to enable drpodown list to have people who have since been made inactive)
         foreach ((array)$rows as $personID => $info) {
             if ($info["active"] || $personID == $push_personID) {
                 $rtn[$personID] = $info["name"];
@@ -223,7 +221,7 @@ class person extends db_entity
 
     public static function get_fullname($personID)
     {
-      // Get vars for the emails below
+        // Get vars for the emails below
         $people_cache =& get_cached_table("person");
         return $people_cache[$personID]["name"];
     }
@@ -344,10 +342,10 @@ class person extends db_entity
             $db = new db_alloc();
             $query = prepare(
                 "SELECT *
-                          FROM task
-                         WHERE taskTypeID = 'Message'
-                           AND personID = %d
-                           AND taskStatus NOT IN (".$ts_closed.")",
+                   FROM task
+                  WHERE taskTypeID = 'Message'
+                    AND personID = %d
+                    AND taskStatus NOT IN (".$ts_closed.")",
                 $this->get_id()
             );
             $db->query($query);
@@ -442,7 +440,7 @@ class person extends db_entity
 
         $_FORM["return"] or $_FORM["return"] = "html";
 
-      // Get averages for hours worked over the past fortnight and year
+        // Get averages for hours worked over the past fortnight and year
         if ($current_user->have_perm(PERM_PERSON_READ_MANAGEMENT) && $_FORM["showHours"]) {
             $t = new timeSheetItem();
             list($ts_hrs_col_1,$ts_dollars_col_1) = $t->get_averages(date("Y-m-d", mktime(0, 0, 0, date("m"), date("d")-14, date("Y"))));
@@ -451,7 +449,7 @@ class person extends db_entity
             unset($_FORM["showHours"]);
         }
 
-      // A header row
+        // A header row
         $summary.= person::get_list_tr_header($_FORM);
 
         if (is_array($filter) && count($filter)) {
@@ -463,11 +461,11 @@ class person extends db_entity
         }
 
         $q = "SELECT person.*
-            FROM person
-       LEFT JOIN proficiency ON person.personID = proficiency.personID
-           ".$filter."
-        GROUP BY username
-        ORDER BY firstName,surname,username";
+                FROM person
+           LEFT JOIN proficiency ON person.personID = proficiency.personID
+             ".$filter."
+            GROUP BY username
+            ORDER BY firstName,surname,username";
 
         $debug and print "Query: ".$q;
         $db = new db_alloc();
@@ -563,26 +561,25 @@ class person extends db_entity
 
     function get_list_vars()
     {
-        return array("return"       => "[MANDATORY] eg: array | html"
-                ,"username"     => "Search by the person username"
-                ,"personActive" => "Search by persons active/inactive status eg: 1 | 0"
-                ,"firstName"    => "Search by persons first name"
-                ,"surname"      => "Search by persons last name"
-                ,"personID"     => "Search by persons ID"
-                ,"skill"        => "Search by a particular skill"
-                ,"skill_class"  => "Search by a particular class of skill"
-                ,"expertise"    => "Search by a level of expertise eg: Novice | Junior | Intermediate | Advanced | Senior"
-                ,"applyFilter"  => "Saves this filter as the persons preference"
-                ,"dontSave"     => "A flag that allows the user to specify that the filter preferences should not be saved this time"
-                ,"form_name"    => "The name of this form, i.e. a handle for referring to this saved form"
-                ,"showHeader"   => "Show the HTML header row of the table"
-                ,"showName"     => "Show the persons name"
-                ,"showActive"   => "Show the persons active/inactive status"
-                ,"showNos"      => "Show the persons contact numbers"
-                ,"showHours"    => "Show the persons time sheeted hours figures"
-                ,"showLinks"    => "Show the person action links"
-                ,"showSkills"   => "Show the persons skills"
-                );
+        return array("return"       => "[MANDATORY] eg: array | html",
+                     "username"     => "Search by the person username",
+                     "personActive" => "Search by persons active/inactive status eg: 1 | 0",
+                     "firstName"    => "Search by persons first name",
+                     "surname"      => "Search by persons last name",
+                     "personID"     => "Search by persons ID",
+                     "skill"        => "Search by a particular skill",
+                     "skill_class"  => "Search by a particular class of skill",
+                     "expertise"    => "Search by a level of expertise eg: Novice | Junior | Intermediate | Advanced | Senior",
+                     "applyFilter"  => "Saves this filter as the persons preference",
+                     "dontSave"     => "A flag that allows the user to specify that the filter preferences should not be saved this time",
+                     "form_name"    => "The name of this form, i.e. a handle for referring to this saved form",
+                     "showHeader"   => "Show the HTML header row of the table",
+                     "showName"     => "Show the persons name",
+                     "showActive"   => "Show the persons active/inactive status",
+                     "showNos"      => "Show the persons contact numbers",
+                     "showHours"    => "Show the persons time sheeted hours figures",
+                     "showLinks"    => "Show the person action links",
+                     "showSkills"   => "Show the persons skills");
     }
 
     function load_form_data($defaults = array())
@@ -616,21 +613,20 @@ class person extends db_entity
         $_FORM["showHours"]    and $rtn["show_hours_checked"] = " checked";
         $_FORM["personActive"] and $rtn["show_all_users_checked"] = " checked";
 
-        $employee_expertise = array(""            =>"Any Expertise"
-                               ,"Novice"      =>"Novice"
-                               ,"Junior"      =>"Junior"
-                               ,"Intermediate"=>"Intermediate"
-                               ,"Advanced"    =>"Advanced"
-                               ,"Senior"      =>"Senior"
-                               );
+        $employee_expertise = array(""             => "Any Expertise",
+                                    "Novice"       => "Novice",
+                                    "Junior"       => "Junior",
+                                    "Intermediate" => "Intermediate",
+                                    "Advanced"     => "Advanced",
+                                    "Senior"       => "Senior");
         $rtn["employee_expertise"] = page::select_options($employee_expertise, $_FORM["expertise"]);
 
         $skill_classes = skill::get_skill_classes();
         $rtn["skill_classes"] = page::select_options($skill_classes, $_FORM["skill_class"]);
 
         $skills = skill::get_skills();
-      // if a skill class is selected and a skill that is not in that class is also selected,
-      // clear the skill as this is what the filter options will do
+        // if a skill class is selected and a skill that is not in that class is also selected,
+        // clear the skill as this is what the filter options will do
         if ($skill_class && !in_array($skills[$_FORM["skill"]], $skills)) {
             $_FORM["skill"] = "";
         }

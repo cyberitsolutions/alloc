@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 define("PERM_PROJECT_PERSON_READ_DETAILS", 256);
 
@@ -27,15 +27,14 @@ class projectPerson extends db_entity
     public $data_table = "projectPerson";
     public $display_field_name = "projectID";
     public $key_field = "projectPersonID";
-    public $data_fields = array("personID"
-                             ,"projectID"
-                             ,"emailType"
-                             ,"emailDateRegex"
-                             ,"rate" => array("type"=>"money")
-                             ,"rateUnitID"
-                             ,"projectPersonModifiedUser"
-                             ,"roleID"
-                             );
+    public $data_fields = array("personID",
+                                "projectID",
+                                "emailType",
+                                "emailDateRegex",
+                                "rate" => array("type"=>"money"),
+                                "rateUnitID",
+                                "projectPersonModifiedUser",
+                                "roleID");
 
     function date_regex_matches()
     {
@@ -57,8 +56,8 @@ class projectPerson extends db_entity
     }
 
 
-  // This is a wrapper to simplify inserts into the projectPerson table using the new
-  // Role methodology.. role handle is canEditTasks, or isManager atm
+    // This is a wrapper to simplify inserts into the projectPerson table using the new
+    // Role methodology.. role handle is canEditTasks, or isManager atm
     function set_value_role($roleHandle)
     {
         $db = new db_alloc();
@@ -68,13 +67,13 @@ class projectPerson extends db_entity
     }
 
 
-  //deprecated in favour of get_rate
+    //deprecated in favour of get_rate
     function get_projectPerson_row($projectID, $personID)
     {
         $q = prepare(
-            "SELECT * 
-                    FROM projectPerson 
-                   WHERE projectID = %d AND personID = %d",
+            "SELECT *
+               FROM projectPerson
+              WHERE projectID = %d AND personID = %d",
             $projectID,
             $personID
         );
@@ -85,20 +84,20 @@ class projectPerson extends db_entity
 
     function get_rate($projectID, $personID)
     {
-      // Try to get the person's rate from the following sources:
-      // project.defaultTimeSheetRate
-      // person.defaultTimeSheetRate
-      // config.name == defaultTimeSheetRate
+        // Try to get the person's rate from the following sources:
+        // project.defaultTimeSheetRate
+        // person.defaultTimeSheetRate
+        // config.name == defaultTimeSheetRate
 
-      // First check the project for a rate
+        // First check the project for a rate
         $project = new project($projectID);
         $row = array('rate' => $project->get_value("defaultTimeSheetRate"),
-                 'unit' => $project->get_value("defaultTimeSheetRateUnitID"));
+                     'unit' => $project->get_value("defaultTimeSheetRateUnitID"));
         if (imp($row['rate']) && $row['unit']) {
             return $row;
         }
 
-      // Next check person, which is in global currency rather than project currency - conversion required
+        // Next check person, which is in global currency rather than project currency - conversion required
         $db = new db_alloc();
         $q = prepare("SELECT defaultTimeSheetRate as rate, defaultTimeSheetRateUnitID as unit FROM person WHERE personID = %d", $personID);
         $db->query($q);
@@ -110,7 +109,7 @@ class projectPerson extends db_entity
             return $row;
         }
 
-      // Lowest priority: global
+        // Lowest priority: global
         $rate = config::get_config_item("defaultTimeSheetRate");
         $unit = config::get_config_item("defaultTimeSheetUnit");
         if (imp($rate) && $unit) {

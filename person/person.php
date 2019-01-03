@@ -113,7 +113,7 @@ function show_person_areasOfExpertise($template)
         $skillProficiencys->read_db_record($db);
         $skillProficiencys->set_values();
 
-      # if they do and there is no heading for this segment put a heading
+        # if they do and there is no heading for this segment put a heading
         $thisSkillClass = $skill->get_value('skillClass');
         if ($currSkillClass != $thisSkillClass) {
             $currSkillClass = $thisSkillClass;
@@ -124,7 +124,7 @@ function show_person_areasOfExpertise($template)
         $skill_prof = $skillProficiencys->get_value('skillProficiency');
         $TPL["skill_proficiencys"] = page::select_options($proficiencys, $skill_prof);
 
-      # display rating if there is one
+        # display rating if there is one
         include_template($template);
     }
 }
@@ -150,7 +150,7 @@ function show_skills_list()
         $skill = new skill();
         $skill->read_db_record($db);
         if (in_array($skill->get_id(), $skills_got)) {
-          // dont show this item
+            // dont show this item
         } else {
             $skills[$skill->get_id()] = sprintf("%s - %s", $skill->get_value('skillClass'), $skill->get_value('skillName'));
         }
@@ -196,7 +196,7 @@ if ($_POST["personExpertiseItem_add"] || $_POST["personExpertiseItem_save"] || $
         } else if ($_POST["personExpertiseItem_save"]) {
             $proficiency->save();
         } else if ($_POST["personExpertiseItem_add"]) {
-          // skillID is an array if when adding but not when saving or deleting
+            // skillID is an array if when adding but not when saving or deleting
             $skillProficiency = $proficiency->get_value('skillProficiency');
             for ($i = 0; $i < count($_POST["skillID"]); $i++) {
                 $proficiency = new proficiency();
@@ -228,7 +228,7 @@ if ($_POST["save"]) {
     if ($_POST["password1"] && $_POST["password1"] == $_POST["password2"]) {
         $person->set_value('password', password_hash($_POST["password1"], PASSWORD_BCRYPT));
     } else if (!$_POST["password1"] && $personID) {
-      // nothing required here, just don't update the password field
+        // nothing required here, just don't update the password field
     } else {
         alloc_error("Please re-type the passwords");
     }
@@ -278,10 +278,10 @@ $person->set_values("person_");
 if ($person->get_id()) {
     $q = prepare(
         "SELECT tfPerson.tfID AS value, tf.tfName AS label
-                  FROM tf, tfPerson
-  				       WHERE tf.tfID = tfPerson.tfID
-                   AND tfPerson.personID = %d
-                   AND (tf.tfActive = 1 OR tf.tfID = %d)",
+           FROM tf, tfPerson
+          WHERE tf.tfID = tfPerson.tfID
+            AND tfPerson.personID = %d
+            AND (tf.tfActive = 1 OR tf.tfID = %d)",
         $person->get_id(),
         $person->get_value("preferred_tfID")
     );

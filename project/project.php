@@ -56,10 +56,10 @@ function show_transaction($template)
 
     if (isset($projectID) && $projectID) {
         $query = prepare("SELECT transaction.*
-                          FROM transaction
-                          WHERE transaction.projectID = %d
-                      ORDER BY transactionModifiedTime desc
-                        ", $projectID);
+                            FROM transaction
+                           WHERE transaction.projectID = %d
+                        ORDER BY transactionModifiedTime desc
+                         ", $projectID);
         $db->query($query);
         while ($db->next_record()) {
             $transaction = new transaction();
@@ -105,7 +105,7 @@ function show_invoices()
     $rows = invoice::get_list($_FORM);
     echo invoice::get_list_html($rows, $_FORM);
 }
-  
+
 function show_projectHistory()
 {
     global $project;
@@ -163,9 +163,9 @@ function show_person_list($template)
 
     if ($projectID) {
         $query = prepare("SELECT projectPerson.*, roleSequence
-                          FROM projectPerson 
-                     LEFT JOIN role ON role.roleID = projectPerson.roleID
-                         WHERE projectID=%d ORDER BY roleSequence DESC,projectPersonID ASC", $projectID);
+                            FROM projectPerson
+                       LEFT JOIN role ON role.roleID = projectPerson.roleID
+                           WHERE projectID=%d ORDER BY roleSequence DESC,projectPersonID ASC", $projectID);
         $db->query($query);
 
         while ($db->next_record()) {
@@ -191,11 +191,11 @@ function show_projectPerson_list()
 
     if ($projectID) {
         $query = prepare("SELECT personID, roleName
-                          FROM projectPerson
-                     LEFT JOIN role ON role.roleID = projectPerson.roleID
-                         WHERE projectID = %d 
-                      GROUP BY projectPerson.personID
-                      ORDER BY roleSequence DESC, personID ASC", $projectID);
+                            FROM projectPerson
+                       LEFT JOIN role ON role.roleID = projectPerson.roleID
+                           WHERE projectID = %d
+                        GROUP BY projectPerson.personID
+                        ORDER BY roleSequence DESC, personID ASC", $projectID);
         $db->query($query);
         while ($db->next_record()) {
             $projectPerson = new projectPerson();
@@ -357,7 +357,7 @@ if ($_POST["save"]) {
         alloc_error("Please enter a name for the Project.");
     }
 
-  // enforced at the database, but show a friendlier error here if possible
+    // enforced at the database, but show a friendlier error here if possible
     $query = prepare("SELECT COUNT(*) as count FROM project WHERE projectShortName = '%s'", $db->esc($project->get_value("projectShortName")));
     if (!$definitely_new_project) {
         $query .= prepare(" AND projectID != %d", $project->get_id());
@@ -381,7 +381,7 @@ if ($_POST["save"]) {
             $client->set_value("clientStatus", "Current");
             $client->save();
         }
-   
+
         if ($definitely_new_project) {
             $projectPerson = new projectPerson();
             $projectPerson->currency = $project->get_value("currencyTypeID");
@@ -410,7 +410,7 @@ if ($_POST["save"]) {
         $p2->save();
         $TPL["message_good"][] = "Project details copied successfully.";
 
-      // Copy project people
+        // Copy project people
         $q = prepare("SELECT * FROM projectPerson WHERE projectID = %d", $p->get_id());
         $db = new db_alloc();
         $db->query($q);
@@ -424,7 +424,7 @@ if ($_POST["save"]) {
             $TPL["message_good"]["projectPeople"] = "Project people copied successfully.";
         }
 
-      // Copy commissions
+        // Copy commissions
         $q = prepare("SELECT * FROM projectCommissionPerson WHERE projectID = %d", $p->get_id());
         $db = new db_alloc();
         $db->query($q);
@@ -453,7 +453,7 @@ if ($projectID) {
             $pp = new projectPerson();
             $pp->read_db_record($db);
             $delete[] = $pp->get_id();
-          #$pp->delete(); // need to delete them after, cause we'll accidently wipe out the current user
+            #$pp->delete(); // need to delete them after, cause we'll accidently wipe out the current user
         }
 
         if (is_array($_POST["person_personID"])) {
@@ -494,7 +494,7 @@ if ($projectID) {
             $commission_item->delete();
         }
     } else if ($_POST['do_import']) {
-      // Import from an uploaded file
+        // Import from an uploaded file
         switch ($_POST['import_type']) {
             case 'planner':
                 import_gnome_planner('import');
@@ -508,11 +508,11 @@ if ($projectID) {
                 break;
         }
     }
-  // Displaying a record
+    // Displaying a record
     $project->set_id($projectID);
     $project->select() || alloc_error("Could not load project $projectID");
 } else {
-  // Creating a new record
+    // Creating a new record
     $project->read_globals();
     $projectID = $project->get_id();
     $project->select();
@@ -542,15 +542,15 @@ $client->set_tpl_values("client_");
 // If a client has been chosen
 if ($clientID) {
     $query = prepare(
-        "SELECT * 
-                      FROM clientContact
-                     WHERE clientContact.clientID = %d AND clientContact.primaryContact = true",
+        "SELECT *
+           FROM clientContact
+          WHERE clientContact.clientID = %d AND clientContact.primaryContact = true",
         $clientID
     );
     $db->query($query);
     $cc = new clientContact();
     $cc->read_db_record($db);
-  
+
     $one = $client->format_address("postal");
     $two = $client->format_address("street");
     $thr = $cc->format_contact();
@@ -591,7 +591,7 @@ if ($clientID) {
 $db->query(prepare("SELECT fullName, emailAddress, clientContactPhone, clientContactMobile, interestedPartyActive
                       FROM interestedParty
                  LEFT JOIN clientContact ON interestedParty.clientContactID = clientContact.clientContactID
-                     WHERE entity='project' 
+                     WHERE entity='project'
                        AND entityID = %d
                        AND interestedPartyActive = 1
                   ORDER BY fullName", $project->get_id()));
@@ -654,8 +654,8 @@ if (is_object($project) && $project->get_id()) {
 
 $TPL["navigation_links"] = $project->get_navigation_links();
 
-$query = prepare("SELECT tfID AS value, tfName AS label 
-                    FROM tf 
+$query = prepare("SELECT tfID AS value, tfName AS label
+                    FROM tf
                    WHERE tfActive = 1
                 ORDER BY tfName");
 $TPL["commission_tf_options"] = page::select_options($query, $TPL["commission_tfID"]);
@@ -770,7 +770,7 @@ $TPL["project_projectComments_html"] = page::to_html($project->get_value("projec
 
 $db = new db_alloc();
 
-$q = prepare("SELECT SUM((amount * pow(10,-currencyType.numberToBasic))) 
+$q = prepare("SELECT SUM((amount * pow(10,-currencyType.numberToBasic)))
                   AS amount, transaction.currencyTypeID as currency
                 FROM transaction
            LEFT JOIN timeSheet on timeSheet.timeSheetID = transaction.timeSheetID
@@ -778,7 +778,7 @@ $q = prepare("SELECT SUM((amount * pow(10,-currencyType.numberToBasic)))
                WHERE timeSheet.projectID = %d
                  AND transaction.status = 'pending'
             GROUP BY transaction.currencyTypeID
-              ", $project->get_id());
+             ", $project->get_id());
 $db->query($q);
 unset($rows);
 while ($row = $db->row()) {
@@ -788,12 +788,12 @@ $TPL["total_timeSheet_transactions_pending"] = page::money_print($rows);
 
 $q = prepare("SELECT SUM(customerBilledDollars * timeSheetItemDuration * multiplier * pow(10,-currencyType.numberToBasic))
                   AS amount, timeSheet.currencyTypeID as currency
-                FROM timeSheetItem 
+                FROM timeSheetItem
            LEFT JOIN timeSheet ON timeSheetItem.timeSheetID = timeSheet.timeSheetID
            LEFT JOIN currencyType on currencyType.currencyTypeID = timeSheet.currencyTypeID
                WHERE timeSheet.projectID = %d
             GROUP BY timeSheetItemID
-                ", $project->get_id());
+             ", $project->get_id());
 $db->query($q);
 unset($rows);
 while ($row = $db->row()) {
@@ -801,7 +801,7 @@ while ($row = $db->row()) {
 }
 $TPL["total_timeSheet_customerBilledDollars"] = page::money_print($rows);
 
-$q = prepare("SELECT SUM((amount * pow(10,-currencyType.numberToBasic))) 
+$q = prepare("SELECT SUM((amount * pow(10,-currencyType.numberToBasic)))
                   AS amount, transaction.currencyTypeID as currency
                 FROM transaction
            LEFT JOIN timeSheet on timeSheet.timeSheetID = transaction.timeSheetID
@@ -809,7 +809,7 @@ $q = prepare("SELECT SUM((amount * pow(10,-currencyType.numberToBasic)))
                WHERE timeSheet.projectID = %d
                  AND transaction.status = 'approved'
             GROUP BY transaction.currencyTypeID
-              ", $project->get_id());
+             ", $project->get_id());
 $db->query($q);
 unset($rows);
 while ($row = $db->row()) {
@@ -817,7 +817,7 @@ while ($row = $db->row()) {
 }
 $TPL["total_timeSheet_transactions_approved"] = page::money_print($rows);
 
-$q = prepare("SELECT SUM((amount * pow(10,-currencyType.numberToBasic))) 
+$q = prepare("SELECT SUM((amount * pow(10,-currencyType.numberToBasic)))
                   AS amount, transaction.currencyTypeID as currency
                 FROM transaction
            LEFT JOIN invoiceItem on invoiceItem.invoiceItemID = transaction.invoiceItemID
@@ -826,7 +826,7 @@ $q = prepare("SELECT SUM((amount * pow(10,-currencyType.numberToBasic)))
                WHERE invoice.projectID = %d
                  AND transaction.status = 'pending'
             GROUP BY transaction.currencyTypeID
-              ", $project->get_id());
+             ", $project->get_id());
 $db->query($q);
 unset($rows);
 while ($row = $db->row()) {
@@ -834,7 +834,7 @@ while ($row = $db->row()) {
 }
 $TPL["total_invoice_transactions_pending"] = page::money_print($rows);
 
-$q = prepare("SELECT SUM((amount * pow(10,-currencyType.numberToBasic))) 
+$q = prepare("SELECT SUM((amount * pow(10,-currencyType.numberToBasic)))
                   AS amount, transaction.currencyTypeID as currency
                 FROM transaction
            LEFT JOIN invoiceItem on invoiceItem.invoiceItemID = transaction.invoiceItemID
@@ -843,7 +843,7 @@ $q = prepare("SELECT SUM((amount * pow(10,-currencyType.numberToBasic)))
                WHERE invoice.projectID = %d
                  AND transaction.status = 'approved'
             GROUP BY transaction.currencyTypeID
-              ", $project->get_id());
+             ", $project->get_id());
 $db->query($q);
 unset($rows);
 while ($row = $db->row()) {
@@ -852,14 +852,14 @@ while ($row = $db->row()) {
 $TPL["total_invoice_transactions_approved"] = page::money_print($rows);
 
 
-$q = prepare("SELECT SUM((amount * pow(10,-currencyType.numberToBasic))) 
+$q = prepare("SELECT SUM((amount * pow(10,-currencyType.numberToBasic)))
                   AS amount, transaction.currencyTypeID as currency
                 FROM transaction
            LEFT JOIN currencyType on currencyType.currencyTypeID = transaction.currencyTypeID
                WHERE transaction.projectID = %d
                  AND transaction.status = 'approved'
             GROUP BY transaction.currencyTypeID
-              ", $project->get_id());
+             ", $project->get_id());
 $db->query($q);
 unset($rows);
 while ($row = $db->row()) {

@@ -37,7 +37,7 @@ if ($_POST["add_skill"]) {
     }
     if ($_POST["other_new_skill_name"] != "") {
         $skill->set_value('skillName', $_POST["other_new_skill_name"]);
-      // description for now can be the same as the name
+        // description for now can be the same as the name
         $skill->set_value('skillDescription', $_POST["other_new_skill_name"]);
     } else {
         $failed = true;

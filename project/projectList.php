@@ -25,10 +25,9 @@ require_once("../alloc.php");
 
 
 
-$defaults = array("showProjectType"=>true
-                 ,"url_form_action"=>$TPL["url_alloc_projectList"]
-                 ,"form_name"=>"projectList_filter"
-                 );
+$defaults = array("showProjectType" => true,
+                  "url_form_action" => $TPL["url_alloc_projectList"],
+                  "form_name"       => "projectList_filter");
 
 function show_filter()
 {
@@ -56,7 +55,7 @@ Projects.
 <br><br>
 
 Simply adjust the filter settings and click the <b>Filter</b> button to
-display a list of previously created Projects. 
+display a list of previously created Projects.
 If you would prefer to create a new Project, click the <b>New Project</b> link
 in the top-right hand corner of the box below.";
 }
