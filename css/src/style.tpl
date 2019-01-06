@@ -1050,4 +1050,5 @@ body.obfus .obfuscate:hover {
      1. it will get overriden by '.panel div.hidden_text' if we don't
      2. we can sort it out when we switch to SASS -- cjb, 2019-01 */
   color:(A_COLOR) !important;
+  cursor: pointer;
 }
