@@ -289,11 +289,10 @@ class comment extends db_entity
     {
         global $TPL;
         $comment = comment::add_shrinky_divs(page::htmlentities($row["comment"]), $row["commentID"]);
-        $onClick = "return set_grow_shrink('comment_".$row["commentID"]."','button_comment_".$row["commentID"]."','true');";
         $rtn[] = '<div class="panel'.$row["external"].' corner pcomment" data-comment-id="'.$row["commentID"].'">';
         $rtn[] = '<table width="100%" cellspacing="0" border="0">';
         $rtn[] = '<tr>';
-        $rtn[] = '  <td style="padding-bottom:0px; white-space:normal" onClick="'.$onClick.'">'.$row["attribution"].$row["hashHTML"].'</td>';
+        $rtn[] = '  <td style="padding-bottom:0px; white-space:normal">'.$row["attribution"].$row["hashHTML"].'</td>';
         $rtn[] = '  <td align="right" style="padding-bottom:0px;" class="nobr">'.$row["form"].$row["recipient_editor"].'</td>';
         if ($row["commentID"]) {
             $rtn[] = '  <td align="right" width="1%">'.page::star("comment", $row["commentID"]).'</td>';
@@ -305,7 +304,7 @@ class comment extends db_entity
         $rtn[] = '  <td colspan="3" style="padding-top:0px; white-space:normal;">'.preg_replace("/<[^>]>/", "", $row["emailed"])."</td>";
         $rtn[] = '</tr>';
         $rtn[] = '<tr>';
-        $rtn[] = '  <td colspan="3" onClick="'.$onClick.'"><div><pre class="comment">'.$comment.'</pre></div></td>';
+        $rtn[] = '  <td colspan="3"><div><pre class="comment">'.$comment.'</pre></div></td>';
         $rtn[] = '</tr>';
         $row["children"] and $rtn[] = comment::get_comment_children($row["children"]);
         if ($row["files"] || $row["reply"]) {
@@ -349,7 +348,9 @@ class comment extends db_entity
                 $num_lines_hidden = $k-$start_position;
 
                 if ($num_lines_hidden > 3) {
-                    $new_lines[$start_position-1].= "<div class=\"hidden_text button_".$class."\"> --- ".$num_lines_hidden." lines hidden --- </div>";
+                    $onClick = "return set_grow_shrink('comment_".$commentID."','button_comment_".$commentID."','true');";
+                    $new_lines[$start_position-1].= "<div class=\"hidden_text button_".$class." on_click\" onclick=\"".$onClick."\"> --- ".$num_lines_hidden." lines hidden, click to show --- </div>";
+                    $new_lines[$start_position-1].= "<div style=\"display:none;\" class=\"hidden_text ".$class." on_click\" onclick=\"".$onClick."\"> --- ".$num_lines_hidden." lines shown, click to hide --- </div>";
                     $new_lines[$start_position-1].= "<div style=\"display:none;\" class=\"hidden_text ".$class."\">";
                     $new_lines[$k] = "</div>".$line;
                 } else {
