@@ -1,10 +1,23 @@
 # Developing alloc
 
-This is a guide to setup a development environment using LXC. Whenever
-a editor is required, your favourite editor should work. If you need a
-recommendation, try [GNU Emacs](https://www.gnu.org/software/emacs/),
-[Vim](https://www.vim.org/), or
-[VSCodium](https://github.com/VSCodium/vscodium).
+## Docker
+
+Behold the 'easiness' of Docker:
+
+```
+$ cd path/to/alloc/clone
+$ docker build -t alloc .
+$ docker run -p 4000:80 alloc
+```
+
+Then open http://localhost:4000/ and proceed with the installation.
+
+You'll want to access mysql and write alloc_config.php, to do so (replace
+`practical_boyd` with the name of your container):
+
+```
+$ docker exec -i -t practical_boyd /bin/bash
+```
 
 ## LXC
 
