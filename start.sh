@@ -4,22 +4,14 @@ set -euxo pipefail
 
 # start apache
 /usr/sbin/apachectl start
-status=$?
-if [ $status -ne 0 ]; then
-    echo "failed to start apache: $status"
-    exit $status
-fi
 
 # start mariadb
 /etc/init.d/mysql start
-status=$?
-if [ $status -ne 0 ]; then
-    echo "failed to start mariadb: $status"
-    exit $status
-fi
 
-while sleep 60; do
-    # check apache2 and mysqld are still running
-    pidof apache2
-    pidof mysqld
-done
+# wait a min, then check apache2 and mysqld are running
+sleep 60
+pidof apache2
+pidof mysqld
+
+# follow the apache error log
+tail -f /var/log/apache2/error.log
