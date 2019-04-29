@@ -2,7 +2,7 @@
 
 ## Docker
 
-Behold the 'easiness' of Docker:
+Behold the 'simplicity' of Docker:
 
 ```
 $ cd path/to/alloc/clone
@@ -16,7 +16,7 @@ You'll want to access mysql and write alloc_config.php, to do so (replace
 `practical_boyd` with the name of your container):
 
 ```
-$ docker exec -i -t practical_boyd /bin/bash
+$ docker exec -ti practical_boyd bash
 ```
 
 ## LXC
