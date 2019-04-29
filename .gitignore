@@ -8,3 +8,5 @@ alloc_config.php
 cache*
 _darcs
 .php_cs.cache
+.buildpath
+.project
