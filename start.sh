@@ -1,5 +1,5 @@
-#!/bin/sh
-
+#!/bin/bash
+set -euxo pipefail
 # https://docs.docker.com/config/containers/multi-service_container/
 
 # start apache
@@ -19,14 +19,7 @@ if [ $status -ne 0 ]; then
 fi
 
 while sleep 60; do
-    ps aux | grep apache |grep -q -v grep
-    PROCESS_1_STATUS=$?
-    ps aux | grep mysql |grep -q -v grep
-    PROCESS_2_STATUS=$?
-    # If the greps above find anything, they exit with 0 status
-    # If they are not both 0, then something is wrong
-    if [ $PROCESS_1_STATUS -ne 0 -o $PROCESS_2_STATUS -ne 0 ]; then
-        echo "a process exited."
-        exit 1
-    fi
+    # check apache2 and mysqld are still running
+    pidof apache2
+    pidof mysqld
 done
