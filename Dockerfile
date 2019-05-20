@@ -4,7 +4,7 @@ FROM debian:stretch-slim
 # install apache, php, and mariadb (mysql)
 RUN apt-get update &&\
 	apt-get -y upgrade &&\
-	apt-get install -y apache2 php php-mysql php-mbstring php-gd mariadb-server make python
+	apt-get install -y apache2 php php-mysql php-mbstring php-gd mariadb-server make python vim
 
 # rm any files/folders created by apcahe
 RUN rm -rvf /var/www/html/*
