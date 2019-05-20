@@ -243,7 +243,6 @@ class timeSheet extends db_entity
         $db = new db_alloc();
         $query = prepare("DELETE FROM transaction WHERE timeSheetID = %d AND transactionType != 'invoice'", $this->get_id());
         $db->query($query);
-        $db->next_record();
     }
 
     function createTransactions($status = "pending")
