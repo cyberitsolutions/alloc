@@ -7,7 +7,7 @@ function redraw_multiple_selects(container) {
   $("select[multiple]",c).selectn();
 }
 
-// Make the XML request thing, specify the callback function 
+// Make the XML request thing, specify the callback function
 function refreshProjectList(radiobutton) {
   url = get_alloc_var('url')+'task/updateProjectList.php?projectType='+radiobutton.value;
   makeAjaxRequest(url, 'projectListDropdown','',1)
@@ -108,7 +108,7 @@ function help_text_on(id, str) {
   var x = offset.left -420;
   if (x < 0) {
     x = x + 400;
-  } 
+  }
   var y = offset.top + 20;
   if ((y + $('#helper').height() + 40) > $(document).height()) {
     y = y-$('#helper').height() - 40;
@@ -116,11 +116,11 @@ function help_text_on(id, str) {
   $("#helper").css('left',x);
   $("#helper").css('top',y);
   $("#helper").fadeIn("normal");
-} 
+}
 function help_text_off(id) {
   $("#helper").fadeOut("normal");
   $('#helper').remove();
-} 
+}
 function preload_field(element, text) {
   $(document).ready(function() {
     $(element).bind("focus", function(e){
@@ -236,7 +236,7 @@ $(document).ready(function() {
     this.value=now.getFullYear()+'-'+((1e2 + now.getMonth()+1 + '').substr(1))+'-'+(1e2 + now.getDate() + '').substr(1);
   });
 
-  $('tr.clickrow').bind('click',function(e){                                                                                                     
+  $('tr.clickrow').bind('click',function(e){
     var id = this.id.split('_')[1]; // clickrow_43242
     if (id && !$(e.target).is('input:checkbox') && !$(e.target).is('a') && !$(e.target).is('b')) {
       $('#checkbox_'+id).attr('checked',!$('#checkbox_'+id).attr('checked'));
@@ -286,7 +286,7 @@ $(document).ready(function() {
 
   $('input.toggler').click(function(){
     return $('.task_checkboxes').each(function() {
-      this.checked = !this.checked 
+      this.checked = !this.checked
     });
   });
 
@@ -338,7 +338,7 @@ $(document).ready(function() {
       $(this).removeClass("hot");
       $(this).closest("td").attr({"data-sort-value":"2"});
     }
-    $.get($(this).attr("href"));   
+    $.get($(this).attr("href"));
     return false;
   });
 
