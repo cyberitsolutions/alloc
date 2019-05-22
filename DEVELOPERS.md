@@ -192,6 +192,8 @@ to the main alloc repo! This will mess up other peoples clones.
 
 ## Alloc coding standards
 
+## PHP
+
 We follow the [PSR-2](https://www.php-fig.org/psr/psr-2/) coding
 standard with the exception of `else if`. Please use `else if` instead
 of `elseif`.
@@ -199,3 +201,21 @@ of `elseif`.
 Because the alloc code base did not use PSR-2 until late 2018, many
 class/method names do not match the PSR-2 recommendations, this is an
 ongoing effort.
+
+## Javascript
+
+You'll need to install esformatter and the needed plugins, e.g.:
+
+```
+$ npm install -g esformatter esformatter-dot-notation esformatter-semicolons esformatter-braces esformatter-eol-last esformatter-quotes esformatter-var-each
+```
+
+Note: you may want to set a prefix (install path) with `--prefix`. If you do,
+make sure to add the `bin` directory from your node prefix/install path to your
+`PATH`.
+
+To use esformatter:
+
+```
+$ esformatter -i javascript/zz_alloc.js
+```
