@@ -66,6 +66,7 @@ function set_grow_shrink(id, id_to_hide, use_classes_instead_of_ids) {
 
 function sidebyside_activate(id, redraw) {
   var arr = [];
+  var i;
   $.each($('.sidebyside'), function(k, v) {
     arr[arr.length] = v.id.replace('sbs_link_', '');
   });
@@ -78,7 +79,7 @@ function sidebyside_activate(id, redraw) {
   }
 
   if (id == 'sbsAll') {
-    for (var i = 0; i < arr.length; i++) {
+    for (i = 0; i < arr.length; i++) {
       if (arr[i] != 'sbsAll') {
         $('#' + arr[i]).show();
         $('#sbs_link_' + arr[i]).removeClass('sidebyside_active').addClass('sidebyside');
@@ -87,7 +88,7 @@ function sidebyside_activate(id, redraw) {
     $('#sbs_link_' + id).addClass('sidebyside_active');
 
   } else {
-    for (var i = 0; i < arr.length; i++) {
+    for (i = 0; i < arr.length; i++) {
       if (arr[i] != 'sbsAll') {
         $('#' + arr[i]).hide();
       }
@@ -149,6 +150,7 @@ function save_recipients(data) {
   var p = data.select.parent();
   var commentID = p.find('input[name=commentID]').val();
   var values = data.select.val();
+  var label;
 
   jQuery.post('../comment/updateRecipients.php', {
     'commentID': commentID,
@@ -156,10 +158,10 @@ function save_recipients(data) {
   }, function(data) {
     p.parent().hide();
     if (data == 'external') {
-      var label = '<em class="faint warn">[ External Conversation ]</em>';
+      label = '<em class="faint warn">[ External Conversation ]</em>';
       p.parents('.panel').addClass('loud');
     } else {
-      var label = '<em class="faint">[ Internal Conversation ]</em>';
+      label = '<em class="faint">[ Internal Conversation ]</em>';
       p.parents('.panel').removeClass('loud');
     }
     p.parent().parent().find('a.recipient_editor_link').html(label).show();
@@ -265,13 +267,14 @@ $(document).ready(function() {
 
   // Add toggles for filters
   $('.toggleFilter').click(function() {
+    var l;
     var d = $('.filter').css('display');
     if (d == 'table') {
-      var l = 'Show Filter';
-      var d = 'none';
+      l = 'Show Filter';
+      d = 'none';
     } else {
-      var l = 'Hide Filter';
-      var d = 'table';
+      l = 'Hide Filter';
+      d = 'table';
     }
     $('.filter').css('display', d);
     $(this).text(l);
