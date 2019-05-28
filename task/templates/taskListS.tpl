@@ -31,7 +31,7 @@
   {if $_FORM["showTimes"]}<th>Actual</th>{/}
   {if $_FORM["showTimes"]}<th>Limit</th>{/}
   {if $_FORM["showTags"]}<th>Tags</th>{/}
-  {if $_FORM["showPercent"]}<th>%</th>{/}
+  {if $_FORM["showPercent"]}<th data-sort="int">%</th>{/}
   {if $_FORM["showStatus"]}<th>Status</th>{/}
   {if $_FORM["showEdit"] || $_FORM["showStarred"]}<th data-sort="num" width="1%" style="font-size:120%"><i class="icon-star"></i></th>{/}
   </tr>
