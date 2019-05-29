@@ -63,6 +63,7 @@ function show_action_buttons()
 {
     global $person;
     global $TPL;
+    echo '<button type="submit" name="save" value="1" class="save_button hidden" aria-hidden="true"></button> ';
     if ($person->have_perm(PERM_DELETE)) {
         echo '<button type="submit" name="delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button> ';
     }
