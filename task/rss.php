@@ -45,7 +45,7 @@ $status_types = config::get_config_item('rssStatusFilter');
 $query = prepare("SELECT audit.taskID, field, dateChanged, value, taskName, taskStatus, task.personID, audit.projectID
                     FROM audit
                LEFT JOIN task AS task ON audit.taskID = task.taskID
-                   WHERE field IN ('taskStatus', 'personID')
+                   WHERE field IN ('taskStatus', 'personID', 'projectID')
                 ORDER BY dateChanged DESC
                    LIMIT %d", $max_events);
 $db->query($query);
@@ -71,23 +71,19 @@ while ($row = $db->next_record()) {
             $project = new project();
             $project->set_id($row['projectID']);
             $project->select();
+            $projectName = $project->get_value('projectShortName');
         }
         if ($summary) {
-            if ($show_project) {
-                $projectName = $project->get_value('projectShortName');
-            }
             $el['desc'] = sprintf('%s: %d %s "%s" %s', $name, $row['taskID'], $projectName, $taskName, $row['taskStatus']);
         } else {
-            if ($show_project) {
-                $projectName = "(".$project->get_value("projectName").")";
-            }
             if ($row['field'] == "taskStatus") {
-                $el['desc'] = sprintf('Task #%d "%s" %s status changed to %s', $row['taskID'], $taskName, $projectName, $row['taskStatus']);
+                $el['desc'] = sprintf('Task #%d "%s" (%s) status changed to %s', $row['taskID'], $taskName, $projectName, $row['taskStatus']);
             } else if ($row['field'] == "personID") {
-                $el['desc'] = sprintf('Task #%d "%s" %s assigned to %s', $row['taskID'], $taskName, $projectName, $name);
-            } else {
-                $el['desc'] = "error!";
-            }
+                $el['desc'] = sprintf('Task #%d "%s" (%s) assigned to %s', $row['taskID'], $taskName, $projectName, $name);
+            } // NOTE: there used to be else { print "error!" } here, I could
+              // not find a case where it was useful, and it would spit out
+              // "error!" for non errors. It did not print a meaningfull
+              // message. -- cjb, 2019-06-05
         }
         $events[$key] = $el;
     }
