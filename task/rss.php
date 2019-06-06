@@ -11,8 +11,8 @@ $show_project = config::get_config_item('rssShowProject');
 $db = new db_alloc();
 $events = array();
 
-//create an artifical sort key. Creation/audit date is not unique, and creation should
-//come before any status changes.
+// create an artifical sort key. Creation/audit date is not unique, and creation should
+// come before any status changes.
 function gen_key($prefix = 0)
 {
     static $subidx = 0;
@@ -29,34 +29,26 @@ function escape_xml($string)
     return str_replace('&', '&amp;', $string);
 }
 
-
 $people =& get_cached_table('person');
 
-//the task history
-$trace = array();
-
-$summary = $_GET['summary'] ? true : false;
 // summary mode is the abbreviated version for the IRC bot
+$summary = $_GET['summary'] ? true : false;
 
-$status_types = config::get_config_item('rssStatusFilter');
 // can't be filtered in the query because it would break the history playback
+$status_types = config::get_config_item('rssStatusFilter');
 
 // find the last max_events audit events that are status change or reassignment
-$query = prepare("SELECT audit.taskID, field, dateChanged, value, taskName, taskStatus, task.personID, audit.projectID
+$query = prepare("SELECT audit.taskID, field, dateChanged, value, taskName, task.personID, task.projectID
                     FROM audit
                LEFT JOIN task AS task ON audit.taskID = task.taskID
-                   WHERE field IN ('taskStatus', 'personID', 'projectID')
+                   WHERE field IN ('taskStatus', 'personID')
                 ORDER BY dateChanged DESC
                    LIMIT %d", $max_events);
 $db->query($query);
+
 while ($row = $db->next_record()) {
     $key = $row['dateChanged'] . gen_key(1);
     $el = array("date" => $row['dateChanged']);
-
-    //overwrite the new data (taskStatus, personID) with the correct (historical) data
-    if ($trace[$row['taskID']]) {
-        $row = array_merge($row, $trace[$row['taskID']]);
-    }
 
     if (!$row['personID']) {
         $name = "Unassigned";
@@ -64,7 +56,8 @@ while ($row = $db->next_record()) {
         $name = $people[$row['personID']]['username'];
     }
 
-    if ($row['field'] != "taskStatus" || array_search($row['taskStatus'], $status_types) !== false) {
+    // 'value' contains the true task status, whereas 'taskStatus' does not.
+    if ($row['field'] != "taskStatus" || array_search($row['value'], $status_types) !== false) {
         $taskName = escape_xml($row['taskName']);
         $project = null;
         if ($show_project) {
@@ -74,21 +67,16 @@ while ($row = $db->next_record()) {
             $projectName = $project->get_value('projectShortName');
         }
         if ($summary) {
-            $el['desc'] = sprintf('%s: %d %s "%s" %s', $name, $row['taskID'], $projectName, $taskName, $row['taskStatus']);
+            $el['desc'] = sprintf('%s: %d %s "%s" %s', $name, $row['taskID'], $projectName, $taskName, $row['value']);
         } else {
             if ($row['field'] == "taskStatus") {
-                $el['desc'] = sprintf('Task #%d "%s" (%s) status changed to %s', $row['taskID'], $taskName, $projectName, $row['taskStatus']);
+                $el['desc'] = sprintf('Task #%d "%s" (%s) status changed to %s', $row['taskID'], $taskName, $projectName, $row['value']);
             } else if ($row['field'] == "personID") {
                 $el['desc'] = sprintf('Task #%d "%s" (%s) assigned to %s', $row['taskID'], $taskName, $projectName, $name);
-            } // NOTE: there used to be else { print "error!" } here, I could
-              // not find a case where it was useful, and it would spit out
-              // "error!" for non errors. It did not print a meaningfull
-              // message. -- cjb, 2019-06-05
+            }
         }
         $events[$key] = $el;
     }
-    //record the history
-    $trace[$db->f('taskID')][$db->f('field')] = $db->f('value');
 }
 
 // generate the actual feed
@@ -96,7 +84,7 @@ $rss = new SimpleXMLElement('<rss version="2.0" />');
 
 $channel = $rss->addChild("channel");
 $channel->addChild("title", "allocPSA event feed");
-$channel->addChild("link", config::get_config_item("allocURL")); //pull from config
+$channel->addChild("link", config::get_config_item("allocURL")); // pull from config
 $channel->addChild("description", "Alloc task event feed.");
 
 // the RSS reader in supybot requires items be in reverse chronological order
