@@ -27,6 +27,9 @@ $(document).ready(function() {
                           ,$url_alloc_client."clientID=".$client_clientID,null,$clientSelfLink)}
 {/}
 
+{if parse_url($client_clientURL, PHP_URL_SCHEME) === null}
+{$client_clientURL = "http://" . $client_clientURL}
+{/}
 <!-- need to merge this style back into the stylesheets -->
 <style>
 .task_pane {
