@@ -1,5 +1,3 @@
-[![Code Climate](https://codeclimate.com/github/cyberitsolutions/alloc/badges/gpa.svg)](https://codeclimate.com/github/cyberitsolutions/alloc) [![Issue Count](https://codeclimate.com/github/cyberitsolutions/alloc/badges/issue_count.svg)](https://codeclimate.com/github/cyberitsolutions/alloc)
-
 # allocPSA
 allocPSA is the web-app that takes care of your projects, employees,
 time sheets, invoicing and customers.
