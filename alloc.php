@@ -226,7 +226,7 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
     if (is_object($current_user) && $current_user->get_id()) {
         $history = new history();
         $history->save_history();
-        $TPL["current_user"] = &$current_user;
+        $TPL["current_user"] = $current_user;
     }
 }
 
