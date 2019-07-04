@@ -1,7 +1,8 @@
-help/images/.*
-help/help.css
+doc/html-images/.*
+help/documentation.css
 help/help.html
-help/images
+help/html-images
+documentation.pdf
 *.swp
 alloc_config.php
 *.pyc
