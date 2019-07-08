@@ -10,7 +10,7 @@ allocPSA v1.8 User Manual
 The Premier Open Source Professional Services Automation Solution
 -----------------------------------------------------------------
 
-.. figure:: images/icon_alloc.png
+.. figure:: ./images/icon_alloc.png
 
 **Cyber IT Solutions Pty Ltd.  ACN 053 904 082  ABN 13 053 904 082**
 
@@ -557,7 +557,7 @@ How to Accomplish Common Tasks
 How do I Log In?
 ----------------
 
-.. figure:: images/login.png
+.. figure:: ./images/login.png
 
     This is the allocPSA log in screen
 
@@ -585,7 +585,7 @@ You can also access the changelog by going to Tools > Deployment Changelog.
 How do I Recover My Lost Password?
 ----------------------------------
 
-.. figure:: images/forgot_pass.png
+.. figure:: ./images/forgot_pass.png
 
     If you've forgotten your password, have a new one sent to you..
 
@@ -2486,7 +2486,7 @@ top-level screens are often function-specific enhancements of the Home screen.
 Top Tasks
 ~~~~~~~~~
 
-.. figure:: images/top_tasks.png
+.. figure:: ./images/top_tasks.png
 
     A list of tasks, this displays as many tasks as you configure it to.
 
@@ -2496,7 +2496,7 @@ This section shows you as many tasks as you configure it to. They are only tasks
 Calendar
 ~~~~~~~~
 
-.. figure:: images/calendar.png
+.. figure:: ./images/calendar.png
 
     The calendar shows tasks, reminders and absences.
 
@@ -2516,7 +2516,7 @@ the top-left hand corner of each day in the calendar.
 Project List
 ~~~~~~~~~~~~
 
-.. figure:: images/project_list.png
+.. figure:: ./images/project_list.png
 
     The table above listed all the new Projects belonging to their corresponding Clients
 
@@ -2596,7 +2596,7 @@ Sheets?`_ .
 Clients
 -------
 
-.. figure:: images/client_list.png
+.. figure:: ./images/client_list.png
 
     List(s) of current, potential and archived Clients are
     shown in the Clients section of allocPSA.
@@ -2656,12 +2656,12 @@ can be used to list All or Archived Clients.
           the contacts, such as headquarters address details, main switch and
           fax number.
 
-.. figure:: images/client.png
+.. figure:: ./images/client.png
 
     Each Client record is defined as a Client organization detail header and
     any number of contacts, reminders, documents, comments, etc.
 
-.. figure:: images/client_contact.png
+.. figure:: ./images/client_contact.png
 
     For each Client you can have as many contacts as you liked. Just click the
     "New Client Contact" link in the top right hand corner of the Client
@@ -2684,7 +2684,7 @@ if this is different from the main address listed in the Client header record
 Adding Notes to a Client
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. figure:: images/client_comment.png
+.. figure:: ./images/client_comment.png
 
     Add as many free-form comments as you need to a Client record. Just click
     the "New Comment" link in the top right hand corner.
@@ -2698,7 +2698,7 @@ view.
 Adding Documents to a Client
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. figure:: images/client_upload.png
+.. figure:: ./images/client_upload.png
 
     You can upload documents like images, database files, contracts, etc.
 
@@ -2729,7 +2729,7 @@ Adding Reminders to Clients
 You can add a new reminder to the Client Project (rather than to just a
 specific Task) by clicking on the 'Add Reminder' link on the 'Clients' page.
 
-.. figure:: images/new_reminder.png
+.. figure:: ./images/new_reminder.png
 
     Remainders can even be linked to Clients
 
@@ -2791,7 +2791,7 @@ If you need to modify the Client header information:
 Projects
 --------
 
-.. figure:: images/project.png
+.. figure:: ./images/project.png
 
     A Project's header information.
 
@@ -2957,7 +2957,7 @@ by following this simple procedure.
 Adding Staff Resource to your Project
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. figure:: images/project_people.png
+.. figure:: ./images/project_people.png
 
     Staff can be added or deleted to a Project according to your needs.
 
@@ -3114,7 +3114,7 @@ allocPSA flags them in brighter colours for obvious recognition.
 New Task
 ~~~~~~~~
 
-.. figure:: images/task_detail.png
+.. figure:: ./images/task_detail.png
 
     When adding new Tasks, you fill out the Task header.
 
@@ -3184,7 +3184,7 @@ will appear on your Project's Transactions section.
 Tasks
 -----
 
-.. figure:: images/task.png
+.. figure:: ./images/task.png
 
     A Task can have its specific details, reminders and comments
 
@@ -3249,7 +3249,7 @@ each atomic action of the Tasks history, adding time and eventually closing the
 Task when it's complete.
 
 
-.. figure:: images/task_detail.png
+.. figure:: ./images/task_detail.png
 
     Task header, allowing you to specify the Project, Task name, description, interested parties and dates.
 
@@ -3361,7 +3361,7 @@ or deleting it.
 Adding Reminders to Tasks
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. figure:: images/new_reminder.png
+.. figure:: ./images/new_reminder.png
 
     Add reminders for you and other members of the Project.
 
@@ -3388,9 +3388,9 @@ the Status drop-list.
 Time
 ----
 
-.. figure:: images/timeSheet_new.png
+.. figure:: ./images/timeSheet_new.png
 
-.. figure:: images/timeSheet_items.png
+.. figure:: ./images/timeSheet_items.png
 
 The allocPSA Time Sheet system is designed to make it easy for staff/employees
 to keep track of their time. This is the default work flow:
@@ -3507,12 +3507,12 @@ reminders on the page.
 Invoices
 --------
 
-.. figure:: images/invoice_new.png
+.. figure:: ./images/invoice_new.png
 
     To create a new Invoice select a Client and click the Create Invoice
     button.
 
-.. figure:: images/invoiceItem_new.png
+.. figure:: ./images/invoiceItem_new.png
 
     Once you've created the Invoice header, you can add as
     many Invoice line items as you like to that Invoice.
@@ -3950,7 +3950,7 @@ Finance
 New Tagged Fund
 ```````````````
 
-.. figure:: images/tf_new.png
+.. figure:: ./images/tf_new.png
 
     You can create new TF cost-centres for Projects, staff or
     for any other purpose.
@@ -3990,7 +3990,7 @@ allocated to you (among possibly other managers users) to manage.
 New Transaction
 ```````````````
 
-.. figure:: images/transaction.png
+.. figure:: ./images/transaction.png
 
     Transaction detail view.
 
@@ -4025,7 +4025,7 @@ You can also apply the various search criteria in combinations. allocPSA will
 search the database and return a list of matching records.
 
 
-.. figure:: images/statement.png
+.. figure:: ./images/statement.png
 
     A cost-centre is like an internal bank account. You can review its contents
     much like you would any online bank account.
@@ -4508,7 +4508,7 @@ Indexed keyword fields for the Wiki
 Company Skill Matrix
 ````````````````````
 
-.. figure:: images/skill_matrix.png
+.. figure:: ./images/skill_matrix.png
 
     You can add your own skill types and levels, and categorise your resources
     against those skill types.

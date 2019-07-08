@@ -1,18 +1,18 @@
 # Copyright (C) 2006-2011 Alex Lance, Clancy Malcolm, Cyber IT Solutions
 # Pty. Ltd.
-# 
+#
 # This file is part of the allocPSA application <info@cyber.com.au>.
-# 
+#
 # allocPSA is free software: you can redistribute it and/or modify it
 # under the terms of the GNU Affero General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or (at
 # your option) any later version.
-# 
+#
 # allocPSA is distributed in the hope that it will be useful, but WITHOUT
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
 # FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public
 # License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
 
@@ -30,42 +30,43 @@ help:
 	@echo "  patches   - combines all DB schema patches into installation file"
 
 doc_html:
-	if [ -d ./help/images ]; then rm -rf ./help/images; fi;
-	mkdir ./help/images
-	cp ./help/src/images_source/* ./help/images/
-	find ./help/images/ -type f -exec mogrify -format gif -scale '750x>' {} \;
-	rm ./help/images/*.png
-	cat ./help/src/help.txt | sed -e 's/.png/.gif/' > ./help/src/help.gif.txt
-	cd ./help/src && rst2html --link-stylesheet --stylesheet=help.css ./help.gif.txt ./help.html
-	mv ./help/src/help.html ./help/
-	cp ./help/src/help.css ./help/
+	if [ -d ./help/html-images ]; then rm -rf ./help/html-images; fi;
+	mkdir -p ./doc/html-images
+	mkdir -p ./help/
+	cp ./doc/images/* ./doc/html-images/
+	cat ./doc/documentation.rst | sed -e 's/\.\/images/html-images/g' > ./doc/documentation.html.rst
+	cd ./doc/ && rst2html --link-stylesheet --stylesheet=documentation.css ./documentation.html.rst ./help.html
+	mv ./doc/help.html ./doc/html-images/ ./help/
+	cp ./doc/documentation.css ./help/documentation.css
+	rm -rf ./doc/html-images
 	$(MAKE) doc_clean
 
-doc_pdf: 
-	if [ -d ./help/src/images ]; then rm -rf ./help/src/images; fi;
-	mkdir ./help/src/images
-	cp ./help/src/images_source/* ./help/src/images/
-	find ./help/src/images/ -type f -exec mogrify -scale '450x>' {} \;
-	cd ./help/src && rst2latex --documentclass=report --graphicx-option=pdftex --stylesheet=help.tss help.txt help.tex
-	cd ./help/src && pdflatex help.tex help.pdf
-	cd ./help/src && pdflatex help.tex help.pdf; # needs two passes to generate table of contents
-	if [ -f "./help/src/help.pdf" ]; then mv ./help/src/help.pdf ./; fi;
+doc_pdf:
+	if [ -d ./doc/pdf-images ]; then rm -rf ./doc/pdf-images; fi;
+	mkdir ./doc/pdf-images
+	cp ./doc/images/* ./doc/pdf-images/
+	find ./doc/images/ -type f -exec mogrify -scale '450x>' {} \;
+	cat ./doc/documentation.rst | sed -e 's/\.\/images/pdf-images/g' > ./doc/documentation.pdf.rst
+	cd ./doc && rst2latex --documentclass=report --graphicx-option=pdftex --stylesheet=documentation.tss documentation.pdf.rst documentation.tex
+	cd ./doc && pdflatex documentation.tex documentation.pdf
+	cd ./doc && pdflatex documentation.tex documentation.pdf; # needs two passes to generate table of contents
+	if [ -f "./doc/documentation.pdf" ]; then mv ./doc/documentation.pdf ./; fi;
 	$(MAKE) doc_clean
 
 doc_clean:
-	rm -rf ./help/src/help.aux ./help/src/help.log ./help/src/help.out ./help/src/help.tex ./help/src/images ./help/src/help.gif.txt ./help/src/help.toc ./help/src/missfont.log
+	rm -rf ./doc/documentation.aux ./doc/documentation.log ./doc/documentation.out ./doc/documentation.tex ./doc/html-images ./doc/pdf-images ./doc/documentation.html.rst ./doc/documentation.pdf.rst ./doc/documentation.toc ./doc/missfont.log
 
 dist:
 	if [ -d ./src ]; then rm -rf ./src; fi;
 	git clone . ./src/
 	rm -rf ./src/.git
-	cd ./src && $(MAKE) doc_html; 
-	cd ./src && $(MAKE) doc_clean; 
+	cd ./src && $(MAKE) doc_html;
+	cd ./src && $(MAKE) doc_clean;
 	cd ./src && $(MAKE) cache;
 	cd ./src && $(MAKE) patches;
 	if [ -d "./src/help/src" ]; then rm -rf ./src/help/src; fi;
 	mv ./src ./allocPSA-`cat util/alloc_version`
-	tar -czvf allocPSA-`cat util/alloc_version`.tgz allocPSA-`cat util/alloc_version`; 
+	tar -czvf allocPSA-`cat util/alloc_version`.tgz allocPSA-`cat util/alloc_version`;
 	rm -rf ./allocPSA-`cat util/alloc_version`;
 
 css: css/src/*
