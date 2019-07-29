@@ -141,6 +141,7 @@ class inbox extends db_entity
         // Commit the db, and move the email into its storage location eg: INBOX.task1234
         if (!$failed && !$TPL["message"]) {
             $db->commit();
+            $email_receive->mark_seen();
             $email_receive->archive();
         }
 
