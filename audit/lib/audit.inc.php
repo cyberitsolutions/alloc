@@ -60,13 +60,11 @@ class audit extends db_entity
             $entity->select();
         }
 
-        $q = "SELECT *
-                FROM audit
-              $where_clause
-            ORDER BY dateChanged";
-
         $db = new db_alloc();
-        $db->query($q);
+        $db->query("SELECT *
+                      FROM audit
+                    $where_clause
+                  ORDER BY dateChanged");
 
         $items = array();
         while ($row = $db->next_record()) {
