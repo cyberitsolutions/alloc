@@ -62,7 +62,7 @@ the bottom of the login screen for allocPSA, or alternatively view the file:
 We'd love your help, make an issue, write a pull request, start a
 discussion.
 
-Also see DEVELOPERS.md for an example development setup. 🙂
+Also see doc/DEVELOPERS.md for an example development setup. 🙂
 
 ## Support
 
