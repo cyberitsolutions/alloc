@@ -2,7 +2,7 @@
 <?php
 
 /*
- * Copyright (C) 2006-2019 Alex Lance, Clancy Malcolm, Cyber IT Solutions
+ * Copyright (C) 2006-2020 Alex Lance, Clancy Malcolm, Cyber IT Solutions
  * Pty. Ltd.
  *
  * This file is part of the allocPSA application <info@cyber.com.au>.
