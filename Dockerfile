@@ -1,5 +1,5 @@
 # the default php images from docker are werid...
-FROM debian:stretch-slim
+FROM debian:buster-slim
 
 # install apache, php, and mariadb (mysql)
 RUN apt-get update &&\
