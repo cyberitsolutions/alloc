@@ -12,4 +12,3 @@ exclude_patterns:
 - "shared/lib/"
 - "email/lib/Mail_RFC822.inc.php"
 - "email/lib/Mail_mimeDecode.inc.php"
-- "wiki/lib/markdown.inc.php"

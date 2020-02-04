@@ -101,7 +101,6 @@ $m = array("shared",
            "help",
            "email",
            "sale",
-           "wiki",
            "audit",
            "calendar");
 
@@ -113,7 +112,6 @@ $external_storage_directories = array("task",
                                       "comment",
                                       "backups",
                                       "whatsnew",
-                                      "wiki",
                                       "logos",
                                       "search",
                                       "tmp");

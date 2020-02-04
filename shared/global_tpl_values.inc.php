@@ -136,7 +136,6 @@ function get_alloc_urls($TPL, $sess = false)
                         "url_alloc_search"                         => "search/search.php",
                         "url_alloc_report"                         => "report/report.php",
                         "url_alloc_tools"                          => "tools/menu.php",
-                        "url_alloc_wiki"                           => "wiki/wiki.php",
                         "url_alloc_stats"                          => "tools/stats.php",
                         "url_alloc_statsImage"                     => "tools/statsImage.php",
                         "url_alloc_costtime"                       => "tools/costtime.php",
@@ -150,13 +149,8 @@ function get_alloc_urls($TPL, $sess = false)
                         "url_alloc_productList"                    => "sale/productList.php",
                         "url_alloc_productSale"                    => "sale/productSale.php",
                         "url_alloc_productSaleList"                => "sale/productSaleList.php",
-                        "url_alloc_updateCostPrice"                => "sale/updateCostPrice.php",
-                        "url_alloc_fileTree"                       => "wiki/fileTree.php",
-                        "url_alloc_file"                           => "wiki/file.php",
-                        "url_alloc_fileHistory"                    => "wiki/fileHistory.php",
-                        "url_alloc_filePreview"                    => "wiki/filePreview.php",
-                        "url_alloc_fileDownload"                   => "wiki/fileDownload.php",
-                        "url_alloc_directory"                      => "wiki/directory.php");
+                        "url_alloc_updateCostPrice"                => "sale/updateCostPrice.php");
+
 
     foreach ($alloc_urls as $k => $v) {
         if (is_object($sess)) {
