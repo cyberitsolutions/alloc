@@ -35,8 +35,6 @@ $misc_options = array(array("url"=>"reminderList"        ,"text"=>"Reminders"   
                       array("url"=>"commentTemplateList" ,"text"=>"Comment Templates"      ,"entity"=>"commentTemplate" ,"action"=>PERM_READ_WRITE),
                       array("url"=>"loans"               ,"text"=>"Item Loans"             ,"entity"=>"loan"            ,"action"=>true),
                       array("url"=>"report"              ,"text"=>"Reports"                ,"entity"=>""                ,"action"=>true, "function"=>"has_report_perm"),
-                      array("url"=>"backup"              ,"text"=>"Database & File Backup" ,"entity"=>""                ,"function"=>"has_backup_perm"),
-                      array("url"=>"sourceCodeList"      ,"text"=>"allocPSA Source Code"   ,"entity"=>""),
                       array("url"=>"whatsnew"            ,"text"=>"Deployment Changelog"   ,"entity"=>""                ,"function"=> "has_whatsnew_files"),
                       array("url"=>"inbox"               ,"text"=>"Manage Inbox"           ,"entity"=>"config"          ,"action"=>PERM_UPDATE));
 
