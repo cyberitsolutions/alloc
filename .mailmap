@@ -1,0 +1,18 @@
+# This -*-conf-*- file tells git when your name/address changes.
+# Ref. git-shortlog(1), git-check-mailmap(1)
+
+# To see the raw data:
+#   git log --all --format=$'%an <%ae>\n%cn <%ce>' | sort|uniq -c|sort -nr
+# To see the corrected data:
+#   git log --all --format=$'%aN <%aE>\n%cN <%cE>' | sort|uniq -c|sort -nr
+
+#CURRENT NAME       CURRENT ADDRE                   OLD ADDRESS(ES)
+#===============    ==============================  ================================================
+Alex Lance          <code@alexlance.com>            <alexlance@users.noreply.github.com>
+Christopher Bayliss <cjb@cjb.sh>                    <christopher.j.bayliss@gmail.com>
+Con Zymaris         <conz@cyber.com.au>             <conz@cybersource.com.au>
+Jeremy Chin         <noreply+jeremyc@invalid>       <jeremyc@cyber.com.au> <jeremyc@cybersource.com.au>
+Matthew Cengia      <noreply+mattcen@invalid>       <mattcen@cyber.com.au> <mattcen@cybersource.com.au>
+Patrick Clearwater  <noreply+patrick@invalid>       <patrick@cyber.com.au> <patrick@cybersource.com.au>
+Peter Write         <noreply+pete@invalid>          <pete@cyber.com.au>    <pete@cybersource.com.au>
+Trent W. Buck       <twb@cyber.com.au>              <twb@cybersource.com.au> <trentbuck@gmail.com>
