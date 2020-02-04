@@ -529,14 +529,6 @@ Products and Sales
 #.  Able to refine allocation on a per-sale basis.
 
 
-Database Backup and Restore
----------------------------
-
-#.  Web-based mechanism for download the complete database, for backups.
-
-#.  Web-based mechanism for uploading/restoring previous database backups.
-
-
 How to Accomplish Common Tasks
 ==============================
 
@@ -4539,45 +4531,6 @@ reporting tools.
     double-hash (##) etc., which you can then use to separate your fields when
     you pull them into your report analysis application, or mail-merge
     facility.
-
-
-Database & File Backup
-``````````````````````
-
-allocPSA allows super-users to create database and uploaded file backups, and
-then subsequently download, upload or restore a backup file.
-
-#.  Click the 'Database & File Backup' link on the allocPSA Tools tab to go to
-    the backup page.
-
-#.  Click the 'Create New Backup' button.
-
-#.  A list of generated backup files will appear, (you can have multiple
-    backups).
-
-#.  If you click the link for the backup file, you can download the file to
-    your computer.
-
-#.  If you click the 'Restore' button next to a backup file, that backup file
-    will be used to overwrite your current allocPSA database and file uploads.
-    Be careful with this feature. (A backup will be auto-created before all
-    'Restore' operations).
-
-#.  You can choose to clear up some space by removing a backup file by clicking
-    the 'Delete' button.
-
-#.  You can download a backup file, unzip it, edit it, zip it back up, and then
-    re-upload it using the 'Upload Backup Zip File' button, and then restore that
-    newly uploaded backup using the 'Restore' button.
-
-.. NOTE:: Be very careful using this feature. Especially when mixing and
-          matching different versions of allocPSA as restoring a backup file
-          from an earlier release of allocPSA onto a new release probably isn't
-          going to work.
-
-.. NOTE:: Sometimes the PHP memory limit of your webserver will need to be
-          increased to allow for large files and databases.
-
 
 allocPSA Source Code
 ````````````````````

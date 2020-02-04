@@ -104,13 +104,12 @@ $m = array("shared",
            "audit",
            "calendar");
 
-// Sub-dirs under ATTACHMENTS_DIR where upload, email and backup data can be stored
+// Sub-dirs under ATTACHMENTS_DIR where upload amd email can be stored
 $external_storage_directories = array("task",
                                       "client",
                                       "project",
                                       "invoice",
                                       "comment",
-                                      "backups",
                                       "whatsnew",
                                       "logos",
                                       "search",

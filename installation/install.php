@@ -127,7 +127,7 @@ if ($_POST["submit_stage_2"]) {
         $failed = 1;
     } else if (!$failed) {
         // Create directories under attachment dir and chmod them
-        $dirs = $external_storage_directories; // something like array("task","client","project","invoice","comment","backups");
+        $dirs = $external_storage_directories; // something like array("task","client","project","invoice","comment");
         foreach ($dirs as $dir) {
             $d = $_FORM["ATTACHMENTS_DIR"].$dir;
             @mkdir($d, 0777);
