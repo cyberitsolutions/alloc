@@ -14,3 +14,11 @@ javascript/jquery.filetree.js
 javascript/jquery.markitupsettings.js
 
 stuff that, just delete jquery.
+
+CREATE A PATCH TO REMOVE EXTERMINATED PARTS FROM EXISTING DBs.
+==============================================================
+
+REMOVE:
+=======
+
+ * International Currency logic.

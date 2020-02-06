@@ -299,8 +299,6 @@ VALUES
 
 ,('currencyType'             ,0  ,'god'      ,NULL ,1+2+4+8    ,NULL)
 
-,('exchangeRate'             ,0  ,'admin'    ,NULL ,1+2+4+8    ,NULL)
-
 ,('expenseForm'              ,-1 ,'employee' ,NULL ,1+2+4+8    ,NULL)
 ,('expenseForm'              ,0  ,'admin'    ,NULL ,1+2+4+8    ,NULL)
 
@@ -581,9 +579,6 @@ useful automated reminders functionality.
 
 # Check every 10 minutes for any allocPSA Reminders to send
 */10 * * * * wget -q -O /dev/null http://urlforyouralloc/reminder/sendReminders.php
-
-# Update the exchange rates - pick your own time to do it - once per day 
-X Y * * * wget -q -O /dev/null http://urlforyouralloc/finance/updateExchangeRates.php
 
 # Check every 5 minutes for updates to the search index
 */5 * * * * wget -q -O /dev/null http://urlforyouralloc/search/updateIndex.php

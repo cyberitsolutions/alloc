@@ -110,7 +110,7 @@ class product extends db_entity
                 list($amount_minus_tax,$amount_of_tax) = tax($row["amount"]);
                 $row["amount"] = $amount_minus_tax;
             }
-            $amount += exchangeRate::convert($row["currencyTypeID"], $row["amount"]);
+            $amount += $row["amount"];
         }
         return $amount;
     }

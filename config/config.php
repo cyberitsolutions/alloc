@@ -85,13 +85,6 @@ if ($_POST["update_currencyless_transactions"] && $_POST["currency"]) {
     $_POST["save"] = true;
 }
 
-if ($_POST["fetch_exchange_rates"]) {
-    $rtn = exchangeRate::download();
-    $rtn and $TPL["message_good"] = $rtn;
-}
-
-
-
 
 if ($_POST["save"]) {
     if ($_POST["hoursInDay"]) {

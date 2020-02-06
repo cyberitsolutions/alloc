@@ -361,7 +361,7 @@ class timeSheet extends db_entity
 
     function get_amount_so_far($include_tax = false)
     {
-        $q = prepare("SELECT SUM(amount * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance
+        $q = prepare("SELECT SUM(amount * pow(10,-currencyType.numberToBasic)) AS balance
                         FROM transaction
                    LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
                        WHERE timeSheetID = %d AND transactionType != 'invoice'
@@ -556,7 +556,8 @@ class timeSheet extends db_entity
             $row["currencyTypeID"] = $t->get_value("currencyTypeID");
             $row["amount"] = $t->pay_info["total_dollars"];
             $amount_tallies[] = array("amount"=>$row["amount"],"currency"=>$row["currencyTypeID"]);
-            $extra["amountTotal"] += exchangeRate::convert($row["currencyTypeID"], $row["amount"]);
+            // FIXME: remove unneeded variable amountTotal. -- cjb, 2020-02
+            $extra["amountTotal"] += $row["amount"];
             $extra["totalHours"] += $t->pay_info["total_duration_hours"];
             $row["totalHours"] += $t->pay_info["total_duration_hours"];
             $row["duration"] = $t->pay_info["summary_unit_totals"];
@@ -573,7 +574,8 @@ class timeSheet extends db_entity
             $row["person"] = $people_array[$row["personID"]]["name"];
             $row["status"] = $status_array[$row["status"]];
             $row["customerBilledDollars"] = $t->pay_info["total_customerBilledDollars"];
-            $extra["customerBilledDollarsTotal"] += exchangeRate::convert($row["currencyTypeID"], $t->pay_info["total_customerBilledDollars"]);
+            // FIXME: ?? -- cjb, 2020-02
+            $extra["customerBilledDollarsTotal"] += $t->pay_info["total_customerBilledDollars"];
             $billed_tallies[] = array("amount"=>$row["customerBilledDollars"],"currency"=>$row["currencyTypeID"]);
 
             if ($_FORM["showFinances"]) {

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# FIXME:: WTH is this script for? -- cjb, 2020-02
+
 # This script creates the views for a single user alloc database
 # This is to be imported as the mysql root user eg:
 # ./make_single_user_db.sh | mysql -u root -p alloc_someuser

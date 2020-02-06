@@ -191,10 +191,11 @@ class timeSheetItem extends db_entity
             #echo "<br>".$id." ".$how_many_fortnights[$id];
         }
 
+        // FIXME:: !! -- cjb, 2020-02
         // Convert all the monies into native currency
         foreach ($rows_dollars as $id => $arr) {
             foreach ($arr as $r) {
-                $alex[$id] += exchangeRate::convert($r["currency"], $r["amount"]);
+                $alex[$id] += $r["amount"];
             }
         }
 

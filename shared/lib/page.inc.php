@@ -502,11 +502,7 @@ EOD;
         foreach ((array)$sums as $currency => $amount) {
             $str.= $sep.page::money($currency, $amount, "%s%m %c");
             $sep = " + ";
-            if ($mainCurrency == $currency) {
-                $total += $amount;
-            } else {
-                $total += exchangeRate::convert($currency, $amount);
-            }
+            $total += $amount;
         }
         $total = page::money($mainCurrency, $total, "%s%m %c");
         if ($str && $str != $total) {

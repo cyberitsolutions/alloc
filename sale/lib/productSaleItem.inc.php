@@ -53,7 +53,7 @@ class productSaleItem extends db_entity
         $db = new db_alloc();
         $q = prepare(
             "SELECT fromTfID, tfID,
-                    (amount * pow(10,-currencyType.numberToBasic) * exchangeRate) as amount
+                    (amount * pow(10,-currencyType.numberToBasic)) as amount
                FROM transaction
           LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
               WHERE tfID = %d
@@ -78,7 +78,7 @@ class productSaleItem extends db_entity
         $db = new db_alloc();
         $q = prepare(
             "SELECT fromTfID, tfID,
-                    (amount * pow(10,-currencyType.numberToBasic) * exchangeRate) as amount
+                    (amount * pow(10,-currencyType.numberToBasic)) as amount
                FROM transaction
           LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
               WHERE fromTfID = %d
@@ -103,8 +103,7 @@ class productSaleItem extends db_entity
         $db = new db_alloc();
         // Don't need to do numberToBasic conversion here
         $q = prepare(
-            "SELECT fromTfID, tfID,
-                    (amount * exchangeRate) as amount
+            "SELECT fromTfID, tfID, amount as amount
                FROM transaction
           LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
               WHERE fromTfID != %d
@@ -137,9 +136,9 @@ class productSaleItem extends db_entity
 
         // margin = sellPrice - GST - costs
         foreach ($transactions as $row) {
-            $row["saleTransactionType"] == "sellPrice" and $sellPrice = exchangeRate::convert($row["currencyTypeID"], $row["amount"]);
-            $row["saleTransactionType"] == "tax"       and $tax      += exchangeRate::convert($row["currencyTypeID"], $row["amount"]);
-            $row["saleTransactionType"] == "aCost"     and $costs    += exchangeRate::convert($row["currencyTypeID"], $row["amount"]);
+            $row["saleTransactionType"] == "sellPrice" and $sellPrice = $row["amount"];
+            $row["saleTransactionType"] == "tax"       and $tax      += $row["amount"];
+            $row["saleTransactionType"] == "aCost"     and $costs    += $row["amount"];
         }
         $margin = $sellPrice - $costs;
         return $margin;
@@ -266,7 +265,6 @@ class productSaleItem extends db_entity
 
         // If this price includes tax, then perform a tax transfer
         $amount_of_tax = $this->get_value("sellPrice") * ($taxPercent/100);
-        $amount_of_tax = exchangeRate::convert($this->get_value("sellPriceCurrencyTypeID"), $amount_of_tax, null, null, "%mo");
         $this->create_transaction(
             $mainTfID,
             $taxTfID,
@@ -292,7 +290,6 @@ class productSaleItem extends db_entity
         $db2->query($query);
         while ($productCost_row = $db2->next_record()) {
             $amount_of_tax = $productCost_row["amount"] * ($taxPercent/100);
-            $amount_of_tax = exchangeRate::convert($productCost_row["currencyTypeID"], $amount_of_tax, null, null, "%mo");
             $productCost_row["amount"] = $amount_minus_tax;
             $this->create_transaction(
                 $mainTfID,

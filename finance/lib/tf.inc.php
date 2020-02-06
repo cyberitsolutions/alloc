@@ -47,7 +47,7 @@ class tf extends db_entity
         // Get belance
         $db = new db_alloc();
         $query = prepare(
-            "SELECT sum( if(fromTfID=%d,-amount,amount) * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance
+            "SELECT sum( if(fromTfID=%d,-amount,amount) * pow(10,-currencyType.numberToBasic) ) AS balance
                FROM transaction
           LEFT JOIN currencyType ON transaction.currencyTypeID = currencyType.currencyTypeID
               WHERE (tfID = %d or fromTfID = %d) ",
@@ -214,7 +214,7 @@ class tf extends db_entity
 
         $db = new db_alloc();
         $q = prepare("SELECT transaction.tfID as id, tf.tfName, transactionID, transaction.status,
-                             sum(amount * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance
+                             sum(amount * pow(10,-currencyType.numberToBasic)) AS balance
                         FROM transaction
                    LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
                    LEFT JOIN tf on transaction.tfID = tf.tfID
@@ -231,7 +231,7 @@ class tf extends db_entity
 
 
         $q = prepare("SELECT transaction.fromTfID as id, tf.tfName, transactionID, transaction.status,
-                             sum(amount * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance
+                             sum(amount * pow(10,-currencyType.numberToBasic)) AS balance
                         FROM transaction
                    LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
                    LEFT JOIN tf on transaction.fromTfID = tf.tfID

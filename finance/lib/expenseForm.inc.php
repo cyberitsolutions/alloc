@@ -214,7 +214,7 @@ class expenseForm extends db_entity
             $id = $this->get_id();
         }
         $db = new db_alloc();
-        $q = prepare("SELECT sum(amount * pow(10,-currencyType.numberToBasic) * exchangeRate) AS amount
+        $q = prepare("SELECT sum(amount * pow(10,-currencyType.numberToBasic)) AS amount
                         FROM transaction
                    LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
                        WHERE expenseFormID = %d", $id);
