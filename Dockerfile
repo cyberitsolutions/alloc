@@ -16,7 +16,7 @@ COPY . /var/www/html/
 WORKDIR /var/www/html/
 
 RUN mkdir -p /var/local/alloc/; chown www-data /var/local/alloc/
-RUN cd /var/www/html/; make patches; make css
+RUN cd /var/www/html/; make patches; make cache
 
 EXPOSE 80
 

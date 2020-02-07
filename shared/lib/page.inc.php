@@ -381,10 +381,14 @@ EOD;
         } else {
             $current_user = &singleton("current_user");
             $themes = page::get_customizedTheme_array();
-            if (!isset($current_user->prefs["customizedTheme2"])) {
-                $current_user->prefs["customizedTheme2"] = 4;
+
+            // DON'T set the users stylesheet.
+            if (isset($current_user->prefs["customizedTheme2"])) {
+                $style = strtolower($themes[sprintf("%d", $current_user->prefs["customizedTheme2"])]);
+            } else {
+                $style="default";
             }
-            $style = strtolower($themes[sprintf("%d", $current_user->prefs["customizedTheme2"])]);
+
             return "style_".$style.".css";
         }
     }
@@ -410,7 +414,7 @@ EOD;
             $handle = opendir($dir);
             // TODO add icons to files attachaments in general
             while (false !== ($file = readdir($handle))) {
-                if (preg_match("/style_(.*)\.ini$/", $file, $m)) {
+                if (preg_match("/style_(.*)\.css$/", $file, $m)) {
                     $rtn[] = ucwords($m[1]);
                 }
             }
