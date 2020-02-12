@@ -1,8 +1,0 @@
-
-DROP TABLE IF EXISTS tag;
-CREATE TABLE tag (
-  taskID integer NOT NULL,
-  name varchar(255) NOT NULL
-) ENGINE=InnoDB PACK_KEYS=0;
-
-ALTER TABLE tag ADD CONSTRAINT tag_taskID FOREIGN KEY (taskID) REFERENCES task (taskID);
