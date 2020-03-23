@@ -67,7 +67,6 @@ class page
         $menu_links["invoice"] = array("name"=>"Invoices","url"=>$TPL["url_alloc_invoiceList"],    "module"=>"invoice");
         $menu_links["sale"]    = array("name"=>"Sales",   "url"=>$TPL["url_alloc_productSaleList"],"module"=>"sale");
         $menu_links["person"]  = array("name"=>"People",  "url"=>$TPL["url_alloc_personList"],     "module"=>"person");
-        $menu_links["wiki"]    = array("name"=>"Wiki",    "url"=>$TPL["url_alloc_wiki"],           "module"=>"wiki");
         if (have_entity_perm("inbox", PERM_READ, $current_user) && config::get_config_item("allocEmailHost")) {
             $menu_links["inbox"] = array("name"=>"Inbox",   "url"=>$TPL["url_alloc_inbox"],          "module"=>"email");
         }
@@ -194,7 +193,6 @@ class page
         has("time")    and $category_options["search_time"] = "Search Time Sheets";
         has("client")  and $category_options["search_clients"] = "Search Clients";
         has("comment") and $category_options["search_comment"] = "Search Comments";
-        has("wiki")    and $category_options["search_wiki"] = "Search Wiki";
         has("item")    and $category_options["search_items"] = "Search Items";
         has("finance") and $category_options["search_expenseForm"] = "Search Expense Forms";
         return page::select_options($category_options, $category);

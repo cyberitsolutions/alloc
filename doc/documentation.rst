@@ -454,19 +454,6 @@ Clients
 #.  Actual and potential Project revenue from this company.
 
 
-Wiki Knowledge Base
--------------------
-
-#.  Offers an easy-to-use interface.
-
-#.  Provides a simple wiki-syntax.
-
-#.  Revision control for wiki pages.
-
-#.  Great for adding documentation related your services offerings,
-    clients etc.
-
-
 Item Loans
 ----------
 
@@ -3721,105 +3708,6 @@ You can now change your personal information as well as add or view your
 absence from, and allocPSA will take you to this.
 
 
-Wiki
-----
-
-The Wiki in allocPSA is a user-generated knowledge base and communal book. Its
-interface and syntax will be familiar to anyone who has created or managed
-documentation or content on a wiki on similar content systems.
-
-After clicking the Wiki tab from the main tab menu, you will see the 'WIKI
-TREE' content block, which sits on the left-hand side of the screen. This shows
-the current documents available in the wiki, along with any
-folders/sub-folders/directories. You can select any of the content items, or
-folders, by clicking on them.
-
-On the right is the 'HISTORY' content block, which shows a list of change
-actions for the selected content item/wiki page.
-
-In the middle is the wiki display area, which will show the marked-up wiki page
-rendering of your selected content item. You can click on any wiki page from
-the 'WIKI TREE', and it will appear here.
-
-To edit the wiki content item, click the 'Edit' button just beneath the content
-display area. This will open the content item in a text-editing area, and
-present a simple wiki-text markup toolbar across the top of this area.
-
-You can now modify the content text how you like. If you're familiar with wiki
-syntax, you can insert it directly. Alternatively, you can use the markup
-toolbar to insert the markup syntax into the text area. You can also start by
-using the toolbar to insert items, and learn the wiki syntax as you progress -
-it's quite simple.
-
-As an example, to enter text as a top-level heading, click the *H1* toolbar
-button. This will insert sample marked-up heading text in the current cursor
-position in the text editing area, and highlight the sample text which you will
-need to replace with your own.
-
-Some of the toolbar buttons have keyboard accelerators - simply hover your
-mouse cursor over one of these buttons to see the corresponding help tooltip.
-For example, the *H1* toolbar button uses the Ctrl + 1 keyboard accelerator.
-*H2* uses Ctrl + 2, etc. To insert **bold** text, you can use Ctrl + B,
-*italic* is Ctrl + I and so forth.
-
-You can preview the changes you've made, without having to commit them, by
-clicking the *Preview* toolbar button. The preview page is below your
-text-editing area.
-
-When done, you can save your changes by clicking the 'Save' button just below
-your text editing area.
-
-Also, you should always consider adding a few words of text explaining the
-nature of your changes to this wiki page. Add these in the single-line text
-box, just below the wiki page text editing area.
-
-Once you've saved your modified wiki page, you see a rendered version, and the
-modification note outlining the nature of the changes will appear in the
-'HISTORY' section on the right, along with the name of the allocPSA making the
-changes (i.e., you) and the date-time of this change.
-
-Note that to make the 'HISTORY' functionality work, you will need to have a
-file version control system installed on the server. Currently allocPSA
-supports git, mercurial, or darcs for its VCS. Out of the box allocPSA uses
-git. The config option called wikiVCS controls which VCS is used.
-
-Creating a New Wiki Page
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-Click the *New File* link in the top right hand corner of the wiki screen; you
-can also create a new file by linking to a file that doesn't exist, using the
-wiki-page link syntax: e.g., [[newfile.txt]]
-
-
-Wiki Syntax
-~~~~~~~~~~~
-
-The wiki syntax used in allocPSA is called *markdown* You can get more
-information about how to write markdown wikis here:
-http://daringfireball.net/projects/markdown/
-
-We've added some additional extensions to cover syntax for links and maps.
-
-Here's a quick primer on *markdown*:
-
-- Headings of various levels can be made by following the heading title with an
-  'underlining' line of characters, such as: ~, -, _, etc.
-
-- Words can be *italicised* (i.e., emphasised) by putting a single asterisk on
-  either side of the word.
-
-- Words can be **bold** (i.e., strongly-emphasised) by putting double-quotes on
-  either side of the word.
-
-- Links can be made to other wiki pages, by putting the file-name of the target
-  wiki page in double-square-brackets: i.e., [[ ]]
-
-allocPSA has been written such that any programmer can "drop-in" a new wiki
-syntax. At the moment, the code needs to be modified in order for this to
-happen. The allocPSA development team hopes to eventually make it easy to make
-this change via a config option.
-
-
 Inbox
 -----
 
@@ -4252,9 +4140,8 @@ Your changes will be automatically updated on the Permission page and activated 
 Search
 ``````
 
-The search functionality within allocPSA searches various fields in the
-database and also the files in the wiki. It uses the Zend port of the Lucene
-search engine.
+The search functionality within allocPSA searches various fields in
+the database. It uses the Zend port of the Lucene search engine.
 
 Any of the keyword fields that are indexed may be searched upon. Either by
 itself or in combination with other search terms. The default is to search
@@ -4488,21 +4375,6 @@ Indexed keyword fields for Comments
      - The person who created the comment
    - - dateCreated
      - The date the comment was created
-
-
-Indexed keyword fields for the Wiki
-
-.. list-table::
-
-   - - id
-     - The unique ID.
-   - - name
-     - The path and file name
-   - - desc
-     - The body of the file
-   - - pdfstr
-     - If the file was a PDF then the body of the pdf may be specifically searched using this keyword
-
 
 
 Company Skill Matrix

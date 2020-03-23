@@ -12,7 +12,7 @@ ini_set('max_execution_time',180000);
 ini_set('memory_limit',"512M");
 
 
-foreach (array("client","comment","item","project","task","timeSheet","wiki") as $i) {
+foreach (array("client","comment","item","project","task","timeSheet") as $i) {
 
   rename(ATTACHMENTS_DIR.'search'.DIRECTORY_SEPARATOR.$i,
          ATTACHMENTS_DIR.'search'.DIRECTORY_SEPARATOR.$i."_backup_".date("Y-m-d"));

@@ -195,7 +195,6 @@ $tabops = array("home"    => "Home",
                 "invoice" => "Invoices",
                 "sale"    => "Sales",
                 "person"  => "People",
-                "wiki"    => "Wiki",
                 "inbox"   => "Inbox",
                 "tools"   => "Tools");
 
