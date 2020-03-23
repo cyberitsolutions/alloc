@@ -31,7 +31,7 @@ class vcs_git extends vcs
         $this->name = "git ";
         $this->repodir = $repo;
         $this->repoprefix = " --git-dir '".$repo.".git' --work-tree '".$repo."' ";
-        $this->commit = " commit --author '".$current_user->get_name()." <".$current_user->get_value("emailAddress").">' -m ";
+        $this->commit = " -c user.name='".$current_user->get_name()."' -c user.email='".$current_user->get_value("emailAddress")."' commit --author '".$current_user->get_name()." <".$current_user->get_value("emailAddress").">' -m ";
         $this->metadir = ".git";
         $this->add_everything = " add ".$repo."/. ";
         $this->log = " log --pretty=format:'Hash: %H%nAuthor: %an%nDate: %ct%nMsg: %s' -M -C --follow ";

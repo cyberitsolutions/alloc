@@ -26,6 +26,7 @@ $file = $_POST["file"] or $file = $_GET["file"];
 $TPL["file"] = $file;
 $editName = $_POST["editName"];
 $TPL["editName"] = $_POST["editName"];
+strlen($_POST["commit_msg"]) or $_POST["commit_msg"] = "File updated";
 
 // Decode the wiki document ..
 $text = html_entity_decode($_POST["wikitext"]);
