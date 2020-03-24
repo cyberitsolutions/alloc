@@ -237,3 +237,12 @@ if (!function_exists("ace_augment")) {
         return $default;
     }
 }
+
+// Setup search indices if they don't already exist
+if (!file_exists(ATTACHMENTS_DIR."search/task")) {
+  $search_item_indexes = array("client", "comment", "item", "project", "task", "timeSheet", "wiki");
+  foreach ($search_item_indexes as $i) {
+    $index = Zend_Search_Lucene::create(ATTACHMENTS_DIR.'search'.DIRECTORY_SEPARATOR.$i);
+    $index->commit();
+  }
+}
