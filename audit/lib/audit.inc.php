@@ -32,16 +32,18 @@ class audit extends db_entity
                                 "field",
                                 "value");
 
+    /**
+     * Get a list of task history items with sophisticated filtering and
+     * somewhat sophisticated output
+     *
+     * (n.b., the output from this generally needs to be post-processed to
+     * handle the semantic meaning of changes in various fields)
+     *
+     * @param array $_FORM
+     * @return array $rows an array of audit records
+     */
     public static function get_list($_FORM)
     {
-      /*
-       *
-       * Get a list of task history items with sophisticated filtering and somewhat sophisticated output
-       *
-       * (n.b., the output from this generally needs to be post-processed to handle the semantic meaning of changes in various fields)
-       *
-       */
-
         $filter = audit::get_list_filter($_FORM);
 
         if (is_array($filter) && count($filter)) {
@@ -58,14 +60,11 @@ class audit extends db_entity
             $entity->select();
         }
 
-
-        $q = "SELECT *
-                FROM audit
-              $where_clause
-            ORDER BY dateChanged";
-
         $db = new db_alloc();
-        $db->query($q);
+        $db->query("SELECT *
+                      FROM audit
+                    $where_clause
+                  ORDER BY dateChanged");
 
         $items = array();
         while ($row = $db->next_record()) {
@@ -77,7 +76,12 @@ class audit extends db_entity
         return $rows;
     }
 
-
+    /**
+     * Get an array to use as a filter
+     *
+     * @param array $filter
+     * @return array $sql an array of project or task id to filter by. e.g.: Array([0] => (taskID = 1))
+     */
     public static function get_list_filter($filter)
     {
         $filter["taskID"]    and $sql[] = prepare("(taskID = %d)", $filter["taskID"]);
