@@ -67,7 +67,7 @@ class token extends db_entity
                 $tokenAction->select();
             }
             if ($this->get_value("tokenEntity")) {
-                $class = $this->get_value("tokenEntity");
+                $class = $this->db_entity::get_value("tokenEntity");
                 $entity = new $class;
                 if ($this->get_value("tokenEntityID")) {
                     $entity->set_id($this->get_value("tokenEntityID"));

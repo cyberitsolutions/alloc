@@ -80,7 +80,7 @@ class comment extends db_entity
     function is_owner()
     {
         $current_user = &singleton("current_user");
-        $entity = $this->get_value("commentMaster");
+        $entity = $this->db_entity::get_value("commentMaster");
         $e = new $entity;
         $e->set_id($this->get_value("commentMasterID"));
         $e->select();
@@ -90,7 +90,7 @@ class comment extends db_entity
     function has_attachment_permission($person)
     {
         $current_user = &singleton("current_user");
-        $entity = $this->get_value("commentMaster");
+        $entity = $this->db_entity::get_value("commentMaster");
         $e = new $entity;
         $e->set_id($this->get_value("commentMasterID"));
         $e->select();
@@ -800,7 +800,7 @@ class comment extends db_entity
     function get_parent_object()
     {
         if (class_exists($this->get_value("commentMaster"))) {
-            $parent_type = $this->get_value("commentMaster");
+            $parent_type = $this->db_entity::get_value("commentMaster");
             $o = new $parent_type;
             $o->set_id($this->get_value("commentMasterID"));
             $o->select();
@@ -818,7 +818,7 @@ class comment extends db_entity
         $author = comment::get_comment_author($arr);
         $name.= $author;
 
-        $entity = $this->get_value("commentType");
+        $entity = $this->db_entity::get_value("commentType");
         $entity_id = $this->get_value("commentLinkID");
         if (!class_exists($entity)) {
             return false;

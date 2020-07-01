@@ -84,7 +84,7 @@ $permission->select();
 
 $TPL["roleNameOptions"] = page::select_options(permission::get_roles(), $permission->get_value("roleName"));
 
-$table_name = $_POST["tableName"] or $table_name = $permission->get_value("tableName");
+$table_name = $_POST["tableName"] or $table_name = $permission->db_entity::get_value("tableName");
 $entity = new $table_name;
 
 foreach ($entity->permissions as $value => $label) {
