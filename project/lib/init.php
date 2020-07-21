@@ -20,9 +20,6 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-require_once(dirname(__FILE__)."/import_export.inc.php");
-
 class project_module extends module
 {
     var $module = "project";

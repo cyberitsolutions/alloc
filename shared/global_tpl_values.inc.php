@@ -54,7 +54,6 @@ function get_alloc_urls($TPL, $sess = false)
                         "url_alloc_updateProjectPersonRate"        => "project/updateProjectPersonRate.php",
                         "url_alloc_personGraph"                    => "project/personGraph.php",
                         "url_alloc_personGraphImage"               => "project/personGraphImage.php",
-                        "url_alloc_importCSV"                      => "project/parseCSV.php",
 
                         "url_alloc_task"                           => "task/task.php",
                         "url_alloc_updateParentTasks"              => "task/updateParentTasks.php",

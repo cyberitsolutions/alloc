@@ -22,9 +22,6 @@
 
 require_once("../alloc.php");
 
-
-
-
 function show_attachments()
 {
     global $projectID;
@@ -316,15 +313,8 @@ function show_tasks()
     include_template("templates/projectTaskS.tpl");
 }
 
-function show_import_export($template)
-{
-    include_template($template);
-}
-
 
 // END FUNCTIONS
-
-
 
 
 $current_user = &singleton("current_user");
@@ -493,21 +483,8 @@ if ($projectID) {
         } else if ($_POST["commission_delete"]) {
             $commission_item->delete();
         }
-    } else if ($_POST['do_import']) {
-        // Import from an uploaded file
-        switch ($_POST['import_type']) {
-            case 'planner':
-                import_gnome_planner('import');
-                break;
-            case 'csv':
-                $fn = store_csv($_FILES['import']['tmp_name']);
-                if ($fn) {
-                    alloc_redirect($TPL["url_alloc_importCSV"]."projectID=".$projectID."&filename=$fn");
-                }
-                $TPL['message'] = "There was an error processing the uploaded file.";
-                break;
-        }
     }
+
     // Displaying a record
     $project->set_id($projectID);
     $project->select() || alloc_error("Could not load project $projectID");
