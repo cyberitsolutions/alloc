@@ -58,17 +58,17 @@ function show_new_invoiceItem($template)
                 unset($TPL["div2"]);
                 $TPL["div1"] = " class=\"hidden\"";
                 $TPL["sbs_link"] = "timeSheet_ii";
-            } else if ($invoiceItem->get_value("expenseFormID")) {
+            } elseif ($invoiceItem->get_value("expenseFormID")) {
                 unset($TPL["div3"]);
                 $TPL["div1"] = " class=\"hidden\"";
                 $TPL["sbs_link"] = "expenseForm_ii";
-            } else if ($invoiceItem->get_value("productSaleID")) {
+            } elseif ($invoiceItem->get_value("productSaleID")) {
                 unset($TPL["div4"]);
                 $TPL["div1"] = " class=\"hidden\"";
                 $TPL["sbs_link"] = "productSale_ii";
             }
 
-        // Else default values for creating a new invoiceItem
+            // Else default values for creating a new invoiceItem
         } else {
             $invoiceItem = new invoiceItem();
             $invoiceItem->set_values("invoiceItem_");
@@ -79,7 +79,7 @@ function show_new_invoiceItem($template)
 
         // Build dropdown lists for timeSheet and expenseForm options.
         if ($invoice->get_value("clientID")) {
-          // Time Sheet dropdown
+            // Time Sheet dropdown
             $db = new db_alloc();
             $q = prepare("SELECT projectID FROM project WHERE clientID = %d", $invoice->get_value("clientID"));
             $db->query($q);
@@ -101,11 +101,11 @@ function show_new_invoiceItem($template)
                 $timeSheetStatii = timeSheet::get_timeSheet_statii();
 
                 while ($row = $db->row()) {
-                      $t = new timeSheet();
-                      $t->read_db_record($db);
-                      $t->load_pay_info();
-                      $dollars = $t->pay_info["total_customerBilledDollars"] or $dollars = $t->pay_info["total_dollars"];
-                      $timeSheetOptions[$row["timeSheetID"]] = "Time Sheet #".$t->get_id()." ".$row["dateFrom"]." ".$dollars." for ".person::get_fullname($row["personID"]).", Project: ".$row["projectName"]." [".$timeSheetStatii[$t->get_value("status")]."]";
+                    $t = new timeSheet();
+                    $t->read_db_record($db);
+                    $t->load_pay_info();
+                    $dollars = $t->pay_info["total_customerBilledDollars"] or $dollars = $t->pay_info["total_dollars"];
+                    $timeSheetOptions[$row["timeSheetID"]] = "Time Sheet #".$t->get_id()." ".$row["dateFrom"]." ".$dollars." for ".person::get_fullname($row["personID"]).", Project: ".$row["projectName"]." [".$timeSheetStatii[$t->get_value("status")]."]";
                 }
 
                 $TPL["timeSheetOptions"] = page::select_options($timeSheetOptions, $invoiceItem->get_value("timeSheetID"), 150);
@@ -121,7 +121,7 @@ function show_new_invoiceItem($template)
                         ORDER BY expenseForm.expenseFormCreatedTime", $invoice->get_value("clientID"));
             $db->query($q);
             while ($row = $db->row()) {
-                  $expenseFormOptions[$row["expenseFormID"]] = "Expense Form #".$row["expenseFormID"]." ".page::money(config::get_config_item("currency"), expenseForm::get_abs_sum_transactions($row["expenseFormID"]), "%s%m %c")." ".person::get_fullname($row["expenseFormCreatedUser"]);
+                $expenseFormOptions[$row["expenseFormID"]] = "Expense Form #".$row["expenseFormID"]." ".page::money(config::get_config_item("currency"), expenseForm::get_abs_sum_transactions($row["expenseFormID"]), "%s%m %c")." ".person::get_fullname($row["expenseFormCreatedUser"]);
             }
 
             if ($invoiceItem->get_value("expenseFormID")) {
@@ -138,11 +138,11 @@ function show_new_invoiceItem($template)
             $invoice->get_value("projectID") and $q.= prepare(" AND projectID = %d", $invoice->get_value("projectID"));
             $db->query($q);
             while ($row = $db->row()) {
-                  $productSale = new productSale();
-                  $productSale->set_id($row["productSaleID"]);
-                  $productSale->select();
-                  $ps_row = $productSale->get_amounts();
-                  $productSaleOptions[$row["productSaleID"]] = "Sale #".$row["productSaleID"]." ".$ps_row["total_sellPrice"]." ".person::get_fullname($row["personID"]);
+                $productSale = new productSale();
+                $productSale->set_id($row["productSaleID"]);
+                $productSale->select();
+                $ps_row = $productSale->get_amounts();
+                $productSaleOptions[$row["productSaleID"]] = "Sale #".$row["productSaleID"]." ".$ps_row["total_sellPrice"]." ".person::get_fullname($row["personID"]);
             }
             if ($invoiceItem->get_value("productSaleID")) {
                 $id = $invoiceItem->get_value("productSaleID");
@@ -226,7 +226,7 @@ function show_invoiceItem_list()
                 $one_rejected = true;
             }
             if ($db2->f("transaction_status") == "pending") {
-                    $one_pending = true;
+                $one_pending = true;
             }
 
             $amounts[$invoiceItem->get_id()]+= $db2->f("transaction_amount");
@@ -250,10 +250,10 @@ function show_invoiceItem_list()
         if (!$one_rejected && !$one_pending && $one_approved) {
             $TPL["box_class"] = " approved";
             $transaction_status = "approved";
-        } else if ($one_rejected) {
+        } elseif ($one_rejected) {
             $TPL["box_class"] = " rejected";
             $transaction_status = "rejected";
-        } else if ($one_pending) {
+        } elseif ($one_pending) {
             $transaction_status = "pending";
             $TPL["box_class"] = " warn";
         } else {
@@ -265,16 +265,16 @@ function show_invoiceItem_list()
 
         if ($sel["rejected"]) {
             $TPL["status_label"] = "<b>[Not Going To Be Paid]</b>";
-        } else if ($sel["pending"]) {
+        } elseif ($sel["pending"]) {
             $TPL["status_label"] = "<b>[Pending]</b>";
-        } else if ($sel["approved"]) {
+        } elseif ($sel["approved"]) {
             $TPL["status_label"] = "<b>[Paid]</b>";
         }
 
         if ($transaction_sum > 0 && $transaction_sum < $invoiceItem->get_value("iiAmount", DST_HTML_DISPLAY)) {
             $TPL["status_label"] = "<b>[Paid in part]</b>";
             $TPL["box_class"] = " warn";
-        } else if ($transaction_sum > $invoiceItem->get_value("iiAmount")) {
+        } elseif ($transaction_sum > $invoiceItem->get_value("iiAmount")) {
             $TPL["status_label"] = "<b>[Overpaid]</b>";
         }
 
@@ -297,7 +297,7 @@ function show_invoiceItem_list()
                 $timeSheet = $invoiceItem->get_foreign_object("timeSheet");
                 $project = $timeSheet->get_foreign_object("project");
                 $selected_tfID = $project->get_value("cost_centre_tfID");
-            } else if (!$selected_tfID && $invoiceItem->get_value("transactionID")) {
+            } elseif (!$selected_tfID && $invoiceItem->get_value("transactionID")) {
                 $transaction = $invoiceItem->get_foreign_object("transaction");
                 $project = $transaction->get_foreign_object("project");
                 $selected_tfID = $project->get_value("cost_centre_tfID");
@@ -339,8 +339,8 @@ function show_invoiceItem_list()
 
 
             unset($TPL["invoiceItem_buttons"]);
-        } else if ($invoice->get_value("invoiceStatus") == "finished") {
-        } else if (is_object($invoice) && $invoice->get_value("invoiceStatus") == "edit") {
+        } elseif ($invoice->get_value("invoiceStatus") == "finished") {
+        } elseif (is_object($invoice) && $invoice->get_value("invoiceStatus") == "edit") {
             $TPL["invoiceItem_buttons"] = '
         <button type="submit" name="invoiceItem_delete['.$invoiceItem->get_id().']" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
         <button type="submit" name="invoiceItem_edit['.$invoiceItem->get_id().']" value="1">Edit<i class="icon-edit"></i></button>
@@ -355,7 +355,7 @@ function show_invoiceItem_list()
             $amount = $t->pay_info["total_customerBilledDollars"] or $amount = $t->pay_info["total_dollars"];
 
             $TPL["invoiceItem_iiMemo"] = "<a href=\"".$TPL["url_alloc_timeSheet"]."timeSheetID=".$invoiceItem->get_value("timeSheetID")."\">".$invoiceItem->get_value("iiMemo")." (Currently: $".$amount.", Status: ".$t->get_timeSheet_status().")</a>";
-        } else if ($invoiceItem->get_value("expenseFormID")) {
+        } elseif ($invoiceItem->get_value("expenseFormID")) {
             $ep = $invoiceItem->get_foreign_object("expenseForm");
             $total = $ep->get_abs_sum_transactions();
             $TPL["invoiceItem_iiMemo"] = "<a href=\"".$TPL["url_alloc_expenseForm"]."expenseFormID=".$invoiceItem->get_value("expenseFormID")."\">".$invoiceItem->get_value("iiMemo")." (Currently: ".page::money(config::get_config_item("currency"), $total, "%s%m %c").", Status: ".$ep->get_status().")</a>";
@@ -387,7 +387,7 @@ function show_comments()
             $interestedPartyOptions = $project->get_all_parties($invoice->get_value("projectID"));
             $client = $project->get_foreign_object("client");
             $clientID = $client->get_id();
-        } else if ($invoice->get_value("clientID")) {
+        } elseif ($invoice->get_value("clientID")) {
             $client = $invoice->get_foreign_object("client");
             $interestedPartyOptions = $client->get_all_parties($invoice->get_value("clientID"));
             $clientID = $client->get_id();
@@ -467,7 +467,7 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
     }
     if ($_POST["save_and_MoveForward"]) {
         $direction = "forwards";
-    } else if ($_POST["save_and_MoveBack"]) {
+    } elseif ($_POST["save_and_MoveBack"]) {
         $direction = "backwards";
     }
 
@@ -500,7 +500,7 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
         $TPL["message_good"][] = "Invoice saved.";
         alloc_redirect($TPL["url_alloc_invoice"]."invoiceID=".$invoiceID.$extra);
     }
-} else if ($_POST["delete"] && $invoice->get_value("invoiceStatus") == "edit") {
+} elseif ($_POST["delete"] && $invoice->get_value("invoiceStatus") == "edit") {
     if ($invoiceItemIDs) {
         $db = new db_alloc();
         $q = prepare("DELETE FROM transaction WHERE invoiceItemID in (%s)", $invoiceItemIDs);
@@ -517,7 +517,7 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
 
 
 // Saving editing individual invoiceItems
-} else if (($_POST["invoiceItem_save"] || $_POST["invoiceItem_edit"] || $_POST["invoiceItem_delete"]) && $invoice->get_value("invoiceStatus") == "edit") {
+} elseif (($_POST["invoiceItem_save"] || $_POST["invoiceItem_edit"] || $_POST["invoiceItem_delete"]) && $invoice->get_value("invoiceStatus") == "edit") {
     is_array($_POST["invoiceItem_edit"]) and $invoiceItemID = key($_POST["invoiceItem_edit"]);
     is_array($_POST["invoiceItem_delete"]) and $invoiceItemID = key($_POST["invoiceItem_delete"]);
 
@@ -539,19 +539,19 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
         if ($_POST["timeSheetID"] && $_POST["split_timeSheet"]) {
             invoiceEntity::create($invoiceItem->get_value("invoiceID"), "timeSheet", $_POST["timeSheetID"], 1);
             invoiceEntity::save_invoice_timeSheetItems($invoiceItem->get_value("invoiceID"), $_POST["timeSheetID"]);
-        } else if ($_POST["timeSheetID"]) {
+        } elseif ($_POST["timeSheetID"]) {
             invoiceEntity::create($invoiceItem->get_value("invoiceID"), "timeSheet", $_POST["timeSheetID"]);
             invoiceEntity::save_invoice_timeSheet($invoiceItem->get_value("invoiceID"), $_POST["timeSheetID"]);
-        } else if ($_POST["expenseFormID"] && $_POST["split_expenseForm"]) {
+        } elseif ($_POST["expenseFormID"] && $_POST["split_expenseForm"]) {
             invoiceEntity::create($invoiceItem->get_value("invoiceID"), "expenseForm", $_POST["expenseFormID"], 1);
             invoiceEntity::save_invoice_expenseFormItems($invoiceItem->get_value("invoiceID"), $_POST["expenseFormID"]);
-        } else if ($_POST["expenseFormID"]) {
+        } elseif ($_POST["expenseFormID"]) {
             invoiceEntity::create($invoiceItem->get_value("invoiceID"), "expenseForm", $_POST["expenseFormID"]);
             invoiceEntity::save_invoice_expenseForm($invoiceItem->get_value("invoiceID"), $_POST["expenseFormID"]);
-        } else if ($_POST["productSaleID"] && $_POST["split_productSale"]) {
+        } elseif ($_POST["productSaleID"] && $_POST["split_productSale"]) {
             invoiceEntity::create($invoiceItem->get_value("invoiceID"), "productSale", $_POST["productSaleID"], 1);
             invoiceEntity::save_invoice_productSaleItems($invoiceItem->get_value("invoiceID"), $_POST["productSaleID"]);
-        } else if ($_POST["productSaleID"]) {
+        } elseif ($_POST["productSaleID"]) {
             invoiceEntity::create($invoiceItem->get_value("invoiceID"), "productSale", $_POST["productSaleID"]);
             invoiceEntity::save_invoice_productSale($invoiceItem->get_value("invoiceID"), $_POST["productSaleID"]);
         } else {
@@ -560,9 +560,9 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
 
         $TPL["message_good"][] = "Invoice Item saved.";
         alloc_redirect($TPL["url_alloc_invoice"]."invoiceID=".$invoiceItem->get_value("invoiceID"));
-    } else if ($_POST["invoiceItem_edit"]) {
+    } elseif ($_POST["invoiceItem_edit"]) {
         // Hmph. Nothing needs to go here?
-    } else if ($_POST["invoiceItem_delete"]) {
+    } elseif ($_POST["invoiceItem_delete"]) {
         $invoiceItem->select();
         $invoiceItem->delete();
         $TPL["message_good"][] = "Invoice Item deleted.";
@@ -573,7 +573,7 @@ if ($_POST["save"] || $_POST["save_and_MoveForward"] || $_POST["save_and_MoveBac
     $invoice->select();
 
 // if someone uploads an attachment
-} else if ($_POST["save_attachment"]) {
+} elseif ($_POST["save_attachment"]) {
     move_attachment("invoice", $invoiceID);
     $TPL["message_good"][] = "Attachment saved.";
     alloc_redirect($TPL["url_alloc_invoice"]."invoiceID=".$invoiceID);
@@ -675,7 +675,7 @@ if ($current_user->have_role('admin')) {
         $TPL["field_clientID"] = $client_select;
         $TPL["field_projectID"] = $project_select;
         $TPL["field_tfID"] = $tf_select;
-    } else if ($invoice->get_value("invoiceStatus") == "edit") {
+    } elseif ($invoice->get_value("invoiceStatus") == "edit") {
         $TPL["invoice_buttons"] = '
         <button type="submit" name="delete" value="1" class="delete_button">Delete<i class="icon-trash"></i></button>
         <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
@@ -687,7 +687,7 @@ if ($current_user->have_role('admin')) {
         $TPL["field_clientID"] = $client_select;
         $TPL["field_projectID"] = $project_select;
         $TPL["field_tfID"] = $tf_select;
-    } else if ($invoice->get_value("invoiceStatus") == "reconcile") {
+    } elseif ($invoice->get_value("invoiceStatus") == "reconcile") {
         $TPL["invoice_buttons"] = '
         <button type="submit" name="save_and_MoveBack" value="1" class="save_button"><i class="icon-arrow-left" style="margin:0px; margin-right:5px"></i>Back</button>
         <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
@@ -702,7 +702,7 @@ if ($current_user->have_role('admin')) {
         $TPL["field_maxAmount"] = page::money($currency, $TPL["maxAmount"], "%s%mo %c");
         $TPL["field_invoiceDateFrom"] = $TPL["invoiceDateFrom"];
         $TPL["field_invoiceDateTo"] = $TPL["invoiceDateTo"];
-    } else if ($invoice->get_value("invoiceStatus") == "finished") {
+    } elseif ($invoice->get_value("invoiceStatus") == "finished") {
         $TPL["invoice_buttons"] = '
         <button type="submit" name="save_and_MoveBack" value="1" class="save_button"><i class="icon-arrow-left" style="margin:0px; margin-right:5px"></i>Back</button>
     ';
@@ -764,7 +764,7 @@ if (is_object($invoice) && $invoice->get_id()) {
                     $id
                 );
                 if ($idrow = $db->row($qid2)) {
-                      $links[] = "<a href='".$TPL["url_alloc_invoice"]."invoiceID=".$idrow["invoiceID"]."'>".$id."</a>";
+                    $links[] = "<a href='".$TPL["url_alloc_invoice"]."invoiceID=".$idrow["invoiceID"]."'>".$id."</a>";
                 } else {
                     $links[] = $id;
                 }

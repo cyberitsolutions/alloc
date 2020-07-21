@@ -32,14 +32,14 @@ class commentTemplate extends db_entity
                                 "commentTemplateModifiedTime");
 
 
-    function get_populated_template($entity, $entityID = false)
+    public function get_populated_template($entity, $entityID = false)
     {
         // Gets a populated template for this->commentTemplateName
         $str = $this->get_value("commentTemplateText");
         return commentTemplate::populate_string($str, $entity, $entityID);
     }
 
-    function populate_string($str, $entity, $entityID = false)
+    public function populate_string($str, $entity, $entityID = false)
     {
         // Actually do the text substitution
         $current_user = &singleton("current_user");

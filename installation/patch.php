@@ -51,7 +51,7 @@ function apply_patch($f)
 
     // Try for sql file
     if (strtolower(substr($file, -4)) == ".sql") {
-        list($sql,$comments) = parse_sql_file($f);
+        list($sql, $comments) = parse_sql_file($f);
         foreach ($sql as $query) {
             if (!$db->query($query)) {
                 #$TPL["message"][] = "<b style=\"color:red\">Error:</b> ".$f."<br>".$db->get_error();
@@ -63,8 +63,8 @@ function apply_patch($f)
             $TPL["message_good"][] = "Successfully Applied: ".$f;
         }
 
-    // Try for php file
-    } else if (strtolower(substr($file, -4)) == ".php") {
+        // Try for php file
+    } elseif (strtolower(substr($file, -4)) == ".php") {
         $str = execute_php_file("../patches/".$file);
         if ($str && !defined("FORCE_PATCH_SUCCEED_".$file)) {
             #$TPL["message"][] = "<b style=\"color:red\">Error:</b> ".$f."<br>".$str;
@@ -104,13 +104,13 @@ if ($_REQUEST["apply_patches"]) {
         }
     }
 
-// Apply a single patch
-} else if ($_REQUEST["apply_patch"] && $_REQUEST["patch_file"]) {
+    // Apply a single patch
+} elseif ($_REQUEST["apply_patch"] && $_REQUEST["patch_file"]) {
     $abc123_f = ALLOC_MOD_DIR."patches/".$_REQUEST["patch_file"];
     if (!in_array($abc123_file, $abc123_applied_patches)) {
         apply_patch($abc123_f);
     }
-} else if ($_REQUEST["remove_patch"] && $_REQUEST["patch_file"]) {
+} elseif ($_REQUEST["remove_patch"] && $_REQUEST["patch_file"]) {
     $abc123_f = ALLOC_MOD_DIR."patches/".$_REQUEST["patch_file"];
     $q = prepare("INSERT INTO patchLog (patchName, patchDesc, patchDate)
                 VALUES ('%s','%s','%s')", $_REQUEST["patch_file"], "Patch not applied.", date("Y-m-d H:i:s"));

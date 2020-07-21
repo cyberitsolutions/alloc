@@ -34,7 +34,7 @@ class config extends db_entity
         if ($table[$name]["type"] == "array") {
             $val = unserialize($table[$name]["value"]) or $val = array();
             return $val;
-        } else if ($table[$name]["type"] == "text") {
+        } elseif ($table[$name]["type"] == "text") {
             $val = $table[$name]["value"];
             return $val;
         }

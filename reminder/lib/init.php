@@ -23,6 +23,6 @@
 
 class reminder_module extends module
 {
-    var $module = "reminder";
-    var $db_entities = array("reminder", "reminderRecipient");
+    public $module = "reminder";
+    public $db_entities = array("reminder", "reminderRecipient");
 }

@@ -205,7 +205,7 @@ class page
             $img = "<div id='help_button_".$topic."' style='display:inline;'><a href=\"".$TPL["url_alloc_getHelp"]."topic=".$topic."\" target=\"_blank\">";
             $img.= "<img border='0' class='help_button' onmouseover=\"help_text_on('help_button_".$topic."','".$str."');\" onmouseout=\"help_text_off('help_button_".$topic."');\" src=\"";
             $img.= $TPL["url_alloc_images"]."help.gif\" alt=\"Help\" /></a></div>";
-        } else if ($topic) {
+        } elseif ($topic) {
             $str = page::prepare_help_string($topic);
             $img = "<div id='help_button_".md5($topic)."' style='display:inline;'>";
             if ($hovertext) {
@@ -278,7 +278,7 @@ EOD;
             }
 
             // Build options from an array: array(value1=>label1, value2=>label2)
-        } else if (is_array($options)) {
+        } elseif (is_array($options)) {
             foreach ($options as $k => $v) {
                 $rows[$k] = $v;
             }
@@ -288,7 +288,7 @@ EOD;
             // Coerce selected options into an array
             if (is_array($selected_value)) {
                 $selected_values = $selected_value;
-            } else if ($selected_value !== null) {
+            } elseif ($selected_value !== null) {
                 $selected_values[] = $selected_value;
             }
 
@@ -304,7 +304,7 @@ EOD;
                     foreach ($selected_values as $selected_value) {
                         if ($selected_value === "" && $value === 0) {
                             // continue
-                        } else if ($selected_value == $value) {
+                        } elseif ($selected_value == $value) {
                             $sel = " selected";
                         }
                     }
@@ -511,7 +511,7 @@ EOD;
         $total = page::money($mainCurrency, $total, "%s%m %c");
         if ($str && $str != $total) {
             $rtn = page::help(page::exclaim()."<b>Approximate currency conversion</b><br>".$str." = ".$total, page::exclaim().$total);
-        } else if ($str) {
+        } elseif ($str) {
             $rtn = $str;
         }
         return $rtn;

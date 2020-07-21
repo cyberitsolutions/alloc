@@ -23,6 +23,6 @@
 
 class client_module extends module
 {
-    var $module = "client";
-    var $db_entities = array("client", "clientContact");
+    public $module = "client";
+    public $db_entities = array("client", "clientContact");
 }

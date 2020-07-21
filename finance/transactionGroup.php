@@ -107,7 +107,7 @@ if ($_POST["save_transactions"]) {
                 $commar1 = ", ";
 
             // Save
-            } else if ($_POST["amount"][$k]) {
+            } elseif ($_POST["amount"][$k]) {
                 $a = array("amount"             => $_POST["amount"][$k]
                   ,"tfID"               => $_POST["tfID"][$k]
                   ,"fromTfID"           => $_POST["fromTfID"][$k]

@@ -54,7 +54,7 @@ class transaction extends db_entity
                                 "transactionRepeatID",
                                 "transactionGroupID");
 
-    function save()
+    public function save()
     {
         // These need to be in here instead of validate(), because
         // validate is called after save() and we need these values set for save().
@@ -66,7 +66,7 @@ class transaction extends db_entity
         if ($old["status"] != $this->get_value("status") && $this->get_value("status") == "approved") {
             $this->set_value("dateApproved", date("Y-m-d"));
             $field_changed = true;
-        } else if ($this->get_value("status") != "approved") {
+        } elseif ($this->get_value("status") != "approved") {
             $this->set_value("dateApproved", "");
         }
 
@@ -82,7 +82,7 @@ class transaction extends db_entity
         return parent::save();
     }
 
-    function validate()
+    public function validate()
     {
         $current_user = &singleton("current_user");
 
@@ -102,7 +102,7 @@ class transaction extends db_entity
         return parent::validate($err);
     }
 
-    function is_owner($person = "")
+    public function is_owner($person = "")
     {
         $current_user = &singleton("current_user");
         if ($person == "") {
@@ -134,7 +134,7 @@ class transaction extends db_entity
         return ($toTf->is_owner($person) || $fromTf->is_owner($person));
     }
 
-    function get_transactionTypes()
+    public function get_transactionTypes()
     {
         $taxName = config::get_config_item("taxName") or $taxName = "Tax";
         return array('invoice'    => 'Invoice',
@@ -147,12 +147,12 @@ class transaction extends db_entity
                      'tax'        => $taxName);
     }
 
-    function get_transactionStatii()
+    public function get_transactionStatii()
     {
         return array("pending"=>"Pending", "approved"=>"Approved", "rejected"=>"Rejected");
     }
 
-    function get_url()
+    public function get_url()
     {
         global $sess;
         $sess or $sess = new session();
@@ -171,7 +171,7 @@ class transaction extends db_entity
         return $url;
     }
 
-    function get_transaction_link($_FORM = array())
+    public function get_transaction_link($_FORM = array())
     {
         $_FORM["return"] or $_FORM["return"] = "html";
         $rtn = "<a href=\"".$this->get_url()."\">";
@@ -180,7 +180,7 @@ class transaction extends db_entity
         return $rtn;
     }
 
-    function get_name($_FORM = array())
+    public function get_name($_FORM = array())
     {
         if ($_FORM["return"] == "html") {
             return $this->get_value("product", DST_HTML_DISPLAY);
@@ -189,7 +189,7 @@ class transaction extends db_entity
         }
     }
 
-    function get_transaction_type_link()
+    public function get_transaction_type_link()
     {
         global $TPL;
         $type = $this->get_value("transactionType");
@@ -205,19 +205,19 @@ class transaction extends db_entity
             $invoice->get_id() and $str = "<a href=\"".$invoice->get_url()."\">".$transactionTypes[$type]." ".$invoice->get_value("invoiceNum")."</a>";
 
         // Transaction is from an expenseform
-        } else if ($type == "expense") {
+        } elseif ($type == "expense") {
             $expenseForm = $this->get_foreign_object("expenseForm");
             if ($expenseForm->get_id() && $expenseForm->have_perm(PERM_READ_WRITE)) {
                 $str = "<a href=\"".$expenseForm->get_url()."\">".$transactionTypes[$type]." ".$this->get_value("expenseFormID")."</a>";
             }
 
-        // Had to rewrite this so that people who had transactions on other peoples timesheets
+            // Had to rewrite this so that people who had transactions on other peoples timesheets
         // could see their own transactions, but not the other persons timesheet.
-        } else if ($type == "timesheet" && $this->get_value("timeSheetID")) {
+        } elseif ($type == "timesheet" && $this->get_value("timeSheetID")) {
             $timeSheet = new timeSheet();
             $timeSheet->set_id($this->get_value("timeSheetID"));
             $str = "<a href=\"".$timeSheet->get_url()."\">".$transactionTypes[$type]." ".$this->get_value("timeSheetID")."</a>";
-        } else if (($type == "commission" || $type == "tax") && $this->get_value("timeSheetID")) {
+        } elseif (($type == "commission" || $type == "tax") && $this->get_value("timeSheetID")) {
             $timeSheet = new timeSheet();
             $timeSheet->set_id($this->get_value("timeSheetID"));
             $str = "<a href=\"".$timeSheet->get_url()."\">".$transactionTypes[$type]." (Time Sheet ".$this->get_value("timeSheetID").")</a>";
@@ -232,7 +232,7 @@ class transaction extends db_entity
         return $str;
     }
 
-    function reduce_tfs($_FORM)
+    public function reduce_tfs($_FORM)
     {
         if ($_FORM["tfName"]) {
             $q = prepare("SELECT * FROM tf WHERE tfName = '%s'", $_FORM["tfName"]);
@@ -250,7 +250,7 @@ class transaction extends db_entity
         return tf::get_permitted_tfs($tfIDs);
     }
 
-    function get_list_filter($_FORM)
+    public function get_list_filter($_FORM)
     {
         $current_user = &singleton("current_user");
 
@@ -415,9 +415,8 @@ class transaction extends db_entity
         return array("totals"=>$_FORM, "rows"=>(array)$transactions);
     }
 
-    function arr_to_csv($rows = array())
+    public function arr_to_csv($rows = array())
     {
-
         $csvHeaders = array("transactionID",
                             "transactionType",
                             "fromTfID",
@@ -443,9 +442,8 @@ class transaction extends db_entity
         return implode(",", array_map('export_escape_csv', $csvHeaders))."\n".$csv;
     }
 
-    function get_list_vars()
+    public function get_list_vars()
     {
-
         return array("return"            => "[MANDATORY] eg: html | csv | array",
                      "tfID"              => "Transactions that are for this TF",
                      "tfIDs"             => "Transactions that are for this array of TF's",
@@ -467,7 +465,7 @@ class transaction extends db_entity
                      "amount"            => "Get Transactions that are for a certain amount");
     }
 
-    function load_form_data($defaults = array())
+    public function load_form_data($defaults = array())
     {
         $current_user = &singleton("current_user");
 
@@ -494,7 +492,7 @@ class transaction extends db_entity
         return $_FORM;
     }
 
-    function load_transaction_filter($_FORM)
+    public function load_transaction_filter($_FORM)
     {
         global $TPL;
 
@@ -571,7 +569,7 @@ class transaction extends db_entity
         return $rtn;
     }
 
-    function get_actual_amount_used($rows = array())
+    public function get_actual_amount_used($rows = array())
     {
 
         /*
@@ -618,7 +616,7 @@ class transaction extends db_entity
         #echo "<br>SUM: ".transaction::get_actual_amount_used($rows);
     }
 
-    function get_next_transactionGroupID()
+    public function get_next_transactionGroupID()
     {
         $q = "SELECT coalesce(max(transactionGroupID)+1,1) as newNum FROM transaction";
         $db = new db_alloc();

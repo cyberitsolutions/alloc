@@ -92,7 +92,7 @@ if ($search && $needle && $category == "search_projects") {
     }
 
     // Clients Search
-} else if ($search && $needle && $category == "search_clients") {
+} elseif ($search && $needle && $category == "search_clients") {
     $TPL["search_title"] = "Client Search";
 
     if (!$noRedirect && is_numeric($needle)) {
@@ -140,7 +140,7 @@ if ($search && $needle && $category == "search_projects") {
     }
 
     // Tasks Search
-} else if ($search && $needle && $category == "search_tasks") {
+} elseif ($search && $needle && $category == "search_tasks") {
     $TPL["search_title"] = "Task Search";
 
     if (!$noRedirect && is_numeric($needle)) {
@@ -180,7 +180,7 @@ if ($search && $needle && $category == "search_projects") {
 
 
     // Item Search
-} else if ($search && $needle && $category == "search_items") {
+} elseif ($search && $needle && $category == "search_items") {
     $TPL["search_title"] = "Item Search";
     $today = date("Y")."-".date("m")."-".date("d");
 
@@ -230,7 +230,7 @@ if ($search && $needle && $category == "search_projects") {
                     }
                     $row["related"] = $status." <a href=\"".$TPL["url_alloc_item"]."itemID=".$item->get_id()."&return=true\">Return</a>";
 
-                    // Else you dont have permission to loan or return so just show status
+                // Else you dont have permission to loan or return so just show status
                 } else {
                     $name = page::htmlentities($p[$loan->get_value("personID")]["name"]);
 
@@ -249,7 +249,7 @@ if ($search && $needle && $category == "search_projects") {
     }
 
     // Expense Form ID search
-} else if ($search && $needle && $category == "search_expenseForm") {
+} elseif ($search && $needle && $category == "search_expenseForm") {
     if (!$noRedirect && is_numeric($needle)) {
         $query = prepare("SELECT expenseFormID FROM expenseForm WHERE expenseFormID = %d", $needle);
         $db->query($query);
@@ -259,7 +259,7 @@ if ($search && $needle && $category == "search_projects") {
     }
 
     // Time Sheet Search
-} else if ($search && $needle && $category == "search_time") {
+} elseif ($search && $needle && $category == "search_time") {
     $TPL["search_title"] = "Time Sheet Search";
 
     if (!$noRedirect && is_numeric($needle)) {
@@ -302,7 +302,7 @@ if ($search && $needle && $category == "search_projects") {
     }
 
     // Comment Search
-} else if ($search && $needle && $category == "search_comment") {
+} elseif ($search && $needle && $category == "search_comment") {
     $TPL["search_title"] = "Comment Search";
 
     if (!$noRedirect && is_numeric($needle)) {

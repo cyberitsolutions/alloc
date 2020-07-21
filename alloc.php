@@ -173,11 +173,11 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
     }
 
     // Else if were not in the installation process and there's no alloc_config.php file then redirect to the installation directory
-} else if (!file_exists(ALLOC_MOD_DIR."alloc_config.php") || !is_readable(ALLOC_MOD_DIR."alloc_config.php") || filesize(ALLOC_MOD_DIR."alloc_config.php") < 5 || !defined("ALLOC_DB_NAME")) {
+} elseif (!file_exists(ALLOC_MOD_DIR."alloc_config.php") || !is_readable(ALLOC_MOD_DIR."alloc_config.php") || filesize(ALLOC_MOD_DIR."alloc_config.php") < 5 || !defined("ALLOC_DB_NAME")) {
     alloc_redirect($TPL["url_alloc_installation"]);
     exit();
 
-    // Else include the alloc_config.php file and begin with proceedings..
+// Else include the alloc_config.php file and begin with proceedings..
 } else {
     // The timezone must be dealt with before anything else uses it or php will emit a warning
     $timezone = config::get_config_item("allocTimezone");
@@ -209,8 +209,8 @@ if (defined("IN_INSTALL_RIGHT_NOW")) {
             defined("NO_REDIRECT") && exit("Session expired. Please <a href='".$TPL["url_alloc_login"]."'>log in</a> again.");
             alloc_redirect($TPL["url_alloc_login"] . ($_SERVER['REQUEST_URI'] != '/' ? '?forward='.urlencode($_SERVER['REQUEST_URI']) : ''));
 
-            // Else load up the current_user and continue
-        } else if ($sess->Get("personID")) {
+        // Else load up the current_user and continue
+        } elseif ($sess->Get("personID")) {
             $current_user->load_current_user($sess->Get("personID"));
         }
     }
@@ -237,9 +237,9 @@ if (!function_exists("ace_augment")) {
 
 // Setup search indices if they don't already exist
 if (!file_exists(ATTACHMENTS_DIR."search/task")) {
-  $search_item_indexes = array("client", "comment", "item", "project", "task", "timeSheet", "wiki");
-  foreach ($search_item_indexes as $i) {
-    $index = Zend_Search_Lucene::create(ATTACHMENTS_DIR.'search'.DIRECTORY_SEPARATOR.$i);
-    $index->commit();
-  }
+    $search_item_indexes = array("client", "comment", "item", "project", "task", "timeSheet", "wiki");
+    foreach ($search_item_indexes as $i) {
+        $index = Zend_Search_Lucene::create(ATTACHMENTS_DIR.'search'.DIRECTORY_SEPARATOR.$i);
+        $index->commit();
+    }
 }

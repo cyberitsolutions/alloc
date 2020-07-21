@@ -125,7 +125,7 @@ if ($_POST["submit_stage_2"]) {
     if (!$failed && !is_writeable($_FORM["ATTACHMENTS_DIR"])) {
         $text_tab_2a[] = "This directory is not writeable by the webserver: ".$_FORM["ATTACHMENTS_DIR"];
         $failed = 1;
-    } else if (!$failed) {
+    } elseif (!$failed) {
         // Create directories under attachment dir and chmod them
         $dirs = $external_storage_directories; // something like array("task","client","project","invoice","comment");
         foreach ($dirs as $dir) {
@@ -134,7 +134,7 @@ if ($_POST["submit_stage_2"]) {
             if (!is_dir($d)) {
                 $text_tab_2a[] = "<b>Unable to create directory: ".$d."</b>";
                 $failed = 1;
-            } else if (!is_writeable($d)) {
+            } elseif (!is_writeable($d)) {
                 $text_tab_2a[] = "This directory is not writeable by the webserver: ".$d;
                 $failed = 1;
             }

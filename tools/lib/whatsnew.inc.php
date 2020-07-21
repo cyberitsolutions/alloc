@@ -23,26 +23,25 @@
 
 class whatsnew
 {
+    public $folders = array();
 
-    var $folders = array();
-
-    function __construct()
+    public function __construct()
     {
     }
 
-    function set_id()
-    {
-        // dummy so can re-use the get_attachment.php script
-        return true;
-    }
-
-    function select()
+    public function set_id()
     {
         // dummy so can re-use the get_attachment.php script
         return true;
     }
 
-    function has_attachment_permission($person)
+    public function select()
+    {
+        // dummy so can re-use the get_attachment.php script
+        return true;
+    }
+
+    public function has_attachment_permission($person)
     {
         return true;
     }

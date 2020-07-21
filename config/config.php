@@ -52,7 +52,7 @@ while ($db->next_record()) {
 
     if ($db->f("type") == "text") {
         $TPL[$db->f("name")] = page::htmlentities($db->f("value"));
-    } else if ($db->f("type") == "array") {
+    } elseif ($db->f("type") == "array") {
         $TPL[$db->f("name")] = unserialize($db->f("value"));
     }
 }
@@ -133,7 +133,7 @@ if ($_POST["save"]) {
                     $c->set_value("value", $_POST[$name]);
                 }
                 $TPL[$name] = page::htmlentities($value);
-            } else if ($types[$name] == "array") {
+            } elseif ($types[$name] == "array") {
                 $c->set_value("value", serialize($_POST[$name]));
                 $TPL[$name] = $_POST[$name];
             }
@@ -154,7 +154,7 @@ if ($_POST["save"]) {
     }
 
     $TPL["message"] or $TPL["message_good"] = "Saved configuration.";
-} else if ($_POST["delete_logo"]) {
+} elseif ($_POST["delete_logo"]) {
     foreach (array(ALLOC_LOGO,ALLOC_LOGO_SMALL) as $logo) {
         if (file_exists($logo)) {
             if (unlink($logo)) {

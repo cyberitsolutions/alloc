@@ -22,13 +22,12 @@
 
 class timeSheetHomeItem extends home_item
 {
-
-    function __construct()
+    public function __construct()
     {
         parent::__construct("time_edit", "New Time Sheet Item", "time", "timeSheetH.tpl", "narrow", 24);
     }
 
-    function visible()
+    public function visible()
     {
         $current_user = &singleton("current_user");
 
@@ -41,7 +40,7 @@ class timeSheetHomeItem extends home_item
         }
     }
 
-    function render()
+    public function render()
     {
         $current_user = &singleton("current_user");
         global $TPL;

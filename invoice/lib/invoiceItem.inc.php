@@ -39,7 +39,7 @@ class invoiceItem extends db_entity
                                 "iiTax",
                                 "iiDate");
 
-    function is_owner($person = "")
+    public function is_owner($person = "")
     {
         $current_user = &singleton("current_user");
 
@@ -85,9 +85,8 @@ class invoiceItem extends db_entity
         return false;
     }
 
-    function delete()
+    public function delete()
     {
-
         $db = new db_alloc();
         $q = prepare("DELETE FROM transaction WHERE invoiceItemID = %d", $this->get_id());
         $db->query($q);
@@ -98,9 +97,8 @@ class invoiceItem extends db_entity
         return $status && $status2;
     }
 
-    function save()
+    public function save()
     {
-
         if (!imp($this->get_value("iiAmount"))) {
             $this->set_value("iiAmount", $this->get_value("iiQuantity") * $this->get_value("iiUnitPrice"));
         }
@@ -110,7 +108,7 @@ class invoiceItem extends db_entity
         return $status && $status2;
     }
 
-    function close_related_entity()
+    public function close_related_entity()
     {
         global $TPL;
 
@@ -151,9 +149,9 @@ class invoiceItem extends db_entity
                 $db->query($q);
                 $row = $db->row();
                 if ($row["num_transactions"]==0) {
-                        $_POST["create_transactions_default"] = true;
-                        $timeSheet->createTransactions($status);
-                        $TPL["message_good"][] = "Automatically created time sheet transactions.";
+                    $_POST["create_transactions_default"] = true;
+                    $timeSheet->createTransactions($status);
+                    $TPL["message_good"][] = "Automatically created time sheet transactions.";
                 }
 
                 // Get total of all time sheet transactions.
@@ -168,9 +166,9 @@ class invoiceItem extends db_entity
                 $total_timeSheet = $row["total"];
 
                 if ($total >= $total_timeSheet) {
-                        $timeSheet->pending_transactions_to_approved();
-                        $timeSheet->change_status("forwards");
-                        $TPL["message_good"][] = "Closed Time Sheet #".$timeSheet->get_id()." and marked its Transactions: ".$status;
+                    $timeSheet->pending_transactions_to_approved();
+                    $timeSheet->change_status("forwards");
+                    $TPL["message_good"][] = "Closed Time Sheet #".$timeSheet->get_id()." and marked its Transactions: ".$status;
                 } else {
                     $TPL["message_help"][] = "Unable to close Time Sheet #".$timeSheet->get_id()." the sum of the Time Sheet's *Transactions* ("
                                    .page::money($timeSheet->get_value("currencyTypeID"), $total_timeSheet, "%s%mo %c")
@@ -178,7 +176,7 @@ class invoiceItem extends db_entity
                                    .page::money($currency, $total, "%s%mo %c").")";
                 }
             }
-        } else if ($expenseFormID) {
+        } elseif ($expenseFormID) {
             $expenseForm = new expenseForm();
             $expenseForm->set_id($expenseFormID);
             $expenseForm->select();
@@ -193,7 +191,7 @@ class invoiceItem extends db_entity
         }
     }
 
-    function create_transaction($amount, $tfID, $status)
+    public function create_transaction($amount, $tfID, $status)
     {
         $transaction = new transaction();
         $invoice = $this->get_foreign_object("invoice");
@@ -228,8 +226,8 @@ class invoiceItem extends db_entity
             );
             $db->query($q);
             if ($db->row()) {
-                  $transaction->set_id($db->f("transactionID"));
-                  $transaction->select();
+                $transaction->set_id($db->f("transactionID"));
+                $transaction->select();
             }
         }
 
@@ -247,12 +245,12 @@ class invoiceItem extends db_entity
         $transaction->save();
     }
 
-    function get_list_filter($filter = array())
+    public function get_list_filter($filter = array())
     {
         // Filter on invoiceID
         if ($filter["invoiceID"] && is_array($filter["invoiceID"])) {
             $sql[] = prepare("(invoice.invoiceID in (%s))", $filter["invoiceID"]);
-        } else if ($filter["invoiceID"]) {
+        } elseif ($filter["invoiceID"]) {
             $sql[] = prepare("(invoice.invoiceID = %d)", $filter["invoiceID"]);
         }
         return $sql;

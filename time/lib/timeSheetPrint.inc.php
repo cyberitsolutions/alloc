@@ -24,10 +24,8 @@ define("DEFAULT_SEP", "\n");
 
 class timeSheetPrint
 {
-
-    function get_timeSheetItem_vars($timeSheetID)
+    public function get_timeSheetItem_vars($timeSheetID)
     {
-
         $timeSheet = new timeSheet();
         $timeSheet->set_id($timeSheetID);
         $timeSheet->select();
@@ -46,10 +44,10 @@ class timeSheetPrint
         return array($db, $customerBilledDollars,$timeSheet,$unit_array,$currency);
     }
 
-    function get_timeSheetItem_list_money($timeSheetID)
+    public function get_timeSheetItem_list_money($timeSheetID)
     {
         global $TPL;
-        list($db,$customerBilledDollars,$timeSheet,$unit_array,$currency) = $this->get_timeSheetItem_vars($timeSheetID);
+        list($db, $customerBilledDollars, $timeSheet, $unit_array, $currency) = $this->get_timeSheetItem_vars($timeSheetID);
 
         $taxPercent = config::get_config_item("taxPercent");
         $taxPercentDivisor = ($taxPercent/100) + 1;
@@ -132,10 +130,10 @@ class timeSheetPrint
         return array($rows,$info);
     }
 
-    function get_timeSheetItem_list_units($timeSheetID)
+    public function get_timeSheetItem_list_units($timeSheetID)
     {
         global $TPL;
-        list($db,$customerBilledDollars,$timeSheet,$unit_array,$currency) = $this->get_timeSheetItem_vars($timeSheetID);
+        list($db, $customerBilledDollars, $timeSheet, $unit_array, $currency) = $this->get_timeSheetItem_vars($timeSheetID);
 
         while ($db->next_record()) {
             $timeSheetItem = new timeSheetItem();
@@ -199,10 +197,10 @@ class timeSheetPrint
         return array($rows,$info);
     }
 
-    function get_timeSheetItem_list_items($timeSheetID)
+    public function get_timeSheetItem_list_items($timeSheetID)
     {
         global $TPL;
-        list($db,$customerBilledDollars,$timeSheet,$unit_array,$currency) = $this->get_timeSheetItem_vars($timeSheetID);
+        list($db, $customerBilledDollars, $timeSheet, $unit_array, $currency) = $this->get_timeSheetItem_vars($timeSheetID);
 
         $m = new meta("timeSheetItemMultiplier");
         $multipliers = $m->get_list();
@@ -249,7 +247,7 @@ class timeSheetPrint
         return array($rows,$info);
     }
 
-    function get_printable_timeSheet_file($timeSheetID, $timeSheetPrintMode, $printDesc, $format)
+    public function get_printable_timeSheet_file($timeSheetID, $timeSheetPrintMode, $printDesc, $format)
     {
         global $TPL;
 
@@ -420,7 +418,7 @@ class timeSheetPrint
                 $pdf->ezSetY($y -20);
 
                 if ($timeSheetPrintMode == "money" || $timeSheetPrintMode == "estimate") {
-                    list($rows,$info) = $this->get_timeSheetItem_list_money($TPL["timeSheetID"]);
+                    list($rows, $info) = $this->get_timeSheetItem_list_money($TPL["timeSheetID"]);
                     $cols2 = array("desc"=>"Description","units"=>"Units","money"=>"Charges","gst"=>$TPL["taxName"]);
                     $taxPercent = config::get_config_item("taxPercent");
                     if ($taxPercent === '') {
@@ -435,13 +433,13 @@ class timeSheetPrint
                     $totals[] = array("one"=>"TOTAL CHARGES","two"=>$info["total"]);
                     $totals[] = array("one"=>"<b>".$default_total_label."</b>","two"=>"<b>".$info["total_inc_gst"]."</b>");
                     $y = $pdf->ezTable($totals, $cols3, "", $pdf_table_options4);
-                } else if ($timeSheetPrintMode == "units") {
-                    list($rows,$info) = $this->get_timeSheetItem_list_units($TPL["timeSheetID"]);
+                } elseif ($timeSheetPrintMode == "units") {
+                    list($rows, $info) = $this->get_timeSheetItem_list_units($TPL["timeSheetID"]);
                     $cols2 = array("desc"=>"Description","units"=>"Units");
                     $rows[] = array("desc"=>"<b>TOTAL</b>","units"=>"<b>".$info["total"]."</b>");
                     $y = $pdf->ezTable($rows, $cols2, "", $pdf_table_options3);
-                } else if ($timeSheetPrintMode == "items") {
-                    list($rows,$info) = $this->get_timeSheetItem_list_items($TPL["timeSheetID"]);
+                } elseif ($timeSheetPrintMode == "items") {
+                    list($rows, $info) = $this->get_timeSheetItem_list_items($TPL["timeSheetID"]);
                     $cols2 = array("date"=>"Date","units"=>"Units","multiplier_string"=>"Multiplier","desc"=>"Description");
                     $rows[] = array("date"=>"<b>TOTAL</b>","units"=>"<b>".$info["total"]."</b>");
                     $y = $pdf->ezTable($rows, $cols2, "", $pdf_table_options3);
@@ -452,7 +450,7 @@ class timeSheetPrint
                 $pdf->ezText(str_replace(array("<br>","<br/>","<br />"), "\n", $TPL["footer"]), 10);
                 $pdf->ezStream(array("Content-Disposition"=>"timeSheet_".$timeSheetID.".pdf"));
 
-                // Else HTML format
+            // Else HTML format
             } else {
                 if (file_exists(ALLOC_LOGO)) {
                     $TPL["companyName"] = '<img alt="Company logo" src="'.$TPL["url_alloc_logo"].'" />';

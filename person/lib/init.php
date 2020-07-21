@@ -23,6 +23,6 @@
 
 class person_module extends module
 {
-    var $module = "person";
-    var $db_entities = array("person", "absence", "skill", "proficiency");
+    public $module = "person";
+    public $db_entities = array("person", "absence", "skill", "proficiency");
 }

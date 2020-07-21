@@ -29,7 +29,7 @@ class role extends db_entity
                                 "roleLevel",
                                 "roleSequence");
 
-    function get_roles_array($level = "person")
+    public function get_roles_array($level = "person")
     {
         $rows = array();
         $db = new db_alloc();

@@ -23,6 +23,6 @@
 
 class config_module extends module
 {
-    var $module = "config";
-    var $db_entities = array("config");
+    public $module = "config";
+    public $db_entities = array("config");
 }

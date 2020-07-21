@@ -35,13 +35,13 @@ class product extends db_entity
                                 "comment",
                                 "productActive");
 
-    function delete()
+    public function delete()
     {
         $this->set_value("productActive", 0);
         $this->save();
     }
 
-    function get_list_filter($filter)
+    public function get_list_filter($filter)
     {
         // stub function for one day when you can filter products
         return $sql;
@@ -49,7 +49,6 @@ class product extends db_entity
 
     public static function get_list($_FORM = array())
     {
-
         $filter = product::get_list_filter($_FORM);
 
         $debug = $_FORM["debug"];
@@ -78,7 +77,7 @@ class product extends db_entity
         return $rows;
     }
 
-    function get_link($row = array())
+    public function get_link($row = array())
     {
         global $TPL;
         if (is_object($this)) {
@@ -88,13 +87,13 @@ class product extends db_entity
         }
     }
 
-    function get_list_vars()
+    public function get_list_vars()
     {
         // stub function for one day when you can specify list parameters
         return array();
     }
 
-    function get_buy_cost($id = false)
+    public function get_buy_cost($id = false)
     {
         $id or $id = $this->get_id();
         $db = new db_alloc();
@@ -107,7 +106,7 @@ class product extends db_entity
         $db->query($q);
         while ($row = $db->row()) {
             if ($row["tax"]) {
-                list($amount_minus_tax,$amount_of_tax) = tax($row["amount"]);
+                list($amount_minus_tax, $amount_of_tax) = tax($row["amount"]);
                 $row["amount"] = $amount_minus_tax;
             }
             $amount += $row["amount"];
@@ -115,7 +114,7 @@ class product extends db_entity
         return $amount;
     }
 
-    function get_list_html($rows = array(), $_FORM = array())
+    public function get_list_html($rows = array(), $_FORM = array())
     {
         global $TPL;
         $TPL["productListRows"] = $rows;

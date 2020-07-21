@@ -27,7 +27,7 @@ require_once("../alloc.php");
 $sess = new session();
 if (isset($_POST["forwardUrl"])) {
     $url = $_POST["forwardUrl"];
-} else if (isset($_GET["forward"])) {
+} elseif (isset($_GET["forward"])) {
     $url = $_GET["forward"];
 } else {
     $url = $sess->GetUrl($TPL["url_alloc_home"]);
@@ -39,7 +39,7 @@ if ($sess->Started()) {
     exit();
 
 // Else log the user in
-} else if ($_POST["login"]) {
+} elseif ($_POST["login"]) {
     $person = new person();
     $row = $person->get_valid_login_row($_POST["username"], $_POST["password"]);
 
@@ -66,7 +66,7 @@ if ($sess->Started()) {
         alloc_redirect($url);
     }
     $error = "Invalid username or password.";
-} else if ($_POST["new_pass"]) {
+} elseif ($_POST["new_pass"]) {
     $db = new db_alloc();
     $db->query("SELECT * FROM person WHERE emailAddress = '%s'", $_POST["email"]);
 
@@ -96,7 +96,7 @@ if ($sess->Started()) {
     }
 
 
-// Else if just visiting the page
+    // Else if just visiting the page
 } else {
     if (!$sess->TestCookie()) {
         $sess->SetTestCookie();
@@ -110,7 +110,7 @@ $TPL["account"] = $account;
 
 if (isset($_POST["username"])) {
     $TPL["username"] = $_POST["username"];
-} else if ($sess->TestCookie() != "alloc_test_cookie") {
+} elseif ($sess->TestCookie() != "alloc_test_cookie") {
     $TPL["username"] = $sess->TestCookie();
 }
 

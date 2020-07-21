@@ -22,10 +22,10 @@
 
 class stats
 {
-    var $classname = "stats";
+    public $classname = "stats";
 
     // FIXME:: I didn't reindent this because it is too messey 😞 -- cjb, 2019-01
-    var $projects = array("all"=>array("total"=>array( /* <date>=> <number> */ )
+    public $projects = array("all"=>array("total"=>array( /* <date>=> <number> */ )
                                        // <uid>=> array( <date>=> <number>, .. ),
                         ), "new"=>array("total"=>array( /* <date>=> <number> */ )
                                           // <uid>=> array( <date>=> <number>, .. ),
@@ -33,25 +33,25 @@ class stats
                         "archived"=>array("total"=>0 /* <uid>=> <number>, .. */ ),
                         "total"=>array("total"=>0)
     );
-    var $tasks = array("all"=>array("total"=>array( /* <date>=> <number> */ )
+    public $tasks = array("all"=>array("total"=>array( /* <date>=> <number> */ )
                                     // <uid>=> array( <date>=> <number>, .. ),
                      ), "new"=>array("total"=>array( /* <date>=> <number> */ )
                                        // <uid>=> array( <date>=> <number>, .. ),
                      ), "current"=>array("total"=>0), "completed"=>array("total"=>0), "total"=>array("total"=>0)
     );
-    var $comments = array("all"=>array("total"=>array( /* <date>=> <number> */ )
+    public $comments = array("all"=>array("total"=>array( /* <date>=> <number> */ )
                                        // <uid>=> array( <date>=> <number>, .. ),
                         ), "new"=>array("total"=>array( /* <date>=> <number> */ )
                                           // <uid>=> array( <date>=> <number>, .. ),
                         ), "total"=>array("total"=>0)
     );
-    var $persons = array();
+    public $persons = array();
 
-    function stats()
+    public function stats()
     {
     }
 
-    function project_stats()
+    public function project_stats()
     {
         // date from which a project is counted as being new. if monday then date back to friday, else the previous day
         $days = date("w") == 1 ? 3 : 1;
@@ -113,11 +113,11 @@ class stats
         return $this->projects;
     }
 
-    function task_stats()
+    public function task_stats()
     {
         $db = new db_alloc();
 
-        list($ts_open,$ts_pending,$ts_closed) = task::get_task_status_in_set_sql();
+        list($ts_open, $ts_pending, $ts_closed) = task::get_task_status_in_set_sql();
         // Get total amount of current tasks for every person
         $q = "SELECT person.personID, person.username, count(taskID) as tally
                 FROM task
@@ -180,7 +180,7 @@ class stats
         return $this->tasks;
     }
 
-    function comment_stats()
+    public function comment_stats()
     {
         // date from which a comment is counted as being new. if monday then date back to friday, else the previous day
         $days = date("w") == 1 ? 3 : 1;
@@ -215,7 +215,7 @@ class stats
         return $this->comments;
     }
 
-    function compare($a, $b)
+    public function compare($a, $b)
     {
         if ($a["count_back"] == $b["count_back"]) {
             // if last added item was added on the same day then look at how many were added on that day
@@ -230,7 +230,7 @@ class stats
         }
     }
 
-    function order_by_most_frequent_use()
+    public function order_by_most_frequent_use()
     {
         $max_search_back = 90;      // maximum number of days to go back when sorting
 
@@ -255,9 +255,8 @@ class stats
         usort($this->persons, array($this, "compare"));
     }
 
-    function get_stats_for_email($format)
+    public function get_stats_for_email($format)
     {
-
         if ($format == "html") {
             $msg = "<br><br><h4>Alloc Stats For Today</h4>";
             $msg.= sprintf("%d New and %d Active Projects<br><br>", $this->projects["new"]["total"], $this->projects["current"]["total"]);

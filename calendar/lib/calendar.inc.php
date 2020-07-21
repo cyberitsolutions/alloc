@@ -23,18 +23,18 @@
 
 class calendar
 {
-    var $person;
-    var $week_start;
-    var $weeks_to_display;
-    var $days_of_week = array();
-    var $rtp;
-    var $first_date;
-    var $last_date;
-    var $db;
-    var $first_day_of_week;
+    public $person;
+    public $week_start;
+    public $weeks_to_display;
+    public $days_of_week = array();
+    public $rtp;
+    public $first_date;
+    public $last_date;
+    public $db;
+    public $first_day_of_week;
 
 
-    function __construct($week_start = 1, $weeks_to_display = 4)
+    public function __construct($week_start = 1, $weeks_to_display = 4)
     {
         $this->db = new db_alloc();
         $this->first_day_of_week = config::get_config_item("calendarFirstDay");
@@ -42,14 +42,14 @@ class calendar
         $this->days_of_week = $this->get_days_of_week_array($this->first_day_of_week);
     }
 
-    function set_cal_person($personID)
+    public function set_cal_person($personID)
     {
         $this->person = new person();
         $this->person->set_id($personID);
         $this->person->select();
     }
 
-    function set_cal_date_range($week_start, $weeks_to_display)
+    public function set_cal_date_range($week_start, $weeks_to_display)
     {
         $this->week_start = $week_start;
         $this->weeks_to_display = $weeks_to_display;
@@ -72,7 +72,7 @@ class calendar
         ));
     }
 
-    function get_cal_reminders()
+    public function get_cal_reminders()
     {
         // Get persons reminders
         $query = prepare("SELECT *
@@ -101,7 +101,7 @@ class calendar
                         $reminderTime = $reminder->get_next_reminder_time($reminderTime, $interval, $intervalUnit);
                     }
 
-                // Else if once off reminder
+                    // Else if once off reminder
                 } else {
                     $row["reminderTime"] = $reminderTime;
                     $reminders[date("Y-m-d", $reminderTime)][] = $row;
@@ -112,9 +112,9 @@ class calendar
         return $reminders;
     }
 
-    function get_cal_tasks_to_start()
+    public function get_cal_tasks_to_start()
     {
-        list($ts_open,$ts_pending,$ts_closed) = task::get_task_status_in_set_sql();
+        list($ts_open, $ts_pending, $ts_closed) = task::get_task_status_in_set_sql();
         // Select all tasks which are targetted to start
         $query = prepare(
             "SELECT *
@@ -136,9 +136,9 @@ class calendar
         return $tasks_to_start;
     }
 
-    function get_cal_tasks_to_complete()
+    public function get_cal_tasks_to_complete()
     {
-        list($ts_open,$ts_pending,$ts_closed) = task::get_task_status_in_set_sql();
+        list($ts_open, $ts_pending, $ts_closed) = task::get_task_status_in_set_sql();
         // Select all tasks which are targetted for completion
         $query = prepare(
             "SELECT *
@@ -160,7 +160,7 @@ class calendar
         return $tasks_to_complete;
     }
 
-    function get_cal_absences()
+    public function get_cal_absences()
     {
         $query = prepare(
             "SELECT *
@@ -195,7 +195,7 @@ class calendar
         return $absences;
     }
 
-    function get_days_of_week_array($first_day)
+    public function get_days_of_week_array($first_day)
     {
         // Generate a list of days, being mindful that a user may not want Sunday to be the first day of the week
         $days = array("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat",
@@ -209,12 +209,12 @@ class calendar
         return $days_of_week;
     }
 
-    function set_return_mode($mode)
+    public function set_return_mode($mode)
     {
         $this->rtp = $mode;
     }
 
-    function draw()
+    public function draw()
     {
         global $TPL;
 
@@ -278,7 +278,7 @@ class calendar
                 // Reminders
                 $reminders[$date] or $reminders[$date] = array();
                 foreach ($reminders[$date] as $r) {
-                  #if (date("Y-m-d",$r["reminderTime"]) == $date) {
+                    #if (date("Y-m-d",$r["reminderTime"]) == $date) {
                     unset($wrap_start, $wrap_end);
                     if (!$r["reminderActive"]) {
                         $wrap_start = "<strike>";
@@ -288,7 +288,7 @@ class calendar
                     $text = page::htmlentities($r["reminderSubject"]);
                     $r["reminderTime"] and $text = date("g:ia", $r["reminderTime"])." ".$text;
                     $d->reminders[] = '<a href="'.$TPL["url_alloc_reminder"].'&step=3&reminderID='.$r["reminderID"].'&returnToParent='.$this->rtp.'&personID='.$r["personID"].'">'.$wrap_start.$text.$wrap_end.'</a>';
-                  #}
+                    #}
                 }
 
                 // Absences
@@ -308,35 +308,35 @@ class calendar
         $this->draw_canvas_end();
     }
 
-    function draw_canvas()
+    public function draw_canvas()
     {
         echo "<table border='0' cellspacing='0' class='alloc_calendar' cellpadding='3'>";
     }
-    function draw_canvas_end()
+    public function draw_canvas_end()
     {
         echo "</table>";
     }
-    function draw_body()
+    public function draw_body()
     {
-      # Unfortunately browser support for this seems to be quite bad. Eventually
-      # this should cause the table to have headers draw at the start of
-      # each page where the table is broken, but for now it doesn't seem to
-      # work.
+        # Unfortunately browser support for this seems to be quite bad. Eventually
+        # this should cause the table to have headers draw at the start of
+        # each page where the table is broken, but for now it doesn't seem to
+        # work.
         echo "<tbody>";
     }
-    function draw_body_end()
+    public function draw_body_end()
     {
         echo "</tbody>";
     }
-    function draw_row()
+    public function draw_row()
     {
         echo "\n<tr>";
     }
-    function draw_row_end()
+    public function draw_row_end()
     {
         echo "</tr>";
     }
-    function draw_row_header()
+    public function draw_row_header()
     {
         echo "\n<thead><tr>";
         foreach ($this->days_of_week as $day) {
@@ -345,7 +345,7 @@ class calendar
         echo "</tr></thead>";
     }
 
-    function get_link_new_task($date)
+    public function get_link_new_task($date)
     {
         global $TPL;
         $link = '<a href="'.$TPL["url_alloc_task"].'dateTargetStart='.$date.'&personID='.$this->person->get_id().'">';
@@ -354,7 +354,7 @@ class calendar
         return $link;
     }
 
-    function get_link_new_reminder($date)
+    public function get_link_new_reminder($date)
     {
         global $TPL;
         $time = urlencode($date." 9:00am");
@@ -365,7 +365,7 @@ class calendar
         return $link;
     }
 
-    function get_link_new_absence($date)
+    public function get_link_new_absence($date)
     {
         global $TPL;
         $link = '<a href="'.$TPL["url_alloc_absence"].'date='.$date.'&personID='.$this->person->get_id().'&returnToParent='.$this->rtp.'">';
@@ -374,19 +374,19 @@ class calendar
         return $link;
     }
 
-    function get_img_new_task()
+    public function get_img_new_task()
     {
         global $TPL;
         return "<img border=\"0\" src=\"".$TPL["url_alloc_images"]."task.gif\" alt=\"New Task\" title=\"New Task\">";
     }
 
-    function get_img_new_reminder()
+    public function get_img_new_reminder()
     {
         global $TPL;
         return "<img border=\"0\" src=\"".$TPL["url_alloc_images"]."reminder.gif\" alt=\"New Reminder\" title=\"New Reminder\">";
     }
 
-    function get_img_new_absence()
+    public function get_img_new_absence()
     {
         global $TPL;
         return "<img border=\"0\" src=\"".$TPL["url_alloc_images"]."absence.gif\" alt=\"New Absence\" title=\"New Absence\">";

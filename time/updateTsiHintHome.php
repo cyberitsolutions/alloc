@@ -40,7 +40,7 @@ foreach ($t as $k => $v) {
             } else {
                 $v = "Task ".$v." not found.";
             }
-        } else if ($k == "username") {
+        } elseif ($k == "username") {
             $name = $people[$v]["name"] or $name = $people[$v]["username"];
         }
         $rtn[$k] = $v;

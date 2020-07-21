@@ -1,4 +1,5 @@
 # allocPSA
+
 allocPSA is the web-app that takes care of your projects, employees,
 time sheets, invoicing and customers.
 
@@ -24,23 +25,24 @@ files for mariadb in /etc/.
 
 To install allocPSA:
 
-1) Put the allocPSA source code in a directory called e.g. `alloc` in your
-httpd servers document root. E.g.: `/var/www/html/alloc/`
+1. Put the allocPSA source code in a directory called e.g. `alloc` in your
+   httpd servers document root. E.g.: `/var/www/html/alloc/`
 
-2) Make the patches and css, e.g.:
+2. Make the patches and css, e.g.:
 
 ```
 $ make patches; make css
 ```
 
-3) In a web browser, go to your servers hostname + directory where you put the
-alloc source code, such as: `http://localhost/alloc/`
+3. In a web browser, go to your servers hostname + directory where you put the
+   alloc source code, such as: `http://localhost/alloc/`
 
-4) Follow the instructions in the web browser to complete the installation.
+4. Follow the instructions in the web browser to complete the installation.
 
 ## Upgrading
 
 #### NOTE: if you are upgrading to newer than 1.9.0, make sure you have already
+
      upgraded to 1.9.0
 
 To determine which version you are currently running, look at the fine print at

@@ -22,19 +22,18 @@
 
 class saleListHomeItem extends home_item
 {
-
-    function __construct()
+    public function __construct()
     {
         parent::__construct("sale_list", "Sales", "sale", "saleListHomeM.tpl", "narrow", 39);
     }
 
-    function visible()
+    public function visible()
     {
         $current_user = &singleton("current_user");
         return isset($current_user) && $current_user->is_employee();
     }
 
-    function render()
+    public function render()
     {
         $current_user = &singleton("current_user");
         global $TPL;

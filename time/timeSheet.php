@@ -82,7 +82,6 @@ function show_transaction_list($template_name)
 
 function show_transaction_listR($template_name)
 {
-
     global $timeSheet;
     global $TPL;
     $current_user = &singleton("current_user");
@@ -351,7 +350,7 @@ function show_new_timeSheet($template)
 
             $timeSheetItemMultiplier = $timeSheetItem->get_value("multiplier");
 
-            // Else default values for creating a new timeSheetItem
+        // Else default values for creating a new timeSheetItem
         } else {
             $TPL["tsi_buttons"] = '<button type="submit" name="timeSheetItem_save" value="1" class="save_button">Add Item<i class="icon-plus-sign"></i></button>';
 
@@ -512,14 +511,14 @@ if ($_POST["save"]
         if (!$invoiceID) {
             $save_error = true;
             alloc_error("Unable to find a Pre-paid Invoice for this Project or Client.");
-        } else if (!$timeSheet->get_id()) {
+        } elseif (!$timeSheet->get_id()) {
             $add_timeSheet_to_invoiceID = $invoiceID;
         }
     }
 
     if ($_POST["save_and_MoveForward"]) {
         $msg.= $timeSheet->change_status("forwards");
-    } else if ($_POST["save_and_MoveBack"]) {
+    } elseif ($_POST["save_and_MoveBack"]) {
         $msg.= $timeSheet->change_status("backwards");
     }
 
@@ -528,11 +527,11 @@ if ($_POST["save"]
     if ($TPL['message'] || $save_error) {
         // don't save or sql will complain
         $url = $TPL["url_alloc_timeSheet"];
-    } else if (!$timeSheet->get_value("personID") && $timeSheetID) {
+    } elseif (!$timeSheet->get_value("personID") && $timeSheetID) {
         //if TS ID is set but person ID is not, it's an existing timesheet this
         // user doesn't have access to (and will overwrite). Don't proceed.
         $url = $TPL["url_alloc_timeSheet"];
-    } else if (!$TPL['message'] && $timeSheet->save()) {
+    } elseif (!$TPL['message'] && $timeSheet->save()) {
         if ($add_timeSheet_to_invoiceID) {
             $invoice = new invoice();
             $invoice->set_id($add_timeSheet_to_invoiceID);
@@ -540,9 +539,9 @@ if ($_POST["save"]
         }
         if ($_POST["save_and_new"]) {
             $url = $TPL["url_alloc_timeSheet"];
-        } else if ($_POST["save_and_returnToList"]) {
+        } elseif ($_POST["save_and_returnToList"]) {
             $url = $TPL["url_alloc_timeSheetList"];
-        } else if ($_POST["save_and_returnToProject"]) {
+        } elseif ($_POST["save_and_returnToProject"]) {
             $url = $TPL["url_alloc_project"]."projectID=".$timeSheet->get_value("projectID");
         } else {
             $msg = page::htmlentities(urlencode($msg));
@@ -553,7 +552,7 @@ if ($_POST["save"]
         alloc_redirect($url);
         exit();
     }
-} else if ($_POST["delete"]) {
+} elseif ($_POST["delete"]) {
     // Deleting a record
     $timeSheet->read_globals();
     $timeSheet->select();
@@ -561,7 +560,7 @@ if ($_POST["save"]
     if (!$TPL["message"]) {
         alloc_redirect($TPL["url_alloc_timeSheetList"]);
     }
-} else if ($timeSheetID) {
+} elseif ($timeSheetID) {
     // Displaying a record
     $timeSheet->set_id($timeSheetID);
     $timeSheet->select();
@@ -588,7 +587,7 @@ if (!$timeSheetID) {
 
 if ($_POST["create_transactions_default"] && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
     $msg.= $timeSheet->createTransactions();
-} else if ($_POST["delete_all_transactions"] && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
+} elseif ($_POST["delete_all_transactions"] && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
     $msg.= $timeSheet->destroyTransactions();
 }
 
@@ -599,9 +598,9 @@ if ($_POST["create_transactions_default"] && $timeSheet->have_perm(PERM_TIME_INV
 if (($_POST["p_button"] || $_POST["a_button"] || $_POST["r_button"]) && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
     if ($_POST["p_button"]) {
         $status = "pending";
-    } else if ($_POST["a_button"]) {
+    } elseif ($_POST["a_button"]) {
         $status = "approved";
-    } else if ($_POST["r_button"]) {
+    } elseif ($_POST["r_button"]) {
         $status = "rejected";
     }
 
@@ -609,8 +608,8 @@ if (($_POST["p_button"] || $_POST["a_button"] || $_POST["r_button"]) && $timeShe
     $db = new db_alloc();
     $db->query($query);
 
-    // Take care of the transaction line items on an invoiced timesheet created by admin
-} else if (($_POST["transaction_save"] || $_POST["transaction_delete"]) && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
+// Take care of the transaction line items on an invoiced timesheet created by admin
+} elseif (($_POST["transaction_save"] || $_POST["transaction_delete"]) && $timeSheet->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
     $transaction = new transaction();
     $transaction->read_globals();
     $transaction->read_globals("transaction_");
@@ -620,7 +619,7 @@ if (($_POST["p_button"] || $_POST["a_button"] || $_POST["r_button"]) && $timeShe
         }
         $transaction->set_value("currencyTypeID", $timeSheet->get_value("currencyTypeID"));
         $transaction->save();
-    } else if ($_POST["transaction_delete"]) {
+    } elseif ($_POST["transaction_delete"]) {
         $transaction->delete();
     }
 }
@@ -648,7 +647,7 @@ if ($timeSheet->get_value("approvedByAdminPersonID")) {
 // display the project name.
 if (($timeSheet->get_value("status") == 'edit' || $timeSheet->get_value("status") == 'rejected') && !$timeSheet->get_value("projectID")) {
     $query = prepare("SELECT * FROM project WHERE projectStatus = 'Current' ORDER by projectName");
-    #.prepare("  LEFT JOIN projectPerson on projectPerson.projectID = project.projectID ")
+#.prepare("  LEFT JOIN projectPerson on projectPerson.projectID = project.projectID ")
     #.prepare("WHERE projectPerson.personID = '%d' ORDER BY projectName", $current_user->get_id());
 } else {
     $query = prepare("SELECT * FROM project ORDER by projectName");
@@ -723,7 +722,7 @@ list($client_select, $client_link, $project_select, $project_link)
 
 
 $TPL["invoice_link"] = $timeSheet->get_invoice_link();
-list($amount_used,$amount_allocated) = $timeSheet->get_amount_allocated();
+list($amount_used, $amount_allocated) = $timeSheet->get_amount_allocated();
 if ($amount_allocated) {
     $TPL["amount_allocated_label"] = "Amount Used / Allocated:";
     $TPL["amount_allocated"] = $amount_allocated;
@@ -857,7 +856,7 @@ switch ($timeSheet->get_value("status")) {
         <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
         <button type="submit" name="save_and_MoveForward" value="1" class="save_button">Time Sheet to Admin<i class="icon-arrow-right"></i></button>';
 
-                $TPL["radio_email"] = $radio_email;
+            $TPL["radio_email"] = $radio_email;
         }
         break;
 
@@ -868,7 +867,7 @@ switch ($timeSheet->get_value("status")) {
         <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
         <button type="submit" name="save_and_MoveForward" value="1" class="save_button">Time Sheet to Invoiced<i class="icon-arrow-right"></i></button>';
 
-                $TPL["radio_email"] = $radio_email;
+            $TPL["radio_email"] = $radio_email;
         }
         break;
 
@@ -879,7 +878,7 @@ switch ($timeSheet->get_value("status")) {
         <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
         <button type="submit" name="save_and_MoveForward" value="1" class="save_button">Time Sheet Complete<i class="icon-arrow-right"></i></button>';
 
-                $TPL["radio_email"] = $radio_email;
+            $TPL["radio_email"] = $radio_email;
         }
         break;
 
@@ -945,7 +944,7 @@ if ($timeSheetID) {
 
     if ($timeSheet->get_value("status") == "edit" && $db->f("count") == 0) {
         $TPL["message_help"][] = "Enter Time Sheet Items and click the Add Time Sheet Item Button.";
-    } else if ($timeSheet->get_value("status") == "edit" && $db->f("count") > 0) {
+    } elseif ($timeSheet->get_value("status") == "edit" && $db->f("count") > 0) {
         $TPL["message_help"][] = "When finished adding Time Sheet Line Items, click the To Manager/Admin button to submit this Time Sheet.";
     }
 }

@@ -22,30 +22,30 @@
 
 class task_message_list_home_item extends home_item
 {
-    var $date;
+    public $date;
 
-    function __construct()
+    public function __construct()
     {
         parent::__construct("task_message_list_home_item", "Messages For You", "task", "taskMessageListH.tpl", "narrow", 19);
     }
 
-    function visible()
+    public function visible()
     {
         $current_user = &singleton("current_user");
         return $current_user->has_messages();
     }
 
-    function render()
+    public function render()
     {
         return true;
     }
 
-    function show_tasks()
+    public function show_tasks()
     {
         $current_user = &singleton("current_user");
         global $tasks_date;
 
-        list($ts_open,$ts_pending,$ts_closed) = task::get_task_status_in_set_sql();
+        list($ts_open, $ts_pending, $ts_closed) = task::get_task_status_in_set_sql();
         $q = prepare("SELECT *
                         FROM task
                        WHERE (task.taskStatus NOT IN (".$ts_closed.") AND task.taskTypeID = 'Message')

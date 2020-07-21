@@ -30,7 +30,7 @@ class invoiceRepeat extends db_entity
                                 "personID",
                                 "message",
                                 "active");
-    function save($dates = "")
+    public function save($dates = "")
     {
         $rtn = parent::save();
         if ($rtn) {
@@ -45,7 +45,7 @@ class invoiceRepeat extends db_entity
         }
     }
 
-    function set_values($prefix)
+    public function set_values($prefix)
     {
         global $TPL;
         $db = new db_alloc();
@@ -57,7 +57,7 @@ class invoiceRepeat extends db_entity
         return parent::set_values($prefix);
     }
 
-    function get_all_parties($invoiceID)
+    public function get_all_parties($invoiceID)
     {
         if ($invoiceID) {
             $invoice = new invoice();

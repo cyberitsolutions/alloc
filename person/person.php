@@ -193,9 +193,9 @@ if ($_POST["personExpertiseItem_add"] || $_POST["personExpertiseItem_save"] || $
     if ($_POST["skillID"] != null) {
         if ($_POST["personExpertiseItem_delete"]) {
             $proficiency->delete();
-        } else if ($_POST["personExpertiseItem_save"]) {
+        } elseif ($_POST["personExpertiseItem_save"]) {
             $proficiency->save();
-        } else if ($_POST["personExpertiseItem_add"]) {
+        } elseif ($_POST["personExpertiseItem_add"]) {
             // skillID is an array if when adding but not when saving or deleting
             $skillProficiency = $proficiency->get_value('skillProficiency');
             for ($i = 0; $i < count($_POST["skillID"]); $i++) {
@@ -227,7 +227,7 @@ if ($_POST["save"]) {
 
     if ($_POST["password1"] && $_POST["password1"] == $_POST["password2"]) {
         $person->set_value('password', password_hash($_POST["password1"], PASSWORD_BCRYPT));
-    } else if (!$_POST["password1"] && $personID) {
+    } elseif (!$_POST["password1"] && $personID) {
         // nothing required here, just don't update the password field
     } else {
         alloc_error("Please re-type the passwords");
@@ -265,7 +265,7 @@ if ($_POST["save"]) {
         $person->save();
         alloc_redirect($TPL["url_alloc_personList"]);
     }
-} else if ($_POST["delete"]) {
+} elseif ($_POST["delete"]) {
     $person->delete();
     alloc_redirect($TPL["url_alloc_personList"]);
 }

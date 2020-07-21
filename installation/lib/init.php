@@ -34,7 +34,7 @@ unset($ALLOC_CONFIG_PATH);
 
 class installation_module extends module
 {
-    var $module = "installation";
+    public $module = "installation";
 }
 
 function get_patch_file_list()

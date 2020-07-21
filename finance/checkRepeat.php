@@ -27,7 +27,6 @@ require_once("../alloc.php");
 
 function timeWarp($mostRecent, $basis)
 {
-
     if ($basis == "weekly") {
         return mktime(0, 0, 0, date("m", $mostRecent), date("d", $mostRecent) + 7, date("Y", $mostRecent));
     }

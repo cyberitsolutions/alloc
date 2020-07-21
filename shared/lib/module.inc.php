@@ -22,9 +22,9 @@
 
 class module
 {
-    var $module = '';
-    var $db_entities = array();   // A list of db_entity class names implemented by this module
-    var $home_items = array();    // A list of all the home page items implemented by this module
+    public $module = '';
+    public $db_entities = array();   // A list of db_entity class names implemented by this module
+    public $home_items = array();    // A list of all the home page items implemented by this module
 
     public function __construct()
     {

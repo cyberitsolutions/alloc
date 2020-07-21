@@ -382,13 +382,13 @@ if ($_POST["save"]) {
         }
         alloc_redirect($TPL["url_alloc_project"]."projectID=".$project->get_id());
     }
-} else if ($_POST["delete"]) {
+} elseif ($_POST["delete"]) {
     $project->read_globals();
     $project->delete();
     alloc_redirect($TPL["url_alloc_projectList"]);
 
 // If they are creating a new project that is based on an existing one
-} else if ($_POST["copy_project_save"] && $_POST["copy_projectID"] && $_POST["copy_project_name"]) {
+} elseif ($_POST["copy_project_save"] && $_POST["copy_projectID"] && $_POST["copy_project_name"]) {
     $p = new project();
     $p->set_id($_POST["copy_projectID"]);
     if ($p->select()) {
@@ -469,7 +469,7 @@ if ($projectID) {
                 $pp->delete();
             }
         }
-    } else if ($_POST["commission_save"] || $_POST["commission_delete"]) {
+    } elseif ($_POST["commission_save"] || $_POST["commission_delete"]) {
         $commission_item = new projectCommissionPerson();
         $commission_item->read_globals();
         $commission_item->read_globals("commission_");
@@ -480,7 +480,7 @@ if ($projectID) {
             } else {
                 $commission_item->save();
             }
-        } else if ($_POST["commission_delete"]) {
+        } elseif ($_POST["commission_delete"]) {
             $commission_item->delete();
         }
     }

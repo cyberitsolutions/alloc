@@ -9,155 +9,163 @@ table.alloc_calendar img {
 }
 
 body {
-  font-family:arial,helvetica,sans-serif;
-  font-size:100%;
+  font-family: arial, helvetica, sans-serif;
+  font-size: 100%;
 }
 
 h6 {
-  font-size:100%;
-  margin:3px 0px;
+  font-size: 100%;
+  margin: 3px 0px;
 }
 
 /* This should match the body font */
 pre.comment {
-  font-family:arial,helvetica,sans-serif;
-  overflow:auto;
-  white-space:pre-wrap;
+  font-family: arial, helvetica, sans-serif;
+  overflow: auto;
+  white-space: pre-wrap;
 }
 
 a {
-  text-decoration:none;
-  color:black;
+  text-decoration: none;
+  color: black;
 }
 
 hr {
-  border:0px;
+  border: 0px;
   width: 100%;
   color: #ccc;
   background-color: #ccc;
-  height:1px;
+  height: 1px;
 }
 
 table.list {
-  width:100%;
-  border-right:1px solid #808080;
-  border-bottom:1px solid #808080;
-  border-collapse:collapse;
-  border-spacing:0px;
+  width: 100%;
+  border-right: 1px solid #808080;
+  border-bottom: 1px solid #808080;
+  border-collapse: collapse;
+  border-spacing: 0px;
 }
 td.list {
-  background-color: #eaf3ff; 
-  padding:4px;
+  background-color: #eaf3ff;
+  padding: 4px;
 }
-table.list th, table.alloc_calendar th {
-  border-bottom:0px;
-  font-weight:bold;
-  white-space:nowrap;
-  color:#444444;
+table.list th,
+table.alloc_calendar th {
+  border-bottom: 0px;
+  font-weight: bold;
+  white-space: nowrap;
+  color: #444444;
 }
-table.list td, table.list th, table.alloc_calendar th {
-  border-left:1px solid #808080;
-  border-top:1px solid #808080;
-  padding:4px;
+table.list td,
+table.list th,
+table.alloc_calendar th {
+  border-left: 1px solid #808080;
+  border-top: 1px solid #808080;
+  padding: 4px;
 }
 .sort_arrow_invisible {
-  color:#f4f4f4;
+  color: #f4f4f4;
 }
 .sort_arrow_faded {
-  color:#999999;
+  color: #999999;
 }
 
-table.alloc_calendar { 
-  width:100%; 
-  border-right:1px solid #808080; 
-  border-bottom:1px solid #808080;
-} 
-table.alloc_calendar td { 
-  border-left:1px solid #808080;  
-  border-top:1px solid #808080; 
-  width:10%; vertical-align:top;
-  font-size:smaller;
+table.alloc_calendar {
+  width: 100%;
+  border-right: 1px solid #808080;
+  border-bottom: 1px solid #808080;
 }
-table.alloc_calendar td.today { 
-  border-top:2px solid #808080;  
-  border-left:2px solid #808080;  
-  border-right:1px solid #808080;  
-  border-bottom:1px solid #808080; 
+table.alloc_calendar td {
+  border-left: 1px solid #808080;
+  border-top: 1px solid #808080;
+  width: 10%;
+  vertical-align: top;
+  font-size: smaller;
+}
+table.alloc_calendar td.today {
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 1px solid #808080;
+  border-bottom: 1px solid #808080;
 }
 table.alloc_calendar td.today h1 {
-  font-weight:bold;
+  font-weight: bold;
 }
-table.alloc_calendar td.even { 
-  background-color:#f0f0f0; 
+table.alloc_calendar td.even {
+  background-color: #f0f0f0;
 }
 table.alloc_calendar td.absent {
-  background-color:#cccccc;
-  color:#999999;
+  background-color: #cccccc;
+  color: #999999;
 }
-table.alloc_calendar td.absent h1{
-  color:#999999;
+table.alloc_calendar td.absent h1 {
+  color: #999999;
 }
 table.alloc_calendar h1 {
-  text-align:right;
-  font-size:12px;
-  margin:0px;
-  padding:3px;
-  font-weight:normal;
+  text-align: right;
+  font-size: 12px;
+  margin: 0px;
+  padding: 3px;
+  font-weight: normal;
 }
 table.alloc_calendar img {
-  float:left;
-  margin:0px;
+  float: left;
+  margin: 0px;
 }
 
 /* This allows the thead to degrade if it's not supported */
-thead {display: table-header-group;}
-table {page-break-inside: avoid;}
+thead {
+  display: table-header-group;
+}
+table {
+  page-break-inside: avoid;
+}
 
-table.box { 
-  margin-left:8px !important;  margin-left:0px;
-  margin-right:8px !important;  margin-right:0px;
-  margin-top:0px; 
-  margin-bottom:14px; 
-  vertical-align:top; 
-  width:98%; 
-  border-collapse:collapse;
-  border-spacing:0px;
-} 
+table.box {
+  margin-left: 8px !important;
+  margin-left: 0px;
+  margin-right: 8px !important;
+  margin-right: 0px;
+  margin-top: 0px;
+  margin-bottom: 14px;
+  vertical-align: top;
+  width: 98%;
+  border-collapse: collapse;
+  border-spacing: 0px;
+}
 table.box th {
   font-weight: bold;
   font-size: 120%;
-  text-align:left;
-  background-color:#f4f4f4;
+  text-align: left;
+  background-color: #f4f4f4;
 }
 table.box table th {
   font-weight: bold;
   font-size: 100%;
 }
 table.comments th {
-  text-align:left;
+  text-align: left;
 }
 table th {
-  text-align:left;
-  font-weight:normal;
+  text-align: left;
+  font-weight: normal;
 }
 table {
-  margin-top:10px;
+  margin-top: 10px;
 }
-
 
 /* The actual wiki stylesheet is called after this printer stylesheet, 
  * so we need to override the values that are set later - this isn't going to
  * work in IE<=6 cause it doesn't obey the !important modifier */
 .wikidoc {
-  border:0px solid black !important;
-  margin:0px !important;
-  padding:0px !important;
+  border: 0px solid black !important;
+  margin: 0px !important;
+  padding: 0px !important;
 }
 
 .corner {
   -moz-border-radius: 12px;
   -webkit-border-radius: 12px;
   border-radius: 12px;
-  border-collapse:separate; /* to prevent border-collapse:collapse being inherited */
+  border-collapse: separate; /* to prevent border-collapse:collapse being inherited */
 }
-

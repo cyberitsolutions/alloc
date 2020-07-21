@@ -46,9 +46,9 @@ foreach ($t as $k => $v) {
             } else {
                 $v = "Task ".$v." not found.";
             }
-        } else if ($k == "unit") {
+        } elseif ($k == "unit") {
             $v = $units[$v];
-        } else if ($k == "multiplier") {
+        } elseif ($k == "multiplier") {
             $v = $tsims[sprintf("%0.2f", $v)]["timeSheetItemMultiplierName"];
         }
         $rtn[$k] = $v;
@@ -68,7 +68,7 @@ if (isset($_REQUEST["save"]) && isset($_REQUEST["time_item"])) {
     if (!is_numeric($t["duration"])) {
         $status = "bad";
         $extra = "Time not added. Duration not found.";
-    } else if (!is_numeric($t["taskID"])) {
+    } elseif (!is_numeric($t["taskID"])) {
         $status = "bad";
         $extra = "Time not added. Task not found.";
     }

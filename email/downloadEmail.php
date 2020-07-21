@@ -56,7 +56,7 @@ if ($_REQUEST["commentID"]) {
 
     if ($_REQUEST["uid"]) {
         header('Content-Type: text/plain; charset=utf-8');
-        list($h,$b) = $mail->get_raw_email_by_msg_uid($_REQUEST["uid"]);
+        list($h, $b) = $mail->get_raw_email_by_msg_uid($_REQUEST["uid"]);
         $mail->close();
         echo $h.$b;
         exit();
@@ -74,7 +74,7 @@ if ($_REQUEST["commentID"]) {
         $uids = $mail->get_emails_UIDs_search($str);
         if (count($uids) == 1) {
             alloc_redirect($TPL["url_alloc_downloadEmail"]."commentID=".$_REQUEST["commentID"]."&uid=".$uids[0]);
-        } else if (count($uids) > 1) {
+        } elseif (count($uids) > 1) {
             $all_uids += $uids;
         }
     }

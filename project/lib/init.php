@@ -22,9 +22,9 @@
 
 class project_module extends module
 {
-    var $module = "project";
-    var $db_entities = array("project",
+    public $module = "project";
+    public $db_entities = array("project",
                              "projectPerson",
                              "projectCommissionPerson");
-    var $home_items = array("project_list_home_item");
+    public $home_items = array("project_list_home_item");
 }

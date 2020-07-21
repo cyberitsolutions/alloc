@@ -85,26 +85,26 @@ function format_date($format = "Y/m/d", $date = "")
 
     // If looks like this: 2003-07-07 21:37:01
     if (preg_match("/^[\d]{4}-[\d]{1,2}-[\d]{1,2} [\d]{2}:[\d]{2}:[\d]{2}$/", $date)) {
-        list($d,$t) = explode(" ", $date);
+        list($d, $t) = explode(" ", $date);
 
-        // If looks like this: 2003-07-07
-    } else if (preg_match("/^[\d]{4}-[\d]{1,2}-[\d]{1,2}$/", $date)) {
+    // If looks like this: 2003-07-07
+    } elseif (preg_match("/^[\d]{4}-[\d]{1,2}-[\d]{1,2}$/", $date)) {
         $d = $date;
 
-        // If looks like this: 12:01:01
-    } else if (preg_match("/^[\d]{2}:[\d]{2}:[\d]{2}$/", $date)) {
+    // If looks like this: 12:01:01
+    } elseif (preg_match("/^[\d]{2}:[\d]{2}:[\d]{2}$/", $date)) {
         $d = "2000-01-01";
         $t = $date;
 
-        // Nasty hobbitses!
-    } else if ($date) {
+    // Nasty hobbitses!
+    } elseif ($date) {
         return "Date unrecognized: ".$date;
     } else {
         return;
     }
-    list($y,$m,$d) = explode("-", $d);
-    list($h,$i,$s) = explode(":", $t);
-    list($y,$m,$d,$h,$i,$s) = array(sprintf("%d", $y),sprintf("%d", $m),sprintf("%d", $d),
+    list($y, $m, $d) = explode("-", $d);
+    list($h, $i, $s) = explode(":", $t);
+    list($y, $m, $d, $h, $i, $s) = array(sprintf("%d", $y),sprintf("%d", $m),sprintf("%d", $d),
                                     sprintf("%d", $h),sprintf("%d", $i),sprintf("%d", $s));
     return date($format, mktime(date($h), date($i), date($s), date($m), date($d), date($y)));
 }
@@ -161,7 +161,7 @@ function get_all_form_data($array = array(), $defaults = array())
 function timetook($start, $friendly_output = true)
 {
     $end = microtime();
-    list($start_micro,$start_epoch,$end_micro,$end_epoch) = explode(" ", $start." ".$end);
+    list($start_micro, $start_epoch, $end_micro, $end_epoch) = explode(" ", $start." ".$end);
     $started  = (substr($start_epoch, -4) + $start_micro);
     $finished = (substr($end_epoch, -4) + $end_micro);
     $dur = $finished - $started;
@@ -206,7 +206,7 @@ function rebuild_cache($table)
         }
         uasort($people, "sort_by_name");
         $cache["person"] = $people;
-    } else if ($table == "config") {
+    } elseif ($table == "config") {
         // Special processing for config table
         $config = $cache["config"];
         foreach ($config as $id => $row) {
@@ -283,9 +283,9 @@ function get_file_type_image($file)
     $icon_dir = ALLOC_MOD_DIR."images".DIRECTORY_SEPARATOR."fileicons".DIRECTORY_SEPARATOR;
     if ($types[$type]) {
         $t = $types[$type];
-    } else if (file_exists($icon_dir.$type.".gif")) {
+    } elseif (file_exists($icon_dir.$type.".gif")) {
         $t = $type.".gif";
-    } else if (file_exists($icon_dir.$type.".png")) {
+    } elseif (file_exists($icon_dir.$type.".png")) {
         $t = $type.".png";
     } else {
         $t = "unknown.gif";
@@ -294,7 +294,6 @@ function get_file_type_image($file)
 }
 function get_attachments($entity, $id, $ops = array())
 {
-
     global $TPL;
     $rows = array();
     $dir = ATTACHMENTS_DIR.$entity.DIRECTORY_SEPARATOR.$id;
@@ -356,7 +355,7 @@ function rejig_files_array($f)
                                          "size"     => $f[$key]["size"][$k]);
                     }
                 }
-            } else if ($f[$key]["tmp_name"]) {
+            } elseif ($f[$key]["tmp_name"]) {
                 $files[] = array("name"     => $f[$key]["name"],
                                  "tmp_name" => $f[$key]["tmp_name"],
                                  "type"     => $f[$key]["type"],
@@ -436,7 +435,7 @@ function parse_sql_file($file)
     foreach ($lines as $line) {
         if (preg_match("/^[\s]*(--[^\n]*)$/", $line, $m)) {
             $comments[] = str_replace("-- ", "", trim($m[1]));
-        } else if (!empty($line) && substr($line, 0, 2) != "--" && $line) {
+        } elseif (!empty($line) && substr($line, 0, 2) != "--" && $line) {
             $queries[] = trim($line);
         }
     }
@@ -471,7 +470,7 @@ function parse_php_file($file)
     foreach ($lines as $line) {
         if (preg_match("/^[\s]*(\/\/[^\n]*)$/", $line, $m)) {
             $comments[] = str_replace("//", "", trim($m[1]));
-        } else if (!empty($line) && substr($line, 0, 2) != "//" && $line) {
+        } elseif (!empty($line) && substr($line, 0, 2) != "//" && $line) {
             $php[] = trim($line);
         }
     }
@@ -485,7 +484,7 @@ function parse_patch_file($file)
 
     if (substr($file, -4) == strtolower(".php")) {
         return parse_php_file($file);
-    } else if (substr($file, -4) == strtolower(".sql")) {
+    } elseif (substr($file, -4) == strtolower(".sql")) {
         return parse_sql_file($file);
     }
 }
@@ -523,8 +522,8 @@ function parse_email_address($email = "")
 }
 function same_email_address($addy1, $addy2)
 {
-    list($from_address1,$from_name1) = parse_email_address($addy1);
-    list($from_address2,$from_name2) = parse_email_address($addy2);
+    list($from_address1, $from_name1) = parse_email_address($addy1);
+    list($from_address2, $from_name2) = parse_email_address($addy2);
     if ($from_address1 == $from_address2) {
         return true;
     }
@@ -648,23 +647,23 @@ if (!function_exists('mime_content_type')) {
         if (array_key_exists($ext, $mime_types)) {
             $mt = $mime_types[$ext];
 
-            // Or if we have the PECL FileInfo stuff available, use that to determine mimetype
-        } else if (file_exists($filename) && function_exists('finfo_open')) {
+        // Or if we have the PECL FileInfo stuff available, use that to determine mimetype
+        } elseif (file_exists($filename) && function_exists('finfo_open')) {
             $finfo = finfo_open(FILEINFO_MIME);
             $mimetype = finfo_file($finfo, $filename);
             finfo_close($finfo);
             $mt = $mimetype;
             $mt = current(explode(" ", $mimetype));
 
-            // Or if the file is an image, get mime type the old-fashioned way
-        } else if (file_exists($filename) && $size = @getimagesize($filename)) {
+        // Or if the file is an image, get mime type the old-fashioned way
+        } elseif (file_exists($filename) && $size = @getimagesize($filename)) {
             $mt = $size['mime'];
 
-            // Or if no suffix at all, return text/plain
-        } else if (!$ext) {
+        // Or if no suffix at all, return text/plain
+        } elseif (!$ext) {
             $mt = 'text/plain';
 
-            // Else unrecognised suffix, force browser to offer download dialog
+        // Else unrecognised suffix, force browser to offer download dialog
         } else {
             $mt = 'application/octet-stream';
         }
@@ -736,8 +735,8 @@ function parse_operator_comparison($str, $figure)
         $number = $str;
         return operator_comparison($operator, $figure, $number);
 
-        // <5 OR =10
-    } else if (stristr($str, "OR")) {
+    // <5 OR =10
+    } elseif (stristr($str, "OR")) {
         $criterias = explode("OR", $str);
         foreach ($criterias as $criteria) {
             if (parse_operator_comparison($criteria, $figure)) {
@@ -746,7 +745,7 @@ function parse_operator_comparison($str, $figure)
         }
 
         // >5 AND <10
-    } else if (stristr($str, "AND")) {
+    } elseif (stristr($str, "AND")) {
         $criterias = explode("AND", $str);
         foreach ($criterias as $criteria) {
             preg_match($operator_regex, $criteria, $matches);
@@ -760,8 +759,8 @@ function parse_operator_comparison($str, $figure)
         }
         return $alive && !$dead;
 
-        // >5
-    } else if (preg_match($operator_regex, $str, $matches)) {
+    // >5
+    } elseif (preg_match($operator_regex, $str, $matches)) {
         $operator = $matches[1];
         $number = $matches[2];
         return operator_comparison($operator, $figure, $number);
@@ -782,7 +781,7 @@ function array_kv($arr, $k, $v)
                 $rtn[$value[$k]].= $sep.$value[$i];
                 $sep = " ";
             }
-        } else if ($k) {
+        } elseif ($k) {
             $rtn[$value[$k]] = $value[$v];
         } else {
             $rtn[$key] = $value[$v];

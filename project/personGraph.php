@@ -50,7 +50,7 @@ if ($projectID) {
                                FROM person, projectPerson
                               WHERE person.personID = projectPerson.personID
                                 AND projectPerson.projectID=%d", $project->get_id());
-} else if ($_GET["personID"]) {
+} elseif ($_GET["personID"]) {
     $person_query = prepare("SELECT * FROM person WHERE personID = %d ORDER BY username", $_GET["personID"]);
 } else {
     $person_query = prepare("SELECT * FROM person ORDER BY username");

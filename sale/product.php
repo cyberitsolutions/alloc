@@ -124,7 +124,7 @@ if ($_POST["save"]) {
         }
     }
     $product->set_values();
-} else if ($_POST["delete"]) {
+} elseif ($_POST["delete"]) {
     $product->read_globals();
     $product->delete();
     alloc_redirect($TPL["url_alloc_productList"]);
@@ -141,8 +141,8 @@ if ($_POST["save_costs"] || $_POST["save_commissions"]) {
             $productCost->select();
             $productCost->delete();
 
-            // Save
-        } else if (imp($_POST["amount"][$k])) {
+        // Save
+        } elseif (imp($_POST["amount"][$k])) {
             $a = array("productCostID"     => $productCostID,
                        "productID"         => $productID,
                        "tfID"              => $_POST["tfID"][$k],

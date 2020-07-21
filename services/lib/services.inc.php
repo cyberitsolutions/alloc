@@ -29,7 +29,6 @@
  */
 class services
 {
-
     public function __construct($sessID = "")
     {
         $current_user = $this->get_current_user($sessID);
@@ -141,7 +140,7 @@ class services
                 }
 
                 // email addresses
-            } else if (in_str("@", $person)) {
+            } elseif (in_str("@", $person)) {
                 foreach ($person_table as $pid => $data) {
                     if (same_email_address($person, $data["emailAddress"]) && $data["personActive"]) {
                         $rtn[$data["emailAddress"]] = $data;
@@ -165,7 +164,7 @@ class services
                 $bad_person = false;
                 continue;
 
-                // usernames, partial and full names
+            // usernames, partial and full names
             } else {
                 foreach ($person_table as $pid => $data) {
                     // If matches username
@@ -347,7 +346,7 @@ class services
             $mail->open_mailbox($folder, OP_READONLY);
             $uids = $mail->get_all_email_msg_uids();
             foreach ((array)$uids as $uid) {
-                list($header,$body) = $mail->get_raw_email_by_msg_uid($uid);
+                list($header, $body) = $mail->get_raw_email_by_msg_uid($uid);
                 if ($header && $body) {
                     $m = new email_send();
                     $m->set_headers($header);
@@ -410,7 +409,7 @@ class services
             $info = $this->init_email_info();
             $mail = new email_receive($info);
             $mail->open_mailbox(config::get_config_item("allocEmailFolder"), OP_READONLY);
-            list($header,$body) = $mail->get_raw_email_by_msg_uid($emailUID);
+            list($header, $body) = $mail->get_raw_email_by_msg_uid($emailUID);
             $mail->close();
             $m = new email_send();
             $m->set_headers($header);
@@ -544,7 +543,7 @@ class services
         $options[$entity] = $id;
         if (strtolower($options[$entity]) == "help") {
             return array("status"=>"msg","message"=>command::get_help($entity));
-        } else if ($options) {
+        } elseif ($options) {
             $command = new command();
             return $command->run_commands($options);
         }

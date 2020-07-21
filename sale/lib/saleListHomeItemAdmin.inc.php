@@ -22,19 +22,18 @@
 
 class saleListHomeItemAdmin extends home_item
 {
-
-    function __construct()
+    public function __construct()
     {
         parent::__construct("sale_list_admin", "Sales Pending Admin", "sale", "saleListHomeM.tpl", "narrow", 38);
     }
 
-    function visible()
+    public function visible()
     {
         $current_user = &singleton("current_user");
         return isset($current_user) && $current_user->have_role("admin");
     }
 
-    function render()
+    public function render()
     {
         $current_user = &singleton("current_user");
         global $TPL;

@@ -160,7 +160,7 @@ function show_client_contacts()
         if ($clientContact->get_value("clientContactActive")) {
             $TPL["clientContactActive_checked"] = " checked";
         }
-    } else if ($rtn) {
+    } elseif ($rtn) {
         $TPL["class_new_client_contact"] = "hidden";
     }
 
@@ -251,10 +251,10 @@ if ($_POST["save"]) {
         $clientID = $client->get_id();
         $client->set_values("client_");
     }
-} else if ($_POST["save_attachment"]) {
+} elseif ($_POST["save_attachment"]) {
     move_attachment("client", $clientID);
     alloc_redirect($TPL["url_alloc_client"]."clientID=".$clientID."&sbs_link=attachments");
-} else if ($_GET["get_vcard"]) {
+} elseif ($_GET["get_vcard"]) {
     $clientContact = new clientContact();
     $clientContact->set_id($_GET["clientContactID"]);
     $clientContact->select();

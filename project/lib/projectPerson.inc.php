@@ -36,15 +36,14 @@ class projectPerson extends db_entity
                                 "projectPersonModifiedUser",
                                 "roleID");
 
-    function date_regex_matches()
+    public function date_regex_matches()
     {
         return eregi($this->get_value("emailDateRegex"), date("YmdD"));
     }
 
 
-    function is_owner($person = "")
+    public function is_owner($person = "")
     {
-
         if (!$this->get_id()) {
             return true;
         } else {
@@ -58,7 +57,7 @@ class projectPerson extends db_entity
 
     // This is a wrapper to simplify inserts into the projectPerson table using the new
     // Role methodology.. role handle is canEditTasks, or isManager atm
-    function set_value_role($roleHandle)
+    public function set_value_role($roleHandle)
     {
         $db = new db_alloc();
         $db->query(prepare("SELECT * FROM role WHERE roleHandle = '%s' AND roleLevel = 'project'", $roleHandle));
@@ -68,7 +67,7 @@ class projectPerson extends db_entity
 
 
     //deprecated in favour of get_rate
-    function get_projectPerson_row($projectID, $personID)
+    public function get_projectPerson_row($projectID, $personID)
     {
         $q = prepare(
             "SELECT *
@@ -82,7 +81,7 @@ class projectPerson extends db_entity
         return $db->row();
     }
 
-    function get_rate($projectID, $personID)
+    public function get_rate($projectID, $personID)
     {
         // Try to get the person's rate from the following sources:
         // project.defaultTimeSheetRate

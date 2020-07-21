@@ -144,7 +144,7 @@ if (isset($taskID)) {
     $task->set_id($taskID);
     $task->select();
 
-    // Creating a new record
+// Creating a new record
 } else {
     $_POST["dateCreated"] = date("Y-m-d H:i:s");
     $task->read_globals();
@@ -203,15 +203,15 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
         if ($_POST["save"] && $_POST["view"] == "brief") {
             #$url = $TPL["url_alloc_taskList"];
             $url = $TPL["url_alloc_task"]."taskID=".$task->get_id();
-        } else if ($_POST["save"] || $_POST["close_task"]) {
+        } elseif ($_POST["save"] || $_POST["close_task"]) {
             $url = $TPL["url_alloc_task"]."taskID=".$task->get_id();
-        } else if ($_POST["save_and_back"]) {
+        } elseif ($_POST["save_and_back"]) {
             $url = $TPL["url_alloc_project"]."projectID=".$task->get_value("projectID");
-        } else if ($_POST["save_and_summary"]) {
+        } elseif ($_POST["save_and_summary"]) {
             $url = $TPL["url_alloc_taskList"];
-        } else if ($_POST["save_and_new"]) {
+        } elseif ($_POST["save_and_new"]) {
             $url = $TPL["url_alloc_task"]."projectID=".$task->get_value("projectID")."&parentTaskID=".$task->get_value("parentTaskID");
-        } else if ($_POST["timeSheet_save"]) {
+        } elseif ($_POST["timeSheet_save"]) {
             $url = $TPL["url_alloc_timeSheet"]."timeSheetID=".$_POST["timeSheetID"]."&taskID=".$task->get_id();
         } else {
             alloc_error("Unexpected save button");
@@ -221,7 +221,7 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
     }
 
     // If deleting a record
-} else if ($_POST["delete"]) {
+} elseif ($_POST["delete"]) {
     if ($task->can_be_deleted()) {
         $task->read_globals();
         $task->delete();

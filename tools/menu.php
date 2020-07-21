@@ -86,7 +86,7 @@ function show_misc_options($template)
                 $TPL["text"] = $option["text"];
                 include_template($template);
             }
-        } else if ($option["function"]) {
+        } elseif ($option["function"]) {
             $f = $option["function"];
             if ($f()) {
                 $TPL["url"] = $TPL["url_alloc_".$option["url"]];
@@ -118,7 +118,7 @@ function show_finance_options($template)
 
                 include_template($template);
             }
-        } else if ($option["function"]) {
+        } elseif ($option["function"]) {
             $f = $option["function"];
             if ($f()) {
                 $TPL["url"] = $TPL["url_alloc_".$option["url"]];

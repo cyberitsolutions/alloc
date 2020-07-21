@@ -25,14 +25,13 @@ require_once("../alloc.php");
 
 function show_all_exp($template)
 {
-
     global $TPL;
     global $expenseForm;
     global $db;
     global $transaction_to_edit;
 
     if ($expenseForm->get_id()) {
-        if ($_POST["transactionID"] && ($_POST["edit"] || ( is_object($transaction_to_edit) && $transaction_to_edit->get_id() ) )) {   // if edit is clicked OR if we've rejected changes made to something so are still editing it
+        if ($_POST["transactionID"] && ($_POST["edit"] || (is_object($transaction_to_edit) && $transaction_to_edit->get_id()))) {   // if edit is clicked OR if we've rejected changes made to something so are still editing it
             $query = prepare(
                 "SELECT * FROM transaction WHERE expenseFormID=%d AND transactionID<>%d ORDER BY transactionID DESC",
                 $expenseForm->get_id(),
@@ -89,7 +88,7 @@ function check_optional_allow_edit()
 
     if (is_object($expenseForm) && !$expenseForm->get_id()) { // New Expense Form
         $allow_edit = true;
-    } else if (is_object($expenseForm) && $expenseForm->get_value("expenseFormFinalised") != 1 && $expenseForm->get_id() && $expenseForm->is_owner()) {
+    } elseif (is_object($expenseForm) && $expenseForm->get_value("expenseFormFinalised") != 1 && $expenseForm->get_id() && $expenseForm->is_owner()) {
         $allow_edit = true;
     } else {
         $allow_edit = false;
@@ -252,25 +251,25 @@ if ($_POST["cancel"]) {
     } else {
         alloc_error("Unable to delete Expense Form");
     }
-} else if ($_POST["changeTransactionStatus"] == "pending") {
+} elseif ($_POST["changeTransactionStatus"] == "pending") {
     $expenseForm->set_value("expenseFormComment", rtrim($expenseForm->get_value("expenseFormComment")));
     $expenseForm->save();
     $expenseForm->set_status("pending");
     alloc_redirect($TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
     exit();
-} else if ($_POST["changeTransactionStatus"] == "approved") {
+} elseif ($_POST["changeTransactionStatus"] == "approved") {
     $expenseForm->set_value("expenseFormComment", rtrim($expenseForm->get_value("expenseFormComment")));
     $expenseForm->save();
     $expenseForm->set_status("approved");
     alloc_redirect($TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
     exit();
-} else if ($_POST["changeTransactionStatus"] == "rejected") {
+} elseif ($_POST["changeTransactionStatus"] == "rejected") {
     $expenseForm->set_value("expenseFormComment", rtrim($expenseForm->get_value("expenseFormComment")));
     $expenseForm->save();
     $expenseForm->set_status("rejected");
     alloc_redirect($TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
     exit();
-} else if ($_POST["save"]) {
+} elseif ($_POST["save"]) {
     $expenseForm->read_globals();
     if ($expenseForm->get_value("reimbursementRequired") == 0 || $expenseForm->get_value("reimbursementRequired") == 1) {
         $expenseForm->set_value("paymentMethod", "");
@@ -280,7 +279,7 @@ if ($_POST["cancel"]) {
     $expenseForm->save();
     alloc_redirect($TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
     exit();
-} else if ($_POST["finalise"]) {
+} elseif ($_POST["finalise"]) {
     $db = new db_alloc();
     $hasItems = $db->qr("SELECT * FROM transaction WHERE expenseFormID = %d", $expenseForm->get_id());
     if (!$hasItems) {
@@ -299,25 +298,25 @@ if ($_POST["cancel"]) {
     $expenseForm->save();
     alloc_redirect($TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
     exit();
-} else if ($_POST["unfinalise"]) {
+} elseif ($_POST["unfinalise"]) {
     $expenseForm->read_globals();
     $expenseForm->set_value("expenseFormFinalised", 0);
     $expenseForm->set_value("expenseFormComment", rtrim($expenseForm->get_value("expenseFormComment")));
     $expenseForm->save();
     alloc_redirect($TPL["url_alloc_expenseForm"]."expenseFormID=".$expenseForm->get_id());
     exit();
-} else if ($_POST["attach_transactions_to_invoice"] && $current_user->have_role("admin")) {
+} elseif ($_POST["attach_transactions_to_invoice"] && $current_user->have_role("admin")) {
     $expenseForm->save_to_invoice($_POST["attach_to_invoiceID"]);
 }
 
 
 if (is_object($expenseForm) && $expenseForm->get_value("expenseFormFinalised") && $current_user->get_id() == $expenseForm->get_value("expenseFormCreatedUser")) {
     $TPL["message_help"][] = "Step 4/4: Print out the Expense Form using the Printer Friendly Version link, attach receipts and hand in to office admin.";
-} else if (check_optional_has_line_items() && !$expenseForm->get_value("expenseFormFinalised")) {
+} elseif (check_optional_has_line_items() && !$expenseForm->get_value("expenseFormFinalised")) {
     $TPL["message_help"][] = "Step 3/4: When finished adding Expense Form Line Items, click the To Admin button to finalise the Expense Form.";
-} else if (is_object($expenseForm) && $expenseForm->get_id() && !$expenseForm->get_value("expenseFormFinalised")) {
+} elseif (is_object($expenseForm) && $expenseForm->get_id() && !$expenseForm->get_value("expenseFormFinalised")) {
     $TPL["message_help"][] = "Step 2/4: Add Expense Form Line Items by filling in the details and clicking the Add Expense Form Line Item button.";
-} else if (!is_object($expenseForm) || !$expenseForm->get_id()) {
+} elseif (!is_object($expenseForm) || !$expenseForm->get_id()) {
     $TPL["message_help"][] = "Step 1/4: Begin an Expense Form by choosing the Payment Method and then clicking the Create Expense Form button.";
 }
 
@@ -374,7 +373,7 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
     $ops = array_kv($ops, "clientID", "clientName");
     $TPL["field_clientID"] = "<select name=\"clientID\"><option value=\"\">".page::select_options($ops, $expenseForm->get_value("clientID"))."</select>";
     $TPL["field_expenseFormComment"] = page::textarea("expenseFormComment", $expenseForm->get_value("expenseFormComment", DST_HTML_DISPLAY));
-} else if (is_object($expenseForm) && $expenseForm->get_id() && $current_user->have_role("admin")) {
+} elseif (is_object($expenseForm) && $expenseForm->get_id() && $current_user->have_role("admin")) {
     $TPL["expenseFormButtons"].= '
   <button type="submit" name="unfinalise" value="1" class="save_button"><i class="icon-arrow-left" style="margin:0px; margin-right:5px;"></i>Edit</button>
   <button type="submit" name="save" value="1" class="save_button">Save<i class="icon-ok-sign"></i></button>
@@ -384,7 +383,7 @@ if (is_object($expenseForm) && $expenseForm->get_id() && check_optional_allow_ed
 
     $TPL["field_clientID"] = $clientName;
     $TPL["field_expenseFormComment"] = page::textarea("expenseFormComment", $expenseForm->get_value("expenseFormComment", DST_HTML_DISPLAY));
-} else if (is_object($expenseForm) && !$expenseForm->get_value("expenseFormFinalised")) {
+} elseif (is_object($expenseForm) && !$expenseForm->get_value("expenseFormFinalised")) {
     $TPL["expenseFormButtons"].= '&nbsp;
          <button type="submit" name="save" value="1" class="save_button">Create Expense Form<i class="icon-ok-sign"></i></button>';
     $TPL["paymentMethodOptions"] = "<select name=\"paymentMethod\">".$paymentOptions."</select>";

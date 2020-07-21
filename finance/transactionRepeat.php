@@ -52,10 +52,10 @@ if ($_POST["save"] || $_POST["delete"] || $_POST["pending"] || $_POST["approved"
         if ($_POST["changeTransactionStatus"] == "pending") {
             $transactionRepeat->set_value("status", "pending");
             $TPL["message_good"][] = "Repeating Expense form Pending.";
-        } else if ($_POST["changeTransactionStatus"] == "approved") {
+        } elseif ($_POST["changeTransactionStatus"] == "approved") {
             $transactionRepeat->set_value("status", "approved");
             $TPL["message_good"][] = "Repeating Expense form Approved!";
-        } else if ($_POST["changeTransactionStatus"] == "rejected") {
+        } elseif ($_POST["changeTransactionStatus"] == "rejected") {
             $transactionRepeat->set_value("status", "rejected");
             $TPL["message_good"][] = "Repeating Expense form  Rejected.";
         }
@@ -110,7 +110,7 @@ if (have_entity_perm("tf", PERM_READ, $current_user, false)) {
         $transactionRepeat->get_value("tfID"),
         $transactionRepeat->get_value("fromTfID")
     );
-} else if (have_entity_perm("tf", PERM_READ, $current_user, true)) {
+} elseif (have_entity_perm("tf", PERM_READ, $current_user, true)) {
     // Person can only read TF records that they own
     $q = prepare(
         "SELECT tf.tfID AS value, tf.tfName AS label
@@ -165,7 +165,7 @@ if (is_object($transactionRepeat) && $transactionRepeat->get_id() && $current_us
 
 if (is_object($transactionRepeat) && $transactionRepeat->get_id() && $transactionRepeat->get_value("status") == "pending") {
     $TPL["message_help"][] = "This Repeating Expense will only create Transactions once its status is Approved.";
-} else if (!$transactionRepeat->get_id()) {
+} elseif (!$transactionRepeat->get_id()) {
     $TPL["message_help"][] = "Complete all the details and click the Save button to create an automatically Repeating Expense";
 }
 

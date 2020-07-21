@@ -35,7 +35,7 @@ if (!$info["host"]) {
 
 if ($_REQUEST["id"] && $_REQUEST["hash"] && !inbox::verify_hash($_REQUEST["id"], $_REQUEST["hash"])) {
     alloc_error("The IMAP ID for that email is no longer valid. Refresh the list and try again.");
-} else if ($_REQUEST["id"] && $_REQUEST["hash"]) {
+} elseif ($_REQUEST["id"] && $_REQUEST["hash"]) {
     $_REQUEST["archive"]    && inbox::archive_email($_REQUEST);  // archive the email by moving it to another folder
     $_REQUEST["download"]   && inbox::download_email($_REQUEST); // download it to a mbox file
     $_REQUEST["process"]    && inbox::process_email($_REQUEST);  // attach it to a task etc

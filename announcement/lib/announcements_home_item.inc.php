@@ -22,23 +22,23 @@
 
 class announcements_home_item extends home_item
 {
-    function __construct()
+    public function __construct()
     {
         parent::__construct("announcements", "Announcements", "announcement", "announcementsH.tpl", "standard", 10);
     }
 
-    function visible()
+    public function visible()
     {
         $announcement = new announcement();
         return $announcement->has_announcements();
     }
 
-    function render()
+    public function render()
     {
         return true;
     }
 
-    function show_announcements($template_name)
+    public function show_announcements($template_name)
     {
         $current_user = &singleton("current_user");
         global $TPL;

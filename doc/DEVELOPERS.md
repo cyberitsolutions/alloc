@@ -21,7 +21,7 @@ $ docker exec -ti practical_boyd bash
 
 ## LXC
 
-These instructions assume you are using Debian, but *should* work on
+These instructions assume you are using Debian, but _should_ work on
 Ubuntu. Read the LXC wiki page for your distro.
 
 ### Install and Setup LXC
@@ -91,7 +91,6 @@ Now create a container for you alloc development work!
 This will give us a list of possible distros, and then a few prompts
 asking what we want. E.g. type `debian RET stretch RET amd64 RET`
 (`RET` is return or enter) to get Debian Stretch 64-bit.
-
 
 A few helpful commands are listed here. To view our containers:
 
@@ -194,28 +193,12 @@ to the main alloc repo! This will mess up other peoples clones.
 
 ## PHP
 
-We follow the [PSR-2](https://www.php-fig.org/psr/psr-2/) coding
-standard with the exception of `else if`. Please use `else if` instead
-of `elseif`.
+We try follow the [PSR-2](https://www.php-fig.org/psr/psr-2/) coding standard.
 
 Because the alloc code base did not use PSR-2 until late 2018, many
 class/method names do not match the PSR-2 recommendations, this is an
 ongoing effort.
 
-## Javascript
+## Javascript, CSS, and Markdown.
 
-You'll need to install esformatter and the needed plugins, e.g.:
-
-```
-$ npm install -g esformatter esformatter-dot-notation esformatter-semicolons esformatter-braces esformatter-eol-last esformatter-quotes esformatter-var-each
-```
-
-Note: you may want to set a prefix (install path) with `--prefix`. If you do,
-make sure to add the `bin` directory from your node prefix/install path to your
-`PATH`.
-
-To use esformatter:
-
-```
-$ esformatter -i javascript/zz_alloc.js
-```
+Format it with [Prettier](https://github.com/prettier/prettier).

@@ -1,152 +1,143 @@
 body {
   background-color: #eeeeee;
-  margin:0px;
-  padding:0px;
-  font-size:12px;
-  font-family: arial,helvetica,sans-serif;
+  margin: 0px;
+  padding: 0px;
+  font-size: 12px;
+  font-family: arial, helvetica, sans-serif;
 }
 
-a:link, a:visited       { color:#003d76; }
-a:hover                 { color:#688db0; }
-
+a:link,
+a:visited {
+  color: #003d76;
+}
+a:hover {
+  color: #688db0;
+}
 
 /* Setup the main content box that encapsulates everything */
 div#main {
-  width:750px;
-  padding-bottom:20px;
+  width: 750px;
+  padding-bottom: 20px;
   background-color: white;
-  margin:auto;
-  border:1px solid #9c9c9c;
+  margin: auto;
+  border: 1px solid #9c9c9c;
   position: relative;
-  clear:both;
-  text-align:left;
-  margin-bottom:4px;
+  clear: both;
+  text-align: left;
+  margin-bottom: 4px;
 }
 
 div#tabs {
-  width:750px;
-  margin:auto;
-  padding:0px !important; padding:0px 16px;
-  border:1px;
+  width: 750px;
+  margin: auto;
+  padding: 0px !important;
+  padding: 0px 16px;
+  border: 1px;
   position: relative;
-  clear:both;
-  text-align:left;
-  height:27px;
-  top:1px;
-  left:1px;
-  z-index:1;
+  clear: both;
+  text-align: left;
+  height: 27px;
+  top: 1px;
+  left: 1px;
+  z-index: 1;
 }
 
-
 div#header_image {
-  width:750px;
-  margin:auto;
+  width: 750px;
+  margin: auto;
   position: relative;
-  text-align:left;
-  z-index:1;
+  text-align: left;
+  z-index: 1;
 }
 
 p.logged_in_text {
-  float:right;
-  color:#666666;
-  position:relative;
-  clear:both;
-  text-align:right;
-  white-space:nowrap;
-  padding:0px;
-  margin:4px;
+  float: right;
+  color: #666666;
+  position: relative;
+  clear: both;
+  text-align: right;
+  white-space: nowrap;
+  padding: 0px;
+  margin: 4px;
 }
-
 
 /* Need this for IE 5, so that the font sizes within tables are not ridiculously huge */
 body table {
-  font-size:100% !important; font-size:13px;
+  font-size: 100% !important;
+  font-size: 13px;
 }
 
 h1 {
-  color:#444444;
-  font-size:200%;
-  font-weight:normal;
-  display:inline;
+  color: #444444;
+  font-size: 200%;
+  font-weight: normal;
+  display: inline;
 }
 
 div.buttons {
-  width:95%; 
-  text-align:right;
-  clear:both;
-  margin:15px;
-  margin-top:30px;
-  margin-bottom:10px;
+  width: 95%;
+  text-align: right;
+  clear: both;
+  margin: 15px;
+  margin-top: 30px;
+  margin-bottom: 10px;
 }
-
 
 /* A single image based tab */
 div.tab {
-  float:left;
-  position:absolute;
-  background:url(../images/tab_unselected.gif) top no-repeat;
-  display:inline;
-  width:80px;
-  height:27px;
-  text-align:center;
-  font-size:12px;
+  float: left;
+  position: absolute;
+  background: url(../images/tab_unselected.gif) top no-repeat;
+  display: inline;
+  width: 80px;
+  height: 27px;
+  text-align: center;
+  font-size: 12px;
 }
 
 /* Active tabs use this class as well */
 div.active {
-  background:url(../images/tab_selected.gif) top no-repeat;
+  background: url(../images/tab_selected.gif) top no-repeat;
 }
 
 div.tab a {
-  font-weight:bold;
-  text-decoration:none;
-  position:relative;
-  top:8px !important; top:7px;
+  font-weight: bold;
+  text-decoration: none;
+  position: relative;
+  top: 8px !important;
+  top: 7px;
   padding: 5px 10px;
 }
 
 div.active a {
-  text-decoration:none;
-  color:#688db0;
+  text-decoration: none;
+  color: #688db0;
 }
 
-
-table.nice { 
-  border-top:1px solid #999999;
-  border-right:1px solid #999999;
-  border-bottom:1px solid #999999;
-  width:720px;
-  margin:0px;
-  padding:0px;
-  margin-top:20px;
-  margin-bottom:20px;
-
+table.nice {
+  border-top: 1px solid #999999;
+  border-right: 1px solid #999999;
+  border-bottom: 1px solid #999999;
+  width: 720px;
+  margin: 0px;
+  padding: 0px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 table.nice th {
-  text-align:left;
-  background-color:#cccccc;
-  color:#444444;
-  padding:6px;
-  border-left:1px solid #999999;
+  text-align: left;
+  background-color: #cccccc;
+  color: #444444;
+  padding: 6px;
+  border-left: 1px solid #999999;
 }
 
 table.nice td {
-  color:#000000;
-  padding:6px;
-  border-left:1px solid #999999;
-  border-top:1px solid #999999;
-  background-color:#eeeeee;
-  font-size:95%;
+  color: #000000;
+  padding: 6px;
+  border-left: 1px solid #999999;
+  border-top: 1px solid #999999;
+  background-color: #eeeeee;
+  font-size: 95%;
 }
-
-
-
-
-
-
-
-
-
-
-

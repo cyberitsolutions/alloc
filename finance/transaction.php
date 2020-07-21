@@ -82,11 +82,11 @@ $transaction->set_values();
 
 
 if ($_POST["save"] || $_POST["saveAndNew"] || $_POST["saveGoTf"]) {
-/*
-  if ($transaction->get_value("status") != "pending") {
-    alloc_error("This transaction is no longer editable.");
-  }
-*/
+    /*
+      if ($transaction->get_value("status") != "pending") {
+        alloc_error("This transaction is no longer editable.");
+      }
+    */
     $transaction->read_globals();
 
     // Tweaked validation to allow reporting of multiple errors
@@ -117,7 +117,7 @@ if ($_POST["save"] || $_POST["saveAndNew"] || $_POST["saveGoTf"]) {
             alloc_redirect($TPL["url_alloc_transaction"]."transactionID=".$transaction->get_id());
         }
     }
-} else if ($_POST["delete"]) {
+} elseif ($_POST["delete"]) {
     $transaction->delete();
     alloc_redirect($TPL["url_alloc_transactionList"]."tfID=".$transaction->get_value("tfID"));
 }
