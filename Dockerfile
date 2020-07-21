@@ -31,8 +31,6 @@ RUN cd /var/www/html/; make patches; make cache
 RUN echo '\
 UPDATE config SET value = "USD" WHERE name = "currency"; \n\
 UPDATE currencyType SET currencyTypeActive = true, currencyTypeSeq = 1 WHERE currencyTypeID = "USD"; \n\
-DELETE FROM exchangeRate; \n\
-INSERT INTO exchangeRate (exchangeRateCreatedDate,exchangeRateCreatedTime,fromCurrency,toCurrency,exchangeRate) VALUES ("2020-03-23","2020-03-23 01:07:06","USD","USD",1); \n\
 UPDATE config SET value = "http://localhost/" WHERE name = "allocURL"; \n\
 UPDATE person SET password = "$2y$10$pyjwF/RYHZDMGgt19s6u8OUBWUAKyq7v9p1Ov.1Y5R/FvDKlcheWO" WHERE personID = 1; \n\
 UPDATE person SET emailAddress = "test@example.com" WHERE personID = 1; \n\
