@@ -371,7 +371,7 @@ class reminder extends db_entity
 
     // get the personID of the person who'll actually recieve this reminder
     // (i.e., convert "Task Assignee" into "Bob")
-    public function get_effective_person_id($recipient)
+    public function get_effective_person_id($recipient = null)
     {
         if ($recipient->get_value('personID') == null) { //nulls don't come through correctly?
             // OK, slightly more complicated, we need to get the relevant link entity
