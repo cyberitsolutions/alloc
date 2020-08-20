@@ -65,5 +65,7 @@ done
 
 # follow the apache error log
 EXPOSE 80
-ADD start.sh /
-CMD ["/bin/bash", "/start.sh"]
+CMD ["/bin/bash", "-c", "set -euxo pipefail && \
+        /usr/sbin/apachectl start && \
+        /etc/init.d/mysql start && \
+        tail -f /var/log/apache2/error.log"]
