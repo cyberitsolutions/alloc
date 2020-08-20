@@ -24,8 +24,9 @@ RUN sed -i -e 's/character-set-server \+= utf8mb4/character-set-server = utf8/' 
 
 ADD . /var/www/html/
 WORKDIR /var/www/html/
-RUN cd /var/www/html/; make patches; make css
+
 RUN mkdir -p /var/local/alloc/; chown www-data /var/local/alloc/
+RUN cd /var/www/html/; make patches; make cache
 
 RUN echo '\
 UPDATE config SET value = "USD" WHERE name = "currency"; \n\

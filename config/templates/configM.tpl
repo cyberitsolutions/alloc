@@ -87,11 +87,6 @@
     <td width="1%">{page::help("config_currency")}</td>
   </tr>
   <tr>
-    <td width="20%">Update Exchange Rates</td>
-    <td><input type="submit" name="fetch_exchange_rates" value="Manually Fetch Exchange Rates"></td>
-    <td width="1%">{page::help("config_exchangeRates")}</td>
-  </tr>
-  <tr>
     <td width="20%"><nobr>Finance Tagged Fund</nobr></td>
     <td><select name="mainTfID"><option value="">{$mainTfOptions}</select></td>
     <td width="1%">{page::help("config_mainTfID")}</td>

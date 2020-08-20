@@ -159,7 +159,7 @@ class productSale extends db_entity
             list($sp,$spcur) = array($productSaleItem->get_value("sellPrice"),$productSaleItem->get_value("sellPriceCurrencyTypeID"));
 
             $sellPriceCurr[$spcur] += page::money($spcur, $sp, "%m");
-            $total_sellPrice += exchangeRate::convert($spcur, $sp);
+            $total_sellPrice += $sp;
             $total_margin += $productSaleItem->get_amount_margin();
             $total_unallocated += $productSaleItem->get_amount_unallocated();
         }

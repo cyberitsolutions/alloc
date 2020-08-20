@@ -69,10 +69,6 @@ dist:
 	tar -czvf allocPSA-`cat util/alloc_version`.tgz allocPSA-`cat util/alloc_version`;
 	rm -rf ./allocPSA-`cat util/alloc_version`;
 
-css: css/src/*
-	./util/make_stylesheets.py
-	$(MAKE) cache
-
 clean: ;
 none: ;
 all: ;

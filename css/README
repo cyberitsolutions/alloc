@@ -1,4 +1,0 @@
-The main CSS files for the application live in this directory. However the
-style_*.css files do not need to be modified directly. Instead, modify the
-source files in the src/ directory and then run `make css`, which will
-rebuild the css files. This approach help to allow allocPSA to be themable.

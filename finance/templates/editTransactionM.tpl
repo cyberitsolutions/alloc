@@ -78,11 +78,6 @@
     <td class="hint"></td>
   </tr>
   <tr>
-    <td>Exchange Rate{page::mandatory($exchangeRate)}</td>
-    <td><input type="text" name="exchangeRate" size="20" value="{$exchangeRate}"> ({$currencyTypeID} to {echo config::get_config_item("currency")})</td>
-    <td class="hint"></td>
-  </tr>
-  <tr>
     <td>Invoice Number</td>
     <td>{$invoice_link}&nbsp;</td>
     <td class="hint"></td>

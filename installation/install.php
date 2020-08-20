@@ -127,7 +127,7 @@ if ($_POST["submit_stage_2"]) {
         $failed = 1;
     } else if (!$failed) {
         // Create directories under attachment dir and chmod them
-        $dirs = $external_storage_directories; // something like array("task","client","project","invoice","comment","backups");
+        $dirs = $external_storage_directories; // something like array("task","client","project","invoice","comment");
         foreach ($dirs as $dir) {
             $d = $_FORM["ATTACHMENTS_DIR"].$dir;
             @mkdir($d, 0777);
@@ -151,8 +151,6 @@ if ($_POST["submit_stage_2"]) {
 
         $query[] = sprintf("UPDATE config SET value = '%s' WHERE name = 'currency';", $_FORM["currency"]);
         $query[] = sprintf("UPDATE currencyType SET currencyTypeActive = true, currencyTypeSeq = 1 WHERE currencyTypeID = '%s';", $_FORM["currency"]);
-        $query[] = sprintf("DELETE FROM exchangeRate;");
-        $query[] = sprintf("INSERT INTO exchangeRate (exchangeRateCreatedDate,exchangeRateCreatedTime,fromCurrency,toCurrency,exchangeRate) VALUES ('%s','%s','%s','%s',%d);", date("Y-m-d"), date("Y-m-d H:i:s"), $_FORM["currency"], $_FORM["currency"], 1);
         $query[] = sprintf("UPDATE config SET value = '%s' WHERE name = 'allocURL';", $_FORM["allocURL"]);
         $query[] = sprintf("UPDATE person SET password = '%s' WHERE personID = 1;", password_hash("alloc", PASSWORD_BCRYPT));
         $query[] = sprintf("UPDATE config SET value = '%s' WHERE name = 'allocTimezone';", $timeZone);

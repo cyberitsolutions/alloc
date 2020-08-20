@@ -40,6 +40,9 @@ alloc source code, such as: `http://localhost/alloc/`
 
 ## Upgrading
 
+#### NOTE: if you are upgrading to newer than 1.9.0, make sure you have already
+     upgraded to 1.9.0
+
 To determine which version you are currently running, look at the fine print at
 the bottom of the login screen for allocPSA, or alternatively view the file:
 `http://YOUR_ALLOC_INSTALLATION/util/alloc_version`

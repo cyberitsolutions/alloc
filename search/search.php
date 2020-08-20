@@ -335,33 +335,7 @@ if ($search && $needle && $category == "search_projects") {
             $TPL["search_results"][] = $row;
         }
     }
-
-    // Wiki Search
-} else if ($search && $needle && $category == "search_wiki") {
-    $TPL["search_title"] = "Wiki Search";
-
-    $index = new Zend_Search_Lucene(ATTACHMENTS_DIR.'search/wiki');
-    $query = Zend_Search_Lucene_Search_QueryParser::parse($needle);
-    $hits = $index->find($needle);
-    $TPL["index_count"] = $index->count();
-    $TPL["hits_count"] = count($hits);
-
-    foreach ($hits as $hit) {
-        $d = $hit->getDocument();
-        $row = array();
-        $row["idx"] = $hit->id;
-        $row["score"] = sprintf('%d%%', $hit->score*100);
-        $row["title"] = sprintf(
-            "<a href='%starget=%s'>%s</a>",
-            $TPL["url_alloc_wiki"],
-            urlencode($d->getFieldValue('name')),
-            page::htmlentities($d->getFieldValue('name'))
-        );
-        $row["desc"] = page::htmlentities($d->getFieldValue('desc'));
-        $TPL["search_results"][] = $row;
-    }
 }
-
 
 // setup generic values
 $TPL["search_category_options"] = page::get_category_options($category);

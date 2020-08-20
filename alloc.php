@@ -101,19 +101,16 @@ $m = array("shared",
            "help",
            "email",
            "sale",
-           "wiki",
            "audit",
            "calendar");
 
-// Sub-dirs under ATTACHMENTS_DIR where upload, email and backup data can be stored
+// Sub-dirs under ATTACHMENTS_DIR where upload amd email can be stored
 $external_storage_directories = array("task",
                                       "client",
                                       "project",
                                       "invoice",
                                       "comment",
-                                      "backups",
                                       "whatsnew",
-                                      "wiki",
                                       "logos",
                                       "search",
                                       "tmp");
@@ -145,7 +142,7 @@ unset($m);
 $TPL = array("url_alloc_index"        => SCRIPT_PATH."index.php",
              "url_alloc_login"        => SCRIPT_PATH."login/login.php",
              "url_alloc_installation" => SCRIPT_PATH."installation/install.php",
-             "url_alloc_styles"       => ALLOC_MOD_DIR."css/src/",
+             "url_alloc_styles"       => ALLOC_MOD_DIR."css/",
              "url_alloc_stylesheets"  => SCRIPT_PATH."css/",
              "url_alloc_javascript"   => SCRIPT_PATH."javascript/",
              "url_alloc_images"       => SCRIPT_PATH."images/",

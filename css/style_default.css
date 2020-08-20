@@ -1,18 +1,13 @@
-
-/* 
- * CSS for allocPSA
- * Note: you'll occassionally see a CSS hack like: width:90% !important; width:95%;
- * Good web browsers obey the first declaration "90%", IE5/6 will obey the latter. 
- */
+/* CSS for allocPSA */
 
 html {
   height:100%;
 }
 
-body { 
-  background:url(../images/wallpaper_default.jpg) repeat-x #dbeafc; 
-  font-family:arial,helvetica,sans-serif; 
-  color:#666666; 
+body {
+  background:url(../images/bg_rams.png) repeat-x #ccc;
+  font-family:arial,helvetica,sans-serif;
+  color:#333;
   padding:10px 30px;
   width:auto !important; width:95%;
   margin:0px;
@@ -25,11 +20,6 @@ pre.comment {
   overflow:auto;
   white-space:pre-wrap;
   margin:0px;
-}
-
-/* Need this for IE 5, so that the font sizes within tables are not ridiculously huge */
-body table {
-  font-size:100%;
 }
 
 /* Setup the main content box that encapsulates everything */
@@ -62,11 +52,11 @@ div#main2 {
   margin:0px 1% !important; margin:auto;
 }
 
-a:link, a:visited { 
+a:link, a:visited {
   color:#1b6cb7;
 }
-a:hover { 
-  color:#8aafd2; 
+a:hover {
+  color:#8aafd2;
 }
 
 a.growshrink, a.magic {
@@ -75,11 +65,11 @@ a.growshrink, a.magic {
 
 a.sidebyside {
   padding:5px;
-  background-color: #f9f9f9;
+  background-color: #fff;
   border:1px solid #cccccc;
   text-decoration:none;
   color:#6e8eb5;
-  font-size:100%; 
+  font-size:100%;
 }
 a.sidebyside:hover {
   background:#e7eff9;
@@ -92,7 +82,7 @@ a.sidebyside_active {
   border:1px solid #6e8eb5;
   text-decoration:none;
   padding:5px;
-  font-size:100%; 
+  font-size:100%;
 }
 
 a.noselect {
@@ -106,25 +96,25 @@ a.noselect {
 
 a.undecorated {
   text-decoration:none;
-  color:#666666;
+  color:#333;
 }
 
-h1 { 
-  font-weight:bold; 
-  font-size:150%; 
+h1 {
+  font-weight:bold;
+  font-size:150%;
 }
-h2 { 
-  font-weight:normal; 
-  font-size:140%; 
+h2 {
+  font-weight:normal;
+  font-size:140%;
   clear:both;
 }
-h3 { 
-  font-weight:bold; 
-  font-size:130%; 
+h3 {
+  font-weight:bold;
+  font-size:130%;
 }
-h4 { 
-  font-weight:bold; 
-  font-size:120%; 
+h4 {
+  font-weight:bold;
+  font-size:120%;
 }
 /* These are the little headers on the task page */
 h6 {
@@ -132,7 +122,7 @@ h6 {
   font-size:90%;
   font-weight:normal;
   text-transform:uppercase;
-  color:#bbbbbb;
+  color:#aaa;
   border-bottom:1px solid #cccccc;
   padding:0px;
   margin:20px 0px 10px 0px;
@@ -150,29 +140,29 @@ h6 div {
 }
 
 textarea, input, select, button {
-  font-size:100%; 
-  font-family:arial,helvetica,sans-serif; 
+  font-size:100%;
+  font-family:arial,helvetica,sans-serif;
   font-weight:normal;
   -webkit-box-sizing:border-box;
      -moz-box-sizing:border-box;
           box-sizing:border-box;
 }
-th { 
-  color:#444444; 
-  text-align:left; 
-  font-size:100%; 
+th {
+  color:#444444;
+  text-align:left;
+  font-size:100%;
 }
-td { 
-  color:#444444; 
-  font-size:100%; 
+td {
+  color:#444444;
+  font-size:100%;
 }
 ul {
   display:inline;
   list-style:disc outside none
 }
-form { 
-  display:inline; 
-  padding:0px; 
+form {
+  display:inline;
+  padding:0px;
   margin:0px;
 }
 div#main input[type="submit"],
@@ -180,18 +170,18 @@ div#main input[type="button"],
 div#main button {
   padding:4px 8px;
 }
-input[type="text"], 
-input[type="password"], 
-input[type="checkbox"], 
+input[type="text"],
+input[type="password"],
+input[type="checkbox"],
 textarea,
 select {
   border: 1px solid #cccccc;
   background-color: #fcfcfc;
   text-transform:none; /* list.th turns options into uppercase */
 }
-input[type="text"]:focus, 
-input[type="password"]:focus, 
-input[type="checkbox"]:focus, 
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="checkbox"]:focus,
 textarea:focus,
 select:focus {
   border: 1px solid #666666;
@@ -213,7 +203,7 @@ select:focus.bad
 }
 input[readonly="true"], input[readonly="true"]:focus {
   border:1px solid #e0e0e0;
-  background-color:#f9f9f9;
+  background-color:#fff;
   color:#777777;
 }
 button {
@@ -298,25 +288,25 @@ hr {
   height:1px;
 }
 
-.right { 
-  text-align:right; 
-} 
+.right {
+  text-align:right;
+}
 .right a {
   margin-left:4px;
 }
 
-.left { 
-  text-align:left; 
-} 
+.left {
+  text-align:left;
+}
 .small {
   padding:0px;
   margin:0px;
 }
-.center { 
-  text-align:center; 
-} 
-.nobr { 
-  white-space:nowrap 
+.center {
+  text-align:center;
+}
+.nobr {
+  white-space:nowrap
 }
 .hidden, .edit {
   display:none;
@@ -338,14 +328,14 @@ hr {
 }
 
 
-#helper { 
-  position:absolute; 
+#helper {
+  position:absolute;
   z-index:1000;
   background-color:#fffdf2;
   border:1px solid #cccccc;
   color:#666666;
-  width:400px; 
-  font-size:100%; 
+  width:400px;
+  font-size:100%;
   padding:8px;
 }
 .help_button {
@@ -357,15 +347,15 @@ hr {
 }
 
 .calendar_container {
-  position:relative; 
-  vertical-align:middle; 
-  padding:0px; 
-  margin:0px; 
+  position:relative;
+  vertical-align:middle;
+  padding:0px;
+  margin:0px;
   display:inline-block;
 }
 .calendar_container img {
   vertical-align:middle;
-  cursor:pointer; 
+  cursor:pointer;
   border:1px solid #999999;
   position:relative;
   margin:2px 0px;
@@ -379,57 +369,57 @@ hr {
   width:6em;
 }
 
-.message { 
-  padding:8px 4px; 
-  margin:15px auto 0px auto; 
+.message {
+  padding:8px 4px;
+  margin:15px auto 0px auto;
   border:1px solid #cccccc;
   background-color:#fffdf2;
   z-index:1000;
 }
-.bad { 
-  color:#e50d0d; 
-  font-size:100%; 
+.bad {
+  color:#e50d0d;
+  font-size:100%;
 }
-.good { 
-  color:green; 
-  font-size:100%; 
+.good {
+  color:green;
+  font-size:100%;
 }
-.help { 
+.help {
   color:#666666;
   font-size:100%;
 }
 
 
-/* Main content boxes */ 
-table.box { 
-  border:1px solid #b8c2cf; 
-  background-color:#f9f9f9; 
-  vertical-align:top; 
-  width:100%; 
+/* Main content boxes */
+table.box {
+  border:0px;
+  background-color:#fff;
+  vertical-align:top;
+  width:100%;
   margin:14px 0px 0px 0px;
   border-collapse:collapse;
   border-spacing:0px;
-} 
-table.box th { 
-  color:#888888; 
-  font-size:110%; 
+}
+table.box th {
+  color:#333;
+  font-size:110%;
   padding:3px;
   font-weight:normal;
-  background: url(../images/bg_default.jpg) repeat-x; border-bottom:1px solid #e0e0e0;; 
-} 
-table.box th.center { 
-  text-align:center; 
-} 
-table.box th.right table { 
-  width:40%; 
-} 
-table.box th a:link, table.box th a:visited { 
-  font-weight:normal; 
-  color:#1b6cb7; 
+  background: #fff; font-size:130%;;
 }
-table.box th a:hover { 
-  font-weight:normal; 
-  color:#8aafd2; 
+table.box th.center {
+  text-align:center;
+}
+table.box th.right table {
+  width:40%;
+}
+table.box th a:link, table.box th a:visited {
+  font-weight:normal;
+  color:#c26832;
+}
+table.box th a:hover {
+  font-weight:normal;
+  color:#ed742c;
 }
 table.box td {
   padding:3px;
@@ -453,29 +443,29 @@ table.box th.header span a.star b {
 }
 
 /* Calendar */
-table.alloc_calendar { 
-  width:100%; 
-  border-right:1px solid #a3bee0; 
-  border-bottom:1px solid #a3bee0;
-} 
-table.alloc_calendar td { 
-  background-color:#f9f9f9; 
-  border-left:1px solid #a3bee0;
-  border-top:1px solid #a3bee0; 
+table.alloc_calendar {
+  width:100%;
+  border-right:1px solid #cccccc;
+  border-bottom:1px solid #cccccc;
+}
+table.alloc_calendar td {
+  background-color:#fff;
+  border-left:1px solid #cccccc;
+  border-top:1px solid #cccccc;
   width:10%; vertical-align:top;
 }
-table.alloc_calendar td.today { 
+table.alloc_calendar td.today {
   background-color:#fffdf2;
-  border-top:2px solid #a3bee0;
-  border-left:2px solid #a3bee0;
-  border-right:1px solid #a3bee0;
-  border-bottom:1px solid #a3bee0; 
+  border-top:2px solid #cccccc;
+  border-left:2px solid #cccccc;
+  border-right:1px solid #cccccc;
+  border-bottom:1px solid #cccccc;
 }
 table.alloc_calendar td.today h1 {
   font-weight:bold;
 }
-table.alloc_calendar td.even { 
-  background-color:#ffffff; 
+table.alloc_calendar td.even {
+  background-color:#ffffff;
 }
 table.alloc_calendar td.absent {
   background-color:#cccccc;
@@ -495,49 +485,49 @@ table.alloc_calendar img {
   float:left;
   margin:0px;
 }
-table.alloc_calendar td:hover { 
-  background-color:#fffdde; 
+table.alloc_calendar td:hover {
+  background-color:#fffdde;
 }
 table.alloc_calendar td.selected {
-  background-color:#e7eff9;
+  background-color:#f4f4f4;
 }
 
 /* Filters */
-table.filter { 
-  background-color:#e7eff9; 
-  border:1px solid #a3bee0; 
-  padding:4px; 
-  margin-top:4px; 
+table.filter {
+  background-color:#f4f4f4;
+  border:1px solid #cccccc;
+  padding:4px;
+  margin-top:4px;
   text-align:left;
 }
 
 table.filter td {
-  color:#6e8eb5; 
+  color:#6e8eb5;
 }
 
-.filter table td { 
-  color:#6e8eb5; 
+.filter table td {
+  color:#6e8eb5;
 }
-.filter table th { 
-  font-weight:bold; 
-  background-color:#e7eff9; 
-  color:#444444; 
-  border-bottom:0px solid #ffffff; 
-  text-align:center; 
+.filter table th {
+  font-weight:bold;
+  background-color:#f4f4f4;
+  color:#444444;
+  border-bottom:0px solid #ffffff;
+  text-align:center;
 }
 
-tr.odd { 
-  background-color:#ffffff; 
+tr.odd {
+  background-color:#ffffff;
 }
-tr.even { 
-  background-color:#f7fbff; 
+tr.even {
+  background-color:#f7fbff;
 }
 tr.odd:hover, tr.even:hover {
-  background-color:#fffdde; 
+  background-color:#fffdde;
 }
 
 .hover:hover {
-  background-color:#e7eff9; 
+  background-color:#e7eff9;
 }
 
 table.nopad, table.nopad td, table.nopad th {
@@ -569,68 +559,68 @@ img.taskType {
   box-shadow:1px 1px 5px #bbbbbb;
 }
 
-.overdue { 
-  color: #e50d0d; 
-}
-.really_overdue { 
-  font-weight:bold; 
+.overdue {
   color: #e50d0d;
 }
-.behind-target { 
-  color: #ccaa00; 
+.really_overdue {
+  font-weight:bold;
+  color: #e50d0d;
 }
-.transaction-approved { 
-  color: green; 
+.behind-target {
+  color: #ccaa00;
 }
-.transaction-pending { 
-  color: #666666; 
+.transaction-approved {
+  color: green;
 }
-.transaction-rejected { 
-  color: #e50d0d; 
+.transaction-pending {
+  color: #666666;
+}
+.transaction-rejected {
+  color: #e50d0d;
 }
 
-.highlighted { 
-  font-weight:normal; 
-  font-style:normal; 
-  background-color:#e7eff9 !important; 
+.highlighted {
+  font-weight:normal;
+  font-style:normal;
+  background-color:#e7eff9 !important;
   padding:0px 3px;
 }
 
-table.list { 
-  width:100%; 
-  border-left:1px solid #a3bee0; 
-  border-right:1px solid #a3bee0; 
-  border-bottom:1px solid #a3bee0;
+table.list {
+  width:100%;
+  border-left:1px solid #cccccc;
+  border-right:1px solid #cccccc;
+  border-bottom:1px solid #cccccc;
   border-collapse:collapse;
   border-spacing:0px;
 }
-td.list { 
-  background-color: #e7eff9; 
-  padding:4px; 
+td.list {
+  background-color: #f4f4f4;
+  padding:4px;
 }
-table.list th, table.alloc_calendar th { 
-  border-bottom:0px; 
-  font-weight:normal; 
-  white-space:nowrap; 
-  background:#e7eff9; 
-  color:#6e8eb5; 
+table.list th, table.alloc_calendar th {
+  border-bottom:0px;
+  font-weight:normal;
+  white-space:nowrap;
+  background:#e7eff9;
+  color:#6e8eb5;
   font-size:90%;
   text-transform:uppercase;
 }
 table.list tr:last-child th {
   font-size:100%;
 }
-table.list td, table.list th, table.alloc_calendar th { 
-  border-top:1px solid #a3bee0; 
+table.list td, table.list th, table.alloc_calendar th {
+  border-top:1px solid #cccccc;
   padding:4px;
 }
-table.alloc_calendar th { 
-  border-left:1px solid #a3bee0; 
+table.alloc_calendar th {
+  border-left:1px solid #cccccc;
 }
 .sort_arrows {
   padding:0px 3px;
 }
-table.list td.grand_total, .grand_total { 
+table.list td.grand_total, .grand_total {
   border-top:1px solid black;
 }
 
@@ -645,7 +635,7 @@ a.star:hover, a.hot {
 }
 
 /* .panel tables (Harpo) have a blue border and a light blue background in the default theme.
-   When a .panel table is inside another .panel table (Chico), the border and the background 
+   When a .panel table is inside another .panel table (Chico), the border and the background
    are lighter.
 
    When a table has .panel and .loud (Groucho), then the table has an orange border with a light
@@ -653,9 +643,9 @@ a.star:hover, a.hot {
 */
 
 .panel {
-  border:1px solid #a3bee0; 
-  background:#e7eff9; 
-  margin-bottom:10px; 
+  border:1px solid #cccccc;
+  background:#f4f4f4;
+  margin-bottom:10px;
   margin-top:10px;
   margin-left:10px;
   margin-right:10px;
@@ -667,14 +657,14 @@ a.star:hover, a.hot {
   font-style:italic;
 }
 .loud {
-  border:1px solid #e0caa3; 
-  background:#fff7ea; 
+  border:1px solid #e0caa3;
+  background:#fff7ea;
 }
 .panel .panel {
-  border:1px solid #c6defb; 
-  background:#ffffff; 
-  margin-top:3px; 
-  margin-bottom:8px; 
+  border:1px solid #c6defb;
+  background:#ffffff;
+  margin-top:3px;
+  margin-bottom:8px;
   margin-left:0px;
   margin-right:0px;
   -webkit-box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
@@ -683,52 +673,52 @@ a.star:hover, a.hot {
           box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
 }
 .loud .panel {
-  border:1px solid #fbe1c6; 
-  background:#ffffff; 
+  border:1px solid #e0caa3;
+  background:#ffffff;
 }
-.panel th { 
-  text-align:left; 
-  background:#e7eff9; 
-  vertical-align:top; 
-  color:#444444; 
-  font-weight:normal; 
+.panel th {
+  text-align:left;
+  background:#f4f4f4;
+  vertical-align:top;
+  color:#444444;
+  font-weight:normal;
   border:0px solid black;
   text-transform:none; /* list.th turns these uppercase */
   font-size:100%;
 }
 .loud th {
-  background:#fff7ea; 
+  background:#fff7ea;
 }
-.panel td { 
-  background:#e7eff9;
+.panel td {
+  background:#f4f4f4;
   border:0px solid black;
 }
 .quiet {
   border: 1px solid #e0e0e0;
 }
-.quiet, .quiet td, .quiet a { 
+.quiet, .quiet td, .quiet a {
   background:#f9f9f9;
   color:#aaaaaa;
 }
 .loud td {
   background:#fff7ea;
 }
-.panel td .panel { 
-  background:#ffffff; 
-}
-.loud td .panel { 
-  background:#ffffff; 
-}
-.panel td .panel th { 
+.panel td .panel {
   background:#ffffff;
 }
-.loud td .panel th { 
+.loud td .panel {
   background:#ffffff;
 }
-.panel td .panel td { 
+.panel td .panel th {
   background:#ffffff;
 }
-.loud td .panel td { 
+.loud td .panel th {
+  background:#ffffff;
+}
+.panel td .panel td {
+  background:#ffffff;
+}
+.loud td .panel td {
   background:#ffffff;
 }
 
@@ -760,24 +750,24 @@ a.star:hover, a.hot {
   font-style:normal;
 }
 
-.warn { 
+.warn {
   color:#e17a00;
 }
-.pending { 
-  background-color:#e7eff9; 
-  border:1px solid #a3bee0; 
+.pending {
+  background-color:#f4f4f4;
+  border:1px solid #cccccc;
 }
-div.warn { 
-  background-color:#fbf6e6; 
-  border:1px solid #e3b375; 
+div.warn {
+  background-color:#fbf6e6;
+  border:1px solid #e3b375;
 }
-.approved { 
-  background-color:#eefff0; 
-  border:1px solid #96d28a; 
+.approved {
+  background-color:#eefff0;
+  border:1px solid #96d28a;
 }
-.rejected { 
-  background-color:#ffeaea; 
-  border:1px solid #e0a6a3; 
+.rejected {
+  background-color:#ffeaea;
+  border:1px solid #e0a6a3;
 }
 
 .pending table td, .warn table td, .approved table td, .rejected table td {
@@ -788,8 +778,8 @@ div.warn {
 #menu {
   margin:0px;
   padding:0px;
-  width:100%; 
-  position:relative; 
+  width:100%;
+  position:relative;
   top:0px;
   margin-top:11px;
   margin-bottom:10px;
@@ -797,31 +787,24 @@ div.warn {
 }
 
 #menu td {
-  color:#333333;
+  color:#666;
 }
 
 div#tabs {
-  margin:0px;
-  padding:0px !important; padding:0px 16px;
-  clear:both;
-  text-align:left;
-  position:relative;
-  left:1px;
-  z-index:1;
+  margin:0;
 }
 
 /* A single image based tab */
 #tabs a.tab {
   float:left;
-  position:absolute;
-  display:inline;
-  width:68px;
   text-align:center;
           border-radius: 8px 8px 0px 0px;
      -moz-border-radius: 8px 8px 0px 0px;
   -webkit-border-radius: 8px 8px 0px 0px;
-  background-color: #eaf0f2; border:1px solid #999;
-  padding:6px 0px 6px 0px;
+  padding:0.4em 1em;
+  border:thin solid transparent;
+  border-bottom:none;
+  margin-bottom: -1px;
 }
 
 #tabs a.tab:hover {
@@ -831,9 +814,10 @@ div#tabs {
 /* Active tabs use this class as well */
 #tabs a.active {
   background-color:white;
-  border-bottom:0px !important;
-  border:1px solid #999;
-  padding:6px 0px 7px 0px;
+  border:thin solid #999;
+  border-bottom:thin solid white;
+  padding:0.4em 1em;
+  margin-bottom: -1px;
 }
 
 #tabs a.active:hover {
@@ -850,14 +834,13 @@ div#tabs {
 
 p#extra_links a:link    { color:#1b6cb7;  }
 p#extra_links a:visited { color:#1b6cb7;  }
-p#extra_links a:hover   { color:#8aafd2;}
+p#extra_links a:hover   { color:#4587c4;}
 
 p#extra_links a:link,
 p#extra_links a:visited,
 p#extra_links a:hover {
   text-decoration:none;
   position:relative;
-  padding: 5px 0px;
 }
 
 #tabs a.tab:link, #tabs a.active:visited {
@@ -866,14 +849,9 @@ p#extra_links a:hover {
 
 p#extra_links {
   font-weight:normal;
-  z-index:-1; 
-  position:relative; 
-  float:right;
-  right:0px !important; right:-16px; 
-  padding:0px !important; padding:0px 16px;
-  height:27px;
-  margin:0px;
-  clear:both;
+  float: right;
+  margin:0;
+  margin-top:0.4em;
 }
 
 div.grippie {
@@ -893,6 +871,7 @@ div.grippie {
 div.grippie:hover {
   background:#fffae8 url(../images/grippie.png) no-repeat scroll center 2px;
 }
+
 /* IE fix */
 .resizable-textarea textarea {
   display:block;
@@ -902,7 +881,6 @@ div.grippie:hover {
   padding-left:0px;
   padding-right:0px;
 }
-
 
 /* CSS for the login form */
 
@@ -961,7 +939,7 @@ body.obfus .obfuscate {
 }
 
 body.obfus .obfuscate:hover {
-  color:#666666 !important;
+  color:#333 !important;
   background-color:transparent !important;
 }
 
@@ -975,7 +953,7 @@ body.obfus .obfuscate:hover {
   font-size:1em;
   overflow:hidden;
   cursor:default;
-  color:#666666;
+  color:#333;
   text-align:left;
 }
 .selectn-label img {
@@ -1009,7 +987,7 @@ body.obfus .obfuscate:hover {
   display:block;
   white-space:nowrap;
   padding-right:5px;
-  color:#666666;
+  color:#333;
   border-top:1px solid #fff;
   border-bottom:1px solid #fff;
   vertical-align:center;
@@ -1028,7 +1006,7 @@ body.obfus .obfuscate:hover {
      -moz-border-radius: 12px;
           border-radius: 12px;
   border-collapse:separate; /* to prevent border-collapse:collapse being inherited */
-} 
+}
 .selectn-active {
   border:1px solid #333;
 }
@@ -1044,4 +1022,11 @@ body.obfus .obfuscate:hover {
   white-space:nowrap;
   margin:4px;
 }
-
+.on_click {
+  /* FIXME: it is not considered bast practice to use !important,
+     however I did it this way because:
+     1. it will get overriden by '.panel div.hidden_text' if we don't
+     2. we can sort it out when we switch to SASS -- cjb, 2019-01 */
+  color:#1b6cb7 !important;
+  cursor: pointer;
+}

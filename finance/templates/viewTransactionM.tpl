@@ -34,7 +34,7 @@
   </tr>
   <tr>
     <td>Amount</td>
-    <td>{$amount} {$currencyTypeID} {if $currencyTypeID != $destCurrencyTypeID}(exchange rate from {$currencyTypeID} to {$destCurrencyTypeID} is {$exchangeRate}){/}</td>
+    <td>{$amount} {$currencyTypeID}</td>
   </tr>
   <tr>
     <td>Status</td>
