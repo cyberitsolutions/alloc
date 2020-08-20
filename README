@@ -1,0 +1,31 @@
+.. -*- mode: rst -*-
+
+About
+=====
+
+allocPSA is a web-app that takes care of your projects, employees,
+time sheets, invoicing, and customers.
+
+The ``cyber`` branch contains changes that are not ready for merging to
+``upstream/master`` yet.
+
+To install allocPSA, please see doc/INSTALL
+
+Developers
+==========
+
+Please see doc/DEVELOPERS for an example development setup. 🙂
+
+Support
+=======
+
+If you need support, please contact Cyber IT Solutions at
+<info@cyber.com.au> or for bugs, create a new issue:
+https://github.com/cyberitsolutions/alloc/issues/new
+
+License
+=======
+
+allocPSA is under the GNU Affero General Public License. For more info
+please see the LICENSE file or visit
+http://www.gnu.org/licenses/agpl-3.0.en.html
