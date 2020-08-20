@@ -5,7 +5,7 @@ FROM debian:buster-slim
 RUN apt-get update && apt-get install --no-install-recommends -y \
     apache2 \
     php \
-    php-mysql \
+    php-pdo-mysql \
     php-mbstring \
     php-gd php-xml \
     mariadb-server \
