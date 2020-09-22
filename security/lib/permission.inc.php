@@ -37,7 +37,7 @@ class permission extends db_entity
         $actions = $this->get_value("actions");
         $description = "";
 
-        $entity_class = $this->db_entity::get_value("tableName");
+        $entity_class = $this->get_value("tableName");
 
         if (meta::$tables[$entity_class]) {
             $entity = new meta($entity_class);
