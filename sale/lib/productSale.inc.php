@@ -152,9 +152,6 @@ class productSale extends db_entity
         foreach ($rows as $row) {
             $productSaleItem = new productSaleItem();
             $productSaleItem->read_row_record($row);
-            //$rtn["total_spent"] += $productSaleItem->get_amount_spent();
-            //$rtn["total_earnt"] += $productSaleItem->get_amount_earnt();
-            //$rtn["total_other"] += $productSaleItem->get_amount_other();
             list($sp, $spcur) = array($productSaleItem->get_value("sellPrice"),$productSaleItem->get_value("sellPriceCurrencyTypeID"));
 
             $sellPriceCurr[$spcur] += page::money($spcur, $sp, "%m");

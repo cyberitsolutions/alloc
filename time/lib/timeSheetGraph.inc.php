@@ -28,7 +28,6 @@ class timeSheetGraph
     public function get_list_vars()
     {
         return array(
-            //"projectIDs" => "An array of projectIDs"
             "dateFrom"    => "From Date",
             "dateTo"      => "To Date",
             "personID"    => "The person assigned to the task",

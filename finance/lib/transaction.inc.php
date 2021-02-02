@@ -357,7 +357,6 @@ class transaction extends db_entity
         $db->query($q);
         $for_cyber = config::for_cyber();
         while ($row = $db->next_record()) {
-            #echo "<pre>".print_r($row,1)."</pre>";
             $i++;
             $t = new transaction();
             if (!$t->read_db_record($db)) {
@@ -472,22 +471,6 @@ class transaction extends db_entity
         $page_vars = array_keys(transaction::get_list_vars());
 
         $_FORM = get_all_form_data($page_vars, $defaults);
-
-        #echo "<pre>".print_r($_FORM,1)."</pre>";
-
-        #if (!$_FORM["applyFilter"]) {
-        #  $_FORM = $current_user->prefs[$_FORM["form_name"]];
-        #  if (!isset($current_user->prefs[$_FORM["form_name"]])) {
-        #    #$_FORM["personID"] = $current_user->get_id();
-        #    list($_FORM["startDate"], $_FORM["endDate"]) = transaction::get_statement_start_and_end_dates(date("m"),date("Y"));
-        #  }
-
-        #} else if ($_FORM["applyFilter"] && is_object($current_user) && !$_FORM["dontSave"]) {
-        #  $url = $_FORM["url_form_action"];
-        #  unset($_FORM["url_form_action"]);
-        #  $current_user->prefs[$_FORM["form_name"]] = $_FORM;
-        #  $_FORM["url_form_action"] = $url;
-        #}
 
         return $_FORM;
     }
@@ -606,14 +589,6 @@ class transaction extends db_entity
         }
 
         return $sum;
-
-        # for debugging
-        #$rows[] = array("amount"=>"20","fromTfID"=>"alla","tfID"=>"twb");
-        #$rows[] = array("amount"=>"17","fromTfID"=>"twb","tfID"=>"alla");
-        #$rows[] = array("amount"=>"2","fromTfID"=>"alla","tfID"=>"pete");
-        #$rows[] = array("amount"=>"-4","fromTfID"=>"pete","tfID"=>"alla");
-        #$rows[] = array("amount"=>"200","fromTfID"=>"zebra","tfID"=>"ghost");
-        #echo "<br>SUM: ".transaction::get_actual_amount_used($rows);
     }
 
     public function get_next_transactionGroupID()

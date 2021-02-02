@@ -251,7 +251,6 @@ class task extends db_entity
         // Removing the field in the web UI does the same
         if ($check_date && $date != 'null') {
             $tokenActionID = 4;
-            //$maxUsed = 1; nope, so people can have recurring reminders
             $name = "Task reopened: ".$this->get_name(array("prefixTaskID"=>true));
             $desc = "This reminder will have automatically reopened this task, if it was pending:\n\n".$this->get_name(array("prefixTaskID"=>true));
             $recipients = array(array("field"=>"metaPersonID","who"=>-2),array("field"=>"metaPersonID","who"=>-3));

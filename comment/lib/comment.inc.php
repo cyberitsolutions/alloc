@@ -388,7 +388,6 @@ class comment extends db_entity
     {
         $rtn = array();
         foreach ($children as $child) {
-            // style=\"padding:0px; padding-left:".($padding*15+5)."px; padding-right:6px;\"
             $rtn[] = "<tr><td colspan=\"3\" style=\"padding:0px; padding-left:6px; padding-right:6px;\">".comment::get_comment_html_table($child)."</td></tr>";
             if (is_array($child["children"]) && count($child["children"])) {
                 $padding += 1;
@@ -407,7 +406,6 @@ class comment extends db_entity
             $cc = new clientContact();
             $cc->set_id($comment["clientContactID"]);
             $cc->select();
-            #$author = " <a href=\"".$TPL["url_alloc_client"]."clientID=".$cc->get_value("clientID")."\">".$cc->get_value("clientContactName")."</a>";
             $author = $cc->get_value("clientContactName");
         } elseif ($comment["personID"]) {
             $author = person::get_fullname($comment["personID"]);
@@ -877,9 +875,6 @@ class comment extends db_entity
 
     public function get_list_summary($_FORM = array())
     {
-        //$_FORM["fromDate"] = "2010-08-20";
-        //$_FORM["projectID"] = "22";
-
         $_FORM["maxCommentLength"] or $_FORM["maxCommentLength"] = 500;
 
         list($filter1, $filter2, $filter3) = comment::get_list_summary_filter($_FORM);
@@ -999,9 +994,6 @@ class comment extends db_entity
 
         $db->query($q3);
         while ($row = $db->row()) {
-            //$tsiHint = new tsiHint();
-            //if (!$tsiHint->read_row_record($row))
-            //  continue;
             $row["icon"] = 'icon-bookmark-empty';
             $row["id"] = "tsihint_".$row["id"];
             $row["person"] = $people[$row["personID"]]["name"];
@@ -1241,7 +1233,6 @@ class comment extends db_entity
         if ($successful_recipients) {
             $append_comment_text = "Email sent to: ".$successful_recipients;
             $message_good.= $append_comment_text;
-            //$comment->set_value("commentEmailMessageID",$messageid); that's the outbound message-id :-(
             $comment->set_value("commentEmailRecipients", $successful_recipients);
         }
 
@@ -1390,8 +1381,6 @@ class comment extends db_entity
             } else {
                 similar_text($text1, $text2, $percent);
                 $debug and print "<br>TEXT: ".sprintf("%d", $text1 == $text2)." (".sprintf("%d", $percent)."%)";
-                #$debug and print "<br>Text1:<br>".$text1."<br>* * *<br>";
-                #$debug and print "Text2:<br>".$text2."<br>+ + +</br>";
                 $debug and print "<br>FROM: ".sprintf("%d", ($from1 == $from2 || !$from2 || same_email_address($from1, config::get_config_item("AllocFromEmailAddress"))));
                 $debug and print " From1: ".page::htmlentities($from1);
                 $debug and print " From2: ".page::htmlentities($from2);

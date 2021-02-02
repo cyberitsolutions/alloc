@@ -63,7 +63,6 @@ class person extends db_entity
     public function get_tasks_for_email()
     {
         $options = array();
-        #$options["projectType"] = "mine";
         $options["limit"] = 3;
         $options["current_user"] = $this->get_id();
         $options["personID"] = $this->get_id();

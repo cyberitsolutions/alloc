@@ -119,8 +119,6 @@ if ($search && $needle && $category == "search_projects") {
                 $d->getFieldValue('id'),
                 page::htmlentities($d->getFieldValue('name'))
             );
-            //$row["related"] = sprintf("<a href='%sprojectID=%d'>%s</a>"
-            //                ,$TPL["url_alloc_project"], $d->getFieldValue('pid'), $d->getFieldValue('project'));
 
             unset($num_contact);
             if ($d->getFieldValue('contact')) {
@@ -282,7 +280,6 @@ if ($search && $needle && $category == "search_projects") {
             $row["score"] = sprintf('%d%%', $hit->score*100);
             $c = (array)explode(" ", $d->getFieldValue('creator'));
             $creator = implode(" ", (array)array_slice($c, 2));
-            //$creator = implode(" ",array_shift(array_shift(explode(" ",$d->getFieldValue('creator')))));
             $row["title"] = $d->getFieldValue('id')." ".sprintf(
                 "<a href='%stimeSheetID=%d'>%s</a>",
                 $TPL["url_alloc_timeSheet"],

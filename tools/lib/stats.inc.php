@@ -244,8 +244,6 @@ class stats
             for ($value = 0, $i = 0; $value == 0 && $i < $max_search_back; $i++) {
                 $date = date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") - $i, date("Y")));
                 $value = $this->tasks["all"][$person->get_id()][$date];
-                // + $this->projects["all"][$person->get_id()][$date]
-                // + $this->comments["all"][$person->get_id()][$date];
                 if ($value > 0) {
                     array_push($this->persons, array("id"=>$person->get_id(), "username"=>$person->get_value('username'), "count_back"=>$i, "value"=>$value));
                 }

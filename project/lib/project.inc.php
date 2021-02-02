@@ -178,7 +178,6 @@ class project extends db_entity
                 $this->get_id(),
                 $person->get_id()
             );
-            #echo "<br><br>".$query;
 
             $db = new db_alloc();
             $db->query($query);
@@ -389,7 +388,6 @@ class project extends db_entity
             $o = project::get_list_by_client(null, $onlymine);
             is_object($this) and $this->get_id() and $o[$this->get_id()] = $this->get_value("projectName");
             $ops.= page::select_options($o, $this->get_id())."</select>";
-            #$ops.= project::get_list_dropdown_options("curr",$this->get_id(),100)."</select>";
         }
         return $ops;
     }

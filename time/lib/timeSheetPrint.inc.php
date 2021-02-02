@@ -143,7 +143,6 @@ class timeSheetPrint
             $taskID or $taskID = "hey"; // Catch entries without task selected. ie timesheetitem.comment entries.
 
             $num = sprintf("%0.2f", $timeSheetItem->get_value("timeSheetItemDuration"));
-            #$info["total"] += $num;
 
             $unit = $unit_array[$timeSheetItem->get_value("timeSheetItemDurationUnitID")];
             $units[$taskID][$unit] += $num;

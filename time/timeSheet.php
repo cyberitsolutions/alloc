@@ -546,7 +546,7 @@ if ($_POST["save"]
         } else {
             $msg = page::htmlentities(urlencode($msg));
             $url = $TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheet->get_id()."&msg=".$msg."&dont_send_email=".$_POST["dont_send_email"];
-            # Pass the taskID forward if we came from a task
+            // Pass the taskID forward if we came from a task
             $url .= "&taskID=".$_POST["taskID"];
         }
         alloc_redirect($url);
@@ -647,8 +647,6 @@ if ($timeSheet->get_value("approvedByAdminPersonID")) {
 // display the project name.
 if (($timeSheet->get_value("status") == 'edit' || $timeSheet->get_value("status") == 'rejected') && !$timeSheet->get_value("projectID")) {
     $query = prepare("SELECT * FROM project WHERE projectStatus = 'Current' ORDER by projectName");
-#.prepare("  LEFT JOIN projectPerson on projectPerson.projectID = project.projectID ")
-    #.prepare("WHERE projectPerson.personID = '%d' ORDER BY projectName", $current_user->get_id());
 } else {
     $query = prepare("SELECT * FROM project ORDER by projectName");
 }
@@ -750,10 +748,6 @@ if (is_object($timeSheet) && $timeSheet->get_id() && $timeSheet->have_perm(PERM_
     $db->query($q);
     $row = $db->row();
     $sel_invoice = $row["invoiceID"];
-    #$TPL["attach_to_invoice_button"] = "<select name=\"attach_to_invoiceID\">";
-    #$TPL["attach_to_invoice_button"].= "<option value=\"create_new\">Create New Invoice</option>";
-    #$TPL["attach_to_invoice_button"].= page::select_options($invoice_list,$sel_invoice)."</select>";
-    #$TPL["attach_to_invoice_button"].= "<input type=\"submit\" name=\"attach_transactions_to_invoice\" value=\"Add to Invoice\"> ";
 }
 
 // msg passed in url and print it out pretty..

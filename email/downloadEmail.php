@@ -30,9 +30,6 @@ function dump_email($uid, $mail)
 }
 
 
-
-//$lockfile = ATTACHMENTS_DIR."mail.lock.person_".$current_user->get_id();
-
 $info["host"] = config::get_config_item("allocEmailHost");
 $info["port"] = config::get_config_item("allocEmailPort");
 $info["username"] = config::get_config_item("allocEmailUsername");
@@ -62,8 +59,6 @@ if ($_REQUEST["commentID"]) {
         exit();
     }
 
-    //$uids = $mail->get_all_email_msg_uids();
-
     $t = new token();
     $t->select_token_by_entity_and_action($c->get_value("commentType"), $c->get_value("commentLinkID"), "add_comment_from_email");
     $hash = $t->get_value("tokenHash");
@@ -92,20 +87,6 @@ if ($_REQUEST["commentID"]) {
     $uids = $mail->get_emails_UIDs_search($str);
     $uids and $all_uids += $uids;
 
-
-    // Couldn't get a body text search to work! Refuses to match long needles.
-    //echo "<br><br>Using FROM and DATE:".print_r($uids,1);
-    //$text = $c->get_value("comment");
-    //$text = str_replace('\r\n','\n',$text);
-    //$text = str_replace('\n',' ',$text);
-    //$text = str_replace('\r',' ',$text);
-    //$text = str_replace('"','\"',$text);
-    //$text = substr($text,0,25);
-    //$text = trim($text);
-    //echo "<br><br>--".htmlentities($text)."--<br><br>";
-    //$str = sprintf('BODY "%s"',$text);
-    //$uids = $mail->get_emails_UIDs_search($str);
-    //echo "<br><br>Using BODY:".print_r($uids,1);
 
     $mail->close();
 }

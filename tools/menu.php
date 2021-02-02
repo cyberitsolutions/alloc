@@ -38,8 +38,6 @@ $misc_options = array(array("url"=>"reminderList"        ,"text"=>"Reminders"   
                       array("url"=>"whatsnew"            ,"text"=>"Deployment Changelog"   ,"entity"=>""                ,"function"=> "has_whatsnew_files"),
                       array("url"=>"inbox"               ,"text"=>"Manage Inbox"           ,"entity"=>"config"          ,"action"=>PERM_UPDATE));
 
-//,array("url"=>"stats"                   ,"text"=>"allocPSA Statistics"   ,"entity"=>"config"             ,"action"=>PERM_UPDATE)
-
 function user_is_admin()
 {
     $current_user = &singleton("current_user");
@@ -59,8 +57,6 @@ $finance_options = array(array("url"=>"tf"                    ,"text"=>"New Tagg
                          array("url"=>"transactionRepeatList" ,"text"=>"Repeating Expense List"     ,"entity"=>"transaction" ,"action"=>PERM_READ),
                          array("url"=>"checkRepeat"           ,"text"=>"Execute Repeating Expenses" ,"entity"=>""            ,"function"=>"user_is_admin"));
 
-
-#,array("url"=>"reconciliationReport", "params"=>"", "text"=>"Reconciliation Report", "entity"=>"transaction", "action"=>true, "function"=>"user_is_admin")
 
 function has_whatsnew_files()
 {

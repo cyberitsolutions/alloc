@@ -32,7 +32,6 @@ function show_task_children($template)
         $options["taskView"] = "byProject";
         $task->get_value("projectID") and $options["projectIDs"][] = $task->get_value("projectID");
         $options["showDates"] = true;
-        #$options["showCreator"] = true;
         $options["showAssigned"] = true;
         $options["showPercent"] = true;
         $options["showHeader"] = true;
@@ -201,7 +200,6 @@ if ($_POST["save"] || $_POST["save_and_back"] || $_POST["save_and_new"] || $_POS
         }
 
         if ($_POST["save"] && $_POST["view"] == "brief") {
-            #$url = $TPL["url_alloc_taskList"];
             $url = $TPL["url_alloc_task"]."taskID=".$task->get_id();
         } elseif ($_POST["save"] || $_POST["close_task"]) {
             $url = $TPL["url_alloc_task"]."taskID=".$task->get_id();

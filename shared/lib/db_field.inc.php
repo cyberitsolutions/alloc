@@ -40,7 +40,6 @@ class db_field
 
         if (!is_array($options)) {
             $options = array();
-            #echo "<br>".$this->name;
         }
         reset($options);
         foreach ($options as $option_name => $option_value) {

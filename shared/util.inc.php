@@ -124,7 +124,6 @@ function seconds_to_display_format($seconds)
         return sprintf("%0.2f hrs", $hours);
     } else {
         $days = $seconds / $day_in_seconds;
-        #return sprintf("%0.1f days", $days);
         return sprintf("%0.2f hrs (%0.1f days)", $hours, $days);
     }
 }
@@ -256,7 +255,6 @@ function get_file_type_image($file)
     $types[".gz"] = "zip.gif";
     $types["doc"] = "doc.gif";
     $types["sxw"] = "doc.gif";
-    #$types["odf"] = "doc.gif";
 
     $type = strtolower(substr($file, -3));
     $icon_dir = ALLOC_MOD_DIR."images".DIRECTORY_SEPARATOR."fileicons".DIRECTORY_SEPARATOR;
@@ -278,11 +276,6 @@ function get_attachments($entity, $id, $ops = array())
     $dir = ATTACHMENTS_DIR.$entity.DIRECTORY_SEPARATOR.$id;
 
     if (isset($id)) {
-        #if (!is_dir($dir)) {
-        #mkdir($dir, 0777);
-        #}
-
-
         if (is_dir($dir)) {
             $handle = opendir($dir);
 
@@ -297,7 +290,6 @@ function get_attachments($entity, $id, $ops = array())
                     $row["path"] = $dir.DIRECTORY_SEPARATOR.$file;
                     $row["file"] = "<a href=\"".$TPL["url_alloc_getDoc"]."id=".$id."&entity=".$entity."&file=".urlencode($file)."\">".$image.$ops["sep"].page::htmlentities($file)."</a>";
                     $row["text"] = page::htmlentities($file);
-                    #$row["delete"] = "<a href=\"".$TPL["url_alloc_delDoc"]."id=".$id."&entity=".$entity."&file=".urlencode($file)."\">Delete</a>";
                     $row["delete"] = "<form action=\"".$TPL["url_alloc_delDoc"]."\" method=\"post\">
                             <input type=\"hidden\" name=\"id\" value=\"".$id."\">
                             <input type=\"hidden\" name=\"file\" value=\"".$file."\">

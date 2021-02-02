@@ -85,7 +85,6 @@ if ($sess->Started()) {
         $db2->query($q);
 
         $e = new email_send($_POST["email"], "New Password", "Your new temporary password: ".$password, "new_password");
-        #echo "Your new temporary password: ".$password;
         if ($e->send()) {
             $TPL["message_good"][] = "New password sent to: ".$_POST["email"];
         } else {

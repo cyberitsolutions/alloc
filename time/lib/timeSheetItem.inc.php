@@ -102,7 +102,6 @@ class timeSheetItem extends db_entity
                    ."\s*"
                    ."(.*)"               # comment
                    ."\s*"
-                   #."(private)?"        # whether the comment is private
                    ."$/i", $str, $m);
 
         $rtn["date"] = trim($m[1]) or $rtn["date"] = date("Y-m-d");
@@ -111,7 +110,6 @@ class timeSheetItem extends db_entity
         $rtn["multiplier"] = str_replace(array("x","X"," "), "", $m[4]) or $rtn["multiplier"] = 1;
         $rtn["taskID"] = $m[5];
         $rtn["comment"] = $m[6];
-        //$rtn["private"] = $m[7];
 
         // use the first letter of the unit for the lookup
         $tu = array("h"=>1,"d"=>2,"w"=>3,"m"=>4,"f"=>5);
@@ -188,7 +186,6 @@ class timeSheetItem extends db_entity
         list($rows, $rows_dollars) = $this->get_averages($dateTimeSheetItem, $personID);
         foreach ($rows as $id => $avg) {
             $rtn[$id] = $avg / $how_many_fortnights[$id];
-            #echo "<br>".$id." ".$how_many_fortnights[$id];
         }
 
         // FIXME:: !! -- cjb, 2020-02
@@ -329,18 +326,6 @@ class timeSheetItem extends db_entity
                      "personID"    => "Show items for a particular person",
                      "comment"     => "Show items that have a comment like eg: *uick brown fox jump*");
     }
-
-    #function get_averages_past_fortnight($personID=false) {
-    # $dateTimeSheetItem = date("Y-m-d",mktime(0,0,0,date("m"),date("d")-14, date("Y")));
-    // DON'T ERASE THIS!! This way will divide by the number of individual days worked
-    #$rows = $this->get_averages($dateTimeSheetItem, $personID, "/ COUNT(DISTINCT dateTimeSheetItem)");
-
-    // This will just get the sum of hours worked for the last two weeks
-    #$rows = $this->get_averages($dateTimeSheetItem, $personID);
-
-    #return $rows;
-    #}
-
 
     public function get_averages($dateTimeSheetItem, $personID = false, $divisor = "", $endDate = null)
     {

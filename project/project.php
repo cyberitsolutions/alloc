@@ -304,7 +304,6 @@ function show_tasks()
     $options["showStatus"] = true;
     $options["showManager"] = true;
     $options["showDates"] = true;
-    #$options["showTimes"] = true; // performance hit
     $options["return"] = "html";
     // $TPL["taskListRows"] is used for the budget estimatation outside of this function
     $options = ace_augment("project_page_task_list_options", $options);
@@ -443,7 +442,6 @@ if ($projectID) {
             $pp = new projectPerson();
             $pp->read_db_record($db);
             $delete[] = $pp->get_id();
-            #$pp->delete(); // need to delete them after, cause we'll accidently wipe out the current user
         }
 
         if (is_array($_POST["person_personID"])) {
@@ -610,7 +608,6 @@ if (is_object($project) && $project->get_id()) {
             $cost_remaining = $hourly_rate * $time_remaining;
 
             if ($cost_remaining > 0) {
-                #echo "<br>Tally: ".$TPL["cost_remaining"] += $cost_remaining;
                 $TPL["cost_remaining"] += $cost_remaining;
                 $TPL["time_remaining"] += $time_remaining;
             }
@@ -654,7 +651,6 @@ if ($TPL["project_cost_centre_tfID"]) {
 
 $query = prepare("SELECT roleName,roleID FROM role WHERE roleLevel = 'project' ORDER BY roleSequence");
 $db->query($query);
-#$project_person_role_array[] = "";
 while ($db->next_record()) {
     $project_person_role_array[$db->f("roleID")] = $db->f("roleName");
 }

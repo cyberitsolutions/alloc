@@ -96,9 +96,8 @@ function show_person_areasOfExpertise($template)
          ';
     $proficiencys = array("Novice"=>"Novice", "Junior"=>"Junior", "Intermediate"=>"Intermediate", "Advanced"=>"Advanced", "Senior"=>"Senior");
 
-    # step through the list of skills ordered by skillclass
+    // step through the list of skills ordered by skillclass
     $db = new db_alloc();
-    // $query = "SELECT * FROM skill ORDER BY skillClass,skillName";
     $query = "SELECT * FROM skill LEFT JOIN proficiency ON skill.skillID=proficiency.skillID";
     $query.= prepare(" WHERE proficiency.personID=%d", $personID);
     $query.= " ORDER BY skillClass,skillName";
@@ -113,7 +112,7 @@ function show_person_areasOfExpertise($template)
         $skillProficiencys->read_db_record($db);
         $skillProficiencys->set_values();
 
-        # if they do and there is no heading for this segment put a heading
+        // if they do and there is no heading for this segment put a heading
         $thisSkillClass = $skill->get_value('skillClass');
         if ($currSkillClass != $thisSkillClass) {
             $currSkillClass = $thisSkillClass;
@@ -124,7 +123,7 @@ function show_person_areasOfExpertise($template)
         $skill_prof = $skillProficiencys->get_value('skillProficiency');
         $TPL["skill_proficiencys"] = page::select_options($proficiencys, $skill_prof);
 
-        # display rating if there is one
+        // display rating if there is one
         include_template($template);
     }
 }
@@ -270,9 +269,6 @@ if ($_POST["save"]) {
     alloc_redirect($TPL["url_alloc_personList"]);
 }
 
-#$person = new person();
-#$person->set_id($personID);
-#$person->select();
 $person->set_values("person_");
 
 if ($person->get_id()) {

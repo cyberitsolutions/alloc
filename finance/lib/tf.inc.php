@@ -66,7 +66,6 @@ class tf extends db_entity
             $query.= " AND ".$column_name.$op." '".db_esc($value)."'";
         }
 
-        #echo "<br>".$debug." q: ".$query;
         $db->query($query);
         $db->next_record() || alloc_error("TF $tfID not found in tf::get_balance");
         return $db->f("balance");

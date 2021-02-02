@@ -58,8 +58,6 @@ while ($db->next_record()) {
 }
 
 
-#echo "<pre>".print_r($_POST,1)."</pre>";
-
 if ($_POST["update_currencyless_transactions"] && $_POST["currency"]) {
     $db = new db_alloc();
     $q = prepare("UPDATE transaction SET currencyTypeID = '%s' WHERE currencyTypeID IS NULL", $_POST["currency"]);
@@ -144,7 +142,6 @@ if ($_POST["save"]) {
 
     // Handle the only checkbox specially. If more checkboxes are added this
     // should be rewritten.
-    #echo var_dump($_POST);
     if ($_POST['sbs_link'] == "rss" && !$_POST['rssShowProject']) {
         $c = new config();
         $c->set_id(config::get_config_item_id('rssShowProject'));

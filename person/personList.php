@@ -44,7 +44,6 @@ function show_people()
 {
     global $defaults;
     $_FORM = person::load_form_data($defaults);
-    #echo "<pre>".print_r($_FORM,1)."</pre>";
     echo person::get_list($_FORM);
 }
 

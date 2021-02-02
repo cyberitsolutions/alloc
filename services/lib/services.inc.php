@@ -404,7 +404,6 @@ class services
     public function get_email($emailUID)
     {
         $current_user = &singleton("current_user");
-        //$lockfile = ATTACHMENTS_DIR."mail.lock.person_".$current_user->get_id();
         if ($emailUID) {
             $info = $this->init_email_info();
             $mail = new email_receive($info);

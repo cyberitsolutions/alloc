@@ -86,7 +86,6 @@ class invoice extends db_entity
     public function get_invoice_statii_payment()
     {
         return array("pending"    => "Not Paid In Full",
-                     // "partly_paid"=>"Waiting to be Paid"
                      "rejected"   => "Has Rejected Transactions",
                      "fully_paid" => "Paid In Full",
                      "over_paid"  => "Overpaid/Pre-Paid");
@@ -365,15 +364,6 @@ class invoice extends db_entity
         $pdf->ezSetY($y-20);
         $pdf->ezText(str_replace(array("<br>","<br/>","<br />"), "\n", $footer), 10);
 
-
-        // Add footer
-        #$all = $pdf->openObject();
-        #$pdf->saveState();
-        #$pdf->addText(415,80,12,"<b>".$default_id_label.":</b>".$this->get_value("invoiceNum"));
-        #$pdf->restoreState();
-        #$pdf->closeObject();
-        #$pdf->addObject($all,'all');
-
         if ($getfile) {
             return $pdf->ezOutput();
         } else {
@@ -482,8 +472,6 @@ class invoice extends db_entity
         $sql = array();
         if ($filter["invoiceStatusPayment"] == "pending") {
             $sql[] = "(COALESCE(amountPaidApproved,0) < iiAmountSum)";
-        #if ($filter["invoiceStatusPayment"] == "partly_paid") {
-         # $sql[] = "(amountPaidApproved < iiAmountSum)";
         } elseif ($filter["invoiceStatusPayment"] == "rejected") {
             $sql[] = "(COALESCE(amountPaidRejected,0) > 0)";
         } elseif ($filter["invoiceStatusPayment"] == "fully_paid") {
@@ -529,7 +517,6 @@ class invoice extends db_entity
             ORDER BY invoiceDateFrom";
 
         $db = new db_alloc();
-        #$db->query("DROP TABLE IF EXISTS invoice_details");
         $db->query($q1);
 
         $q2= "SELECT invoice_details.*
@@ -566,7 +553,6 @@ class invoice extends db_entity
             $row["amountPaidApproved"] == $row["iiAmountSum"] and $payment_status[] = "fully_paid";
             $row["amountPaidApproved"] > $row["iiAmountSum"] and $payment_status[] = "over_paid";
             $row["amountPaidRejected"] > 0 and $payment_status[] = "rejected";
-            #$row["amountPaidApproved"] > 0 && $row["amountPaidApproved"] < $row["iiAmountSum"] and $payment_status[] = "partly_paid";
             $row["amountPaidApproved"] < $row["iiAmountSum"] and $payment_status[] = "pending";
 
             foreach ((array)$payment_status as $ps) {

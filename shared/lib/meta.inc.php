@@ -28,24 +28,14 @@ class meta extends db_entity
     // integrity tables that the user is allowed to edit.
     public static $tables = array("absenceType"               => "Absence Types",
                                   "clientStatus"              => "Client Statuses",
-                                  #"configType"                => "Config Types",
-                                  #"invoiceStatus"             => "Invoice Statuses",
                                   "itemType"                  => "Item Types",
                                   "projectType"               => "Project Types",
                                   "currencyType"              => "Currency Types",
                                   "projectStatus"             => "Project Statuses",
                                   "taskStatus"                => "Task Statuses",
-                                  #"roleLevel"                 => "Role Levels",
-                                  #"reminderRecuringInterval"  => "Reminder Intervals",
-                                  #"reminderAdvNoticeInterval" => "Advanced Notice Int",
-                                  #"sentEmailType"             => "Sent Email Types",
                                   "skillProficiency"          => "Skill Proficiencies",
-                                  #"changeType"                => "Change Types",
-                                  #"timeSheetStatus"           => "Time Sheet Statuses",
-                                  #"transactionStatus"         => "Transaction Statuses",
                                   "transactionType"           => "Transaction Types",
                                   "timeSheetItemMultiplier"   => "Time Sheet Multipliers",
-                                  #"productSaleStatus"         => "Product Sale Statuses",
                                   "taskType"                  => "Task Types");
 
     public function __construct($table = "")

@@ -220,7 +220,6 @@ class task_graph
 
     public function draw_today()
     {
-        #$x = $this->date_stamp_to_x(mktime());
         $x = $this->date_to_x(date("Y-m-d"));
         imageDashedLine($this->image, $x, $this->top_margin, $x, $this->height - $this->bottom_margin, $this->color_today);
         imageDashedLine($this->image, $x + 1, $this->top_margin, $x + 1, $this->height - $this->bottom_margin, $this->color_today);
@@ -229,7 +228,6 @@ class task_graph
     public function draw_dates($date_start, $date_completion, $y, $color, $filled)
     {
         echo_debug("Drawing '$date_start' to '$date_completion'<br>");
-        #echo("Drawing '$date_start' to '$date_completion'<br>");
         if ($date_start && $date_completion) {
             // Task is complete - show full bar
             echo_debug("Drawing date range<br>");
@@ -404,7 +402,6 @@ function get_date_range($tasks = array())
     while (list(, $task) = each($tasks)) {
         if ($task->get_value("dateTargetStart") != "" && $task->get_value("dateTargetStart") != "0000-00-00" && $task->get_value("dateTargetStart") < $graph_start_date) {
             $graph_start_date = $task->get_value("dateTargetStart");
-            #echo "A: $graph_start_date<br>";
         }
 
         if ($task->get_value("dateTargetCompletion") > $graph_completion_date) {
@@ -413,7 +410,6 @@ function get_date_range($tasks = array())
 
         if ($task->get_value("dateActualStart") != "" && $task->get_value("dateActualStart") != "0000-00-00" && $task->get_value("dateActualStart") < $graph_start_date) {
             $graph_start_date = $task->get_value("dateActualStart");
-            #echo "B: $graph_start_date<br>";
         }
 
         if ($task->get_value("dateActualCompletion") > $graph_completion_date) {

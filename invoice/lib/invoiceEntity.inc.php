@@ -284,7 +284,6 @@ class invoiceEntity extends db_entity
         $ii->set_value("iiUnitPrice", $amounts["total_sellPrice_value"]);
         $ii->set_value("iiAmount", $amounts["total_sellPrice_value"]);
         $ii->set_value("iiDate", $row["maxDate"]);
-        //$ii->set_value("iiTax",config::get_config_item("taxPercent"));
         $ii->save();
     }
 
@@ -316,7 +315,6 @@ class invoiceEntity extends db_entity
             $ii->set_value("iiAmount", $row["sellPrice"]*$row["quantity"]);
             $d = $productSale->get_value("productSaleDate") or $d = $productSale->get_value("productSaleModifiedTime") or $d = $productSale->get_value("productSaleCreatedTime");
             $ii->set_value("iiDate", $d);
-            //$ii->set_value("iiTax",config::get_config_item("taxPercent")); // product sale items are always excl GST
             $ii->save();
         }
     }

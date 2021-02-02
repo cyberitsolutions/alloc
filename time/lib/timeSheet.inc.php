@@ -410,10 +410,6 @@ class timeSheet extends db_entity
         // New email object wrapper takes care of logging etc.
         $email = new email_send($addr, $sub, $msg, $type);
 
-        // REMOVE ME!!
-        #$email->ignore_no_email_urls = true;
-
-
         if ($dummy) {
             return "Elected not to send email.";
         } elseif (!$email->is_valid_url()) {
@@ -796,7 +792,6 @@ class timeSheet extends db_entity
         $newstatus = $steps[$direction][$status];
         if ($newstatus) {
             $m = $this->{"email_move_status_to_".$newstatus}($direction, $info);
-            //$this->save();
             if (is_array($m)) {
                 return implode("<br>", $m);
             }

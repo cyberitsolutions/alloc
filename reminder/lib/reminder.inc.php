@@ -244,9 +244,9 @@ class reminder extends db_entity
 
         if ($ok) {
             $recipients = $this->get_all_recipients();
-            # Reminders can be clients, tasks, projects or "general" - comment threads don't exist for general
+            // Reminders can be clients, tasks, projects or "general" - comment threads don't exist for general
             if ($this->get_value('reminderType') != 'general') {
-                # Nowhere to put the subject?
+                // Nowhere to put the subject?
                 $commentID = comment::add_comment(
                     $this->get_value('reminderType'),
                     $this->get_value('reminderLinkID'),
@@ -254,7 +254,7 @@ class reminder extends db_entity
                     $this->get_value('reminderType'),
                     $this->get_value('reminderLinkID')
                 );
-                # Repackage the recipients to become IPs of the new comment
+                // Repackage the recipients to become IPs of the new comment
                 $ips = array();
                 foreach ((array)$recipients as $id => $person) {
                     $ip = array();
@@ -267,7 +267,7 @@ class reminder extends db_entity
                 }
 
                 comment::add_interested_parties($commentID, false, $ips);
-                # email_receive false or true? false for now... maybe true is better?
+                // email_receive false or true? false for now... maybe true is better?
                 comment::send_comment($commentID, array("interested"));
             } else {
                 foreach ((array)$recipients as $person) {

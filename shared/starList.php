@@ -55,7 +55,6 @@ $star_entities = array("client"        => array("label"=>"Clients"       ,"form"
                        "timeSheet"     => array("label"=>"Time Sheets"   ,"form"=> $timeSheet_defaults),
                        "invoice"       => array("label"=>"Invoices"      ,"form"=> $invoice_defaults),
                        "productSale"   => array("label"=>"Sales"         ,"form"=> $productSale_defaults)
-                       //"tf"            => array("label"=>"Tagged Funds"  ,"form"=> $tf_defaults)
 );
 
 $TPL["star_entities"] = $star_entities;

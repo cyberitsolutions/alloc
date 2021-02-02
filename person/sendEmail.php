@@ -35,7 +35,6 @@ if (date("D") == "Sat" || date("D") == "Sun") {
 $announcement = person::get_announcements_for_email();
 $db = new db_alloc();
 $db->query("SELECT personID,emailAddress,firstName,surname FROM person WHERE personActive = '1'");
-// AND username='alla'"); // or username=\"ashridah\"");
 
 
 while ($db->next_record()) {
