@@ -35,6 +35,7 @@ CREATE INDEX idx_productSaleItemID ON transaction (productSaleItemID);
 CREATE INDEX idx_productCostID ON transaction (productCostID);
 CREATE INDEX idx_transactionGroupID ON transaction (transactionGroupID);
 CREATE INDEX idx_interestedParty_entityID ON interestedParty (entityID);
+CREATE INDEX token_tokenEntityID ON token (tokenEntityID);
 
 -- Unique key constraints
 CREATE UNIQUE INDEX name ON config (name);
