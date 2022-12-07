@@ -43,20 +43,6 @@ require_once("Zend".DIRECTORY_SEPARATOR."Search".DIRECTORY_SEPARATOR."Lucene.php
 Zend_Search_Lucene_Analysis_Analyzer::setDefault(new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive());
 Zend_Search_Lucene_Search_Query_Wildcard::setMinPrefixLength(0);
 
-// Undo magic quotes if it's enabled
-if (get_magic_quotes_gpc()) {
-    function stripslashes_array($array)
-    {
-        return is_array($array) ? array_map('stripslashes_array', $array) : stripslashes($array);
-    }
-
-    $_COOKIE = stripslashes_array($_COOKIE);
-    $_FILES = stripslashes_array($_FILES);
-    $_GET = stripslashes_array($_GET);
-    $_POST = stripslashes_array($_POST);
-    $_REQUEST = stripslashes_array($_REQUEST);
-}
-
 // Get the alloc directory
 $f = trim(dirname(__FILE__));
 substr($f, -1, 1) != DIRECTORY_SEPARATOR and $f.= DIRECTORY_SEPARATOR;

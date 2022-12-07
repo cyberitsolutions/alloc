@@ -428,10 +428,7 @@ function parse_sql_file($file)
 
     $sql = array();
     $comments = array();
-    $mqr = @get_magic_quotes_runtime();
-    @set_magic_quotes_runtime(0);
     $lines = file($file);
-    @set_magic_quotes_runtime($mqr);
 
     foreach ($lines as $line) {
         if (preg_match("/^[\s]*(--[^\n]*)$/", $line, $m)) {
@@ -463,10 +460,7 @@ function parse_php_file($file)
 
     $php = array();
     $comments = array();
-    $mqr = @get_magic_quotes_runtime();
-    @set_magic_quotes_runtime(0);
     $lines = file($file);
-    @set_magic_quotes_runtime($mqr);
 
     foreach ($lines as $line) {
         if (preg_match("/^[\s]*(\/\/[^\n]*)$/", $line, $m)) {
