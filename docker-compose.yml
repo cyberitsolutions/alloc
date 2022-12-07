@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  web:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.alloc
+    ports:
+      - 4000:80
+    links:
+      - db:db
+    depends_on:
+      - "db"
+  db:
+    build:
+      dockerfile: ./Dockerfile.mariadb
