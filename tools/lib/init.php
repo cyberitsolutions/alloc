@@ -23,5 +23,5 @@
 
 class tools_module extends module
 {
-    var $module = "tools";
+    public $module = "tools";
 }

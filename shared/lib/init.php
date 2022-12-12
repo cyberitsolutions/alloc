@@ -26,6 +26,6 @@ require_once(dirname(__FILE__)."/template.inc.php");
 
 class shared_module extends module
 {
-    var $module = "shared";
-    var $db_entities = array("sentEmailLog", "interestedParty");
+    public $module = "shared";
+    public $db_entities = array("sentEmailLog", "interestedParty");
 }

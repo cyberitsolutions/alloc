@@ -29,7 +29,7 @@ class projectCommissionPerson extends db_entity
                                 "tfID",
                                 "commissionPercent");
 
-    function is_owner($person = "")
+    public function is_owner($person = "")
     {
         $project = new project();
         $project->set_id($this->get_value("projectID"));
@@ -37,7 +37,7 @@ class projectCommissionPerson extends db_entity
         return $project->is_owner($person);
     }
 
-    function save()
+    public function save()
     {
         // Just ensure multiple 0 entries cannot be saved.
         if ($this->get_value("commissionPercent") == 0) {

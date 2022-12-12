@@ -22,15 +22,15 @@
 
 class task_calendar_home_item extends home_item
 {
-    var $date;
+    public $date;
 
-    function __construct()
+    public function __construct()
     {
         $this->has_config = true;
         parent::__construct("task_calendar_home_item", "Calendar", "calendar", "taskCalendarS.tpl", "standard", 30);
     }
 
-    function visible()
+    public function visible()
     {
         $current_user = &singleton("current_user");
 
@@ -45,12 +45,12 @@ class task_calendar_home_item extends home_item
         }
     }
 
-    function render()
+    public function render()
     {
         return true;
     }
 
-    function show_task_calendar_recursive()
+    public function show_task_calendar_recursive()
     {
         $current_user = &singleton("current_user");
         $tasksGraphPlotHomeStart = $current_user->prefs["tasksGraphPlotHomeStart"];

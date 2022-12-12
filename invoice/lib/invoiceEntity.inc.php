@@ -32,7 +32,7 @@ class invoiceEntity extends db_entity
                                 "productSaleID",
                                 "useItems");
 
-    function create($invoiceID, $entity, $entityID, $useItems = 0)
+    public function create($invoiceID, $entity, $entityID, $useItems = 0)
     {
         $q = prepare("SELECT * FROM invoiceEntity WHERE invoiceID = %d AND %sID = %d", $invoiceID, $entity, $entityID);
         $db = new db_alloc();
@@ -48,7 +48,7 @@ class invoiceEntity extends db_entity
         $ie->save();
     }
 
-    function get($entity, $entityID)
+    public function get($entity, $entityID)
     {
         $q = prepare("SELECT invoiceEntity.*,invoice.invoiceNum
                         FROM invoiceEntity
@@ -63,7 +63,7 @@ class invoiceEntity extends db_entity
         return (array)$rows;
     }
 
-    function get_links($invoiceID)
+    public function get_links($invoiceID)
     {
         $rows = invoiceEntity::get("invoice", $invoiceID); // cheating :)
         foreach ($rows as $row) {
@@ -89,7 +89,7 @@ class invoiceEntity extends db_entity
         return implode(" / ", (array)$rtn);
     }
 
-    function save_invoice_timeSheet($invoiceID, $timeSheetID)
+    public function save_invoice_timeSheet($invoiceID, $timeSheetID)
     {
         global $TPL;
         $invoice = new invoice($invoiceID);
@@ -120,7 +120,7 @@ class invoiceEntity extends db_entity
             $row = $db->row();
             $ii = new invoiceItem();
             if ($row) {
-                  $ii->set_id($row["invoiceItemID"]);
+                $ii->set_id($row["invoiceItemID"]);
             }
             $ii->set_value("invoiceID", $invoiceID);
             $ii->set_value("timeSheetID", $timeSheet->get_id());
@@ -137,7 +137,7 @@ class invoiceEntity extends db_entity
         }
     }
 
-    function save_invoice_timeSheetItems($invoiceID, $timeSheetID)
+    public function save_invoice_timeSheetItems($invoiceID, $timeSheetID)
     {
         $timeSheet = new timeSheet();
         $timeSheet->set_id($timeSheetID);
@@ -178,7 +178,7 @@ class invoiceEntity extends db_entity
 
             $ii = new invoiceItem();
             if ($r2["invoiceItemID"]) {
-                  $ii->set_id($r2["invoiceItemID"]);
+                $ii->set_id($r2["invoiceItemID"]);
             }
             $ii->currency = $currency;
             $ii->set_value("invoiceID", $invoiceID);
@@ -194,7 +194,7 @@ class invoiceEntity extends db_entity
         }
     }
 
-    function save_invoice_expenseForm($invoiceID, $expenseFormID)
+    public function save_invoice_expenseForm($invoiceID, $expenseFormID)
     {
         $expenseForm = new expenseForm();
         $expenseForm->set_id($expenseFormID);
@@ -225,7 +225,7 @@ class invoiceEntity extends db_entity
         $ii->save();
     }
 
-    function save_invoice_expenseFormItems($invoiceID, $expenseFormID)
+    public function save_invoice_expenseFormItems($invoiceID, $expenseFormID)
     {
         $expenseForm = new expenseForm();
         $expenseForm->set_id($expenseFormID);
@@ -257,7 +257,7 @@ class invoiceEntity extends db_entity
         }
     }
 
-    function save_invoice_productSale($invoiceID, $productSaleID)
+    public function save_invoice_productSale($invoiceID, $productSaleID)
     {
         $productSale = new productSale();
         $productSale->set_id($productSaleID);
@@ -284,11 +284,10 @@ class invoiceEntity extends db_entity
         $ii->set_value("iiUnitPrice", $amounts["total_sellPrice_value"]);
         $ii->set_value("iiAmount", $amounts["total_sellPrice_value"]);
         $ii->set_value("iiDate", $row["maxDate"]);
-        //$ii->set_value("iiTax",config::get_config_item("taxPercent"));
         $ii->save();
     }
 
-    function save_invoice_productSaleItems($invoiceID, $productSaleID)
+    public function save_invoice_productSaleItems($invoiceID, $productSaleID)
     {
         $productSale = new productSale();
         $productSale->set_id($productSaleID);
@@ -316,7 +315,6 @@ class invoiceEntity extends db_entity
             $ii->set_value("iiAmount", $row["sellPrice"]*$row["quantity"]);
             $d = $productSale->get_value("productSaleDate") or $d = $productSale->get_value("productSaleModifiedTime") or $d = $productSale->get_value("productSaleCreatedTime");
             $ii->set_value("iiDate", $d);
-            //$ii->set_value("iiTax",config::get_config_item("taxPercent")); // product sale items are always excl GST
             $ii->save();
         }
     }

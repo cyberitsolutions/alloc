@@ -44,7 +44,6 @@ $db->query($query);
 while ($db->next_record()) {
     $reminder = new reminder();
     $reminder->read_db_record($db);
-    //echo "<br>Adv: ".$reminder->get_id();
     $current_user = new person();
     $current_user->load_current_user($db->f('reminderCreatedUser'));
     singleton("current_user", $current_user);
@@ -67,7 +66,6 @@ $db->query($query);
 while ($db->next_record()) {
     $reminder = new reminder();
     $reminder->read_db_record($db);
-    //echo "<br>Rem: ".$reminder->get_id();
     $current_user = new person();
     $current_user->load_current_user($db->f('reminderCreatedUser'));
     singleton("current_user", $current_user);

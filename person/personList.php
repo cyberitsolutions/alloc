@@ -44,7 +44,6 @@ function show_people()
 {
     global $defaults;
     $_FORM = person::load_form_data($defaults);
-    #echo "<pre>".print_r($_FORM,1)."</pre>";
     echo person::get_list($_FORM);
 }
 
@@ -56,7 +55,7 @@ if ($max_alloc_users && $num_alloc_users > $max_alloc_users) {
     alloc_error("Maximum number of active user accounts: ".$max_alloc_users);
     alloc_error("Current number of active user accounts: ".$num_alloc_users."<br>");
     alloc_error(get_max_alloc_users_message());
-} else if ($max_alloc_users) {
+} elseif ($max_alloc_users) {
     $TPL["message_help"][] = "Maximum number of active user accounts: ".$max_alloc_users;
     $TPL["message_help"][] = "Current number of active user accounts: ".$num_alloc_users;
 }

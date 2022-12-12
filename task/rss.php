@@ -71,7 +71,7 @@ while ($row = $db->next_record()) {
         } else {
             if ($row['field'] == "taskStatus") {
                 $el['desc'] = sprintf('Task #%d "%s" (%s) status changed to %s', $row['taskID'], $taskName, $projectName, $row['value']);
-            } else if ($row['field'] == "personID") {
+            } elseif ($row['field'] == "personID") {
                 $el['desc'] = sprintf('Task #%d "%s" (%s) assigned to %s', $row['taskID'], $taskName, $projectName, $name);
             }
         }

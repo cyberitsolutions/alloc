@@ -74,7 +74,7 @@ if ($_POST["save"]) {
     $permission->set_value("comment", rtrim($permission->get_value("comment")));
     $permission->save();
     alloc_redirect($TPL["url_alloc_permissionList"]);
-} else if ($_POST["delete"]) {
+} elseif ($_POST["delete"]) {
     $permission->delete();
     alloc_redirect($TPL["url_alloc_permissionList"]);
 }

@@ -221,7 +221,7 @@ $tflist = $tf->get_assoc_array("tfID", "tfName");
 if ($_POST["move_forwards"]) {
     $productSale->move_forwards();
     $_POST["save"] = true;
-} else if ($_POST["move_backwards"]) {
+} elseif ($_POST["move_backwards"]) {
     $productSale->move_backwards();
     $_POST["save"] = true;
 }
@@ -233,7 +233,7 @@ if (!$TPL["message"] && $_POST["save"]) {
     $productSale->save();
     $productSaleID = $productSale->get_id();
     alloc_redirect($TPL["url_alloc_productSale"]."productSaleID=".$productSaleID);
-} else if ($_POST["save_items"] && $productSaleID) {
+} elseif ($_POST["save_items"] && $productSaleID) {
     is_array($_POST["deleteProductSaleItem"]) or $_POST["deleteProductSaleItem"] = array();
 
     if (is_array($_POST["productSaleItemID"]) && count($_POST["productSaleItemID"])) {
@@ -246,7 +246,7 @@ if (!$TPL["message"] && $_POST["save"]) {
                 $productSaleItem->set_id($productSaleItemID);
                 $productSaleItem->delete();
 
-                // Save
+            // Save
             } else {
                 $a = array("productID"               => $_POST["productID"][$k],
                            "sellPrice"               => $_POST["sellPrice"][$k],
@@ -275,7 +275,7 @@ if (!$TPL["message"] && $_POST["save"]) {
         }
     }
     alloc_redirect($TPL["url_alloc_productSale"]."productSaleID=".$productSaleID);
-} else if ($_POST["save_transactions"]) {
+} elseif ($_POST["save_transactions"]) {
     is_array($_POST["deleteTransaction"]) or $_POST["deleteTransaction"] = array();
 
     if (is_array($_POST["transactionID"]) && count($_POST["transactionID"])) {
@@ -287,8 +287,8 @@ if (!$TPL["message"] && $_POST["save"]) {
                 $transaction->select();
                 $transaction->delete();
 
-                // Save
-            } else if (imp($_POST["amount"][$k])) {
+            // Save
+            } elseif (imp($_POST["amount"][$k])) {
                 $type = $_POST["transactionType"][$k] or $type = 'sale';
 
                 $a = array("amount"            => $_POST["amount"][$k],
@@ -318,22 +318,22 @@ if (!$TPL["message"] && $_POST["save"]) {
         }
     }
     alloc_redirect($TPL["url_alloc_productSale"]."productSaleID=".$productSaleID);
-} else if ($_POST["create_default_transactions"] && $_POST["productSaleItemID"]) {
+} elseif ($_POST["create_default_transactions"] && $_POST["productSaleItemID"]) {
     $productSaleItem = new productSaleItem();
     $productSaleItem->set_id($_POST["productSaleItemID"]);
     $productSaleItem->select();
     $productSaleItem->create_transactions();
-} else if ($_POST["add_tax"] && $_POST["productSaleItemID"]) {
+} elseif ($_POST["add_tax"] && $_POST["productSaleItemID"]) {
     $productSaleItem = new productSaleItem();
     $productSaleItem->set_id($_POST["productSaleItemID"]);
     $productSaleItem->select();
     $productSaleItem->create_transactions_tax();
-} else if ($_POST["delete_transactions"] && $_POST["productSaleItemID"]) {
+} elseif ($_POST["delete_transactions"] && $_POST["productSaleItemID"]) {
     $productSaleItem = new productSaleItem();
     $productSaleItem->set_id($_POST["productSaleItemID"]);
     $productSaleItem->select();
     $productSaleItem->delete_transactions();
-} else if ($_POST["delete_productSale"]) {
+} elseif ($_POST["delete_productSale"]) {
     $productSale->delete();
     alloc_redirect($TPL["url_alloc_productSaleList"]);
 }
@@ -406,12 +406,12 @@ $status = $productSale->get_value("status");
 if ($productSaleID && $status == "edit") {
     define("DISPLAY", DISPLAY_PRODUCT_SALE_ITEM_EDIT);
 
-    // Show line item + transaction + edit
-} else if ($productSaleID && ($status == "allocate" || ($status == "admin" && $productSale->have_perm(PERM_APPROVE_PRODUCT_TRANSACTIONS)))) {
+// Show line item + transaction + edit
+} elseif ($productSaleID && ($status == "allocate" || ($status == "admin" && $productSale->have_perm(PERM_APPROVE_PRODUCT_TRANSACTIONS)))) {
     define("DISPLAY", DISPLAY_PRODUCT_SALE_ITEM_TRANSACTION_EDIT);
 
-    // Show line item + transaction + view
-} else if ($productSaleID && ($status == "finished" || !$productSale->have_perm(PERM_APPROVE_PRODUCT_TRANSACTIONS))) {
+// Show line item + transaction + view
+} elseif ($productSaleID && ($status == "finished" || !$productSale->have_perm(PERM_APPROVE_PRODUCT_TRANSACTIONS))) {
     define("DISPLAY", DISPLAY_PRODUCT_SALE_ITEM_TRANSACTION_VIEW);
 } else {
     define("DISPLAY", 0);
@@ -419,21 +419,21 @@ if ($productSaleID && $status == "edit") {
 
 if (!$productSale->get_id()) {
     $TPL["message_help"][] = "To create a new Sale, optionally select a Client and/or Project and click the Create Sale button.";
-} else if ($productSale->get_value("status") == "edit") {
+} elseif ($productSale->get_value("status") == "edit") {
     $TPL["message_help"][] = "Add as many Sale Items as you like by clicking the 'New' link multiple times, and then clicking the
                             Save Items button.<br><br>When you are done adding Sale Items click the 'Allocate -->' button
                             to setup the resulting transactions from this Sale.";
-} else if ($productSale->get_value("status") == "allocate") {
+} elseif ($productSale->get_value("status") == "allocate") {
     $TPL["message_help"][] = "If necessary, adjust the transactions below. When you're done, submit this Sale
                             to the Adminstrator, you will no longer be able to edit this Sale.
 
                             <br><br>Generally, the transactions for the Sale Items will add up correctly if the
                             <b>Sell Price</b> is equal to <b>Transactions Incoming</b>, and the <b>Margin</b> is
                             equal to <b>Transactions Other</b>.";
-} else if ($productSale->get_value("status") == "admin" && $productSale->have_perm(PERM_APPROVE_PRODUCT_TRANSACTIONS)) {
+} elseif ($productSale->get_value("status") == "admin" && $productSale->have_perm(PERM_APPROVE_PRODUCT_TRANSACTIONS)) {
     $TPL["message_help"][] = "Please review the Sale Transactions carefully. If accurate <b>approve</b> and save the transactions,
                             then move this Sale to status 'Completed'.";
-} else if ($productSale->get_value("status") == "admin") {
+} elseif ($productSale->get_value("status") == "admin") {
     $TPL["message_help"][] = "This Sale is awaiting approval from the Administrator.";
 }
 

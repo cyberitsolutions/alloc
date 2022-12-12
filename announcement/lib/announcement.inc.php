@@ -31,7 +31,7 @@ class announcement extends db_entity
                                 "displayFromDate",
                                 "displayToDate");
 
-    function has_announcements()
+    public function has_announcements()
     {
         $db = new db_alloc();
         $today = date("Y-m-d");

@@ -27,7 +27,6 @@ require_once("../alloc.php");
 
 function timeWarp($mostRecent, $basis)
 {
-
     if ($basis == "weekly") {
         return mktime(0, 0, 0, date("m", $mostRecent), date("d", $mostRecent) + 7, date("Y", $mostRecent));
     }
@@ -75,8 +74,6 @@ while ($db->next_record()) {
     }
 
     echo "<br>Attempting repeating transaction: ".$transactionRepeat->get_value("product")." ... ";
-    //echo '<br><br>$nextScheduled <= $today && $nextScheduled >= $startDate && $nextScheduled <= $finishDate';
-    //echo "<br>".$nextScheduled." <= ".$today." && ".$nextScheduled." >= ".$startDate." && ".$nextScheduled." <= ".$finishDate;
     while ($nextScheduled <= $today && $nextScheduled >= $startDate && $nextScheduled <= $finishDate) {
         $tf = new tf();
         $tf->set_id($transactionRepeat->get_value("tfID"));

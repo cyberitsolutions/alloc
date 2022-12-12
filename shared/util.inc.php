@@ -20,27 +20,6 @@
  * along with allocPSA. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-function path_under_path($unsafe, $safe, $use_realpath = true)
-{
-    // Checks that the potentially unsafe path is under the safe path
-    if ($use_realpath) {
-        $unsafe = realpath($unsafe);
-        $safe = realpath($safe);
-    }
-
-    // strip trailing slash
-    substr($safe, -1, 1) == DIRECTORY_SEPARATOR and $safe = substr($safe, 0, -1);
-    substr($unsafe, -1, 1) == DIRECTORY_SEPARATOR and $unsafe = substr($unsafe, 0, -1);
-
-    if ($safe && $unsafe) {
-        // Make sure the unsafe dir is under the safe dir
-        if (substr($unsafe, 0, strlen($safe)) == $safe) {
-            return true;
-        }
-    }
-}
-
 // Format a time offset in seconds to (+|-)HH:MM
 function format_offset($secs)
 {
@@ -85,26 +64,26 @@ function format_date($format = "Y/m/d", $date = "")
 
     // If looks like this: 2003-07-07 21:37:01
     if (preg_match("/^[\d]{4}-[\d]{1,2}-[\d]{1,2} [\d]{2}:[\d]{2}:[\d]{2}$/", $date)) {
-        list($d,$t) = explode(" ", $date);
+        list($d, $t) = explode(" ", $date);
 
-        // If looks like this: 2003-07-07
-    } else if (preg_match("/^[\d]{4}-[\d]{1,2}-[\d]{1,2}$/", $date)) {
+    // If looks like this: 2003-07-07
+    } elseif (preg_match("/^[\d]{4}-[\d]{1,2}-[\d]{1,2}$/", $date)) {
         $d = $date;
 
-        // If looks like this: 12:01:01
-    } else if (preg_match("/^[\d]{2}:[\d]{2}:[\d]{2}$/", $date)) {
+    // If looks like this: 12:01:01
+    } elseif (preg_match("/^[\d]{2}:[\d]{2}:[\d]{2}$/", $date)) {
         $d = "2000-01-01";
         $t = $date;
 
-        // Nasty hobbitses!
-    } else if ($date) {
+    // Nasty hobbitses!
+    } elseif ($date) {
         return "Date unrecognized: ".$date;
     } else {
         return;
     }
-    list($y,$m,$d) = explode("-", $d);
-    list($h,$i,$s) = explode(":", $t);
-    list($y,$m,$d,$h,$i,$s) = array(sprintf("%d", $y),sprintf("%d", $m),sprintf("%d", $d),
+    list($y, $m, $d) = explode("-", $d);
+    list($h, $i, $s) = explode(":", $t);
+    list($y, $m, $d, $h, $i, $s) = array(sprintf("%d", $y),sprintf("%d", $m),sprintf("%d", $d),
                                     sprintf("%d", $h),sprintf("%d", $i),sprintf("%d", $s));
     return date($format, mktime(date($h), date($i), date($s), date($m), date($d), date($y)));
 }
@@ -145,7 +124,6 @@ function seconds_to_display_format($seconds)
         return sprintf("%0.2f hrs", $hours);
     } else {
         $days = $seconds / $day_in_seconds;
-        #return sprintf("%0.1f days", $days);
         return sprintf("%0.2f hrs (%0.1f days)", $hours, $days);
     }
 }
@@ -161,7 +139,7 @@ function get_all_form_data($array = array(), $defaults = array())
 function timetook($start, $friendly_output = true)
 {
     $end = microtime();
-    list($start_micro,$start_epoch,$end_micro,$end_epoch) = explode(" ", $start." ".$end);
+    list($start_micro, $start_epoch, $end_micro, $end_epoch) = explode(" ", $start." ".$end);
     $started  = (substr($start_epoch, -4) + $start_micro);
     $finished = (substr($end_epoch, -4) + $end_micro);
     $dur = $finished - $started;
@@ -206,7 +184,7 @@ function rebuild_cache($table)
         }
         uasort($people, "sort_by_name");
         $cache["person"] = $people;
-    } else if ($table == "config") {
+    } elseif ($table == "config") {
         // Special processing for config table
         $config = $cache["config"];
         foreach ($config as $id => $row) {
@@ -277,15 +255,14 @@ function get_file_type_image($file)
     $types[".gz"] = "zip.gif";
     $types["doc"] = "doc.gif";
     $types["sxw"] = "doc.gif";
-    #$types["odf"] = "doc.gif";
 
     $type = strtolower(substr($file, -3));
     $icon_dir = ALLOC_MOD_DIR."images".DIRECTORY_SEPARATOR."fileicons".DIRECTORY_SEPARATOR;
     if ($types[$type]) {
         $t = $types[$type];
-    } else if (file_exists($icon_dir.$type.".gif")) {
+    } elseif (file_exists($icon_dir.$type.".gif")) {
         $t = $type.".gif";
-    } else if (file_exists($icon_dir.$type.".png")) {
+    } elseif (file_exists($icon_dir.$type.".png")) {
         $t = $type.".png";
     } else {
         $t = "unknown.gif";
@@ -294,17 +271,11 @@ function get_file_type_image($file)
 }
 function get_attachments($entity, $id, $ops = array())
 {
-
     global $TPL;
     $rows = array();
     $dir = ATTACHMENTS_DIR.$entity.DIRECTORY_SEPARATOR.$id;
 
     if (isset($id)) {
-        #if (!is_dir($dir)) {
-        #mkdir($dir, 0777);
-        #}
-
-
         if (is_dir($dir)) {
             $handle = opendir($dir);
 
@@ -319,7 +290,6 @@ function get_attachments($entity, $id, $ops = array())
                     $row["path"] = $dir.DIRECTORY_SEPARATOR.$file;
                     $row["file"] = "<a href=\"".$TPL["url_alloc_getDoc"]."id=".$id."&entity=".$entity."&file=".urlencode($file)."\">".$image.$ops["sep"].page::htmlentities($file)."</a>";
                     $row["text"] = page::htmlentities($file);
-                    #$row["delete"] = "<a href=\"".$TPL["url_alloc_delDoc"]."id=".$id."&entity=".$entity."&file=".urlencode($file)."\">Delete</a>";
                     $row["delete"] = "<form action=\"".$TPL["url_alloc_delDoc"]."\" method=\"post\">
                             <input type=\"hidden\" name=\"id\" value=\"".$id."\">
                             <input type=\"hidden\" name=\"file\" value=\"".$file."\">
@@ -356,7 +326,7 @@ function rejig_files_array($f)
                                          "size"     => $f[$key]["size"][$k]);
                     }
                 }
-            } else if ($f[$key]["tmp_name"]) {
+            } elseif ($f[$key]["tmp_name"]) {
                 $files[] = array("name"     => $f[$key]["name"],
                                  "tmp_name" => $f[$key]["tmp_name"],
                                  "type"     => $f[$key]["type"],
@@ -418,95 +388,9 @@ function db_esc($str = "")
     $db =& singleton("db");
     return $db->esc($str);
 }
-function parse_sql_file($file)
-{
-
-    // Filename must be readable and end in .sql
-    if (!is_readable($file) || substr($file, -4) != strtolower(".sql")) {
-        return;
-    }
-
-    $sql = array();
-    $comments = array();
-    $mqr = @get_magic_quotes_runtime();
-    @set_magic_quotes_runtime(0);
-    $lines = file($file);
-    @set_magic_quotes_runtime($mqr);
-
-    foreach ($lines as $line) {
-        if (preg_match("/^[\s]*(--[^\n]*)$/", $line, $m)) {
-            $comments[] = str_replace("-- ", "", trim($m[1]));
-        } else if (!empty($line) && substr($line, 0, 2) != "--" && $line) {
-            $queries[] = trim($line);
-        }
-    }
-
-    $bits = array();
-    foreach ((array)$queries as $query) {
-        if (!empty($query)) {
-            $query = trim($query);
-            $bits[] = $query;
-            if (preg_match('/;\s*$/', $query)) {
-                $sql[] = implode(" ", $bits);
-                $bits = array();
-            }
-        }
-    }
-    return array($sql,$comments);
-}
-function parse_php_file($file)
-{
-    // Filename must be readable and end in .php
-    if (!is_readable($file) || substr($file, -4) != strtolower(".php")) {
-        return;
-    }
-
-    $php = array();
-    $comments = array();
-    $mqr = @get_magic_quotes_runtime();
-    @set_magic_quotes_runtime(0);
-    $lines = file($file);
-    @set_magic_quotes_runtime($mqr);
-
-    foreach ($lines as $line) {
-        if (preg_match("/^[\s]*(\/\/[^\n]*)$/", $line, $m)) {
-            $comments[] = str_replace("//", "", trim($m[1]));
-        } else if (!empty($line) && substr($line, 0, 2) != "//" && $line) {
-            $php[] = trim($line);
-        }
-    }
-    return array($php,$comments);
-}
-function parse_patch_file($file)
-{
-    if (!is_readable($file)) {
-        return;
-    }
-
-    if (substr($file, -4) == strtolower(".php")) {
-        return parse_php_file($file);
-    } else if (substr($file, -4) == strtolower(".sql")) {
-        return parse_sql_file($file);
-    }
-}
-function execute_php_file($file_to_execute)
-{
-    global $TPL;
-    ob_start();
-    include($file_to_execute);
-    return ob_get_contents();
-}
 function bad_filename($filename)
 {
     return preg_match("@[/\\\]@", $filename);
-}
-function has_backup_perm()
-{
-    $current_user = &singleton("current_user");
-    if (is_object($current_user)) {
-        return $current_user->have_role("god");
-    }
-    return false;
 }
 function parse_email_address($email = "")
 {
@@ -523,8 +407,8 @@ function parse_email_address($email = "")
 }
 function same_email_address($addy1, $addy2)
 {
-    list($from_address1,$from_name1) = parse_email_address($addy1);
-    list($from_address2,$from_name2) = parse_email_address($addy2);
+    list($from_address1, $from_name1) = parse_email_address($addy1);
+    list($from_address2, $from_name2) = parse_email_address($addy2);
     if ($from_address1 == $from_address2) {
         return true;
     }
@@ -648,23 +532,23 @@ if (!function_exists('mime_content_type')) {
         if (array_key_exists($ext, $mime_types)) {
             $mt = $mime_types[$ext];
 
-            // Or if we have the PECL FileInfo stuff available, use that to determine mimetype
-        } else if (file_exists($filename) && function_exists('finfo_open')) {
+        // Or if we have the PECL FileInfo stuff available, use that to determine mimetype
+        } elseif (file_exists($filename) && function_exists('finfo_open')) {
             $finfo = finfo_open(FILEINFO_MIME);
             $mimetype = finfo_file($finfo, $filename);
             finfo_close($finfo);
             $mt = $mimetype;
             $mt = current(explode(" ", $mimetype));
 
-            // Or if the file is an image, get mime type the old-fashioned way
-        } else if (file_exists($filename) && $size = @getimagesize($filename)) {
+        // Or if the file is an image, get mime type the old-fashioned way
+        } elseif (file_exists($filename) && $size = @getimagesize($filename)) {
             $mt = $size['mime'];
 
-            // Or if no suffix at all, return text/plain
-        } else if (!$ext) {
+        // Or if no suffix at all, return text/plain
+        } elseif (!$ext) {
             $mt = 'text/plain';
 
-            // Else unrecognised suffix, force browser to offer download dialog
+        // Else unrecognised suffix, force browser to offer download dialog
         } else {
             $mt = 'application/octet-stream';
         }
@@ -736,8 +620,8 @@ function parse_operator_comparison($str, $figure)
         $number = $str;
         return operator_comparison($operator, $figure, $number);
 
-        // <5 OR =10
-    } else if (stristr($str, "OR")) {
+    // <5 OR =10
+    } elseif (stristr($str, "OR")) {
         $criterias = explode("OR", $str);
         foreach ($criterias as $criteria) {
             if (parse_operator_comparison($criteria, $figure)) {
@@ -746,7 +630,7 @@ function parse_operator_comparison($str, $figure)
         }
 
         // >5 AND <10
-    } else if (stristr($str, "AND")) {
+    } elseif (stristr($str, "AND")) {
         $criterias = explode("AND", $str);
         foreach ($criterias as $criteria) {
             preg_match($operator_regex, $criteria, $matches);
@@ -760,8 +644,8 @@ function parse_operator_comparison($str, $figure)
         }
         return $alive && !$dead;
 
-        // >5
-    } else if (preg_match($operator_regex, $str, $matches)) {
+    // >5
+    } elseif (preg_match($operator_regex, $str, $matches)) {
         $operator = $matches[1];
         $number = $matches[2];
         return operator_comparison($operator, $figure, $number);
@@ -773,37 +657,6 @@ function imp($var)
     // imp == important == is this variable important == if imp($var)
     return $var !== array() && trim((string)$var) !== '' && $var !== null && $var !== false;
 }
-function get_exchange_rate($from, $to)
-{
-
-    // eg: AUD to AUD == 1
-    if ($from == $to) {
-        return 1;
-    }
-
-    $debug = $_REQUEST["debug"];
-
-    usleep(500000); // So we don't hit their servers too hard
-    $debug and print "<br>";
-
-    $url = 'http://finance.yahoo.com/d/quotes.csv?f=l1d1t1&s='.$from.$to.'=X';
-    $data = file_get_contents($url);
-    $debug and print "<br>Y: ".htmlentities($data);
-    $results = explode(",", $data);
-    $rate = $results[0];
-    $debug and print "<br>Yahoo says 5 ".$from." is worth ".($rate*5)." ".$to." at this exchange rate: ".$rate;
-
-    if (!$rate) {
-        $url = 'http://www.google.com/ig/calculator?hl=en&q='.urlencode('1'.$from.'=?'.$to);
-        $data = file_get_contents($url);
-        $debug and print "<br>G: ".htmlentities($data);
-        $arr = alloc_json_decode($data);
-        $rate = current(explode(" ", $arr["rhs"]));
-        $debug and print "<br>Google says 5 ".$from." is worth ".($rate*5)." ".$to." at this exchange rate: ".$rate;
-    }
-
-    return trim($rate);
-}
 function array_kv($arr, $k, $v)
 {
     foreach ((array)$arr as $key => $value) {
@@ -813,7 +666,7 @@ function array_kv($arr, $k, $v)
                 $rtn[$value[$k]].= $sep.$value[$i];
                 $sep = " ";
             }
-        } else if ($k) {
+        } elseif ($k) {
             $rtn[$value[$k]] = $value[$v];
         } else {
             $rtn[$key] = $value[$v];
@@ -1006,20 +859,6 @@ function prepare()
     }
 
     return $query;
-}
-function refcount(&$var)
-{
-    ob_start();
-    debug_zval_dump(array(&$var));
-    $rtn = preg_replace("/^.+?refcount\((\d+)\).+$/ms", '$1', substr(ob_get_clean(), 24), 1) - 4;
-    echo "<br>refcount:".$rtn;
-    return $rtn;
-}
-function reference(&$a, &$b)
-{
-    $d = refcount($b);
-    $e = &$a;
-    return refcount($b) != $d;
 }
 function has($module)
 {

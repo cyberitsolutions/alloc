@@ -32,7 +32,7 @@ class permission extends db_entity
                                 "sortKey",
                                 "comment");
 
-    function describe_actions()
+    public function describe_actions()
     {
         $actions = $this->get_value("actions");
         $description = "";
@@ -42,7 +42,7 @@ class permission extends db_entity
         if (meta::$tables[$entity_class]) {
             $entity = new meta($entity_class);
             $permissions = $entity->permissions;
-        } else if (class_exists($entity_class)) {
+        } elseif (class_exists($entity_class)) {
             $entity = new $entity_class();
             $permissions = $entity->permissions;
         }
@@ -59,7 +59,7 @@ class permission extends db_entity
         return $description;
     }
 
-    function get_roles()
+    public function get_roles()
     {
         return array("god"      => "Super User",
                      "admin"    => "Finance Admin",

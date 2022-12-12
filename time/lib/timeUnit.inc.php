@@ -34,7 +34,7 @@ class timeUnit extends db_entity
                                 "timeUnitActive",
                                 "timeUnitSequence");
 
-    function seconds_to_display_time_unit($seconds)
+    public function seconds_to_display_time_unit($seconds)
     {
         $q = "SELECT * FROM timeUnit";
         $db = new db_alloc();

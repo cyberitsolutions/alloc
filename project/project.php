@@ -22,9 +22,6 @@
 
 require_once("../alloc.php");
 
-
-
-
 function show_attachments()
 {
     global $projectID;
@@ -307,7 +304,6 @@ function show_tasks()
     $options["showStatus"] = true;
     $options["showManager"] = true;
     $options["showDates"] = true;
-    #$options["showTimes"] = true; // performance hit
     $options["return"] = "html";
     // $TPL["taskListRows"] is used for the budget estimatation outside of this function
     $options = ace_augment("project_page_task_list_options", $options);
@@ -316,15 +312,8 @@ function show_tasks()
     include_template("templates/projectTaskS.tpl");
 }
 
-function show_import_export($template)
-{
-    include_template($template);
-}
-
 
 // END FUNCTIONS
-
-
 
 
 $current_user = &singleton("current_user");
@@ -392,13 +381,13 @@ if ($_POST["save"]) {
         }
         alloc_redirect($TPL["url_alloc_project"]."projectID=".$project->get_id());
     }
-} else if ($_POST["delete"]) {
+} elseif ($_POST["delete"]) {
     $project->read_globals();
     $project->delete();
     alloc_redirect($TPL["url_alloc_projectList"]);
 
 // If they are creating a new project that is based on an existing one
-} else if ($_POST["copy_project_save"] && $_POST["copy_projectID"] && $_POST["copy_project_name"]) {
+} elseif ($_POST["copy_project_save"] && $_POST["copy_projectID"] && $_POST["copy_project_name"]) {
     $p = new project();
     $p->set_id($_POST["copy_projectID"]);
     if ($p->select()) {
@@ -453,7 +442,6 @@ if ($projectID) {
             $pp = new projectPerson();
             $pp->read_db_record($db);
             $delete[] = $pp->get_id();
-            #$pp->delete(); // need to delete them after, cause we'll accidently wipe out the current user
         }
 
         if (is_array($_POST["person_personID"])) {
@@ -479,7 +467,7 @@ if ($projectID) {
                 $pp->delete();
             }
         }
-    } else if ($_POST["commission_save"] || $_POST["commission_delete"]) {
+    } elseif ($_POST["commission_save"] || $_POST["commission_delete"]) {
         $commission_item = new projectCommissionPerson();
         $commission_item->read_globals();
         $commission_item->read_globals("commission_");
@@ -490,24 +478,11 @@ if ($projectID) {
             } else {
                 $commission_item->save();
             }
-        } else if ($_POST["commission_delete"]) {
+        } elseif ($_POST["commission_delete"]) {
             $commission_item->delete();
         }
-    } else if ($_POST['do_import']) {
-        // Import from an uploaded file
-        switch ($_POST['import_type']) {
-            case 'planner':
-                import_gnome_planner('import');
-                break;
-            case 'csv':
-                $fn = store_csv($_FILES['import']['tmp_name']);
-                if ($fn) {
-                    alloc_redirect($TPL["url_alloc_importCSV"]."projectID=".$projectID."&filename=$fn");
-                }
-                $TPL['message'] = "There was an error processing the uploaded file.";
-                break;
-        }
     }
+
     // Displaying a record
     $project->set_id($projectID);
     $project->select() || alloc_error("Could not load project $projectID");
@@ -633,7 +608,6 @@ if (is_object($project) && $project->get_id()) {
             $cost_remaining = $hourly_rate * $time_remaining;
 
             if ($cost_remaining > 0) {
-                #echo "<br>Tally: ".$TPL["cost_remaining"] += $cost_remaining;
                 $TPL["cost_remaining"] += $cost_remaining;
                 $TPL["time_remaining"] += $time_remaining;
             }
@@ -677,7 +651,6 @@ if ($TPL["project_cost_centre_tfID"]) {
 
 $query = prepare("SELECT roleName,roleID FROM role WHERE roleLevel = 'project' ORDER BY roleSequence");
 $db->query($query);
-#$project_person_role_array[] = "";
 while ($db->next_record()) {
     $project_person_role_array[$db->f("roleID")] = $db->f("roleName");
 }

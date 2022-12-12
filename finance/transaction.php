@@ -82,11 +82,6 @@ $transaction->set_values();
 
 
 if ($_POST["save"] || $_POST["saveAndNew"] || $_POST["saveGoTf"]) {
-/*
-  if ($transaction->get_value("status") != "pending") {
-    alloc_error("This transaction is no longer editable.");
-  }
-*/
     $transaction->read_globals();
 
     // Tweaked validation to allow reporting of multiple errors
@@ -98,8 +93,6 @@ if ($_POST["save"] || $_POST["saveAndNew"] || $_POST["saveGoTf"]) {
     $transaction->get_value("tfID")            or alloc_error("You must select a Destination Tagged Fund to add this transaction against");
     $transaction->get_value("transactionType") or alloc_error("You must set a transaction type");
     $transaction->get_value("currencyTypeID")  or alloc_error("You must set a transaction currency");
-    #$transaction->get_value("projectID")       or alloc_error("You must select a project");
-    #$transaction->get_value("companyDetails")  or alloc_error("You must enter the company details");
 
     if (!count($TPL["message"])) {
         $transaction->set_value("amount", str_replace(array("$",","), "", $transaction->get_value("amount")));
@@ -117,7 +110,7 @@ if ($_POST["save"] || $_POST["saveAndNew"] || $_POST["saveGoTf"]) {
             alloc_redirect($TPL["url_alloc_transaction"]."transactionID=".$transaction->get_id());
         }
     }
-} else if ($_POST["delete"]) {
+} elseif ($_POST["delete"]) {
     $transaction->delete();
     alloc_redirect($TPL["url_alloc_transactionList"]."tfID=".$transaction->get_value("tfID"));
 }

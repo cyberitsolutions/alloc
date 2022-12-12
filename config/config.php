@@ -52,13 +52,11 @@ while ($db->next_record()) {
 
     if ($db->f("type") == "text") {
         $TPL[$db->f("name")] = page::htmlentities($db->f("value"));
-    } else if ($db->f("type") == "array") {
+    } elseif ($db->f("type") == "array") {
         $TPL[$db->f("name")] = unserialize($db->f("value"));
     }
 }
 
-
-#echo "<pre>".print_r($_POST,1)."</pre>";
 
 if ($_POST["update_currencyless_transactions"] && $_POST["currency"]) {
     $db = new db_alloc();
@@ -84,13 +82,6 @@ if ($_POST["update_currencyless_transactions"] && $_POST["currency"]) {
     $db->query($q);
     $_POST["save"] = true;
 }
-
-if ($_POST["fetch_exchange_rates"]) {
-    $rtn = exchangeRate::download();
-    $rtn and $TPL["message_good"] = $rtn;
-}
-
-
 
 
 if ($_POST["save"]) {
@@ -140,7 +131,7 @@ if ($_POST["save"]) {
                     $c->set_value("value", $_POST[$name]);
                 }
                 $TPL[$name] = page::htmlentities($value);
-            } else if ($types[$name] == "array") {
+            } elseif ($types[$name] == "array") {
                 $c->set_value("value", serialize($_POST[$name]));
                 $TPL[$name] = $_POST[$name];
             }
@@ -151,7 +142,6 @@ if ($_POST["save"]) {
 
     // Handle the only checkbox specially. If more checkboxes are added this
     // should be rewritten.
-    #echo var_dump($_POST);
     if ($_POST['sbs_link'] == "rss" && !$_POST['rssShowProject']) {
         $c = new config();
         $c->set_id(config::get_config_item_id('rssShowProject'));
@@ -161,7 +151,7 @@ if ($_POST["save"]) {
     }
 
     $TPL["message"] or $TPL["message_good"] = "Saved configuration.";
-} else if ($_POST["delete_logo"]) {
+} elseif ($_POST["delete_logo"]) {
     foreach (array(ALLOC_LOGO,ALLOC_LOGO_SMALL) as $logo) {
         if (file_exists($logo)) {
             if (unlink($logo)) {
@@ -195,7 +185,6 @@ $tabops = array("home"    => "Home",
                 "invoice" => "Invoices",
                 "sale"    => "Sales",
                 "person"  => "People",
-                "wiki"    => "Wiki",
                 "inbox"   => "Inbox",
                 "tools"   => "Tools");
 

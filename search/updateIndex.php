@@ -36,7 +36,7 @@ function echoo($str)
 }
 
 
-foreach (array("client","comment","item","project","task","timeSheet","wiki") as $i) {
+foreach (array("client","comment","item","project","task","timeSheet") as $i) {
     if (!is_dir(ATTACHMENTS_DIR.'search/'.$i)) {
         $index = Zend_Search_Lucene::create(ATTACHMENTS_DIR.'search/'.$i);
         $index->commit();

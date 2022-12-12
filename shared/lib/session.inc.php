@@ -22,12 +22,11 @@
 
 class session
 {
-
-    var $key;          # the unique key for the session
-    var $db;           # database object
-    var $session_data; # assoc array which holds all session data
-    var $session_life; # number of seconds the session is alive for
-    var $mode;         # whether to use get or cookies
+    public $key;          # the unique key for the session
+    public $db;           # database object
+    public $session_data; # assoc array which holds all session data
+    public $session_life; # number of seconds the session is alive for
+    public $mode;         # whether to use get or cookies
 
 
     // * * * * * * * * * * * * * * * * *//
@@ -39,13 +38,12 @@ class session
 
 
     // Constructor
-    function __construct($key = "")
+    public function __construct($key = "")
     {
         global $TPL;
         $this->key           = $key or $this->key = $_COOKIE["alloc_cookie"] or $this->key = $_GET["sess"] or $this->key = $_REQUEST["sessID"];
         $TPL["sessID"]       = $_GET["sess"];
         $this->db            = new db_alloc();
-        #$this->session_life  = (5);
         $this->session_life  = (config::get_config_item("allocSessionMinutes")*60);
         $this->session_life < 1 and $this->session_life = 10000; // just in case.
         $this->session_data  = $this->UnEncode($this->GetSessionData());
@@ -59,7 +57,7 @@ class session
 
 
     // Call this in a login page to start session
-    function Start($row, $nuke_prev_sessions = true)
+    public function Start($row, $nuke_prev_sessions = true)
     {
         $this->key = md5($row["personID"]."mix it up#@!".md5(mktime().md5(microtime())));
         $this->Put("session_started", mktime());
@@ -78,18 +76,18 @@ class session
     }
 
     // Test whether session has started
-    function Started()
+    public function Started()
     {
         if ($this->Get("session_started") && !$this->Expired()) {
             return true;
         }
     }
 
-    function Save()
+    public function Save()
     {
         if ($this->Expired()) {
             $this->Destroy();
-        } else if ($this->Started()) {
+        } elseif ($this->Started()) {
             $this->Put("session_started", mktime());
             $this->db->query(
                 "UPDATE sess SET sessData = '%s' WHERE sessID = '%s'",
@@ -99,7 +97,7 @@ class session
         }
     }
 
-    function Destroy()
+    public function Destroy()
     {
         if ($this->Started() && $this->key) {
             $this->db->query("DELETE FROM sess WHERE sessID = '%s'", $this->key);
@@ -108,22 +106,22 @@ class session
         $this->key = "";
     }
 
-    function Put($name, $value)
+    public function Put($name, $value)
     {
         $this->session_data[$name] = $value;
     }
 
-    function Get($name)
+    public function Get($name)
     {
         return $this->session_data[$name];
     }
 
-    function GetKey()
+    public function GetKey()
     {
         return $this->key;
     }
 
-    function MakeCookie()
+    public function MakeCookie()
     {
 
         // Attempt to unset the test cookie
@@ -133,33 +131,33 @@ class session
         $rtn = SetCookie("alloc_cookie", $this->key, 0, "/", "");
         if (!$rtn) {
             $this->mode = "get";
-        } else if (!isset($_COOKIE["alloc_cookie"])) {
+        } elseif (!isset($_COOKIE["alloc_cookie"])) {
             $_COOKIE["alloc_cookie"] = $this->key;
         }
     }
 
-    function DestroyCookie()
+    public function DestroyCookie()
     {
         SetCookie("alloc_cookie", false, 0, "/", "");
         unset($_COOKIE["alloc_cookie"]);
     }
 
-    function SetTestCookie($val = "alloc_test_cookie")
+    public function SetTestCookie($val = "alloc_test_cookie")
     {
         SetCookie("alloc_test_cookie", $val, 0, "/", "");
     }
 
-    function TestCookie()
+    public function TestCookie()
     {
         return $_COOKIE["alloc_test_cookie"];
     }
 
-    function GetUrl($url = "")
+    public function GetUrl($url = "")
     {
         return $this->url($url);
     }
 
-    function url($url = "")
+    public function url($url = "")
     {
         $url = preg_replace("/[&?]+$/", "", $url);
 
@@ -178,14 +176,14 @@ class session
         return $url.$extra;
     }
 
-    function UseGet()
+    public function UseGet()
     {
         $this->mode = "get";
         $this->DestroyCookie();
         $this->Put("session_mode", $this->mode);
     }
 
-    function UseCookie()
+    public function UseCookie()
     {
         $this->mode = "cookie";
         $this->MakeCookie();
@@ -200,7 +198,7 @@ class session
     // * * * * * * * * * * * * * * * * *//
 
     // Fetches data given a key
-    function GetSessionData()
+    public function GetSessionData()
     {
         if ($this->key) {
             $row = $this->db->qr("SELECT sessData FROM sess WHERE sessID = '%s'", $this->key);
@@ -209,26 +207,26 @@ class session
     }
 
     // if $this->session_life seconds have passed then session has expired
-    function Expired()
+    public function Expired()
     {
         if ($this->Get("session_started") && (mktime() > ($this->Get("session_started")+$this->session_life))) {
             return true;
         }
     }
     // add encryption for session_data here
-    function Encode($data)
+    public function Encode($data)
     {
         return serialize($data);
     }
 
     // and add unencryption for session_data here
-    function UnEncode($data)
+    public function UnEncode($data)
     {
         return unserialize($data);
     }
 
     // errors fix me
-    function Error($msg)
+    public function Error($msg)
     {
         alloc_error($msg);
     }

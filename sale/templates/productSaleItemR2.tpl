@@ -6,7 +6,6 @@
     <td width="1%" class="right">Product:</td><td width="20%">{$productLink}</td>
     <td class="right nobr">Sell Price{$sellPriceTax_label}:</td><td class="right nobr">
       {page::money($sellPriceCurrencyTypeID, $itemSellPrice,"%s%mo %c")}
-      {$sellPriceCurrencyTypeID!=config::get_config_item('currency') and print exchangeRate::convert($sellPriceCurrencyTypeID,$itemSellPrice,null,null,"(%s%mo %c)")}
     </td>
     <td class="right nobr {$classItemEarnt}">Transactions Incoming:</td><td class="right nobr {$classItemEarnt}">{page::money(config::get_config_item("currency"),$itemEarnt,"%s%m %c")}</td>
     <td width="20%" class="right nobr"></td><td width="1%" class="right"></td>

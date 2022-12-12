@@ -60,10 +60,9 @@ class person extends db_entity
                              ,PERM_PERSON_WRITE_ROLES => "set roles");
 
 
-    function get_tasks_for_email()
+    public function get_tasks_for_email()
     {
         $options = array();
-        #$options["projectType"] = "mine";
         $options["limit"] = 3;
         $options["current_user"] = $this->get_id();
         $options["personID"] = $this->get_id();
@@ -130,7 +129,7 @@ class person extends db_entity
         return $topThree.$dueToday.$newTasks;
     }
 
-    function get_announcements_for_email()
+    public function get_announcements_for_email()
     {
         $db = new db_alloc();
         $db->query("SELECT * FROM announcement WHERE CURDATE() <= displayToDate AND CURDATE() >= displayFromDate");
@@ -142,13 +141,13 @@ class person extends db_entity
         return $announcement;
     }
 
-    function have_role($perm_name)
+    public function have_role($perm_name)
     {
         $perms = explode(",", $this->get_value("perms"));
         return in_array($perm_name, $perms);
     }
 
-    function is_employee()
+    public function is_employee()
     {
         // Function to check if the person is an employee
         $current_user = &singleton("current_user");
@@ -162,7 +161,7 @@ class person extends db_entity
         }
     }
 
-    function check_employee()
+    public function check_employee()
     {
         // Ensure the current user is an employee
         if (!$this->is_employee()) {
@@ -170,7 +169,7 @@ class person extends db_entity
         }
     }
 
-    function get_skills($proficiency)
+    public function get_skills($proficiency)
     {
         // Return a string of skills with a given proficiency
         $query = "SELECT * FROM proficiency LEFT JOIN skill on proficiency.skillID=skill.skillID";
@@ -226,7 +225,7 @@ class person extends db_entity
         return $people_cache[$personID]["name"];
     }
 
-    function get_name($_FORM = array())
+    public function get_name($_FORM = array())
     {
         $firstName = $this->get_value("firstName");
         $surname   = $this->get_value("surname");
@@ -234,7 +233,7 @@ class person extends db_entity
 
         if ($_FORM["format"] == "nick") {
             $rtn = $username;
-        } else if ($firstName && $surname) {
+        } elseif ($firstName && $surname) {
             $rtn = $firstName." ".$surname;
         } else {
             $rtn = $username;
@@ -247,7 +246,7 @@ class person extends db_entity
         }
     }
 
-    function get_tfIDs()
+    public function get_tfIDs()
     {
         $db = new db_alloc();
         $db->query("SELECT tfID FROM tfPerson WHERE personID = %d", $this->get_id());
@@ -257,7 +256,7 @@ class person extends db_entity
         return $tfIDs;
     }
 
-    function get_valid_login_row($username, $password = "")
+    public function get_valid_login_row($username, $password = "")
     {
         $db = new db_alloc();
         $q = prepare(
@@ -273,7 +272,7 @@ class person extends db_entity
         }
     }
 
-    function load_current_user($personID)
+    public function load_current_user($personID)
     {
         $this->set_id($personID);
         if ($this->select()) {
@@ -281,13 +280,13 @@ class person extends db_entity
         }
     }
 
-    function load_prefs()
+    public function load_prefs()
     {
         $this->prefs = unserialize($this->get_value("sessData"));
         !isset($this->prefs["customizedFont"]) and $this->prefs["customizedFont"] = 0;
     }
 
-    function update_prefs($p = array())
+    public function update_prefs($p = array())
     {
         isset($p["font"])                      and $this->prefs["customizedFont"]            = sprintf("%d", $p["font"]);
         isset($p["theme"])                     and $this->prefs["customizedTheme2"]          = $p["theme"];
@@ -308,7 +307,7 @@ class person extends db_entity
         isset($p["showTimeSheetItemHintHome"]) and $this->prefs["showTimeSheetItemHintHome"] = $p["showTimeSheetItemHintHome"];
     }
 
-    function store_prefs()
+    public function store_prefs()
     {
         $p = new person();
         $p->set_id($this->get_id());
@@ -335,10 +334,10 @@ class person extends db_entity
         }
     }
 
-    function has_messages()
+    public function has_messages()
     {
         if (is_object($this)) {
-            list($ts_open,$ts_pending,$ts_closed) = task::get_task_status_in_set_sql();
+            list($ts_open, $ts_pending, $ts_closed) = task::get_task_status_in_set_sql();
             $db = new db_alloc();
             $query = prepare(
                 "SELECT *
@@ -350,15 +349,14 @@ class person extends db_entity
             );
             $db->query($query);
             if ($db->next_record()) {
-                  return true;
+                return true;
             }
         }
         return false;
     }
 
-    function find_by_name($name = false, $certainty = 90)
+    public function find_by_name($name = false, $certainty = 90)
     {
-
         $stack1 = array();
         $people =& get_cached_table("person");
         foreach ($people as $personID => $row) {
@@ -378,7 +376,7 @@ class person extends db_entity
         }
     }
 
-    function find_by_email($email = false)
+    public function find_by_email($email = false)
     {
         $email = str_replace(array("<",">"), "", $email);
         $people =& get_cached_table("person");
@@ -389,7 +387,7 @@ class person extends db_entity
         }
     }
 
-    function get_from()
+    public function get_from()
     {
         $name = $this->get_name();
         $name and $name = '"'.$name.'"';
@@ -402,7 +400,7 @@ class person extends db_entity
         }
     }
 
-    function get_list_filter($filter = array())
+    public function get_list_filter($filter = array())
     {
         $filter["username"]     and $sql[] = sprintf_implode("username = '%s'", $filter["username"]);
         $filter["personActive"] and $sql[] = sprintf_implode("personActive = %d", $filter["personActive"]);
@@ -432,7 +430,7 @@ class person extends db_entity
     {
         global $TPL;
         $current_user = &singleton("current_user");
-        list($filter,$filter2) = person::get_list_filter($_FORM);
+        list($filter, $filter2) = person::get_list_filter($_FORM);
 
         $debug = $_FORM["debug"];
         $debug and print "<pre>_FORM: ".print_r($_FORM, 1)."</pre>";
@@ -443,8 +441,8 @@ class person extends db_entity
         // Get averages for hours worked over the past fortnight and year
         if ($current_user->have_perm(PERM_PERSON_READ_MANAGEMENT) && $_FORM["showHours"]) {
             $t = new timeSheetItem();
-            list($ts_hrs_col_1,$ts_dollars_col_1) = $t->get_averages(date("Y-m-d", mktime(0, 0, 0, date("m"), date("d")-14, date("Y"))));
-            list($ts_hrs_col_2,$ts_dollars_col_2) = $t->get_fortnightly_average();
+            list($ts_hrs_col_1, $ts_dollars_col_1) = $t->get_averages(date("Y-m-d", mktime(0, 0, 0, date("m"), date("d")-14, date("Y"))));
+            list($ts_hrs_col_2, $ts_dollars_col_2) = $t->get_fortnightly_average();
         } else {
             unset($_FORM["showHours"]);
         }
@@ -518,14 +516,14 @@ class person extends db_entity
         $rows or $rows = array();
         if ($print && $_FORM["return"] == "array") {
             return $rows;
-        } else if ($print && $_FORM["return"] == "html") {
+        } elseif ($print && $_FORM["return"] == "html") {
             return "<table class=\"list sortable\">".$summary."</table>";
-        } else if (!$print && $_FORM["return"] == "html") {
+        } elseif (!$print && $_FORM["return"] == "html") {
             return "<table style=\"width:100%\"><tr><td colspan=\"10\" style=\"text-align:center\"><b>No People Found</b></td></tr></table>";
         }
     }
 
-    function get_list_tr_header($_FORM)
+    public function get_list_tr_header($_FORM)
     {
         if ($_FORM["showHeader"]) {
             $summary[] = "<tr>";
@@ -551,7 +549,7 @@ class person extends db_entity
         }
     }
 
-    function get_list_tr($row, $_FORM)
+    public function get_list_tr($row, $_FORM)
     {
         global $TPL;
         $TPL["_FORM"] = $_FORM;
@@ -559,7 +557,7 @@ class person extends db_entity
         return include_template(dirname(__FILE__)."/../templates/personListR.tpl", true);
     }
 
-    function get_list_vars()
+    public function get_list_vars()
     {
         return array("return"       => "[MANDATORY] eg: array | html",
                      "username"     => "Search by the person username",
@@ -582,7 +580,7 @@ class person extends db_entity
                      "showSkills"   => "Show the persons skills");
     }
 
-    function load_form_data($defaults = array())
+    public function load_form_data($defaults = array())
     {
         $current_user = &singleton("current_user");
         $page_vars = array_keys(person::get_list_vars());
@@ -593,7 +591,7 @@ class person extends db_entity
             if (!isset($current_user->prefs[$_FORM["form_name"]])) {
                 $_FORM["personActive"] = true;
             }
-        } else if ($_FORM["applyFilter"] && is_object($current_user) && !$_FORM["dontSave"]) {
+        } elseif ($_FORM["applyFilter"] && is_object($current_user) && !$_FORM["dontSave"]) {
             $url = $_FORM["url_form_action"];
             unset($_FORM["url_form_action"]);
             $current_user->prefs[$_FORM["form_name"]] = $_FORM;
@@ -603,7 +601,7 @@ class person extends db_entity
         return $_FORM;
     }
 
-    function load_person_filter($_FORM)
+    public function load_person_filter($_FORM)
     {
         global $TPL;
         $current_user = &singleton("current_user");
@@ -635,14 +633,14 @@ class person extends db_entity
         return $rtn;
     }
 
-    function get_link($_FORM = array())
+    public function get_link($_FORM = array())
     {
         global $TPL;
         $_FORM["return"] or $_FORM["return"] = "html";
         return "<a href=\"".$TPL["url_alloc_person"]."personID=".$this->get_id()."\">".$this->get_name($_FORM)."</a>";
     }
 
-    function get_people_by_username($field = "username")
+    public function get_people_by_username($field = "username")
     {
         $people =& get_cached_table("person");
         foreach ($people as $personID => $person) {

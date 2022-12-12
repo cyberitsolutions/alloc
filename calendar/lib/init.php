@@ -23,7 +23,7 @@
 
 class calendar_module extends module
 {
-    var $module = "calendar";
-    var $db_entities = array();
-    var $home_items = array("task_calendar_home_item");
+    public $module = "calendar";
+    public $db_entities = array();
+    public $home_items = array("task_calendar_home_item");
 }

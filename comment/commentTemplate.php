@@ -41,7 +41,7 @@ if ($_POST["save"]) {
     alloc_redirect($TPL["url_alloc_commentTemplateList"]);
 
 // Process submission of the form using the delete button
-} else if ($_POST["delete"]) {
+} elseif ($_POST["delete"]) {
     $commentTemplate->delete();
     alloc_redirect($TPL["url_alloc_commentTemplateList"]);
     exit();

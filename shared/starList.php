@@ -27,7 +27,6 @@ $clientContact_defaults = array("starred"=>true);
 $project_defaults = array("starred"=>true);
 $comment_defaults = array("starred"=>true);
 $productSale_defaults = array("starred"=>true);
-$wiki_defaults = array("starred"=>true);
 
 $task_defaults = array("showHeader"  => true,
                        "showTaskID"  => true,
@@ -55,9 +54,7 @@ $star_entities = array("client"        => array("label"=>"Clients"       ,"form"
                        "comment"       => array("label"=>"Comments"      ,"form"=> $comment_defaults),
                        "timeSheet"     => array("label"=>"Time Sheets"   ,"form"=> $timeSheet_defaults),
                        "invoice"       => array("label"=>"Invoices"      ,"form"=> $invoice_defaults),
-                       "productSale"   => array("label"=>"Sales"         ,"form"=> $productSale_defaults),
-                       "wiki"          => array("label"=>"Wiki Documents","form"=> $wiki_defaults),
-                       //"tf"            => array("label"=>"Tagged Funds"  ,"form"=> $tf_defaults)
+                       "productSale"   => array("label"=>"Sales"         ,"form"=> $productSale_defaults)
 );
 
 $TPL["star_entities"] = $star_entities;

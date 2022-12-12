@@ -47,7 +47,7 @@ class client extends db_entity
                                 "clientURL");
 
 
-    function delete()
+    public function delete()
     {
         // delete all contacts and comments linked with this client as well
         $db = new db_alloc();
@@ -68,25 +68,25 @@ class client extends db_entity
         return parent::delete();
     }
 
-    function is_owner()
+    public function is_owner()
     {
         $current_user = &singleton("current_user");
         return $current_user->is_employee();
     }
 
-    function has_attachment_permission($person)
+    public function has_attachment_permission($person)
     {
         // Placeholder for security check in shared/get_attchment.php
         return true;
     }
 
-    function has_attachment_permission_delete($person)
+    public function has_attachment_permission_delete($person)
     {
         // Placeholder for security check in shared/get_attchment.php
         return true;
     }
 
-    function get_client_select($clientStatus = "", $clientID = "")
+    public function get_client_select($clientStatus = "", $clientID = "")
     {
         global $TPL;
         $db = new db_alloc();
@@ -109,7 +109,7 @@ class client extends db_entity
         return $str;
     }
 
-    function get_client_contact_select($clientID = "", $clientContactID = "")
+    public function get_client_contact_select($clientID = "", $clientContactID = "")
     {
         $clientID or $clientID = $_GET["clientID"];
         $db = new db_alloc();
@@ -118,7 +118,7 @@ class client extends db_entity
         return "<select id=\"clientContactID\" name=\"clientContactID\" style=\"width:100%\"><option value=\"\">".$options."</select>";
     }
 
-    function get_name($_FORM = array())
+    public function get_name($_FORM = array())
     {
         if ($_FORM["return"] == "html") {
             return $this->get_value("clientName", DST_HTML_DISPLAY);
@@ -127,13 +127,13 @@ class client extends db_entity
         }
     }
 
-    function get_client_link($_FORM = array())
+    public function get_client_link($_FORM = array())
     {
         global $TPL;
         return "<a href=\"".$TPL["url_alloc_client"]."clientID=".$this->get_id()."\">".$this->get_name($_FORM)."</a>";
     }
 
-    function get_list_filter($filter = array())
+    public function get_list_filter($filter = array())
     {
         $current_user = &singleton("current_user");
 
@@ -160,7 +160,7 @@ class client extends db_entity
 
         if ($filter["clientLetter"] && $filter["clientLetter"] == "A") {
             $sql[] = "(clientName like 'A%' or clientName REGEXP '^[^[:alpha:]]')";
-        } else if ($filter["clientLetter"] && $filter["clientLetter"] != "ALL") {
+        } elseif ($filter["clientLetter"] && $filter["clientLetter"] != "ALL") {
             $sql[] = sprintf_implode("clientName LIKE '%s%%'", $filter["clientLetter"]);
         }
 
@@ -169,10 +169,10 @@ class client extends db_entity
 
     public static function get_list($_FORM)
     {
-      /*
-       * This is the definitive method of getting a list of clients that need a sophisticated level of filtering
-       *
-       */
+        /*
+         * This is the definitive method of getting a list of clients that need a sophisticated level of filtering
+         *
+         */
 
 
         global $TPL;
@@ -216,7 +216,7 @@ class client extends db_entity
         return (array)$rows;
     }
 
-    function get_list_vars()
+    public function get_list_vars()
     {
         return array("clientStatus"     => "Client status eg: Current | Potential | Archived",
                      "clientCategory"   => "Client category eg: 1-7",
@@ -229,7 +229,7 @@ class client extends db_entity
                      "applyFilter"      => "Saves this filter as the persons preference");
     }
 
-    function load_form_data($defaults = array())
+    public function load_form_data($defaults = array())
     {
         $current_user = &singleton("current_user");
 
@@ -243,7 +243,7 @@ class client extends db_entity
                 $_FORM["clientLetter"] = "A";
                 $_FORM["clientStatus"] = "Current";
             }
-        } else if ($_FORM["applyFilter"] && is_object($current_user) && !$_FORM["dontSave"]) {
+        } elseif ($_FORM["applyFilter"] && is_object($current_user) && !$_FORM["dontSave"]) {
             $url = $_FORM["url_form_action"];
             unset($_FORM["url_form_action"]);
             $current_user->prefs[$_FORM["form_name"]] = $_FORM;
@@ -253,7 +253,7 @@ class client extends db_entity
         return $_FORM;
     }
 
-    function load_client_filter($_FORM)
+    public function load_client_filter($_FORM)
     {
         global $TPL;
 
@@ -291,7 +291,7 @@ class client extends db_entity
         return $rtn;
     }
 
-    function get_url()
+    public function get_url()
     {
         global $TPL;
         global $sess;
@@ -299,7 +299,7 @@ class client extends db_entity
         return $TPL["url_alloc_client"].$url;
     }
 
-    function get_clientID_from_name($name)
+    public function get_clientID_from_name($name)
     {
         static $clients;
         if (!$clients) {
@@ -323,7 +323,7 @@ class client extends db_entity
         return array($probable_clientID,$client_percent);
     }
 
-    function get_client_and_project_dropdowns_and_links($clientID = false, $projectID = false, $onlymine = false)
+    public function get_client_and_project_dropdowns_and_links($clientID = false, $projectID = false, $onlymine = false)
     {
         // This function returns dropdown lists and links for both client and
         // project. The two dropdown lists are linked, in that if you change the
@@ -357,7 +357,7 @@ class client extends db_entity
         return array($client_select, $client_link, $project_select, $project_link);
     }
 
-    function update_search_index_doc(&$index)
+    public function update_search_index_doc(&$index)
     {
         $person =& get_cached_table("person");
         $clientModifiedUser = $this->get_value("clientModifiedUser");
@@ -425,16 +425,15 @@ class client extends db_entity
         $index->addDocument($doc);
     }
 
-    function format_address($type = "street", $map_link = true)
+    public function format_address($type = "street", $map_link = true)
     {
-
         if ($type == "postal") {
             $f1 = $this->get_value("clientStreetAddressOne", DST_HTML_DISPLAY);
             $f2 = $this->get_value("clientSuburbOne", DST_HTML_DISPLAY);
             $f3 = $this->get_value("clientStateOne", DST_HTML_DISPLAY);
             $f4 = $this->get_value("clientPostcodeOne", DST_HTML_DISPLAY);
             $f5 = $this->get_value("clientCountryOne", DST_HTML_DISPLAY);
-        } else if ($type == "street") {
+        } elseif ($type == "street") {
             $f1 = $this->get_value("clientStreetAddressTwo", DST_HTML_DISPLAY);
             $f2 = $this->get_value("clientSuburbTwo", DST_HTML_DISPLAY);
             $f3 = $this->get_value("clientStateTwo", DST_HTML_DISPLAY);
@@ -449,7 +448,7 @@ class client extends db_entity
             $map_base = config::get_config_item('mapURL');
             $address = str_replace("%ad", urlencode(implode(", ", array($f1,$f2,$f3,$f4,$f5))), $map_base);
             $str .= '<a href="' . $address .'">'.$f1.'<br/>'.$f2.' '.$f3.' '.$f4.'<br/>'.$f5.'</a>';
-        } else if ($f1 != "") {
+        } elseif ($f1 != "") {
             $str = $f1;
             $f2 and $str.= "<br>".$f2;
             $f3 and $str.= " ".$f3;
@@ -460,7 +459,7 @@ class client extends db_entity
         return $str;
     }
 
-    function get_all_parties($clientID = false)
+    public function get_all_parties($clientID = false)
     {
         if (!$clientID && is_object($this)) {
             $clientID = $this->get_id();
@@ -475,7 +474,7 @@ class client extends db_entity
                          ", $clientID);
             $db->query($q);
             while ($db->next_record()) {
-                  $interestedPartyOptions[$db->f("clientContactEmail")] = array("name"=>$db->f("clientContactName"),"external"=>"1","clientContactID"=>$db->f("clientContactID"));
+                $interestedPartyOptions[$db->f("clientContactEmail")] = array("name"=>$db->f("clientContactName"),"external"=>"1","clientContactID"=>$db->f("clientContactID"));
             }
         }
         // return an aggregation of the current task/proj/client parties + the existing interested parties
@@ -483,7 +482,7 @@ class client extends db_entity
         return (array)$interestedPartyOptions;
     }
 
-    function get_list_html($rows = array(), $ops = array())
+    public function get_list_html($rows = array(), $ops = array())
     {
         global $TPL;
         $TPL["clientListRows"] = $rows;

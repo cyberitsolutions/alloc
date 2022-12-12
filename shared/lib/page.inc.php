@@ -67,7 +67,6 @@ class page
         $menu_links["invoice"] = array("name"=>"Invoices","url"=>$TPL["url_alloc_invoiceList"],    "module"=>"invoice");
         $menu_links["sale"]    = array("name"=>"Sales",   "url"=>$TPL["url_alloc_productSaleList"],"module"=>"sale");
         $menu_links["person"]  = array("name"=>"People",  "url"=>$TPL["url_alloc_personList"],     "module"=>"person");
-        $menu_links["wiki"]    = array("name"=>"Wiki",    "url"=>$TPL["url_alloc_wiki"],           "module"=>"wiki");
         if (have_entity_perm("inbox", PERM_READ, $current_user) && config::get_config_item("allocEmailHost")) {
             $menu_links["inbox"] = array("name"=>"Inbox",   "url"=>$TPL["url_alloc_inbox"],          "module"=>"email");
         }
@@ -194,7 +193,6 @@ class page
         has("time")    and $category_options["search_time"] = "Search Time Sheets";
         has("client")  and $category_options["search_clients"] = "Search Clients";
         has("comment") and $category_options["search_comment"] = "Search Comments";
-        has("wiki")    and $category_options["search_wiki"] = "Search Wiki";
         has("item")    and $category_options["search_items"] = "Search Items";
         has("finance") and $category_options["search_expenseForm"] = "Search Expense Forms";
         return page::select_options($category_options, $category);
@@ -207,7 +205,7 @@ class page
             $img = "<div id='help_button_".$topic."' style='display:inline;'><a href=\"".$TPL["url_alloc_getHelp"]."topic=".$topic."\" target=\"_blank\">";
             $img.= "<img border='0' class='help_button' onmouseover=\"help_text_on('help_button_".$topic."','".$str."');\" onmouseout=\"help_text_off('help_button_".$topic."');\" src=\"";
             $img.= $TPL["url_alloc_images"]."help.gif\" alt=\"Help\" /></a></div>";
-        } else if ($topic) {
+        } elseif ($topic) {
             $str = page::prepare_help_string($topic);
             $img = "<div id='help_button_".md5($topic)."' style='display:inline;'>";
             if ($hovertext) {
@@ -280,7 +278,7 @@ EOD;
             }
 
             // Build options from an array: array(value1=>label1, value2=>label2)
-        } else if (is_array($options)) {
+        } elseif (is_array($options)) {
             foreach ($options as $k => $v) {
                 $rows[$k] = $v;
             }
@@ -290,7 +288,7 @@ EOD;
             // Coerce selected options into an array
             if (is_array($selected_value)) {
                 $selected_values = $selected_value;
-            } else if ($selected_value !== null) {
+            } elseif ($selected_value !== null) {
                 $selected_values[] = $selected_value;
             }
 
@@ -306,7 +304,7 @@ EOD;
                     foreach ($selected_values as $selected_value) {
                         if ($selected_value === "" && $value === 0) {
                             // continue
-                        } else if ($selected_value == $value) {
+                        } elseif ($selected_value == $value) {
                             $sel = " selected";
                         }
                     }
@@ -383,10 +381,14 @@ EOD;
         } else {
             $current_user = &singleton("current_user");
             $themes = page::get_customizedTheme_array();
-            if (!isset($current_user->prefs["customizedTheme2"])) {
-                $current_user->prefs["customizedTheme2"] = 4;
+
+            // DON'T set the users stylesheet.
+            if (isset($current_user->prefs["customizedTheme2"])) {
+                $style = strtolower($themes[sprintf("%d", $current_user->prefs["customizedTheme2"])]);
+            } else {
+                $style="default";
             }
-            $style = strtolower($themes[sprintf("%d", $current_user->prefs["customizedTheme2"])]);
+
             return "style_".$style.".css";
         }
     }
@@ -412,7 +414,7 @@ EOD;
             $handle = opendir($dir);
             // TODO add icons to files attachaments in general
             while (false !== ($file = readdir($handle))) {
-                if (preg_match("/style_(.*)\.ini$/", $file, $m)) {
+                if (preg_match("/style_(.*)\.css$/", $file, $m)) {
                     $rtn[] = ucwords($m[1]);
                 }
             }
@@ -504,16 +506,12 @@ EOD;
         foreach ((array)$sums as $currency => $amount) {
             $str.= $sep.page::money($currency, $amount, "%s%m %c");
             $sep = " + ";
-            if ($mainCurrency == $currency) {
-                $total += $amount;
-            } else {
-                $total += exchangeRate::convert($currency, $amount);
-            }
+            $total += $amount;
         }
         $total = page::money($mainCurrency, $total, "%s%m %c");
         if ($str && $str != $total) {
             $rtn = page::help(page::exclaim()."<b>Approximate currency conversion</b><br>".$str." = ".$total, page::exclaim().$total);
-        } else if ($str) {
+        } elseif ($str) {
             $rtn = $str;
         }
         return $rtn;

@@ -92,7 +92,7 @@ if ($search && $needle && $category == "search_projects") {
     }
 
     // Clients Search
-} else if ($search && $needle && $category == "search_clients") {
+} elseif ($search && $needle && $category == "search_clients") {
     $TPL["search_title"] = "Client Search";
 
     if (!$noRedirect && is_numeric($needle)) {
@@ -119,8 +119,6 @@ if ($search && $needle && $category == "search_projects") {
                 $d->getFieldValue('id'),
                 page::htmlentities($d->getFieldValue('name'))
             );
-            //$row["related"] = sprintf("<a href='%sprojectID=%d'>%s</a>"
-            //                ,$TPL["url_alloc_project"], $d->getFieldValue('pid'), $d->getFieldValue('project'));
 
             unset($num_contact);
             if ($d->getFieldValue('contact')) {
@@ -140,7 +138,7 @@ if ($search && $needle && $category == "search_projects") {
     }
 
     // Tasks Search
-} else if ($search && $needle && $category == "search_tasks") {
+} elseif ($search && $needle && $category == "search_tasks") {
     $TPL["search_title"] = "Task Search";
 
     if (!$noRedirect && is_numeric($needle)) {
@@ -180,7 +178,7 @@ if ($search && $needle && $category == "search_projects") {
 
 
     // Item Search
-} else if ($search && $needle && $category == "search_items") {
+} elseif ($search && $needle && $category == "search_items") {
     $TPL["search_title"] = "Item Search";
     $today = date("Y")."-".date("m")."-".date("d");
 
@@ -230,7 +228,7 @@ if ($search && $needle && $category == "search_projects") {
                     }
                     $row["related"] = $status." <a href=\"".$TPL["url_alloc_item"]."itemID=".$item->get_id()."&return=true\">Return</a>";
 
-                    // Else you dont have permission to loan or return so just show status
+                // Else you dont have permission to loan or return so just show status
                 } else {
                     $name = page::htmlentities($p[$loan->get_value("personID")]["name"]);
 
@@ -249,7 +247,7 @@ if ($search && $needle && $category == "search_projects") {
     }
 
     // Expense Form ID search
-} else if ($search && $needle && $category == "search_expenseForm") {
+} elseif ($search && $needle && $category == "search_expenseForm") {
     if (!$noRedirect && is_numeric($needle)) {
         $query = prepare("SELECT expenseFormID FROM expenseForm WHERE expenseFormID = %d", $needle);
         $db->query($query);
@@ -259,7 +257,7 @@ if ($search && $needle && $category == "search_projects") {
     }
 
     // Time Sheet Search
-} else if ($search && $needle && $category == "search_time") {
+} elseif ($search && $needle && $category == "search_time") {
     $TPL["search_title"] = "Time Sheet Search";
 
     if (!$noRedirect && is_numeric($needle)) {
@@ -282,7 +280,6 @@ if ($search && $needle && $category == "search_projects") {
             $row["score"] = sprintf('%d%%', $hit->score*100);
             $c = (array)explode(" ", $d->getFieldValue('creator'));
             $creator = implode(" ", (array)array_slice($c, 2));
-            //$creator = implode(" ",array_shift(array_shift(explode(" ",$d->getFieldValue('creator')))));
             $row["title"] = $d->getFieldValue('id')." ".sprintf(
                 "<a href='%stimeSheetID=%d'>%s</a>",
                 $TPL["url_alloc_timeSheet"],
@@ -302,7 +299,7 @@ if ($search && $needle && $category == "search_projects") {
     }
 
     // Comment Search
-} else if ($search && $needle && $category == "search_comment") {
+} elseif ($search && $needle && $category == "search_comment") {
     $TPL["search_title"] = "Comment Search";
 
     if (!$noRedirect && is_numeric($needle)) {
@@ -335,33 +332,7 @@ if ($search && $needle && $category == "search_projects") {
             $TPL["search_results"][] = $row;
         }
     }
-
-    // Wiki Search
-} else if ($search && $needle && $category == "search_wiki") {
-    $TPL["search_title"] = "Wiki Search";
-
-    $index = new Zend_Search_Lucene(ATTACHMENTS_DIR.'search/wiki');
-    $query = Zend_Search_Lucene_Search_QueryParser::parse($needle);
-    $hits = $index->find($needle);
-    $TPL["index_count"] = $index->count();
-    $TPL["hits_count"] = count($hits);
-
-    foreach ($hits as $hit) {
-        $d = $hit->getDocument();
-        $row = array();
-        $row["idx"] = $hit->id;
-        $row["score"] = sprintf('%d%%', $hit->score*100);
-        $row["title"] = sprintf(
-            "<a href='%starget=%s'>%s</a>",
-            $TPL["url_alloc_wiki"],
-            urlencode($d->getFieldValue('name')),
-            page::htmlentities($d->getFieldValue('name'))
-        );
-        $row["desc"] = page::htmlentities($d->getFieldValue('desc'));
-        $TPL["search_results"][] = $row;
-    }
 }
-
 
 // setup generic values
 $TPL["search_category_options"] = page::get_category_options($category);

@@ -32,7 +32,6 @@ class transaction extends db_entity
                                 "amount" => array("type"=>"money"),
                                 "currencyTypeID",
                                 "destCurrencyTypeID",
-                                "exchangeRate",
                                 "status",
                                 "dateApproved",
                                 "expenseFormID",
@@ -55,7 +54,7 @@ class transaction extends db_entity
                                 "transactionRepeatID",
                                 "transactionGroupID");
 
-    function save()
+    public function save()
     {
         // These need to be in here instead of validate(), because
         // validate is called after save() and we need these values set for save().
@@ -67,7 +66,7 @@ class transaction extends db_entity
         if ($old["status"] != $this->get_value("status") && $this->get_value("status") == "approved") {
             $this->set_value("dateApproved", date("Y-m-d"));
             $field_changed = true;
-        } else if ($this->get_value("status") != "approved") {
+        } elseif ($this->get_value("status") != "approved") {
             $this->set_value("dateApproved", "");
         }
 
@@ -77,30 +76,13 @@ class transaction extends db_entity
         if ($old["destCurrencyTypeID"] != $this->get_value("destCurrencyTypeID")) {
             $field_changed = true;
         }
+        // FIXME: why? -- cjb, 2020-02
         $db = new db_alloc();
-
-        // If there already is an exchange rate set for an approved
-        // transaction, then there's no need to update the exchange rate
-        if ($this->get_value("exchangeRate") && $this->get_value("dateApproved") && !$field_changed) {
-        // Else update the transaction's exchange rate
-        } else {
-            $this->get_value("transactionCreatedTime")  and $date = format_date("Y-m-d", $this->get_value("transactionCreatedTime"));
-            $this->get_value("transactionModifiedTime") and $date = format_date("Y-m-d", $this->get_value("transactionModifiedTime"));
-            $this->get_value("transactionDate")         and $date = $this->get_value("transactionDate");
-            $this->get_value("dateApproved")            and $date = $this->get_value("dateApproved");
-
-            $er = exchangeRate::get_er($this->get_value("currencyTypeID"), $this->get_value("destCurrencyTypeID"), $date);
-            if (!$er) {
-                alloc_error("Unable to determine exchange rate for ".$this->get_value("currencyTypeID")." to ".$this->get_value("destCurrencyTypeID")." for date: ".$date);
-            } else {
-                $this->set_value("exchangeRate", $er);
-            }
-        }
 
         return parent::save();
     }
 
-    function validate()
+    public function validate()
     {
         $current_user = &singleton("current_user");
 
@@ -120,7 +102,7 @@ class transaction extends db_entity
         return parent::validate($err);
     }
 
-    function is_owner($person = "")
+    public function is_owner($person = "")
     {
         $current_user = &singleton("current_user");
         if ($person == "") {
@@ -152,7 +134,7 @@ class transaction extends db_entity
         return ($toTf->is_owner($person) || $fromTf->is_owner($person));
     }
 
-    function get_transactionTypes()
+    public function get_transactionTypes()
     {
         $taxName = config::get_config_item("taxName") or $taxName = "Tax";
         return array('invoice'    => 'Invoice',
@@ -165,12 +147,12 @@ class transaction extends db_entity
                      'tax'        => $taxName);
     }
 
-    function get_transactionStatii()
+    public function get_transactionStatii()
     {
         return array("pending"=>"Pending", "approved"=>"Approved", "rejected"=>"Rejected");
     }
 
-    function get_url()
+    public function get_url()
     {
         global $sess;
         $sess or $sess = new session();
@@ -189,7 +171,7 @@ class transaction extends db_entity
         return $url;
     }
 
-    function get_transaction_link($_FORM = array())
+    public function get_transaction_link($_FORM = array())
     {
         $_FORM["return"] or $_FORM["return"] = "html";
         $rtn = "<a href=\"".$this->get_url()."\">";
@@ -198,7 +180,7 @@ class transaction extends db_entity
         return $rtn;
     }
 
-    function get_name($_FORM = array())
+    public function get_name($_FORM = array())
     {
         if ($_FORM["return"] == "html") {
             return $this->get_value("product", DST_HTML_DISPLAY);
@@ -207,7 +189,7 @@ class transaction extends db_entity
         }
     }
 
-    function get_transaction_type_link()
+    public function get_transaction_type_link()
     {
         global $TPL;
         $type = $this->get_value("transactionType");
@@ -223,19 +205,19 @@ class transaction extends db_entity
             $invoice->get_id() and $str = "<a href=\"".$invoice->get_url()."\">".$transactionTypes[$type]." ".$invoice->get_value("invoiceNum")."</a>";
 
         // Transaction is from an expenseform
-        } else if ($type == "expense") {
+        } elseif ($type == "expense") {
             $expenseForm = $this->get_foreign_object("expenseForm");
             if ($expenseForm->get_id() && $expenseForm->have_perm(PERM_READ_WRITE)) {
                 $str = "<a href=\"".$expenseForm->get_url()."\">".$transactionTypes[$type]." ".$this->get_value("expenseFormID")."</a>";
             }
 
-        // Had to rewrite this so that people who had transactions on other peoples timesheets
+            // Had to rewrite this so that people who had transactions on other peoples timesheets
         // could see their own transactions, but not the other persons timesheet.
-        } else if ($type == "timesheet" && $this->get_value("timeSheetID")) {
+        } elseif ($type == "timesheet" && $this->get_value("timeSheetID")) {
             $timeSheet = new timeSheet();
             $timeSheet->set_id($this->get_value("timeSheetID"));
             $str = "<a href=\"".$timeSheet->get_url()."\">".$transactionTypes[$type]." ".$this->get_value("timeSheetID")."</a>";
-        } else if (($type == "commission" || $type == "tax") && $this->get_value("timeSheetID")) {
+        } elseif (($type == "commission" || $type == "tax") && $this->get_value("timeSheetID")) {
             $timeSheet = new timeSheet();
             $timeSheet->set_id($this->get_value("timeSheetID"));
             $str = "<a href=\"".$timeSheet->get_url()."\">".$transactionTypes[$type]." (Time Sheet ".$this->get_value("timeSheetID").")</a>";
@@ -250,7 +232,7 @@ class transaction extends db_entity
         return $str;
     }
 
-    function reduce_tfs($_FORM)
+    public function reduce_tfs($_FORM)
     {
         if ($_FORM["tfName"]) {
             $q = prepare("SELECT * FROM tf WHERE tfName = '%s'", $_FORM["tfName"]);
@@ -268,7 +250,7 @@ class transaction extends db_entity
         return tf::get_permitted_tfs($tfIDs);
     }
 
-    function get_list_filter($_FORM)
+    public function get_list_filter($_FORM)
     {
         $current_user = &singleton("current_user");
 
@@ -345,7 +327,7 @@ class transaction extends db_entity
 
         // Determine opening balance
         if (is_array($_FORM['tfIDs']) && count($_FORM['tfIDs'])) {
-            $q = prepare("SELECT SUM( IF(fromTfID IN (%s),-amount,amount) * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance
+            $q = prepare("SELECT SUM( IF(fromTfID IN (%s),-amount,amount) * pow(10,-currencyType.numberToBasic) ) AS balance
                             FROM transaction
                       LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
                          ".$filter2, $_FORM['tfIDs']);
@@ -359,7 +341,7 @@ class transaction extends db_entity
 
         $q = "SELECT *,
                      (amount * pow(10,-currencyType.numberToBasic)) as amount1,
-                     (amount * pow(10,-currencyType.numberToBasic) * exchangeRate) as amount2,
+                     (amount * pow(10,-currencyType.numberToBasic)) as amount2,
                      if(transactionModifiedTime,transactionModifiedTime,transactionCreatedTime) AS transactionSortDate,
                      tf1.tfName as fromTfName,
                      tf2.tfName as tfName
@@ -375,7 +357,6 @@ class transaction extends db_entity
         $db->query($q);
         $for_cyber = config::for_cyber();
         while ($row = $db->next_record()) {
-            #echo "<pre>".print_r($row,1)."</pre>";
             $i++;
             $t = new transaction();
             if (!$t->read_db_record($db)) {
@@ -433,9 +414,8 @@ class transaction extends db_entity
         return array("totals"=>$_FORM, "rows"=>(array)$transactions);
     }
 
-    function arr_to_csv($rows = array())
+    public function arr_to_csv($rows = array())
     {
-
         $csvHeaders = array("transactionID",
                             "transactionType",
                             "fromTfID",
@@ -445,7 +425,6 @@ class transaction extends db_entity
                             "product",
                             "status",
                             "currencyTypeID",
-                            "exchangeRate",
                             "destCurrencyTypeID",
                             "amount_positive",
                             "amount_negative",
@@ -462,9 +441,8 @@ class transaction extends db_entity
         return implode(",", array_map('export_escape_csv', $csvHeaders))."\n".$csv;
     }
 
-    function get_list_vars()
+    public function get_list_vars()
     {
-
         return array("return"            => "[MANDATORY] eg: html | csv | array",
                      "tfID"              => "Transactions that are for this TF",
                      "tfIDs"             => "Transactions that are for this array of TF's",
@@ -486,7 +464,7 @@ class transaction extends db_entity
                      "amount"            => "Get Transactions that are for a certain amount");
     }
 
-    function load_form_data($defaults = array())
+    public function load_form_data($defaults = array())
     {
         $current_user = &singleton("current_user");
 
@@ -494,26 +472,10 @@ class transaction extends db_entity
 
         $_FORM = get_all_form_data($page_vars, $defaults);
 
-        #echo "<pre>".print_r($_FORM,1)."</pre>";
-
-        #if (!$_FORM["applyFilter"]) {
-        #  $_FORM = $current_user->prefs[$_FORM["form_name"]];
-        #  if (!isset($current_user->prefs[$_FORM["form_name"]])) {
-        #    #$_FORM["personID"] = $current_user->get_id();
-        #    list($_FORM["startDate"], $_FORM["endDate"]) = transaction::get_statement_start_and_end_dates(date("m"),date("Y"));
-        #  }
-
-        #} else if ($_FORM["applyFilter"] && is_object($current_user) && !$_FORM["dontSave"]) {
-        #  $url = $_FORM["url_form_action"];
-        #  unset($_FORM["url_form_action"]);
-        #  $current_user->prefs[$_FORM["form_name"]] = $_FORM;
-        #  $_FORM["url_form_action"] = $url;
-        #}
-
         return $_FORM;
     }
 
-    function load_transaction_filter($_FORM)
+    public function load_transaction_filter($_FORM)
     {
         global $TPL;
 
@@ -590,7 +552,7 @@ class transaction extends db_entity
         return $rtn;
     }
 
-    function get_actual_amount_used($rows = array())
+    public function get_actual_amount_used($rows = array())
     {
 
         /*
@@ -627,17 +589,9 @@ class transaction extends db_entity
         }
 
         return $sum;
-
-        # for debugging
-        #$rows[] = array("amount"=>"20","fromTfID"=>"alla","tfID"=>"twb");
-        #$rows[] = array("amount"=>"17","fromTfID"=>"twb","tfID"=>"alla");
-        #$rows[] = array("amount"=>"2","fromTfID"=>"alla","tfID"=>"pete");
-        #$rows[] = array("amount"=>"-4","fromTfID"=>"pete","tfID"=>"alla");
-        #$rows[] = array("amount"=>"200","fromTfID"=>"zebra","tfID"=>"ghost");
-        #echo "<br>SUM: ".transaction::get_actual_amount_used($rows);
     }
 
-    function get_next_transactionGroupID()
+    public function get_next_transactionGroupID()
     {
         $q = "SELECT coalesce(max(transactionGroupID)+1,1) as newNum FROM transaction";
         $db = new db_alloc();

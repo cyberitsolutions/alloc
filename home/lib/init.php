@@ -23,6 +23,6 @@
 
 class home_module extends module
 {
-    var $module = "home";
-    var $db_entities = array("history");
+    public $module = "home";
+    public $db_entities = array("history");
 }

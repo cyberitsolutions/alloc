@@ -35,12 +35,8 @@ $misc_options = array(array("url"=>"reminderList"        ,"text"=>"Reminders"   
                       array("url"=>"commentTemplateList" ,"text"=>"Comment Templates"      ,"entity"=>"commentTemplate" ,"action"=>PERM_READ_WRITE),
                       array("url"=>"loans"               ,"text"=>"Item Loans"             ,"entity"=>"loan"            ,"action"=>true),
                       array("url"=>"report"              ,"text"=>"Reports"                ,"entity"=>""                ,"action"=>true, "function"=>"has_report_perm"),
-                      array("url"=>"backup"              ,"text"=>"Database & File Backup" ,"entity"=>""                ,"function"=>"has_backup_perm"),
-                      array("url"=>"sourceCodeList"      ,"text"=>"allocPSA Source Code"   ,"entity"=>""),
                       array("url"=>"whatsnew"            ,"text"=>"Deployment Changelog"   ,"entity"=>""                ,"function"=> "has_whatsnew_files"),
                       array("url"=>"inbox"               ,"text"=>"Manage Inbox"           ,"entity"=>"config"          ,"action"=>PERM_UPDATE));
-
-//,array("url"=>"stats"                   ,"text"=>"allocPSA Statistics"   ,"entity"=>"config"             ,"action"=>PERM_UPDATE)
 
 function user_is_admin()
 {
@@ -61,8 +57,6 @@ $finance_options = array(array("url"=>"tf"                    ,"text"=>"New Tagg
                          array("url"=>"transactionRepeatList" ,"text"=>"Repeating Expense List"     ,"entity"=>"transaction" ,"action"=>PERM_READ),
                          array("url"=>"checkRepeat"           ,"text"=>"Execute Repeating Expenses" ,"entity"=>""            ,"function"=>"user_is_admin"));
 
-
-#,array("url"=>"reconciliationReport", "params"=>"", "text"=>"Reconciliation Report", "entity"=>"transaction", "action"=>true, "function"=>"user_is_admin")
 
 function has_whatsnew_files()
 {
@@ -88,7 +82,7 @@ function show_misc_options($template)
                 $TPL["text"] = $option["text"];
                 include_template($template);
             }
-        } else if ($option["function"]) {
+        } elseif ($option["function"]) {
             $f = $option["function"];
             if ($f()) {
                 $TPL["url"] = $TPL["url_alloc_".$option["url"]];
@@ -120,7 +114,7 @@ function show_finance_options($template)
 
                 include_template($template);
             }
-        } else if ($option["function"]) {
+        } elseif ($option["function"]) {
             $f = $option["function"];
             if ($f()) {
                 $TPL["url"] = $TPL["url_alloc_".$option["url"]];

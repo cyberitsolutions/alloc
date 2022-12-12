@@ -43,7 +43,7 @@ class timeSheetItem extends db_entity
                                 "timeSheetItemModifiedTime",
                                 "timeSheetItemModifiedUser");
 
-    function save()
+    public function save()
     {
         $current_user = &singleton("current_user");
         $timeSheet = new timeSheet();
@@ -51,7 +51,7 @@ class timeSheetItem extends db_entity
         $timeSheet->select();
 
         $timeSheet->load_pay_info();
-        list($amount_used,$amount_allocated) = $timeSheet->get_amount_allocated("%mo");
+        list($amount_used, $amount_allocated) = $timeSheet->get_amount_allocated("%mo");
 
         $this->currency = $timeSheet->get_value("currencyTypeID");
 
@@ -88,7 +88,7 @@ class timeSheetItem extends db_entity
         return $rtn;
     }
 
-    function parse_time_string($str)
+    public function parse_time_string($str)
     {
         preg_match("/^"
                    ."(\d\d\d\d\-\d\d?\-\d\d?\s+)?"   # date
@@ -102,7 +102,6 @@ class timeSheetItem extends db_entity
                    ."\s*"
                    ."(.*)"               # comment
                    ."\s*"
-                   #."(private)?"        # whether the comment is private
                    ."$/i", $str, $m);
 
         $rtn["date"] = trim($m[1]) or $rtn["date"] = date("Y-m-d");
@@ -111,7 +110,6 @@ class timeSheetItem extends db_entity
         $rtn["multiplier"] = str_replace(array("x","X"," "), "", $m[4]) or $rtn["multiplier"] = 1;
         $rtn["taskID"] = $m[5];
         $rtn["comment"] = $m[6];
-        //$rtn["private"] = $m[7];
 
         // use the first letter of the unit for the lookup
         $tu = array("h"=>1,"d"=>2,"w"=>3,"m"=>4,"f"=>5);
@@ -123,12 +121,12 @@ class timeSheetItem extends db_entity
         return $rtn;
     }
 
-    function calculate_item_charge($currency, $rate = 0)
+    public function calculate_item_charge($currency, $rate = 0)
     {
         return page::money($currency, $rate * $this->get_value("timeSheetItemDuration") * $this->get_value("multiplier"), "%mo");
     }
 
-    function delete()
+    public function delete()
     {
         $timeSheetID = $this->get_value("timeSheetID");
 
@@ -145,14 +143,14 @@ class timeSheetItem extends db_entity
             $ii->select();
             if ($ii->get_value("timeSheetItemID") == $this->get_id()) {
                 $ii->delete();
-            } else if (!$ii->get_value("timeSheetItemID")) {
+            } elseif (!$ii->get_value("timeSheetItemID")) {
                 invoiceEntity::save_invoice_timeSheet($row["invoiceID"], $timeSheetID);  // will update the existing invoice item
             }
         }
         return parent::delete();
     }
 
-    function get_fortnightly_average($personID = false)
+    public function get_fortnightly_average($personID = false)
     {
 
         // Need an array of the past years fortnights
@@ -185,16 +183,16 @@ class timeSheetItem extends db_entity
         }
 
         $rtn = array();
-        list($rows,$rows_dollars) = $this->get_averages($dateTimeSheetItem, $personID);
+        list($rows, $rows_dollars) = $this->get_averages($dateTimeSheetItem, $personID);
         foreach ($rows as $id => $avg) {
             $rtn[$id] = $avg / $how_many_fortnights[$id];
-            #echo "<br>".$id." ".$how_many_fortnights[$id];
         }
 
+        // FIXME:: !! -- cjb, 2020-02
         // Convert all the monies into native currency
         foreach ($rows_dollars as $id => $arr) {
             foreach ($arr as $r) {
-                $alex[$id] += exchangeRate::convert($r["currency"], $r["amount"]);
+                $alex[$id] += $r["amount"];
             }
         }
 
@@ -206,7 +204,7 @@ class timeSheetItem extends db_entity
         return array($rtn,$rtn_dollars);
     }
 
-    function is_owner()
+    public function is_owner()
     {
         if ($this->get_value("timeSheetID")) {
             $timeSheet = new timeSheet();
@@ -223,8 +221,8 @@ class timeSheetItem extends db_entity
         if ($filter["timeSheetID"] && is_array($filter["timeSheetID"])) {
             $timeSheetIDs = $filter["timeSheetID"];
 
-            // Else
-        } else if ($filter["timeSheetID"] && is_numeric($filter["timeSheetID"])) {
+        // Else
+        } elseif ($filter["timeSheetID"] && is_numeric($filter["timeSheetID"])) {
             $timeSheetIDs[] = $filter["timeSheetID"];
         }
 
@@ -318,7 +316,7 @@ class timeSheetItem extends db_entity
         }
     }
 
-    function get_list_vars()
+    public function get_list_vars()
     {
         return array("return"      => "[MANDATORY] eg: array | html | dropdown_options",
                      "timeSheetID" => "Show items for a particular time sheet",
@@ -329,21 +327,8 @@ class timeSheetItem extends db_entity
                      "comment"     => "Show items that have a comment like eg: *uick brown fox jump*");
     }
 
-    #function get_averages_past_fortnight($personID=false) {
-    # $dateTimeSheetItem = date("Y-m-d",mktime(0,0,0,date("m"),date("d")-14, date("Y")));
-    // DON'T ERASE THIS!! This way will divide by the number of individual days worked
-    #$rows = $this->get_averages($dateTimeSheetItem, $personID, "/ COUNT(DISTINCT dateTimeSheetItem)");
-
-    // This will just get the sum of hours worked for the last two weeks
-    #$rows = $this->get_averages($dateTimeSheetItem, $personID);
-
-    #return $rows;
-    #}
-
-
-    function get_averages($dateTimeSheetItem, $personID = false, $divisor = "", $endDate = null)
+    public function get_averages($dateTimeSheetItem, $personID = false, $divisor = "", $endDate = null)
     {
-
         $personID and $personID_sql = prepare(" AND timeSheetItem.personID = %d", $personID);
         $endDate and $endDate_sql = prepare(" AND timeSheetItem.dateTimeSheetItem <= '%s'", $endDate);
 
@@ -387,14 +372,14 @@ class timeSheetItem extends db_entity
         return array($rows,$rows_dollars);
     }
 
-    function get_timeSheetItemComments($taskID = "", $starred = false)
+    public function get_timeSheetItemComments($taskID = "", $starred = false)
     {
         // Init
         $rows = array();
 
         if ($taskID) {
             $where = prepare("timeSheetItem.taskID = %d", $taskID);
-        } else if ($starred) {
+        } elseif ($starred) {
             $current_user = &singleton("current_user");
             $timeSheetItemIDs = array();
             foreach ((array)$current_user->prefs["stars"]["timeSheetItem"] as $k => $v) {
@@ -432,7 +417,7 @@ class timeSheetItem extends db_entity
     }
 
 
-    function get_total_hours_worked_per_day($personID, $start = null, $end = null)
+    public function get_total_hours_worked_per_day($personID, $start = null, $end = null)
     {
         $current_user =& singleton("current_user");
 
@@ -458,8 +443,8 @@ class timeSheetItem extends db_entity
             $info[$row["dateTimeSheetItem"]] = $row;
         }
 
-        list($sy,$sm,$sd) = explode("-", $start);
-        list($ey,$em,$ed) = explode("-", $end);
+        list($sy, $sm, $sd) = explode("-", $start);
+        list($ey, $em, $ed) = explode("-", $end);
 
         $x = 0;
         while (mktime(0, 0, 0, $sm, $sd+$x, $sy)<=mktime(0, 0, 0, $em, $ed, $ey)) {
@@ -471,7 +456,7 @@ class timeSheetItem extends db_entity
         return $points;
     }
 
-    function get_total_hours_worked_per_month($personID, $start = null, $end = null)
+    public function get_total_hours_worked_per_month($personID, $start = null, $end = null)
     {
         $current_user =& singleton("current_user");
 

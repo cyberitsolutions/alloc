@@ -37,7 +37,7 @@ class token extends db_entity
                                 "tokenCreatedDate");
 
 
-    function set_hash($hash, $validate = true)
+    public function set_hash($hash, $validate = true)
     {
         $validate and $extra = " AND tokenActive = 1";
         $validate and $extra.= " AND (tokenUsed < tokenMaxUsed OR tokenMaxUsed IS NULL OR tokenMaxUsed = 0)";
@@ -58,7 +58,7 @@ class token extends db_entity
         }
     }
 
-    function execute()
+    public function execute()
     {
         if ($this->get_id()) {
             if ($this->get_value("tokenActionID")) {
@@ -83,21 +83,21 @@ class token extends db_entity
         return array(false,false);
     }
 
-    function increment_tokenUsed()
+    public function increment_tokenUsed()
     {
         $q = prepare("UPDATE token SET tokenUsed = coalesce(tokenUsed,0) + 1 WHERE tokenID = %d", $this->get_id());
         $db = new db_alloc();
         $db->query($q);
     }
 
-    function decrement_tokenUsed()
+    public function decrement_tokenUsed()
     {
         $q = prepare("UPDATE token SET tokenUsed = coalesce(tokenUsed,0) - 1 WHERE tokenID = %d", $this->get_id());
         $db = new db_alloc();
         $db->query($q);
     }
 
-    function get_hash_str()
+    public function get_hash_str()
     {
         list($usec, $sec) = explode(' ', microtime());
         $seed = $sec + ($usec * 100000);
@@ -108,7 +108,7 @@ class token extends db_entity
         return $randval;
     }
 
-    function generate_hash()
+    public function generate_hash()
     {
         // Make an eight character base 36 garbage fds3ys79 / also check that we haven't used this ID already
         $randval = $this->get_hash_str();
@@ -119,7 +119,7 @@ class token extends db_entity
         return $randval;
     }
 
-    function select_token_by_entity_and_action($entity, $entityID, $action)
+    public function select_token_by_entity_and_action($entity, $entityID, $action)
     {
         $q = prepare("SELECT token.*, tokenAction.*
                         FROM token
@@ -137,7 +137,7 @@ class token extends db_entity
         }
     }
 
-    function get_list_filter($filter = array())
+    public function get_list_filter($filter = array())
     {
         $filter["tokenEntity"]   and $sql[] = sprintf_implode("token.tokenEntity = '%s'", $filter["tokenEntity"]);
         $filter["tokenEntityID"] and $sql[] = sprintf_implode("token.tokenEntityID = %d", $filter["tokenEntityID"]);

@@ -81,13 +81,6 @@ function show_client_contacts()
 
         $clientContact->get_value('clientContactCountry') and $col1[] = $clientContact->get_value('clientContactCountry', DST_HTML_DISPLAY);
 
-
-        // find some gpl icons!
-        #$ico_e = "<img src=\"".$TPL["url_alloc_images"]."/icon_email.gif\">";
-        #$ico_p = "<img src=\"".$TPL["url_alloc_images"]."/icon_phone.gif\">";
-        #$ico_m = "<img src=\"".$TPL["url_alloc_images"]."/icon_mobile.gif\">";
-        #$ico_f = "<img src=\"".$TPL["url_alloc_images"]."/icon_fax.gif\">";
-
         $ico_e = "E: ";
         $ico_p = "P: ";
         $ico_m = "M: ";
@@ -160,7 +153,7 @@ function show_client_contacts()
         if ($clientContact->get_value("clientContactActive")) {
             $TPL["clientContactActive_checked"] = " checked";
         }
-    } else if ($rtn) {
+    } elseif ($rtn) {
         $TPL["class_new_client_contact"] = "hidden";
     }
 
@@ -251,10 +244,10 @@ if ($_POST["save"]) {
         $clientID = $client->get_id();
         $client->set_values("client_");
     }
-} else if ($_POST["save_attachment"]) {
+} elseif ($_POST["save_attachment"]) {
     move_attachment("client", $clientID);
     alloc_redirect($TPL["url_alloc_client"]."clientID=".$clientID."&sbs_link=attachments");
-} else if ($_GET["get_vcard"]) {
+} elseif ($_GET["get_vcard"]) {
     $clientContact = new clientContact();
     $clientContact->set_id($_GET["clientContactID"]);
     $clientContact->select();
@@ -291,7 +284,6 @@ if ($_POST["clientContact_save"] || $_POST["clientContact_delete"]) {
     $clientContact->read_globals();
 
     if ($_POST["clientContact_save"]) {
-        #$clientContact->set_value('clientID', $_POST["clientID"]);
         $clientContact->save();
     }
 

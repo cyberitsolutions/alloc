@@ -80,8 +80,8 @@ if ($_POST["mass_update"]) {
                 $task->updateSearchIndexLater = true;
                 $task->save();
 
-                // All other cases are generic and can be handled by a single clause
-            } else if ($_POST["update_action"] && in_array($_POST["update_action"], $allowed_auto_fields)) {
+            // All other cases are generic and can be handled by a single clause
+            } elseif ($_POST["update_action"] && in_array($_POST["update_action"], $allowed_auto_fields)) {
                 $task->set_value($_POST["update_action"], $_POST[$_POST["update_action"]]);
                 $task->updateSearchIndexLater = true;
                 $task->save();

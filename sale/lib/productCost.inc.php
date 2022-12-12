@@ -35,7 +35,7 @@ class productCost extends db_entity
                                 "tax",
                                 "productCostActive");
 
-    function validate()
+    public function validate()
     {
         $this->get_value("productID")    or $err[] = "Missing a Product.";
         $this->get_value("tfID")         or $err[] = "Missing a Destination TF.";
@@ -43,7 +43,7 @@ class productCost extends db_entity
         return parent::validate($err);
     }
 
-    function delete()
+    public function delete()
     {
         if ($this->get_id()) {
             $this->set_value("productCostActive", 0);

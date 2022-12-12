@@ -5,7 +5,7 @@ FROM debian:buster-slim
 RUN apt-get update && apt-get install --no-install-recommends -y \
     apache2 \
     php \
-    php-mysql \
+    php-pdo-mysql \
     php-mbstring \
     php-gd php-xml \
     mariadb-server \
@@ -24,14 +24,13 @@ RUN sed -i -e 's/character-set-server \+= utf8mb4/character-set-server = utf8/' 
 
 ADD . /var/www/html/
 WORKDIR /var/www/html/
-RUN cd /var/www/html/; make patches; make css
+
 RUN mkdir -p /var/local/alloc/; chown www-data /var/local/alloc/
+RUN cd /var/www/html/; make patches; make cache
 
 RUN echo '\
 UPDATE config SET value = "USD" WHERE name = "currency"; \n\
 UPDATE currencyType SET currencyTypeActive = true, currencyTypeSeq = 1 WHERE currencyTypeID = "USD"; \n\
-DELETE FROM exchangeRate; \n\
-INSERT INTO exchangeRate (exchangeRateCreatedDate,exchangeRateCreatedTime,fromCurrency,toCurrency,exchangeRate) VALUES ("2020-03-23","2020-03-23 01:07:06","USD","USD",1); \n\
 UPDATE config SET value = "http://localhost/" WHERE name = "allocURL"; \n\
 UPDATE person SET password = "$2y$10$pyjwF/RYHZDMGgt19s6u8OUBWUAKyq7v9p1Ov.1Y5R/FvDKlcheWO" WHERE personID = 1; \n\
 UPDATE person SET emailAddress = "test@example.com" WHERE personID = 1; \n\
@@ -66,5 +65,7 @@ done
 
 # follow the apache error log
 EXPOSE 80
-ADD start.sh /
-CMD ["/bin/bash", "/start.sh"]
+CMD ["/bin/bash", "-c", "set -euxo pipefail && \
+        /usr/sbin/apachectl start && \
+        /etc/init.d/mysql start && \
+        tail -f /var/log/apache2/error.log"]

@@ -55,23 +55,23 @@ if ($sessID) {
         $n = count($parameters);
         if ($n == 9) {
             echo alloc_json_encode($services->$method($a[0], $a[1], $a[2], $a[3], $a[4], $a[5], $a[6], $a[7], $a[8]));
-        } else if ($n == 8) {
+        } elseif ($n == 8) {
             echo alloc_json_encode($services->$method($a[0], $a[1], $a[2], $a[3], $a[4], $a[5], $a[6], $a[7]));
-        } else if ($n == 7) {
+        } elseif ($n == 7) {
             echo alloc_json_encode($services->$method($a[0], $a[1], $a[2], $a[3], $a[4], $a[5], $a[6]));
-        } else if ($n == 6) {
+        } elseif ($n == 6) {
             echo alloc_json_encode($services->$method($a[0], $a[1], $a[2], $a[3], $a[4], $a[5]));
-        } else if ($n == 5) {
+        } elseif ($n == 5) {
             echo alloc_json_encode($services->$method($a[0], $a[1], $a[2], $a[3], $a[4]));
-        } else if ($n == 4) {
+        } elseif ($n == 4) {
             echo alloc_json_encode($services->$method($a[0], $a[1], $a[2], $a[3]));
-        } else if ($n == 3) {
+        } elseif ($n == 3) {
             echo alloc_json_encode($services->$method($a[0], $a[1], $a[2]));
-        } else if ($n == 2) {
+        } elseif ($n == 2) {
             echo alloc_json_encode($services->$method($a[0], $a[1]));
-        } else if ($n == 1) {
+        } elseif ($n == 1) {
             echo alloc_json_encode($services->$method($a[0]));
-        } else if ($n == 0) {
+        } elseif ($n == 0) {
             echo alloc_json_encode($services->$method());
         }
     }

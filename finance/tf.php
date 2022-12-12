@@ -118,10 +118,10 @@ if ($_POST["person_save"] || $_POST["person_delete"]) {
     $tfPerson->read_globals("person_");
     if (!$_POST["person_personID"]) {
         alloc_error("Please select a person from the dropdown list.");
-    } else if ($_POST["person_save"]) {
+    } elseif ($_POST["person_save"]) {
         $tfPerson->save();
         $TPL["message_good"][] = "Person added to TF.";
-    } else if ($_POST["person_delete"]) {
+    } elseif ($_POST["person_delete"]) {
         $tfPerson->delete();
     }
 }

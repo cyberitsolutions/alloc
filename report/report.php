@@ -175,7 +175,7 @@ if ($_POST["do_step_2"]) {
 
     if ($_POST["field_quotes"] == "single") {
         $s_q_sel = " selected";
-    } else if ($_POST["field_quotes"] == "double") {
+    } elseif ($_POST["field_quotes"] == "double") {
         $d_q_sel = " selected";
     }
 
@@ -296,7 +296,7 @@ if ($_POST["do_step_3"]) {
                     $person->select();
 
                     $result = $person->get_name(array("format"=>"nick"));
-                } else if (stripos("tfID", $field) !== false) {
+                } elseif (stripos("tfID", $field) !== false) {
                     $result = tf::get_name($db->f($field));
                 } else {
                     $result = $db->f($field);

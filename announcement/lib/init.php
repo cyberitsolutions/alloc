@@ -23,7 +23,7 @@
 
 class announcement_module extends module
 {
-    var $module = "announcement";
-    var $db_entities = array("announcement");
-    var $home_items = array("announcements_home_item");
+    public $module = "announcement";
+    public $db_entities = array("announcement");
+    public $home_items = array("announcements_home_item");
 }

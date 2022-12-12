@@ -33,7 +33,7 @@ class tf extends db_entity
                                 "quickenAccount",
                                 "tfActive");
 
-    function get_balance($where = array(), $debug = "")
+    public function get_balance($where = array(), $debug = "")
     {
         $current_user = &singleton("current_user");
 
@@ -47,7 +47,7 @@ class tf extends db_entity
         // Get belance
         $db = new db_alloc();
         $query = prepare(
-            "SELECT sum( if(fromTfID=%d,-amount,amount) * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance
+            "SELECT sum( if(fromTfID=%d,-amount,amount) * pow(10,-currencyType.numberToBasic) ) AS balance
                FROM transaction
           LEFT JOIN currencyType ON transaction.currencyTypeID = currencyType.currencyTypeID
               WHERE (tfID = %d or fromTfID = %d) ",
@@ -66,13 +66,12 @@ class tf extends db_entity
             $query.= " AND ".$column_name.$op." '".db_esc($value)."'";
         }
 
-        #echo "<br>".$debug." q: ".$query;
         $db->query($query);
         $db->next_record() || alloc_error("TF $tfID not found in tf::get_balance");
         return $db->f("balance");
     }
 
-    function is_owner($person = "")
+    public function is_owner($person = "")
     {
         $current_user = &singleton("current_user");
         static $owners;
@@ -92,7 +91,7 @@ class tf extends db_entity
         return in_array($this->get_id(), (array)$owners[$person->get_id()]);
     }
 
-    function get_tfs_for_person($personID)
+    public function get_tfs_for_person($personID)
     {
         $query = prepare("SELECT * FROM tfPerson WHERE personID=%d", $personID);
         $db = new db_alloc();
@@ -103,7 +102,7 @@ class tf extends db_entity
         return $owners;
     }
 
-    function get_nav_links()
+    public function get_nav_links()
     {
         global $TPL;
         $current_user = &singleton("current_user");
@@ -123,7 +122,7 @@ class tf extends db_entity
         return $nav_links;
     }
 
-    function get_link()
+    public function get_link()
     {
         $current_user = &singleton("current_user");
         global $TPL;
@@ -134,7 +133,7 @@ class tf extends db_entity
         }
     }
 
-    function get_name($tfID = false)
+    public function get_name($tfID = false)
     {
         if ($tfID) {
             $db = new db_alloc();
@@ -144,7 +143,7 @@ class tf extends db_entity
         }
     }
 
-    function get_tfID($name)
+    public function get_tfID($name)
     {
         if ($name) {
             $db = new db_alloc();
@@ -203,7 +202,7 @@ class tf extends db_entity
     {
         $current_user = &singleton("current_user");
 
-        list($filter1,$filter2) = tf::get_list_filter($_FORM);
+        list($filter1, $filter2) = tf::get_list_filter($_FORM);
 
         if (is_array($filter1) && count($filter1)) {
             $f = " AND ".implode(" AND ", $filter1);
@@ -214,7 +213,7 @@ class tf extends db_entity
 
         $db = new db_alloc();
         $q = prepare("SELECT transaction.tfID as id, tf.tfName, transactionID, transaction.status,
-                             sum(amount * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance
+                             sum(amount * pow(10,-currencyType.numberToBasic)) AS balance
                         FROM transaction
                    LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
                    LEFT JOIN tf on transaction.tfID = tf.tfID
@@ -224,14 +223,14 @@ class tf extends db_entity
         while ($row = $db->row()) {
             if ($row["status"] == "approved") {
                 $adds[$row["id"]] = $row["balance"];
-            } else if ($row["status"] == "pending") {
+            } elseif ($row["status"] == "pending") {
                 $pending_adds[$row["id"]] = $row["balance"];
             }
         }
 
 
         $q = prepare("SELECT transaction.fromTfID as id, tf.tfName, transactionID, transaction.status,
-                             sum(amount * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance
+                             sum(amount * pow(10,-currencyType.numberToBasic)) AS balance
                         FROM transaction
                    LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
                    LEFT JOIN tf on transaction.fromTfID = tf.tfID
@@ -241,7 +240,7 @@ class tf extends db_entity
         while ($row = $db->row()) {
             if ($row["status"] == "approved") {
                 $subs[$row["id"]] = $row["balance"];
-            } else if ($row["status"] == "pending") {
+            } elseif ($row["status"] == "pending") {
                 $pending_subs[$row["id"]] = $row["balance"];
             }
         }

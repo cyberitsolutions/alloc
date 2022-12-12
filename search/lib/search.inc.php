@@ -24,8 +24,7 @@ define("PERM_PROJECT_READ_TASK_DETAIL", 256);
 
 class search
 {
-
-    function by_file($file, $needle)
+    public function by_file($file, $needle)
     {
         if (file_exists($file) && is_readable($file) && !is_dir($file)) {
             $rtn = array();
@@ -41,9 +40,8 @@ class search
         return $rtn;
     }
 
-    function get_trimmed_description($haystack, $needle, $category)
+    public function get_trimmed_description($haystack, $needle, $category)
     {
-
         $position = strpos(strtolower($haystack), strtolower($needle));
         if ($position !== false) {
             $prefix = "...";
@@ -75,7 +73,7 @@ class search
         }
     }
 
-    function get_recursive_dir_list($dir)
+    public function get_recursive_dir_list($dir)
     {
         $rtn = array();
         $dir = realpath($dir).DIRECTORY_SEPARATOR;
@@ -85,7 +83,7 @@ class search
             if (!in_array($file, $dont_search_these_dirs)) {
                 if (is_file($dir.$file) && !is_dir($dir.$file)) {
                     $rtn[] = $dir.$file;
-                } else if (is_dir($dir.$file)) {
+                } elseif (is_dir($dir.$file)) {
                     $rtn = array_merge((array)$rtn, (array)search::get_recursive_dir_list($dir.$file));
                 }
             }

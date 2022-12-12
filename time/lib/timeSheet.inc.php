@@ -47,7 +47,7 @@ class timeSheet extends db_entity
     public $permissions = array(PERM_TIME_APPROVE_TIMESHEETS => "approve",
                                 PERM_TIME_INVOICE_TIMESHEETS => "invoice");
 
-    function is_owner()
+    public function is_owner()
     {
         $current_user = &singleton("current_user");
 
@@ -84,14 +84,14 @@ class timeSheet extends db_entity
         }
     }
 
-    function save()
+    public function save()
     {
         $rtn = parent::save();
         $this->update_related_invoices();
         return $rtn;
     }
 
-    function update_related_invoices()
+    public function update_related_invoices()
     {
         if ($rows = invoiceEntity::get("timeSheet", $this->get_id())) {
             foreach ($rows as $row) {
@@ -114,13 +114,13 @@ class timeSheet extends db_entity
                      "rejected" => "Rejected");
     }
 
-    function get_timeSheet_status()
+    public function get_timeSheet_status()
     {
         $statii = timeSheet::get_timeSheet_statii();
         return $statii[$this->get_value("status")];
     }
 
-    function load_pay_info()
+    public function load_pay_info()
     {
 
         /***************************************************************************
@@ -158,7 +158,7 @@ class timeSheet extends db_entity
         $units = array_reverse($timeUnit->get_assoc_array("timeUnitID", "timeUnitLabelA"), true);
 
         if ($rates[$this->get_value("projectID")][$this->get_value("personID")]) {
-            list($this->pay_info["project_rate"],$this->pay_info["project_rateUnitID"]) = $rates[$this->get_value("projectID")][$this->get_value("personID")];
+            list($this->pay_info["project_rate"], $this->pay_info["project_rateUnitID"]) = $rates[$this->get_value("projectID")][$this->get_value("personID")];
         } else {
             // Get rate for person for this particular project
             $db->query(
@@ -238,14 +238,14 @@ class timeSheet extends db_entity
         $this->pay_info["currency"] = page::money($currency, '', "%S");
     }
 
-    function destroyTransactions()
+    public function destroyTransactions()
     {
         $db = new db_alloc();
         $query = prepare("DELETE FROM transaction WHERE timeSheetID = %d AND transactionType != 'invoice'", $this->get_id());
         $db->query($query);
     }
 
-    function createTransactions($status = "pending")
+    public function createTransactions($status = "pending")
     {
 
         // So this will only create transaction if:
@@ -263,11 +263,11 @@ class timeSheet extends db_entity
         if ($this->get_value("status") != "invoiced") {
             return "ERROR: Status of the timesheet must be 'invoiced' to Create Transactions.
               The status is currently: ".$this->get_value("status");
-        } else if ($this->get_value("recipient_tfID") == "") {
+        } elseif ($this->get_value("recipient_tfID") == "") {
             return "ERROR: There is no recipient Tagged Fund to credit for this timesheet.
               Go to Tools -> New Tagged Fund, add a new TF and add the owner. Then go
               to People -> Select the user and set their Preferred Payment TF.";
-        } else if (!$cost_centre || $cost_centre == 0) {
+        } elseif (!$cost_centre || $cost_centre == 0) {
             return "ERROR: There is no cost centre associated with the project.";
         }
 
@@ -288,9 +288,9 @@ class timeSheet extends db_entity
             $product = "Timesheet #".$this->get_id()." for ".$projectName." (".$this->pay_info["summary_unit_totals"].")";
             $rtn[$product] = $this->createTransaction($product, $this->pay_info["total_dollars"], $recipient_tfID, "timesheet", $status);
 
-            // 2. Payment Insurance
+        // 2. Payment Insurance
             // removed
-        } else if ($_POST["create_transactions_default"]) {
+        } elseif ($_POST["create_transactions_default"]) {
             /*  This was previously named "Simple" transactions. Ho ho.
                 On the Project page we care about these following variables:
                 - Client Billed At $amount eg: $121
@@ -324,8 +324,8 @@ class timeSheet extends db_entity
                     $amount = $this->pay_info["total_customerBilledDollars_minus_gst"]*($db->f("commissionPercent")/100);
                     $rtn[$product] = $this->createTransaction($product, $amount, $db->f("tfID"), "commission", $status);
 
-                    // Suck up the rest of funds if it is a special zero % commission
-                } else if ($db->f("commissionPercent") == 0) {
+                // Suck up the rest of funds if it is a special zero % commission
+                } elseif ($db->f("commissionPercent") == 0) {
                     $amount = $this->pay_info["total_customerBilledDollars_minus_gst"] - $this->get_amount_so_far();
                     $amount < 0 and $amount = 0;
 
@@ -359,9 +359,9 @@ class timeSheet extends db_entity
         return $rtnmsg;
     }
 
-    function get_amount_so_far($include_tax = false)
+    public function get_amount_so_far($include_tax = false)
     {
-        $q = prepare("SELECT SUM(amount * pow(10,-currencyType.numberToBasic) * exchangeRate) AS balance
+        $q = prepare("SELECT SUM(amount * pow(10,-currencyType.numberToBasic)) AS balance
                         FROM transaction
                    LEFT JOIN currencyType ON currencyType.currencyTypeID = transaction.currencyTypeID
                        WHERE timeSheetID = %d AND transactionType != 'invoice'
@@ -372,9 +372,8 @@ class timeSheet extends db_entity
         return $r['balance'];
     }
 
-    function createTransaction($product, $amount, $tfID, $transactionType, $status = "", $fromTfID = false)
+    public function createTransaction($product, $amount, $tfID, $transactionType, $status = "", $fromTfID = false)
     {
-
         if ($amount == 0) {
             return 1;
         }
@@ -400,9 +399,8 @@ class timeSheet extends db_entity
         }
     }
 
-    function shootEmail($email)
+    public function shootEmail($email)
     {
-
         $addr = $email["to"];
         $msg = $email["body"];
         $sub = $email["subject"];
@@ -412,30 +410,25 @@ class timeSheet extends db_entity
         // New email object wrapper takes care of logging etc.
         $email = new email_send($addr, $sub, $msg, $type);
 
-        // REMOVE ME!!
-        #$email->ignore_no_email_urls = true;
-
-
         if ($dummy) {
             return "Elected not to send email.";
-        } else if (!$email->is_valid_url()) {
+        } elseif (!$email->is_valid_url()) {
             return "Almost sent email to: ".$email->to_address;
-        } else if (!$email->to_address) {
+        } elseif (!$email->to_address) {
             return "Could not send email, invalid email address: ".$email->to_address;
-        } else if ($email->send()) {
+        } elseif ($email->send()) {
             return "Sent email to: ".$email->to_address;
         } else {
             return "Problem sending email to: ".$email->to_address;
         }
     }
 
-    function get_task_list_dropdown($status, $timeSheetID, $taskID = "")
+    public function get_task_list_dropdown($status, $timeSheetID, $taskID = "")
     {
-
         if (is_object($this)) {
             $personID = $this->get_value('personID');
             $projectID = $this->get_value('projectID');
-        } else if ($timeSheetID) {
+        } elseif ($timeSheetID) {
             $t = new timeSheet();
             $t->set_id($timeSheetID);
             $t->select();
@@ -556,7 +549,8 @@ class timeSheet extends db_entity
             $row["currencyTypeID"] = $t->get_value("currencyTypeID");
             $row["amount"] = $t->pay_info["total_dollars"];
             $amount_tallies[] = array("amount"=>$row["amount"],"currency"=>$row["currencyTypeID"]);
-            $extra["amountTotal"] += exchangeRate::convert($row["currencyTypeID"], $row["amount"]);
+            // FIXME: remove unneeded variable amountTotal. -- cjb, 2020-02
+            $extra["amountTotal"] += $row["amount"];
             $extra["totalHours"] += $t->pay_info["total_duration_hours"];
             $row["totalHours"] += $t->pay_info["total_duration_hours"];
             $row["duration"] = $t->pay_info["summary_unit_totals"];
@@ -573,11 +567,12 @@ class timeSheet extends db_entity
             $row["person"] = $people_array[$row["personID"]]["name"];
             $row["status"] = $status_array[$row["status"]];
             $row["customerBilledDollars"] = $t->pay_info["total_customerBilledDollars"];
-            $extra["customerBilledDollarsTotal"] += exchangeRate::convert($row["currencyTypeID"], $t->pay_info["total_customerBilledDollars"]);
+            // FIXME: ?? -- cjb, 2020-02
+            $extra["customerBilledDollarsTotal"] += $t->pay_info["total_customerBilledDollars"];
             $billed_tallies[] = array("amount"=>$row["customerBilledDollars"],"currency"=>$row["currencyTypeID"]);
 
             if ($_FORM["showFinances"]) {
-                list($pos,$neg) = $t->get_transaction_totals();
+                list($pos, $neg) = $t->get_transaction_totals();
                 $row["transactionsPos"] = page::money_print($pos);
                 $row["transactionsNeg"] = page::money_print($neg);
                 foreach ((array)$pos as $v) {
@@ -606,7 +601,7 @@ class timeSheet extends db_entity
         }
     }
 
-    function get_list_html($rows = array(), $extra = array())
+    public function get_list_html($rows = array(), $extra = array())
     {
         global $TPL;
         $TPL["timeSheetListRows"] = $rows;
@@ -614,9 +609,8 @@ class timeSheet extends db_entity
         include_template(dirname(__FILE__)."/../templates/timeSheetListS.tpl");
     }
 
-    function get_transaction_totals()
+    public function get_transaction_totals()
     {
-
         $db = new db_alloc();
         $q = prepare("SELECT amount * pow(10,-currencyType.numberToBasic) AS amount,
                              transaction.currencyTypeID as currency
@@ -637,7 +631,7 @@ class timeSheet extends db_entity
         return array($pos,$neg);
     }
 
-    function get_url()
+    public function get_url()
     {
         global $sess;
         $sess or $sess = new session();
@@ -647,7 +641,7 @@ class timeSheet extends db_entity
         if ($sess->Started()) {
             $url = $sess->url(SCRIPT_PATH.$url);
 
-            // This for urls that are emailed
+        // This for urls that are emailed
         } else {
             static $prefix;
             $prefix or $prefix = config::get_config_item("allocURL");
@@ -656,13 +650,13 @@ class timeSheet extends db_entity
         return $url;
     }
 
-    function get_link($text = false)
+    public function get_link($text = false)
     {
         $text or $text = $this->get_id();
         return "<a href=\"".$this->get_url()."\">".$text."</a>";
     }
 
-    function get_list_vars()
+    public function get_list_vars()
     {
         return array("return"               => "[MANDATORY] eg: array | html",
                      "timeSheetID"          => "Time Sheet that has this ID",
@@ -686,7 +680,7 @@ class timeSheet extends db_entity
                      "showAllProjects"      => "Show archived and potential projects");
     }
 
-    function load_form_data($defaults = array())
+    public function load_form_data($defaults = array())
     {
         $current_user = &singleton("current_user");
 
@@ -700,7 +694,7 @@ class timeSheet extends db_entity
                 $_FORM["status"] = "edit";
                 $_FORM["personID"] = $current_user->get_id();
             }
-        } else if ($_FORM["applyFilter"] && is_object($current_user) && !$_FORM["dontSave"]) {
+        } elseif ($_FORM["applyFilter"] && is_object($current_user) && !$_FORM["dontSave"]) {
             $url = $_FORM["url_form_action"];
             unset($_FORM["url_form_action"]);
             $current_user->prefs[$_FORM["form_name"]] = $_FORM;
@@ -710,7 +704,7 @@ class timeSheet extends db_entity
         return $_FORM;
     }
 
-    function load_timeSheet_filter($_FORM)
+    public function load_timeSheet_filter($_FORM)
     {
         $current_user = &singleton("current_user");
 
@@ -755,7 +749,7 @@ class timeSheet extends db_entity
         return $rtn;
     }
 
-    function get_invoice_link()
+    public function get_invoice_link()
     {
         global $TPL;
         $rows = invoiceEntity::get("timeSheet", $this->get_id());
@@ -766,7 +760,7 @@ class timeSheet extends db_entity
         return $str;
     }
 
-    function change_status($direction)
+    public function change_status($direction)
     {
         // access controls are partially disabled for timesheets. Make sure time sheet is really accessible by checking
         // user ID - it's restricted to being NOT NULL in the DB. Not doing this check allows a user to overwrite
@@ -798,14 +792,13 @@ class timeSheet extends db_entity
         $newstatus = $steps[$direction][$status];
         if ($newstatus) {
             $m = $this->{"email_move_status_to_".$newstatus}($direction, $info);
-            //$this->save();
             if (is_array($m)) {
                 return implode("<br>", $m);
             }
         }
     }
 
-    function email_move_status_to_edit($direction, $info)
+    public function email_move_status_to_edit($direction, $info)
     {
         // is possible to move backwards to "edit", from both "manager" and "admin"
         // requires manager or APPROVE_TIMESHEET permission
@@ -843,7 +836,7 @@ EOD;
         return $msg;
     }
 
-    function email_move_status_to_manager($direction, $info)
+    public function email_move_status_to_manager($direction, $info)
     {
         $current_user = &singleton("current_user");
         $project = $this->get_foreign_object("project");
@@ -905,7 +898,7 @@ EOD;
                 $msg[] = $this->shootEmail($email);
             }
             // Can get backwards to "manager" only from "admin"
-        } else if ($direction == "backwards") {
+        } elseif ($direction == "backwards") {
             //admin->manager requires APPROVE_TIMESHEETS
             if (!$this->have_perm(PERM_TIME_INVOICE_TIMESHEETS)) {
                 //no permission, go away
@@ -934,7 +927,7 @@ EOD;
         return $msg;
     }
 
-    function email_move_status_to_admin($direction, $info)
+    public function email_move_status_to_admin($direction, $info)
     {
         $current_user = &singleton("current_user");
         $project = $this->get_foreign_object("project");
@@ -1000,7 +993,7 @@ EOD;
         return $msg;
     }
 
-    function email_move_status_to_invoiced($direction, $info)
+    public function email_move_status_to_invoiced($direction, $info)
     {
         $current_user = &singleton("current_user");
         // Can get forwards to "invoiced" from "admin"
@@ -1018,7 +1011,7 @@ EOD;
         $this->set_value("status", "invoiced");
     }
 
-    function email_move_status_to_finished($direction, $info)
+    public function email_move_status_to_finished($direction, $info)
     {
         if ($direction == "forwards") {
             //requires INVOICE_TIMESHEETS
@@ -1064,7 +1057,7 @@ EOD;
         }
     }
 
-    function pending_transactions_to_approved()
+    public function pending_transactions_to_approved()
     {
         if (!$this->have_perm(PERM_TIME_APPROVE_TIMESHEETS)) {
             //no permission, die
@@ -1076,7 +1069,7 @@ EOD;
         $db->query($q);
     }
 
-    function get_email_vars()
+    public function get_email_vars()
     {
         $current_user = &singleton("current_user");
         static $rtn;
@@ -1099,7 +1092,7 @@ EOD;
         return $rtn;
     }
 
-    function add_timeSheetItem($stuff)
+    public function add_timeSheetItem($stuff)
     {
         $current_user = &singleton("current_user");
 
@@ -1171,7 +1164,7 @@ EOD;
                 $timeSheet->save();
                 $timeSheetID = $timeSheet->get_id();
 
-                // Else use the first timesheet we found
+            // Else use the first timesheet we found
             } else {
                 $timeSheetID = $row["timeSheetID"];
             }
@@ -1219,7 +1212,7 @@ EOD;
         }
     }
 
-    function get_all_parties($projectID = "")
+    public function get_all_parties($projectID = "")
     {
         $db = new db_alloc();
         $interestedPartyOptions = array();
@@ -1258,7 +1251,7 @@ EOD;
         return $interestedPartyOptions;
     }
 
-    function get_amount_allocated($fmt = "%s%mo")
+    public function get_amount_allocated($fmt = "%s%mo")
     {
         // Return total amount used and total amount allocated
         if (is_object($this) && $this->get_id()) {
@@ -1289,12 +1282,12 @@ EOD;
         }
     }
 
-    function has_attachment_permission()
+    public function has_attachment_permission()
     {
         return $this->is_owner();
     }
 
-    function get_name($_FORM = array())
+    public function get_name($_FORM = array())
     {
         $project = new project();
         $project->set_id($this->get_value("projectID"));
@@ -1303,7 +1296,7 @@ EOD;
         return "Time Sheet for ".$project->get_name($_FORM)." by ".$p[$this->get_value("personID")]["name"];
     }
 
-    function update_search_index_doc(&$index)
+    public function update_search_index_doc(&$index)
     {
         $p =& get_cached_table("person");
         $personID = $this->get_value("personID");
@@ -1352,7 +1345,7 @@ EOD;
         $index->addDocument($doc);
     }
 
-    function can_edit_rate()
+    public function can_edit_rate()
     {
         $current_user = &singleton("current_user");
         $db = new db_alloc();
@@ -1360,7 +1353,7 @@ EOD;
         return $row["allow"];
     }
 
-    function get_project_id()
+    public function get_project_id()
     {
         return $this->get_value("projectID");
     }

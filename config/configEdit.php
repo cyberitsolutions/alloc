@@ -53,7 +53,7 @@ if ($_POST["save"]) {
         $config->set_value("value", serialize($arr));
         $config->save();
     }
-} else if ($_POST["delete"]) {
+} elseif ($_POST["delete"]) {
     $arr = config::get_config_item($configName);
     if ($configType == "people") {
         unset($arr[array_search($_POST["value"], $arr)]);
@@ -67,7 +67,7 @@ if ($_POST["save"]) {
 
 if (file_exists("templates/configEdit_".$configName.".tpl")) {
     include_template("templates/configEdit_".$configName.".tpl");
-} else if (file_exists("templates/configEdit_".$configType.".tpl")) {
+} elseif (file_exists("templates/configEdit_".$configType.".tpl")) {
     include_template("templates/configEdit_".$configType.".tpl");
 } else {
     include_template("templates/configEdit.tpl");

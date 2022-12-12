@@ -45,13 +45,13 @@ class invoice extends db_entity
                                 "invoiceModifiedTime",
                                 "invoiceModifiedUser");
 
-    function save()
+    public function save()
     {
         if (!$this->get_value("currencyTypeID")) {
             if ($this->get_value("projectID")) {
                 $project = $this->get_foreign_object("project");
                 $currencyTypeID = $project->get_value("currencyTypeID");
-            } else if (config::get_config_item("currency")) {
+            } elseif (config::get_config_item("currency")) {
                 $currencyTypeID = config::get_config_item("currency");
             }
 
@@ -67,7 +67,7 @@ class invoice extends db_entity
         return parent::save();
     }
 
-    function delete()
+    public function delete()
     {
         $db = new db_alloc();
         $q = prepare("DELETE FROM invoiceEntity WHERE invoiceID = %d", $this->get_id());
@@ -75,7 +75,7 @@ class invoice extends db_entity
         return parent::delete();
     }
 
-    function get_invoice_statii()
+    public function get_invoice_statii()
     {
         return array("create"    => "Create",
                      "edit"      => "Add Items",
@@ -83,16 +83,15 @@ class invoice extends db_entity
                      "finished"  => "Completed");
     }
 
-    function get_invoice_statii_payment()
+    public function get_invoice_statii_payment()
     {
         return array("pending"    => "Not Paid In Full",
-                     // "partly_paid"=>"Waiting to be Paid"
                      "rejected"   => "Has Rejected Transactions",
                      "fully_paid" => "Paid In Full",
                      "over_paid"  => "Overpaid/Pre-Paid");
     }
 
-    function get_invoice_statii_payment_image($payment_status = false)
+    public function get_invoice_statii_payment_image($payment_status = false)
     {
         global $TPL;
         if ($payment_status) {
@@ -101,7 +100,7 @@ class invoice extends db_entity
         }
     }
 
-    function is_owner($person = "")
+    public function is_owner($person = "")
     {
         $current_user = &singleton("current_user");
 
@@ -122,7 +121,7 @@ class invoice extends db_entity
         return false;
     }
 
-    function get_invoiceItems($invoiceID = "")
+    public function get_invoiceItems($invoiceID = "")
     {
         $invoiceItemIDs = array();
         $id = $invoiceID or $id = $this->get_id();
@@ -135,7 +134,7 @@ class invoice extends db_entity
         return $invoiceItemIDs;
     }
 
-    function get_transactions($invoiceID = "")
+    public function get_transactions($invoiceID = "")
     {
         $transactionIDs = array();
         $id = $invoiceID or $id = $this->get_id();
@@ -148,7 +147,7 @@ class invoice extends db_entity
         return $transactionIDs;
     }
 
-    function get_next_invoiceNum()
+    public function get_next_invoiceNum()
     {
         $q = "SELECT coalesce(max(invoiceNum)+1,1) as newNum FROM invoice";
         $db = new db_alloc();
@@ -157,7 +156,7 @@ class invoice extends db_entity
         return $db->f("newNum");
     }
 
-    function get_invoiceItem_list_for_file($verbose = false)
+    public function get_invoiceItem_list_for_file($verbose = false)
     {
         $currency = $this->get_value("currencyTypeID");
 
@@ -239,7 +238,7 @@ class invoice extends db_entity
         return array($rows,$info);
     }
 
-    function generate_invoice_file($verbose = false, $getfile = false)
+    public function generate_invoice_file($verbose = false, $getfile = false)
     {
         // Build PDF document
         $font1 = ALLOC_MOD_DIR."util/fonts/Helvetica.afm";
@@ -346,7 +345,7 @@ class invoice extends db_entity
 
         $pdf->ezSetY($y -20);
 
-        list($rows,$info) = $this->get_invoiceItem_list_for_file($verbose);
+        list($rows, $info) = $this->get_invoiceItem_list_for_file($verbose);
         $cols2 = array("desc"=>"Description","quantity"=>"Qty","unit"=>"Unit Price","money"=>"Charges","gst"=>$taxName);
         $taxPercent = config::get_config_item("taxPercent");
         if ($taxPercent === '') {
@@ -365,15 +364,6 @@ class invoice extends db_entity
         $pdf->ezSetY($y-20);
         $pdf->ezText(str_replace(array("<br>","<br/>","<br />"), "\n", $footer), 10);
 
-
-        // Add footer
-        #$all = $pdf->openObject();
-        #$pdf->saveState();
-        #$pdf->addText(415,80,12,"<b>".$default_id_label.":</b>".$this->get_value("invoiceNum"));
-        #$pdf->restoreState();
-        #$pdf->closeObject();
-        #$pdf->addObject($all,'all');
-
         if ($getfile) {
             return $pdf->ezOutput();
         } else {
@@ -381,17 +371,17 @@ class invoice extends db_entity
         }
     }
 
-    function has_attachment_permission($person)
+    public function has_attachment_permission($person)
     {
         return $person->have_role("admin");
     }
 
-    function has_attachment_permission_delete($person)
+    public function has_attachment_permission_delete($person)
     {
         return $person->have_role("admin");
     }
 
-    function get_url()
+    public function get_url()
     {
         global $sess;
         $sess or $sess = new session();
@@ -410,18 +400,18 @@ class invoice extends db_entity
         return $url;
     }
 
-    function get_name($_FORM = array())
+    public function get_name($_FORM = array())
     {
         return $this->get_value("invoiceNum");
     }
 
-    function get_invoice_link($_FORM = array())
+    public function get_invoice_link($_FORM = array())
     {
         global $TPL;
         return "<a href=\"".$TPL["url_alloc_invoice"]."invoiceID=".$this->get_id()."\">".$this->get_name($_FORM)."</a>";
     }
 
-    function get_list_filter($filter = array())
+    public function get_list_filter($filter = array())
     {
         $current_user = &singleton("current_user");
         $sql = array();
@@ -476,19 +466,17 @@ class invoice extends db_entity
         return $sql;
     }
 
-    function get_list_filter2($filter = array())
+    public function get_list_filter2($filter = array())
     {
         // Filter for the HAVING clause
         $sql = array();
         if ($filter["invoiceStatusPayment"] == "pending") {
             $sql[] = "(COALESCE(amountPaidApproved,0) < iiAmountSum)";
-        #if ($filter["invoiceStatusPayment"] == "partly_paid") {
-         # $sql[] = "(amountPaidApproved < iiAmountSum)";
-        } else if ($filter["invoiceStatusPayment"] == "rejected") {
+        } elseif ($filter["invoiceStatusPayment"] == "rejected") {
             $sql[] = "(COALESCE(amountPaidRejected,0) > 0)";
-        } else if ($filter["invoiceStatusPayment"] == "fully_paid") {
+        } elseif ($filter["invoiceStatusPayment"] == "fully_paid") {
             $sql[] = "(COALESCE(amountPaidApproved,0) = iiAmountSum)";
-        } else if ($filter["invoiceStatusPayment"] == "over_paid") {
+        } elseif ($filter["invoiceStatusPayment"] == "over_paid") {
             $sql[] = "(COALESCE(amountPaidApproved,0) > iiAmountSum)";
         }
 
@@ -529,7 +517,6 @@ class invoice extends db_entity
             ORDER BY invoiceDateFrom";
 
         $db = new db_alloc();
-        #$db->query("DROP TABLE IF EXISTS invoice_details");
         $db->query($q1);
 
         $q2= "SELECT invoice_details.*
@@ -544,8 +531,8 @@ class invoice extends db_entity
             GROUP BY invoice_details.invoiceID
              $f2_having
             ORDER BY invoiceDateFrom";
-         // Don't do this! It doubles the totals!
-         //LEFT JOIN tfPerson ON tfPerson.tfID = transaction_approved.tfID OR tfPerson.tfID = transaction_pending.tfID OR tfPerson.tfID = transaction_rejected.tfID
+        // Don't do this! It doubles the totals!
+        //LEFT JOIN tfPerson ON tfPerson.tfID = transaction_approved.tfID OR tfPerson.tfID = transaction_pending.tfID OR tfPerson.tfID = transaction_rejected.tfID
 
         $debug and print "<pre>Query1: ".$q1."</pre>";
         $debug and print "<pre>Query2: ".$q2."</pre>";
@@ -566,7 +553,6 @@ class invoice extends db_entity
             $row["amountPaidApproved"] == $row["iiAmountSum"] and $payment_status[] = "fully_paid";
             $row["amountPaidApproved"] > $row["iiAmountSum"] and $payment_status[] = "over_paid";
             $row["amountPaidRejected"] > 0 and $payment_status[] = "rejected";
-            #$row["amountPaidApproved"] > 0 && $row["amountPaidApproved"] < $row["iiAmountSum"] and $payment_status[] = "partly_paid";
             $row["amountPaidApproved"] < $row["iiAmountSum"] and $payment_status[] = "pending";
 
             foreach ((array)$payment_status as $ps) {
@@ -583,9 +569,8 @@ class invoice extends db_entity
         return $rows;
     }
 
-    function get_list_vars()
+    public function get_list_vars()
     {
-
         return array("return"                   => "[MANDATORY] eg: array | html | dropdown_options",
                      "invoiceID"                => "Invoice by ID",
                      "clientID"                 => "Invoices for a particular Client",
@@ -612,7 +597,7 @@ class invoice extends db_entity
                      "showInvoiceStatusPayment" => "Shows the invoices payment status");
     }
 
-    function load_form_data($defaults = array())
+    public function load_form_data($defaults = array())
     {
         $current_user = &singleton("current_user");
 
@@ -626,7 +611,7 @@ class invoice extends db_entity
                 // defaults go here
                 $_FORM["invoiceStatus"] = "edit";
             }
-        } else if ($_FORM["applyFilter"] && is_object($current_user) && !$_FORM["dontSave"]) {
+        } elseif ($_FORM["applyFilter"] && is_object($current_user) && !$_FORM["dontSave"]) {
             $url = $_FORM["url_form_action"];
             unset($_FORM["url_form_action"]);
             $current_user->prefs[$_FORM["form_name"]] = $_FORM;
@@ -636,7 +621,7 @@ class invoice extends db_entity
         return $_FORM;
     }
 
-    function load_invoice_filter($_FORM)
+    public function load_invoice_filter($_FORM)
     {
         global $TPL;
 
@@ -668,7 +653,7 @@ class invoice extends db_entity
         return $rtn;
     }
 
-    function update_invoice_dates($invoiceID)
+    public function update_invoice_dates($invoiceID)
     {
         $db = new db_alloc();
         $db->query(prepare(
@@ -686,7 +671,7 @@ class invoice extends db_entity
         return $invoice->save();
     }
 
-    function close_related_entities()
+    public function close_related_entities()
     {
         $db = new db_alloc();
         $invoiceItemIDs = $this->get_invoiceItems();
@@ -700,17 +685,16 @@ class invoice extends db_entity
             );
             $db->query($q);
             if (!$db->next_record()) {
-                  $invoiceItem = new invoiceItem();
-                  $invoiceItem->set_id($invoiceItemID);
-                  $invoiceItem->select();
-                  $invoiceItem->close_related_entity();
+                $invoiceItem = new invoiceItem();
+                $invoiceItem->set_id($invoiceItemID);
+                $invoiceItem->select();
+                $invoiceItem->close_related_entity();
             }
         }
     }
 
-    function next_status($direction)
+    public function next_status($direction)
     {
-
         $steps["forwards"][""] = "edit";
         $steps["forwards"]["edit"] = "reconcile";
         $steps["forwards"]["reconcile"] = "finished";
@@ -725,7 +709,7 @@ class invoice extends db_entity
         return $newstatus;
     }
 
-    function change_status($direction)
+    public function change_status($direction)
     {
         $newstatus = $this->next_status($direction);
         if ($newstatus) {
@@ -738,17 +722,17 @@ class invoice extends db_entity
         }
     }
 
-    function move_status_to_edit($direction)
+    public function move_status_to_edit($direction)
     {
         $this->set_value("invoiceStatus", "edit");
     }
 
-    function move_status_to_reconcile($direction)
+    public function move_status_to_reconcile($direction)
     {
         $this->set_value("invoiceStatus", "reconcile");
     }
 
-    function move_status_to_finished($direction)
+    public function move_status_to_finished($direction)
     {
         if ($direction == "forwards") {
             $this->close_related_entities();
@@ -756,7 +740,7 @@ class invoice extends db_entity
         $this->set_value("invoiceStatus", "finished");
     }
 
-    function can_move($direction)
+    public function can_move($direction)
     {
         $newstatus = $this->next_status($direction);
         if ($direction == "forwards" && $newstatus == "finished") {
@@ -776,7 +760,7 @@ class invoice extends db_entity
         return true;
     }
 
-    function has_pending_transactions()
+    public function has_pending_transactions()
     {
         $q = prepare("SELECT *
                         FROM transaction
@@ -788,7 +772,7 @@ class invoice extends db_entity
         return $db->next_record();
     }
 
-    function add_timeSheet($timeSheetID = false)
+    public function add_timeSheet($timeSheetID = false)
     {
         if ($timeSheetID) {
             $q = prepare(
@@ -804,12 +788,12 @@ class invoice extends db_entity
             // Add this time sheet to the invoice if the timeSheet hasn't already
             // been added to this invoice
             if (!$db->row()) {
-                  invoiceEntity::save_invoice_timeSheet($this->get_id(), $timeSheetID);
+                invoiceEntity::save_invoice_timeSheet($this->get_id(), $timeSheetID);
             }
         }
     }
 
-    function get_all_parties($projectID = "", $clientID = "")
+    public function get_all_parties($projectID = "", $clientID = "")
     {
         $db = new db_alloc();
         $interestedPartyOptions = array();
@@ -837,7 +821,7 @@ class invoice extends db_entity
         return $interestedPartyOptions;
     }
 
-    function get_list_html($rows = array(), $ops = array())
+    public function get_list_html($rows = array(), $ops = array())
     {
         global $TPL;
         $TPL["invoiceListRows"] = $rows;

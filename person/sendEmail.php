@@ -35,7 +35,6 @@ if (date("D") == "Sat" || date("D") == "Sun") {
 $announcement = person::get_announcements_for_email();
 $db = new db_alloc();
 $db->query("SELECT personID,emailAddress,firstName,surname FROM person WHERE personActive = '1'");
-// AND username='alla'"); // or username=\"ashridah\"");
 
 
 while ($db->next_record()) {
@@ -61,7 +60,7 @@ while ($db->next_record()) {
         $tasks = $person->get_tasks_for_email();
         $msg.= $tasks;
 
-        $subject = commentTemplate::populate_string(config::get_config_item("emailSubject_dailyDigest", ""));
+        $subject = commentTemplate::populate_string(config::get_config_item("emailSubject_dailyDigest", ""), null);
         $to = $person->get_value("emailAddress");
         if ($person->get_value("firstName") && $person->get_value("surname") && $to) {
             $to = $person->get_value("firstName")." ".$person->get_value("surname")." <".$to.">";

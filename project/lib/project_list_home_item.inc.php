@@ -22,14 +22,13 @@
 
 class project_list_home_item extends home_item
 {
-
-    function __construct()
+    public function __construct()
     {
         $this->has_config = true;
         parent::__construct("project_list", "Project List", "project", "projectListH.tpl", "standard", 40);
     }
 
-    function visible()
+    public function visible()
     {
         $current_user = &singleton("current_user");
 
@@ -43,7 +42,7 @@ class project_list_home_item extends home_item
         }
     }
 
-    function render()
+    public function render()
     {
         $current_user = &singleton("current_user");
         global $TPL;

@@ -22,11 +22,10 @@
 
 class command
 {
+    public $commands;
+    public $email_receive;
 
-    var $commands;
-    var $email_receive;
-
-    function get_help($type)
+    public function get_help($type)
     {
         $message = ucwords($type)." fields:";
         $fields = command::get_fields($type);
@@ -36,9 +35,8 @@ class command
         return $message;
     }
 
-    function get_fields($type = "all")
+    public function get_fields($type = "all")
     {
-
         $comment = array(
             "key"   => array("","The comment thread key."),
             "ip"    => array("","Add to a comment's interested parties. Eg: jon,jane@j.com,Hal Comp <hc@hc.com> ... can also remove eg: -jon"),
@@ -98,25 +96,24 @@ class command
         return $types[$type];
     }
 
-    function run_commands($commands = array(), $email_receive = false)
+    public function run_commands($commands = array(), $email_receive = false)
     {
-
         if ($commands["command"] == "edit_timeSheetItem") {
-            list($s,$m) = $this->edit_timeSheetItem($commands);
-        } else if ($commands["command"] == "edit_task") {
-            list($s,$m) = $this->edit_task($commands, $email_receive);
-        } else if ($commands["command"] == "add_comment") {
-            list($s,$m) = $this->add_comment($commands);
-        } else if ($commands["command"] == "edit_reminder") {
-            list($s,$m) = $this->edit_reminder($commands);
+            list($s, $m) = $this->edit_timeSheetItem($commands);
+        } elseif ($commands["command"] == "edit_task") {
+            list($s, $m) = $this->edit_task($commands, $email_receive);
+        } elseif ($commands["command"] == "add_comment") {
+            list($s, $m) = $this->add_comment($commands);
+        } elseif ($commands["command"] == "edit_reminder") {
+            list($s, $m) = $this->edit_reminder($commands);
         }
 
         if ($commands["key"]) {
-            list($s,$m) = $this->add_comment_via_email($commands, $email_receive);
+            list($s, $m) = $this->add_comment_via_email($commands, $email_receive);
         }
 
         if ($commands["time"]) {
-            list($s,$m) = $this->add_time($commands, $email_receive);
+            list($s, $m) = $this->add_time($commands, $email_receive);
         }
 
         if ($s && $m) {
@@ -128,7 +125,7 @@ class command
         return array("status"=>$status,"message"=>$message);
     }
 
-    function edit_task($commands, $email_receive)
+    public function edit_task($commands, $email_receive)
     {
         $task_fields = $this->get_fields("task");
         // Task commands
@@ -261,7 +258,7 @@ class command
                     $message[] = "Task ".$task->get_id()." updated.";
                 }
 
-            // Problems
+                // Problems
             } else {
                 alloc_error("Problem updating task: ".implode("\n", (array)$err));
             }
@@ -269,7 +266,7 @@ class command
         return array($status,$message);
     }
 
-    function edit_timeSheetItem($commands)
+    public function edit_timeSheetItem($commands)
     {
         $item_fields = $this->get_fields("item");
 
@@ -291,7 +288,7 @@ class command
                 if ($k == "unit") {
                     $changes[$k] = "timeSheetItemDurationUnitID";
                     in_array($v, array(1,2,3,4,5)) or $err[] = "Invalid unit. Try a number from 1-5.";
-                } else if ($k == "task") {
+                } elseif ($k == "task") {
                     $changes[$k] = "taskID";
                     $t = new task();
                     $t->set_id($v);
@@ -322,7 +319,7 @@ class command
                 $message[] = "Time sheet item ".$id." deleted.";
 
             // Save timeSheetItem
-            } else if (!$err && $commands["item"] && $timeSheetItem->save()) {
+            } elseif (!$err && $commands["item"] && $timeSheetItem->save()) {
                 $timeSheetItem->select();
                 $str = $this->condense_changes($changes, $timeSheetItem->row());
                 $str and $status[] = "msg";
@@ -334,15 +331,15 @@ class command
                     $message[] = "Time sheet item ".$timeSheetItem->get_id()." updated.";
                 }
 
-            // Problems
-            } else if ($err && $commands["item"]) {
+                // Problems
+            } elseif ($err && $commands["item"]) {
                 alloc_error("Problem updating time sheet item: ".implode("\n", (array)$err));
             }
         }
         return array($status,$message);
     }
 
-    function edit_reminder($commands)
+    public function edit_reminder($commands)
     {
         $id = $commands["reminder"];
         $options = $commands;
@@ -350,7 +347,7 @@ class command
         if ($id and $id != "new") {
             $reminder->set_id($id);
             $reminder->select();
-        } else if ($id == "new") {
+        } elseif ($id == "new") {
             // extra sanity checks, partially filled in reminder isn't much good
             if (!$options['date'] || !$options['subject'] || !$options['recipients']) {
                 $status[] = "err";
@@ -361,10 +358,10 @@ class command
             if ($options['task']) {
                 $reminder->set_value('reminderType', 'task');
                 $reminder->set_value('reminderLinkID', $options['task']);
-            } else if ($options['project']) {
+            } elseif ($options['project']) {
                 $reminder->set_value('reminderType', 'project');
                 $reminder->set_value('reminderLinkID', $options['project']);
-            } else if ($options['client']) {
+            } elseif ($options['client']) {
                 $reminder->set_value('reminderLinkID', $options['client']);
                 $reminder->set_value('reminderType', 'client');
             }
@@ -423,7 +420,7 @@ class command
         return array($status,$message);
     }
 
-    function add_time($commands, $email_receive)
+    public function add_time($commands, $email_receive)
     {
         $current_user = &singleton("current_user");
         if ($commands["time"]) {
@@ -449,7 +446,7 @@ class command
         return array($status,$message);
     }
 
-    function add_comment_via_email($commands, $email_receive)
+    public function add_comment_via_email($commands, $email_receive)
     {
         // If there's Key in the email, then add a comment with the contents of the email.
         $token = new token();
@@ -458,7 +455,7 @@ class command
             $comment = $token->get_value("tokenEntity");
             $commentID = $token->get_value("tokenEntityID");
 
-            list($entity,$method) = $token->execute();
+            list($entity, $method) = $token->execute();
             if (is_object($entity) && $method == "add_comment_from_email") {
                 $c = comment::add_comment_from_email($email_receive, $entity);
 
@@ -474,14 +471,14 @@ class command
                     }
                 }
             }
-        // Bad or missing key, then error
-        } else if ($email_receive) {
+            // Bad or missing key, then error
+        } elseif ($email_receive) {
             alloc_error("Bad or missing key. Unable to process email.");
         }
         return array($status,$message);
     }
 
-    function add_comment($commands)
+    public function add_comment($commands)
     {
         $commentID = comment::add_comment($commands["entity"], $commands["entityID"], $commands["comment_text"]);
 
@@ -495,7 +492,7 @@ class command
         $emailRecipients = array();
         $emailRecipients[] = "interested";
         if (defined("ALLOC_DEFAULT_FROM_ADDRESS") && ALLOC_DEFAULT_FROM_ADDRESS) {
-            list($from_address,$from_name) = parse_email_address(ALLOC_DEFAULT_FROM_ADDRESS);
+            list($from_address, $from_name) = parse_email_address(ALLOC_DEFAULT_FROM_ADDRESS);
             $emailRecipients[] = $from_address;
         }
 
@@ -504,7 +501,7 @@ class command
         return array($status,$message);
     }
 
-    function condense_changes($changes, $fields)
+    public function condense_changes($changes, $fields)
     {
         foreach ((array)$changes as $label => $field) {
             $v = $fields[$field] or $v = $field;

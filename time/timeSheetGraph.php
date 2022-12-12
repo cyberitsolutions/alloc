@@ -43,7 +43,7 @@ $_FORM = timeSheetGraph::load_filter($defaults);
 
 if ($_FORM["groupBy"] == "day") {
     $TPL["chart1"] = timeSheetItem::get_total_hours_worked_per_day($_FORM["personID"], $_FORM["dateFrom"], $_FORM["dateTo"]);
-} else if ($_FORM["groupBy"] == "month") {
+} elseif ($_FORM["groupBy"] == "month") {
     $TPL["chart1"] = timeSheetItem::get_total_hours_worked_per_month($_FORM["personID"], $_FORM["dateFrom"], $_FORM["dateTo"]);
 }
 

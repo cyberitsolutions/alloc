@@ -36,7 +36,7 @@ class expenseForm extends db_entity
                                 "expenseFormFinalised"=>array("empty_to_null"=>false),
                                 "expenseFormComment");
 
-    function is_owner($person = "")
+    public function is_owner($person = "")
     {
         $current_user = &singleton("current_user");
 
@@ -60,7 +60,7 @@ class expenseForm extends db_entity
                 }
             }
 
-        // If no expenseForm ID, then it hasn't been created yet...
+            // If no expenseForm ID, then it hasn't been created yet...
         } else {
             return true;
         }
@@ -79,7 +79,7 @@ class expenseForm extends db_entity
                      "2" => "Paid by company");
     }
 
-    function set_status($status)
+    public function set_status($status)
     {
         // This sets the status of the expense form. Actually, the expense form
         // doesn't have its own status - this sets the status of the transactions on the
@@ -92,7 +92,7 @@ class expenseForm extends db_entity
         }
     }
 
-    function get_status()
+    public function get_status()
     {
         $q = prepare("SELECT status FROM transaction WHERE expenseFormID = %d", $this->get_id());
         $db = new db_alloc();
@@ -108,7 +108,7 @@ class expenseForm extends db_entity
         return $return;
     }
 
-    function delete_transactions($transactionID = "")
+    public function delete_transactions($transactionID = "")
     {
         global $TPL;
 
@@ -121,7 +121,7 @@ class expenseForm extends db_entity
         }
     }
 
-    function get_invoice_link()
+    public function get_invoice_link()
     {
         global $TPL;
         $db = new db_alloc();
@@ -135,9 +135,8 @@ class expenseForm extends db_entity
         }
     }
 
-    function save_to_invoice($invoiceID = false)
+    public function save_to_invoice($invoiceID = false)
     {
-
         if ($this->get_value("clientID")) {
             $invoiceID and $extra = prepare(" AND invoiceID = %d", $invoiceID);
             $client = $this->get_foreign_object("client");
@@ -171,7 +170,7 @@ class expenseForm extends db_entity
         }
     }
 
-    function get_min_date()
+    public function get_min_date()
     {
         $db = new db_alloc();
         $q = prepare("SELECT min(transactionDate) as date FROM transaction WHERE expenseFormID = %d", $this->get_id());
@@ -180,7 +179,7 @@ class expenseForm extends db_entity
         return $db->f('date');
     }
 
-    function get_max_date()
+    public function get_max_date()
     {
         $db = new db_alloc();
         $q = prepare("SELECT max(transactionDate) as date FROM transaction WHERE expenseFormID = %d", $this->get_id());
@@ -189,7 +188,7 @@ class expenseForm extends db_entity
         return $db->f('date');
     }
 
-    function get_url()
+    public function get_url()
     {
         global $sess;
         $sess or $sess = new session();
@@ -208,13 +207,13 @@ class expenseForm extends db_entity
         return $url;
     }
 
-    function get_abs_sum_transactions($id = false)
+    public function get_abs_sum_transactions($id = false)
     {
         if (is_object($this)) {
             $id = $this->get_id();
         }
         $db = new db_alloc();
-        $q = prepare("SELECT sum(amount * pow(10,-currencyType.numberToBasic) * exchangeRate) AS amount
+        $q = prepare("SELECT sum(amount * pow(10,-currencyType.numberToBasic)) AS amount
                         FROM transaction
                    LEFT JOIN currencyType on transaction.currencyTypeID = currencyType.currencyTypeID
                        WHERE expenseFormID = %d", $id);
@@ -281,7 +280,7 @@ class expenseForm extends db_entity
         return (array)$rows;
     }
 
-    function get_pending_repeat_transaction_list()
+    public function get_pending_repeat_transaction_list()
     {
         global $TPL;
         $transactionTypes = transaction::get_transactionTypes();

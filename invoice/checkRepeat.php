@@ -28,9 +28,6 @@ singleton("errors_logged", true);
 singleton("errors_thrown", true);
 singleton("errors_haltdb", false);
 
-
-#$today = $_REQUEST["today"] or $today = date("Y-m-d");
-
 $q = prepare("SELECT invoiceRepeatDate.invoiceRepeatID
                    , invoiceRepeatDate.invoiceDate
                    , invoiceRepeat.invoiceID AS templateInvoiceID
@@ -54,8 +51,6 @@ while ($row = $db->row($id)) {
         singleton("current_user", $current_user);
     }
 
-    #echo "<br>Checking row: ".print_r($row,1);
-
     $invoice = new invoice();
     $invoice->set_id($row["templateInvoiceID"]);
     $invoice->select();
@@ -73,8 +68,6 @@ while ($row = $db->row($id)) {
     $i->set_value("maxAmount", $invoice->get_value("maxAmount"));
     $i->save();
 
-    #echo "<br>Created invoice: ".$i->get_id();
-
     $q = prepare("SELECT * FROM invoiceItem WHERE invoiceID = %d", $invoice->get_id());
     $id2 = $db->query($q);
     while ($item = $db->row($id2)) {
@@ -86,7 +79,6 @@ while ($row = $db->row($id)) {
         $ii->set_value("iiAmount", page::money($ii->currency, $item["iiAmount"], "%mo"));
         $ii->set_value("iiQuantity", $item["iiQuantity"]);
         $ii->save();
-        #echo "<br>Created invoice item: ".$ii->get_id();
     }
 
 

@@ -90,7 +90,7 @@ function get_people_header()
     $query.= " LEFT JOIN skill ON proficiency.skillID=skill.skillID WHERE personActive = 1 ";
     if ($talent) {
         $query.= prepare(" AND skill.skillID=%d", $talent);
-    } else if ($skill_class) {
+    } elseif ($skill_class) {
         $query.= prepare(" AND skill.skillClass='%s'", $skill_class);
     }
     $query.= " GROUP BY username ORDER BY username";

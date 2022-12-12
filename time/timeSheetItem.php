@@ -50,9 +50,9 @@ if (($_POST["timeSheetItem_save"] || $_POST["timeSheetItem_edit"] || $_POST["tim
         $rtn and $TPL["message_good"][] = "Time Sheet Item saved.";
         $_POST["timeSheetItem_taskID"] and $t = "&taskID=".$_POST["timeSheetItem_taskID"];
         alloc_redirect($TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheetID.$t);
-    } else if ($_POST["timeSheetItem_edit"]) {
+    } elseif ($_POST["timeSheetItem_edit"]) {
         alloc_redirect($TPL["url_alloc_timeSheet"]."timeSheetID=".$timeSheetID."&timeSheetItem_edit=true&timeSheetItemID=".$timeSheetItem->get_id());
-    } else if ($_POST["timeSheetItem_delete"]) {
+    } elseif ($_POST["timeSheetItem_delete"]) {
         $timeSheetItem->select();
         $timeSheetItem->delete();
         $TPL["message_good"][] = "Time Sheet Item deleted.";

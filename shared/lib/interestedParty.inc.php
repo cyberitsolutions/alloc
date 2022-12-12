@@ -35,25 +35,25 @@ class interestedParty extends db_entity
                                 "interestedPartyCreatedTime",
                                 "interestedPartyActive");
 
-    function delete()
+    public function delete()
     {
         $this->set_value("interestedPartyActive", 0);
         $this->save();
     }
 
-    function is_owner()
+    public function is_owner()
     {
         $current_user = &singleton("current_user");
         return same_email_address($this->get_value("emailAddress"), $current_user->get_value("emailAddress"));
     }
 
-    function save()
+    public function save()
     {
         $this->set_value("emailAddress", str_replace(array("<",">"), "", $this->get_value("emailAddress")));
         return parent::save();
     }
 
-    function exists($entity, $entityID, $email)
+    public function exists($entity, $entityID, $email)
     {
         $email = str_replace(array("<",">"), "", $email);
         $db = new db_alloc();
@@ -66,9 +66,9 @@ class interestedParty extends db_entity
         return $db->row();
     }
 
-    function active($entity, $entityID, $email)
+    public function active($entity, $entityID, $email)
     {
-        list($email,$name) = parse_email_address($email);
+        list($email, $name) = parse_email_address($email);
         $db = new db_alloc();
         $db->query("SELECT *
                       FROM interestedParty
@@ -80,7 +80,7 @@ class interestedParty extends db_entity
         return $db->row();
     }
 
-    function make_interested_parties($entity, $entityID, $encoded_parties = array())
+    public function make_interested_parties($entity, $entityID, $encoded_parties = array())
     {
         // Nuke entries from interestedParty
         $db = new db_alloc();
@@ -107,13 +107,13 @@ class interestedParty extends db_entity
         $db->commit();
     }
 
-    function abbreviate($str)
+    public function abbreviate($str)
     {
         $rtn = array();
         $bits = explode(",", $str);
         foreach ((array)$bits as $bit) {
             if ($bit) {
-                list($name,$address) = explode("<", $bit);
+                list($name, $address) = explode("<", $bit);
                 $rtn[] = page::htmlentities(trim($name))."<span class='hidden'> ".page::htmlentities("<".$address)."</span>";
             }
         }
@@ -122,7 +122,7 @@ class interestedParty extends db_entity
         }
     }
 
-    function get_interested_parties_string($entity, $entityID)
+    public function get_interested_parties_string($entity, $entityID)
     {
         $q = prepare("SELECT get_interested_parties_string('%s',%d) as parties", $entity, $entityID);
         $db = new db_alloc();
@@ -130,7 +130,7 @@ class interestedParty extends db_entity
         return $row["parties"];
     }
 
-    function sort_interested_parties($a, $b)
+    public function sort_interested_parties($a, $b)
     {
         return strtolower($a["name"]) > strtolower($b["name"]);
     }
@@ -177,12 +177,12 @@ class interestedParty extends db_entity
         return base64_encode(serialize($info));
     }
 
-    function get_decoded_interested_party_identifier($blob)
+    public function get_decoded_interested_party_identifier($blob)
     {
         return unserialize(base64_decode($blob));
     }
 
-    function get_interested_parties_html($parties = array())
+    public function get_interested_parties_html($parties = array())
     {
         $current_user = &singleton("current_user");
         if (is_object($current_user) && $current_user->get_id()) {
@@ -208,10 +208,10 @@ class interestedParty extends db_entity
         return $str;
     }
 
-    function delete_interested_party($entity, $entityID, $email)
+    public function delete_interested_party($entity, $entityID, $email)
     {
         // Delete existing entries
-        list($email,$name) = parse_email_address($email);
+        list($email, $name) = parse_email_address($email);
         $row = interestedParty::active($entity, $entityID, $email);
         if ($row) {
             $ip = new interestedParty();
@@ -220,7 +220,7 @@ class interestedParty extends db_entity
         }
     }
 
-    function add_interested_party($data)
+    public function add_interested_party($data)
     {
         static $people;
         $data["emailAddress"] = str_replace(array("<",">"), "", $data["emailAddress"]);
@@ -264,7 +264,7 @@ class interestedParty extends db_entity
         return $ip->get_id();
     }
 
-    function adjust_by_email_subject($email_receive, $e)
+    public function adjust_by_email_subject($email_receive, $e)
     {
         $current_user = &singleton("current_user");
 
@@ -273,8 +273,8 @@ class interestedParty extends db_entity
         $subject = trim($email_receive->mail_headers["subject"]);
         $body = $email_receive->get_converted_encoding();
         $msg_uid = $email_receive->msg_uid;
-        list($emailAddress,$fullName) = parse_email_address($email_receive->mail_headers["from"]);
-        list($personID,$clientContactID,$fullName) = comment::get_person_and_client($emailAddress, $fullName, $e->get_project_id());
+        list($emailAddress, $fullName) = parse_email_address($email_receive->mail_headers["from"]);
+        list($personID, $clientContactID, $fullName) = comment::get_person_and_client($emailAddress, $fullName, $e->get_project_id());
 
         // Load up the parent object that this comment refers to, be it task or timeSheet etc
         if ($entity == "comment" && $entityID) {
@@ -282,7 +282,7 @@ class interestedParty extends db_entity
             $c->set_id($entityID);
             $c->select();
             $object = $c->get_parent_object();
-        } else if (class_exists($entity) && $entityID) {
+        } elseif (class_exists($entity) && $entityID) {
             $object = new $entity;
             $object->set_id($entityID);
             $object->select();
@@ -295,20 +295,20 @@ class interestedParty extends db_entity
 
         foreach ((array)$commands as $command) {
             $command = strtolower($command);
-            list($command,$command2) = explode(":", $command); // for eg: duplicate:1234
+            list($command, $command2) = explode(":", $command); // for eg: duplicate:1234
 
             // If "quiet" in the subject line, then the email/comment won't be re-emailed out again
             if ($command == "quiet") {
                 $quiet = true;
 
-                // To unsubscribe from this conversation
-            } else if ($command == "unsub" || $command == "unsubscribe") {
+            // To unsubscribe from this conversation
+            } elseif ($command == "unsub" || $command == "unsubscribe") {
                 if (interestedParty::active($entity, $entityID, $emailAddress)) {
                     interestedParty::delete_interested_party($entity, $entityID, $emailAddress);
                 }
 
                 // To subscribe to this conversation
-            } else if ($command == "sub" || $command == "subscribe") {
+            } elseif ($command == "sub" || $command == "subscribe") {
                 $ip = interestedParty::exists($entity, $entityID, $emailAddress);
 
                 if (!$ip) {
@@ -320,8 +320,8 @@ class interestedParty extends db_entity
                                   "clientContactID" => $clientContactID);
                     interestedParty::add_interested_party($data);
 
-                    // Else reactivate existing IP
-                } else if (!interestedParty::active($entity, $entityID, $emailAddress)) {
+                // Else reactivate existing IP
+                } elseif (!interestedParty::active($entity, $entityID, $emailAddress)) {
                     $interestedParty = new interestedParty();
                     $interestedParty->set_id($ip["interestedPartyID"]);
                     $interestedParty->select();
@@ -331,7 +331,7 @@ class interestedParty extends db_entity
 
 
                 // If there's a number/duration then add some time to a time sheet
-            } else if (is_object($current_user) && $current_user->get_id() && preg_match("/([\.\d]+)/i", $command, $m)) {
+            } elseif (is_object($current_user) && $current_user->get_id() && preg_match("/([\.\d]+)/i", $command, $m)) {
                 $duration = $m[1];
 
                 if (is_numeric($duration)) {
@@ -345,12 +345,12 @@ class interestedParty extends db_entity
                 }
 
                 // Otherwise assume it's a status change
-            } else if (is_object($current_user) && $current_user->get_id() && $command) {
+            } elseif (is_object($current_user) && $current_user->get_id() && $command) {
                 if (is_object($object) && $object->get_id()) {
                     $object->set_value("taskStatus", $command);
                     if ($command2 && preg_match("/dup/i", $command)) {
                         $object->set_value("duplicateTaskID", $command2);
-                    } else if ($command2 && preg_match("/tasks/i", $command)) {
+                    } elseif ($command2 && preg_match("/tasks/i", $command)) {
                         $object->add_pending_tasks($command2);
                     }
                     $object->save();
@@ -360,7 +360,7 @@ class interestedParty extends db_entity
         return $quiet;
     }
 
-    function get_list_filter($filter = array())
+    public function get_list_filter($filter = array())
     {
         $filter["emailAddress"] = str_replace(array("<",">"), "", $filter["emailAddress"]);
         $filter["emailAddress"]    and $sql[] = prepare("(interestedParty.emailAddress LIKE '%%%s%%')", $filter["emailAddress"]);
@@ -376,7 +376,6 @@ class interestedParty extends db_entity
 
     public static function get_list($_FORM)
     {
-
         if ($_FORM["taskID"]) {
             $join = " LEFT JOIN comment ON ((interestedParty.entity = comment.commentType AND interestedParty.entityID = comment.commentLinkID) OR (interestedParty.entity = 'comment' and interestedParty.entityID = comment.commentID))";
             $groupby = ' GROUP BY interestedPartyID';
@@ -401,7 +400,7 @@ class interestedParty extends db_entity
         return (array)$rows;
     }
 
-    function is_external($entity, $entityID)
+    public function is_external($entity, $entityID)
     {
         $ips = interestedParty::get_interested_parties($entity, $entityID);
         foreach ($ips as $email => $info) {
@@ -411,7 +410,7 @@ class interestedParty extends db_entity
         }
     }
 
-    function expand_ip($ip, $projectID = null)
+    public function expand_ip($ip, $projectID = null)
     {
 
         // jon               alloc username
@@ -427,7 +426,7 @@ class interestedParty extends db_entity
 
         // email address
         $people = person::get_people_by_username("emailAddress");
-        list($email,$name) = parse_email_address($ip);
+        list($email, $name) = parse_email_address($ip);
         if ($people[$email]) {
             return array($people[$email]["personID"],$people[$email]["name"],$people[$email]["emailAddress"]);
         }
@@ -452,7 +451,7 @@ class interestedParty extends db_entity
         return array(null,$name,$email);
     }
 
-    function add_remove_ips($ip, $entity, $entityID, $projectID = null)
+    public function add_remove_ips($ip, $entity, $entityID, $projectID = null)
     {
         $parties = explode(",", $ip);
         foreach ($parties as $party) {
@@ -460,12 +459,12 @@ class interestedParty extends db_entity
 
             // remove an ip
             if ($party[0] == "%") {
-                list($personID,$name,$email) = interestedParty::expand_ip(implode("", array_slice(str_split($party), 1)), $projectID);
+                list($personID, $name, $email) = interestedParty::expand_ip(implode("", array_slice(str_split($party), 1)), $projectID);
                 interestedParty::delete_interested_party($entity, $entityID, $email);
 
-                // add an ip
+            // add an ip
             } else {
-                list($personID,$name,$email) = interestedParty::expand_ip($party, $projectID);
+                list($personID, $name, $email) = interestedParty::expand_ip($party, $projectID);
                 if (!$email || strpos($email, "@") === false) {
                     alloc_error("Unable to add interested party: ".$party);
                 } else {

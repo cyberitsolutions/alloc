@@ -36,7 +36,7 @@ class history extends db_entity
                                 "personID");
 
 
-    function get_history_query($order = "")
+    public function get_history_query($order = "")
     {
         $current_user = &singleton("current_user");
         if (is_object($current_user)) {
@@ -60,7 +60,7 @@ class history extends db_entity
     // will be used to determine whether
     // or not to save a history entry.
 
-    function get_ignored_files()
+    public function get_ignored_files()
     {
         $ignored_files = array();
         $query = $this->get_history_query("ASC");
@@ -87,7 +87,7 @@ class history extends db_entity
         return $ignored_files;
     }
 
-    function get_history_label($SCRIPT_NAME, $qs)
+    public function get_history_label($SCRIPT_NAME, $qs)
     {
 
         // Save the history record LABEL with the most descriptive label
@@ -162,7 +162,7 @@ class history extends db_entity
         return false;
     }
 
-    function save_history()
+    public function save_history()
     {
         $current_user = &singleton("current_user");
         global $TPL;
@@ -212,7 +212,7 @@ class history extends db_entity
         }
     }
 
-    function strip_get_session($str = "")
+    public function strip_get_session($str = "")
     {
         return (string)preg_replace("/sess=[A-Za-z0-9]{32}/", "", $str);
     }

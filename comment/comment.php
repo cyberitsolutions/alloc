@@ -86,7 +86,7 @@ foreach ((array)$files as $k => $f) {
     $fullpath = $dir.DIRECTORY_SEPARATOR.$f["name"];
     if ($f["blob"]) {
         file_put_contents($fullpath, $f["blob"]);
-    } else if ($f["tmp_name"]) {
+    } elseif ($f["tmp_name"]) {
         rename($f["tmp_name"], $fullpath);
     }
     $files[$k]["fullpath"] = $fullpath;

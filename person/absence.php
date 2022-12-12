@@ -55,7 +55,7 @@ if ($_POST["save"]) {
         $urls[$returnToParent] and $url = $urls[$returnToParent];
         alloc_redirect($url);
     }
-} else if ($_POST["delete"]) {
+} elseif ($_POST["delete"]) {
     // Deleting a record
     $absence->read_globals();
     $absence->delete();

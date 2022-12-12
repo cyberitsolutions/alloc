@@ -91,7 +91,6 @@ if ($productID) {
 $tf = new tf();
 $tflist = $tf->get_assoc_array("tfID", "tfName");
 $extra_options = array(
-    //"-3"=>"META: Sale TF"
     "-1"=>"META: Project TF",
     "-2"=>"META: Salesperson TF",
     config::get_config_item("mainTfID") => "Main Finance TF (".tf::get_name(config::get_config_item("mainTfID")).")",
@@ -124,14 +123,14 @@ if ($_POST["save"]) {
         }
     }
     $product->set_values();
-} else if ($_POST["delete"]) {
+} elseif ($_POST["delete"]) {
     $product->read_globals();
     $product->delete();
     alloc_redirect($TPL["url_alloc_productList"]);
 }
 
 
-# Fixed costs
+// Fixed costs
 if ($_POST["save_costs"] || $_POST["save_commissions"]) {
     foreach ((array)$_POST["productCostID"] as $k => $productCostID) {
         // Delete
@@ -141,8 +140,8 @@ if ($_POST["save_costs"] || $_POST["save_commissions"]) {
             $productCost->select();
             $productCost->delete();
 
-            // Save
-        } else if (imp($_POST["amount"][$k])) {
+        // Save
+        } elseif (imp($_POST["amount"][$k])) {
             $a = array("productCostID"     => $productCostID,
                        "productID"         => $productID,
                        "tfID"              => $_POST["tfID"][$k],
@@ -158,7 +157,6 @@ if ($_POST["save_costs"] || $_POST["save_commissions"]) {
 
             $productCost = new productCost();
             $productCost->read_array($a);
-            //$errs = $productCost->validate();
             if (!$errs) {
                 $productCost->save();
             }

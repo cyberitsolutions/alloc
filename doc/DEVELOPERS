@@ -1,0 +1,45 @@
+.. -*- mode: rst -*-
+
+DOCKER
+======
+
+Behold the *simplicity* of Docker::
+
+  cd path/to/alloc/clone
+  docker build -t alloc .
+  docker run -p 4000:80 alloc
+
+Then open http://localhost:4000/ to test alloc.
+
+You'll probably want to access mysql and write alloc_config.php, to do
+so (replace ``practical_boyd`` with the name of your container)::
+
+  docker exec -ti practical_boyd bash
+
+CODING STANDARDS
+================
+
+Instead of creating a custom coding standard, we use `PSR-2`_ for php
+and `Prettier`_ for JS and CSS.
+
+Because the alloc code base did not use PSR-2 until late 2018, many
+class/method names do not match the PSR-2 recommendations, this is an
+ongoing effort.
+
+To ensure that the php code is consistent run BOTH ``php-cs-fixer`` and
+``phpcbf`` over it::
+
+  cd path/to/alloc/clone
+  php-cs-fixer fix .
+  phpcbf -d memory_limit=1024M --standard=PSR2 --extensions=php .
+
+For JS and CSS::
+
+  cd path/to/alloc/clone
+  prettier . --write
+
+Please don't include style changes to zendSearch, jquery, or any other
+non-alloc code that is in the source tree.
+  
+.. _PSR-2: https://www.php-fig.org/psr/psr-2/
+.. _Prettier: https://github.com/prettier/prettier

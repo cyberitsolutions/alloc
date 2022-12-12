@@ -26,8 +26,6 @@ if (!config::get_config_item("outTfID")) {
     alloc_error("Please select a default Outgoing TF from the Setup -> Finance menu.");
 }
 
-#$field_map = array("transactionDate"=>0, "employeeNum"=>1, "name"=>2, ""=>3, ""=>4, ""=>5, ""=>6, ""=>7, ""=>8, ""=>9, "amount"=>10, ""=>11, ""=>12);
-
 $field_map = array(""                => 0,
                    "transactionDate" => 1,
                    "name"            => 2,
@@ -64,23 +62,10 @@ if ($_POST["upload"] && is_uploaded_file($_FILES["wages_file"]["tmp_name"])) {
         // If there's a memo field then append it to account
         $memo and $account.= " - ".$memo;
 
-
-        #echo "<br>";
-        #echo "<br>date: ".$transactionDate;
-        #echo "<br>memo: ".$memo;
-        #echo "<br>account: ".$account;
-        #echo "<br>amount: ".$amount;
-        #echo "<br>employeeNum: ".$employeeNum;
-
         // Ignore heading row, dividing lines and total rows
         if ($transactionDate == "Date" || !$transactionDate || strpos("_____", $transactionDate) !== false || strpos("¯¯¯", $transactionDate) !== false || stripos("total", $transactionDate) !== false) {
             continue;
         }
-        // If the employeeNum field is blank use the previous employeeNum
-        #if (!$employeeNum) {
-        #    $employeeNum = $prev_employeeNum;
-        #}
-        #$prev_employeeNum = $employeeNum;
 
         // Find the TF for the wage
         $query = prepare("SELECT * FROM tf WHERE qpEmployeeNum=%d", $employeeNum);

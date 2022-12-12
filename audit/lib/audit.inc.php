@@ -54,7 +54,7 @@ class audit extends db_entity
             $entity = new project();
             $entity->set_id($_FORM["projectID"]);
             $entity->select();
-        } else if ($_FORM["taskID"]) {
+        } elseif ($_FORM["taskID"]) {
             $entity = new task();
             $entity->set_id($_FORM["taskID"]);
             $entity->select();
@@ -89,7 +89,7 @@ class audit extends db_entity
         return $sql;
     }
 
-    function get_list_vars()
+    public function get_list_vars()
     {
         return array("taskID"           => "The task id to find audit records for",
                      "projectID"        => "The project id to find audit records for");

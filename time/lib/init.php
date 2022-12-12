@@ -23,9 +23,9 @@
 
 class time_module extends module
 {
-    var $module = "time";
-    var $db_entities = array("timeSheet", "timeSheetItem","timeUnit");
-    var $home_items = array("timeSheetHomeItem",
+    public $module = "time";
+    public $db_entities = array("timeSheet", "timeSheetItem","timeUnit");
+    public $home_items = array("timeSheetHomeItem",
                             "tsiHintHomeItem",
                             "timeSheetListHomeItem",
                             "pendingApprovalTimeSheetListHomeItem",

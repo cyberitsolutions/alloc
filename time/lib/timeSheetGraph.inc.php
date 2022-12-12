@@ -22,14 +22,12 @@
 
 class timeSheetGraph
 {
-
-    function __construct()
+    public function __construct()
     {
     }
-    function get_list_vars()
+    public function get_list_vars()
     {
         return array(
-            //"projectIDs" => "An array of projectIDs"
             "dateFrom"    => "From Date",
             "dateTo"      => "To Date",
             "personID"    => "The person assigned to the task",
@@ -37,7 +35,7 @@ class timeSheetGraph
             "applyFilter" => "Store the filter settings");
     }
 
-    function load_filter($defaults)
+    public function load_filter($defaults)
     {
         $current_user = &singleton("current_user");
 

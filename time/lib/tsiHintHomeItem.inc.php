@@ -22,13 +22,12 @@
 
 class tsiHintHomeItem extends home_item
 {
-
-    function __construct()
+    public function __construct()
     {
         parent::__construct("tsiHint_edit", "Time Sheet Item Hint", "time", "tsiHintH.tpl", "narrow", 25);
     }
 
-    function visible()
+    public function visible()
     {
         $current_user = &singleton("current_user");
         if ($current_user->have_role("manage") && $current_user->prefs["showTimeSheetItemHintHome"]) {
@@ -36,7 +35,7 @@ class tsiHintHomeItem extends home_item
         }
     }
 
-    function render()
+    public function render()
     {
         return true;
     }

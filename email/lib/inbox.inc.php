@@ -22,10 +22,9 @@
 
 class inbox extends db_entity
 {
-
-    function change_current_user($from)
+    public function change_current_user($from)
     {
-        list($from_address,$from_name) = parse_email_address($from);
+        list($from_address, $from_name) = parse_email_address($from);
         $person = new person();
         $personID = $person->find_by_email($from_address);
         $personID or $personID = $person->find_by_name($from_name);
@@ -40,7 +39,7 @@ class inbox extends db_entity
         return false;
     }
 
-    function verify_hash($id, $hash)
+    public function verify_hash($id, $hash)
     {
         $info = inbox::get_mail_info();
         $email_receive = new email_receive($info);
@@ -54,7 +53,7 @@ class inbox extends db_entity
         return $rtn;
     }
 
-    function archive_email($req = array())
+    public function archive_email($req = array())
     {
         global $TPL;
         $info = inbox::get_mail_info();
@@ -66,7 +65,7 @@ class inbox extends db_entity
         $email_receive->close();
     }
 
-    function download_email($req = array())
+    public function download_email($req = array())
     {
         global $TPL;
         $info = inbox::get_mail_info();
@@ -75,7 +74,7 @@ class inbox extends db_entity
         $email_receive->set_msg($req["id"]);
         $new_nums = $email_receive->get_new_email_msg_uids();
         in_array($req["id"], (array)$new_nums) and $new = true;
-        list($h,$b) = $email_receive->get_raw_header_and_body();
+        list($h, $b) = $email_receive->get_raw_header_and_body();
         $new and $email_receive->set_unread(); // might have to "unread" the email, if it was new, i.e. set it back to new
         $email_receive->close();
         header('Content-Type: text/plain');
@@ -84,7 +83,7 @@ class inbox extends db_entity
         exit();
     }
 
-    function process_email($req = array())
+    public function process_email($req = array())
     {
         global $TPL;
         $info = inbox::get_mail_info();
@@ -97,7 +96,7 @@ class inbox extends db_entity
         $email_receive->close();
     }
 
-    function process_email_to_task($req = array())
+    public function process_email_to_task($req = array())
     {
         global $TPL;
         $info = inbox::get_mail_info();
@@ -110,7 +109,7 @@ class inbox extends db_entity
         $email_receive->close();
     }
 
-    function process_one_email($email_receive)
+    public function process_one_email($email_receive)
     {
         $current_user = &singleton("current_user");
         $orig_current_user = &$current_user;
@@ -150,7 +149,7 @@ class inbox extends db_entity
         singleton("current_user", $current_user);
     }
 
-    function convert_email_to_new_task($email_receive, $change_user = false)
+    public function convert_email_to_new_task($email_receive, $change_user = false)
     {
         global $TPL;
         $current_user = &singleton("current_user");
@@ -192,7 +191,7 @@ class inbox extends db_entity
             $email_receive->archive($mailbox) and $msg.= "\nMoved email to ".$mailbox;
             $msg and $TPL["message_good_no_esc"][] = $msg;
 
-            list($from_address,$from_name) = parse_email_address($email_receive->mail_headers["from"]);
+            list($from_address, $from_name) = parse_email_address($email_receive->mail_headers["from"]);
             $ip["emailAddress"] = $from_address;
             $ip["name"] = $from_name;
             $ip["personID"] = $personID;
@@ -205,7 +204,7 @@ class inbox extends db_entity
         singleton("current_user", $current_user);
     }
 
-    function attach_email_to_existing_task($req = array())
+    public function attach_email_to_existing_task($req = array())
     {
         global $TPL;
         $info = inbox::get_mail_info();
@@ -227,7 +226,7 @@ class inbox extends db_entity
             $commentID and $TPL["message_good_no_esc"][] = "Created comment ".$commentID." on task ".$task->get_task_link(array("prefixTaskID"=>true));
 
             // Possibly change the identity of current_user
-            list($from_address,$from_name) = parse_email_address($email_receive->mail_headers["from"]);
+            list($from_address, $from_name) = parse_email_address($email_receive->mail_headers["from"]);
             $person = new person();
             $personID = $person->find_by_email($from_address);
             $personID or $personID = $person->find_by_name($from_name);
@@ -271,7 +270,7 @@ class inbox extends db_entity
                 if ($req["emailto"] == "internal" && !$inf["external"] && !$inf["clientContactID"]) {
                     $id = interestedParty::add_interested_party($inf);
                     $recipients[] = $inf["name"]." ".add_brackets($k);
-                } else if ($req["emailto"] == "default") {
+                } elseif ($req["emailto"] == "default") {
                     $id = interestedParty::add_interested_party($inf);
                     $recipients[] = $inf["name"]." ".add_brackets($k);
                 }
@@ -291,7 +290,7 @@ class inbox extends db_entity
         }
     }
 
-    function unread_email($req = array())
+    public function unread_email($req = array())
     {
         global $TPL;
         $info = inbox::get_mail_info();
@@ -302,18 +301,18 @@ class inbox extends db_entity
         $email_receive->close();
     }
 
-    function read_email($req = array())
+    public function read_email($req = array())
     {
         global $TPL;
         $info = inbox::get_mail_info();
         $email_receive = new email_receive($info);
         $email_receive->open_mailbox($info["folder"]);
         $email_receive->set_msg($req["id"]);
-        list($h,$b) = $email_receive->get_raw_header_and_body();
+        list($h, $b) = $email_receive->get_raw_header_and_body();
         $email_receive->close();
     }
 
-    function get_mail_info()
+    public function get_mail_info()
     {
         $info["host"] = config::get_config_item("allocEmailHost");
         $info["port"] = config::get_config_item("allocEmailPort");

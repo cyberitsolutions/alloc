@@ -22,25 +22,24 @@
 
 class db_field
 {
-    var $classname = "db_field";
-    var $name;
-    var $value;
-    var $label;
-    var $empty_to_null = true;
+    public $classname = "db_field";
+    public $name;
+    public $value;
+    public $label;
+    public $empty_to_null = true;
 
-    var $audit = false;
+    public $audit = false;
 
-    var $write_perm_name = 0;     // Name of a permission a user must have to write to this field, if any.  E.g. "admin"
-    var $read_perm_name = 0;      // Name of the permission a user must have to read this field, if any.  E.g. "read details"
+    public $write_perm_name = 0;     // Name of a permission a user must have to write to this field, if any.  E.g. "admin"
+    public $read_perm_name = 0;      // Name of the permission a user must have to read this field, if any.  E.g. "read details"
 
-    function __construct($name = "", $options = array())
+    public function __construct($name = "", $options = array())
     {
         $this->name = $name;
         $this->label = $name;
 
         if (!is_array($options)) {
             $options = array();
-            #echo "<br>".$this->name;
         }
         reset($options);
         foreach ($options as $option_name => $option_value) {
@@ -48,29 +47,29 @@ class db_field
         }
     }
 
-    function set_value($value, $source = SRC_VARIABLE)
+    public function set_value($value, $source = SRC_VARIABLE)
     {
         if (isset($value) || $this->empty_to_null == false) {
             $this->value = $value;
         }
     }
 
-    function has_value()
+    public function has_value()
     {
         return isset($this->value) && imp($this->value);
     }
 
-    function get_name()
+    public function get_name()
     {
         return $this->name;
     }
 
-    function is_audited()
+    public function is_audited()
     {
         return $this->audit;
     }
 
-    function get_value($dest = DST_VARIABLE, $parent = null)
+    public function get_value($dest = DST_VARIABLE, $parent = null)
     {
         if ($dest == DST_DATABASE) {
             if ((isset($this->value) && imp($this->value)) || $this->empty_to_null == false) {
@@ -78,7 +77,7 @@ class db_field
             } else {
                 return "NULL";
             }
-        } else if ($dest == DST_HTML_DISPLAY) {
+        } elseif ($dest == DST_HTML_DISPLAY) {
             if ($this->type == "money" && imp($this->value)) {
                 $c = $parent->currency;
                 if ($this->currency && isset($parent->data_fields[$this->currency])) {
@@ -87,7 +86,7 @@ class db_field
 
                 if (!$c) {
                     alloc_error("db_field::get_value(): No currency specified for ".$parent->classname.".".$this->name." (currency:".$c.")");
-                } else if ($this->value == $parent->all_row_fields[$this->name]) {
+                } elseif ($this->value == $parent->all_row_fields[$this->name]) {
                     return page::money($c, $this->value, "%mo");
                 }
             }
@@ -97,12 +96,12 @@ class db_field
         }
     }
 
-    function clear_value()
+    public function clear_value()
     {
         unset($this->value);
     }
 
-    function validate($parent)
+    public function validate($parent)
     {
         global $TPL;
         if ($parent->doMoney && $this->type == "money") {
@@ -112,7 +111,7 @@ class db_field
             }
             if (!$c) {
                 return "db_field::validate(): No currency specified for ".$parent->classname.".".$this->name." (currency:".$c.")";
-            } else if ($this->value != $parent->all_row_fields[$this->name]) {
+            } elseif ($this->value != $parent->all_row_fields[$this->name]) {
                 $this->set_value(page::money($c, $this->value, "%mi"));
             }
         }

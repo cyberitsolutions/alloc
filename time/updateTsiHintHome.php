@@ -24,8 +24,6 @@
 define("NO_REDIRECT", 1);
 require_once("../alloc.php");
 
-//usleep(1000);
-
 $t = tsiHint::parse_tsiHint_string($_REQUEST["tsiHint_item"]);
 
 $people = person::get_people_by_username();
@@ -40,7 +38,7 @@ foreach ($t as $k => $v) {
             } else {
                 $v = "Task ".$v." not found.";
             }
-        } else if ($k == "username") {
+        } elseif ($k == "username") {
             $name = $people[$v]["name"] or $name = $people[$v]["username"];
         }
         $rtn[$k] = $v;

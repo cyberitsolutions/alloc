@@ -65,7 +65,7 @@ function echo_var($matches)
 
     if ($var && $starts_with_equals) {
         return '<?php echo page::htmlentities('.$var.'); ?>';
-    } else if ($var) {
+    } elseif ($var) {
         return '<?php echo '.$var.'; ?>';
     }
 }
@@ -73,7 +73,6 @@ function echo_var($matches)
 // Read a template and return the mixed php/html, ready for processing
 function get_template($filename)
 {
-
     $template = implode("", (@file($filename)));
     if ((!$template) or(empty($template))) {
         echo "get_template() failure: [$filename]";

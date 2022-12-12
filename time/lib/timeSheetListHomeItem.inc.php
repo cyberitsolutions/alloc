@@ -22,20 +22,19 @@
 
 class timeSheetListHomeItem extends home_item
 {
-
-    function __construct()
+    public function __construct()
     {
         $this->has_config = true;
         parent::__construct("time_list", "Current Time Sheets", "time", "timeSheetListH.tpl", "narrow", 30);
     }
 
-    function visible()
+    public function visible()
     {
         $current_user = &singleton("current_user");
         return isset($current_user) && $current_user->is_employee();
     }
 
-    function render()
+    public function render()
     {
         $current_user = &singleton("current_user");
         global $TPL;
