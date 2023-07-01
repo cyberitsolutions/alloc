@@ -29,8 +29,8 @@ INSERT INTO error (errorID) VALUES ("\n\nALLOC ERROR: Parent task loops not perm
 
 
 -- if (NOT something) doesn't work for NULLs
-DROP FUNCTION IF EXISTS empty $$
-CREATE FUNCTION empty(str text) RETURNS BOOLEAN DETERMINISTIC
+DROP FUNCTION IF EXISTS emptyXXX $$
+CREATE FUNCTION emptyXXX(str text) RETURNS BOOLEAN DETERMINISTIC
 BEGIN RETURN str = '' OR str IS NULL; END $$
 
 -- if (null != 'something') evaluates falsely
@@ -135,7 +135,7 @@ BEGIN
 ORDER BY auditID DESC
    LIMIT 1;
 
-  IF (empty(rtn)) THEN
+  IF (emptyXXX(rtn)) THEN
     SELECT 'open_notstarted' INTO rtn;
   END IF;
   RETURN rtn;
@@ -550,27 +550,27 @@ BEGIN
     SET NEW.dateActualCompletion = current_date();
   END IF;
 
-  IF (empty(NEW.taskStatus)) THEN SET NEW.taskStatus = 'open_notstarted'; END IF;
-  IF (empty(NEW.priority)) THEN SET NEW.priority = 3; END IF;
-  IF (empty(NEW.taskTypeID)) THEN SET NEW.taskTypeID = 'Task'; END IF;
+  IF (emptyXXX(NEW.taskStatus)) THEN SET NEW.taskStatus = 'open_notstarted'; END IF;
+  IF (emptyXXX(NEW.priority)) THEN SET NEW.priority = 3; END IF;
+  IF (emptyXXX(NEW.taskTypeID)) THEN SET NEW.taskTypeID = 'Task'; END IF;
   IF (NEW.personID) THEN SET NEW.dateAssigned = current_timestamp(); END IF;
   IF (NEW.closerID) THEN SET NEW.dateClosed = current_timestamp(); END IF;
-  IF (empty(NEW.timeLimit)) THEN SET NEW.timeLimit = NEW.timeExpected; END IF;
+  IF (emptyXXX(NEW.timeLimit)) THEN SET NEW.timeLimit = NEW.timeExpected; END IF;
   
-  IF (empty(NEW.timeLimit) AND NEW.projectID) THEN
+  IF (emptyXXX(NEW.timeLimit) AND NEW.projectID) THEN
     SELECT defaultTaskLimit INTO defTaskLimit FROM project WHERE projectID = NEW.projectID;
     SET NEW.timeLimit = defTaskLimit;
   END IF;
  
-  IF (empty(NEW.estimatorID) AND (NEW.timeWorst OR NEW.timeBest OR NEW.timeExpected)) THEN
+  IF (emptyXXX(NEW.estimatorID) AND (NEW.timeWorst OR NEW.timeBest OR NEW.timeExpected)) THEN
     SET NEW.estimatorID = personID();
   END IF;
 
-  IF (empty(NEW.timeWorst) AND empty(NEW.timeBest) AND empty(NEW.timeExpected)) THEN
+  IF (emptyXXX(NEW.timeWorst) AND emptyXXX(NEW.timeBest) AND emptyXXX(NEW.timeExpected)) THEN
     SET NEW.estimatorID = NULL;
   END IF;
 
-  IF (NEW.taskStatus = 'open_inprogress' AND empty(NEW.dateActualStart)) THEN
+  IF (NEW.taskStatus = 'open_inprogress' AND emptyXXX(NEW.dateActualStart)) THEN
     SET NEW.dateActualStart = current_date();
   END IF;
 END
@@ -593,15 +593,15 @@ BEGIN
   SET NEW.dateCreated = OLD.dateCreated;
   SET NEW.taskModifiedUser = personID();
 
-  IF (empty(NEW.taskStatus)) THEN
+  IF (emptyXXX(NEW.taskStatus)) THEN
     SET NEW.taskStatus = OLD.taskStatus;
   END IF;
 
-  IF (empty(NEW.taskStatus)) THEN
+  IF (emptyXXX(NEW.taskStatus)) THEN
     SET NEW.taskStatus = 'open_notstarted';
   END IF;
 
-  IF (NEW.taskStatus = 'open_inprogress' AND neq(NEW.taskStatus, OLD.taskStatus) AND empty(NEW.dateActualStart)) THEN
+  IF (NEW.taskStatus = 'open_inprogress' AND neq(NEW.taskStatus, OLD.taskStatus) AND emptyXXX(NEW.dateActualStart)) THEN
     SET NEW.dateActualStart = current_date();
   END IF;
 
@@ -611,30 +611,30 @@ BEGIN
     SET NEW.dateActualCompletion = NULL;  
     SET NEW.duplicateTaskID = NULL;  
   ELSEIF (SUBSTRING(NEW.taskStatus,1,6) = 'closed' AND neq(NEW.taskStatus, OLD.taskStatus)) THEN
-    IF (empty(NEW.dateActualStart)) THEN SET NEW.dateActualStart = current_date(); END IF;
-    IF (empty(NEW.dateClosed)) THEN SET NEW.dateClosed = current_timestamp(); END IF;
-    IF (empty(NEW.closerID)) THEN SET NEW.closerID = personID(); END IF;
+    IF (emptyXXX(NEW.dateActualStart)) THEN SET NEW.dateActualStart = current_date(); END IF;
+    IF (emptyXXX(NEW.dateClosed)) THEN SET NEW.dateClosed = current_timestamp(); END IF;
+    IF (emptyXXX(NEW.closerID)) THEN SET NEW.closerID = personID(); END IF;
     SET NEW.dateActualCompletion = current_date();
   END IF;
 
   IF (NEW.personID AND neq(NEW.personID, OLD.personID)) THEN
     SET NEW.dateAssigned = current_timestamp();
-  ELSEIF (empty(NEW.personID)) THEN
+  ELSEIF (emptyXXX(NEW.personID)) THEN
     SET NEW.dateAssigned = NULL;
   END IF;
 
   IF (NEW.closerID AND neq(NEW.closerID, OLD.closerID)) THEN
     SET NEW.dateClosed = current_timestamp();
-  ELSEIF (empty(NEW.closerID)) THEN
+  ELSEIF (emptyXXX(NEW.closerID)) THEN
     SET NEW.dateClosed = NULL;
   END IF;
 
   IF ((neq(NEW.timeWorst, OLD.timeWorst) OR neq(NEW.timeBest, OLD.timeBest) OR neq(NEW.timeExpected, OLD.timeExpected))
-  AND empty(NEW.estimatorID)) THEN
+  AND emptyXXX(NEW.estimatorID)) THEN
     SET NEW.estimatorID = personID();
   END IF;
 
-  IF (empty(NEW.timeWorst) AND empty(NEW.timeBest) AND empty(NEW.timeExpected)) THEN
+  IF (emptyXXX(NEW.timeWorst) AND emptyXXX(NEW.timeBest) AND emptyXXX(NEW.timeExpected)) THEN
     SET NEW.estimatorID = NULL;
   END IF;
 
@@ -1114,7 +1114,7 @@ DROP TRIGGER IF EXISTS before_insert_absence $$
 CREATE TRIGGER before_insert_absence BEFORE INSERT ON absence
 FOR EACH ROW
 BEGIN
-  IF empty(NEW.dateFrom) OR empty(NEW.dateTo) THEN
+  IF emptyXXX(NEW.dateFrom) OR emptyXXX(NEW.dateTo) THEN
     call alloc_error('Absence must have a start and end date.');
   END IF;
 END
@@ -1124,7 +1124,7 @@ DROP TRIGGER IF EXISTS before_update_absence $$
 CREATE TRIGGER before_update_absence BEFORE UPDATE ON absence
 FOR EACH ROW
 BEGIN
-  IF empty(NEW.dateFrom) OR empty(NEW.dateTo) THEN
+  IF emptyXXX(NEW.dateFrom) OR emptyXXX(NEW.dateTo) THEN
     call alloc_error('Absence must have a start and end date.');
   END IF;
 END
