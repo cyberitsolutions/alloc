@@ -734,7 +734,10 @@ class email_receive
         if ($enc) {
             $db = new db_alloc();
             $db->connect();
-            $body = mb_convert_encoding($body, $db->get_encoding(), $enc);
+            // PHP does not know what "utf8mb3" is.
+            // https://mariadb.com/kb/en/upgrading-from-mariadb-10-5-to-mariadb-10-6/#character-sets
+            // Sep 18 12:56:15 heavy uwsgi[5940]: PHP Warning:  mb_convert_encoding(): Unknown encoding &quot;utf8mb3&quot; in /var/www/alloc/email/lib/email_receive.inc.php on line 737
+            $body = mb_convert_encoding($body, str_replace("utf8mb3", "utf8", $db->get_encoding()), $enc);
         }
         return $body;
     }
